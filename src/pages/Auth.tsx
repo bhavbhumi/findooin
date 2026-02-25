@@ -116,7 +116,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left — branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-primary text-primary-foreground flex-col justify-between p-12">
+      <div className="hidden lg:flex lg:w-1/2 text-white flex-col justify-between p-12 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #191970 0%, #3367D6 30%, #005DFF 50%, #C137A2 75%, #D4AF37 100%)' }}>
         <Link to="/" className="flex items-center gap-2">
           <img src={findooLogoWhite} alt="FindOO" className="h-8 w-8" />
           <span className="text-xl font-bold font-heading">FindOO</span>
