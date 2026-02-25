@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import {
   Heart, MessageSquare, Bookmark, Share2, FileText, Image, Video, Music,
   CheckCircle2, BarChart3, UserCheck, Building2, TrendingUp, BookOpen, Megaphone, Newspaper,
-  MoreVertical, Pencil, EyeOff, Archive, Trash2, Flag,
+  MoreVertical, Pencil, EyeOff, Trash2, Flag,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -135,9 +135,8 @@ export function PostCard({ post }: { post: FeedPost }) {
                 <DropdownMenuItem onClick={() => toast.info("Hide post coming soon")} className="gap-2 text-sm">
                   <EyeOff className="h-3.5 w-3.5" /> Hide
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.info("Archive post coming soon")} className="gap-2 text-sm">
-                  <Archive className="h-3.5 w-3.5" /> Archive
-                </DropdownMenuItem>
+
+
                 <DropdownMenuItem onClick={() => toast.info("Delete post coming soon")} className="gap-2 text-sm text-destructive focus:text-destructive">
                   <Trash2 className="h-3.5 w-3.5" /> Delete
                 </DropdownMenuItem>
