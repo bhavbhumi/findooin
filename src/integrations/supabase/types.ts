@@ -14,6 +14,136 @@ export type Database = {
   }
   public: {
     Tables: {
+      comments: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      connections: {
+        Row: {
+          connection_type: Database["public"]["Enums"]["connection_type"]
+          created_at: string
+          from_user_id: string
+          id: string
+          status: Database["public"]["Enums"]["connection_status"]
+          to_user_id: string
+        }
+        Insert: {
+          connection_type?: Database["public"]["Enums"]["connection_type"]
+          created_at?: string
+          from_user_id: string
+          id?: string
+          status?: Database["public"]["Enums"]["connection_status"]
+          to_user_id: string
+        }
+        Update: {
+          connection_type?: Database["public"]["Enums"]["connection_type"]
+          created_at?: string
+          from_user_id?: string
+          id?: string
+          status?: Database["public"]["Enums"]["connection_status"]
+          to_user_id?: string
+        }
+        Relationships: []
+      }
+      post_interactions: {
+        Row: {
+          created_at: string
+          id: string
+          interaction_type: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          interaction_type: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          interaction_type?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_interactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          attachment_name: string | null
+          attachment_type: string | null
+          attachment_url: string | null
+          author_id: string
+          content: string
+          created_at: string
+          hashtags: string[] | null
+          id: string
+          post_type: Database["public"]["Enums"]["post_type"]
+          updated_at: string
+        }
+        Insert: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          author_id: string
+          content?: string
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          post_type?: Database["public"]["Enums"]["post_type"]
+          updated_at?: string
+        }
+        Update: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          author_id?: string
+          content?: string
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          post_type?: Database["public"]["Enums"]["post_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -92,6 +222,14 @@ export type Database = {
     }
     Enums: {
       app_role: "issuer" | "intermediary" | "investor"
+      connection_status: "pending" | "accepted" | "rejected"
+      connection_type: "follow" | "connect"
+      post_type:
+        | "text"
+        | "market_commentary"
+        | "research_note"
+        | "announcement"
+        | "article"
       user_type: "individual" | "entity"
       verification_status: "unverified" | "pending" | "verified"
     }
@@ -222,6 +360,15 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["issuer", "intermediary", "investor"],
+      connection_status: ["pending", "accepted", "rejected"],
+      connection_type: ["follow", "connect"],
+      post_type: [
+        "text",
+        "market_commentary",
+        "research_note",
+        "announcement",
+        "article",
+      ],
       user_type: ["individual", "entity"],
       verification_status: ["unverified", "pending", "verified"],
     },
