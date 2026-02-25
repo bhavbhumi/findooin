@@ -76,7 +76,7 @@ export function TrendingSidebar() {
         ) : topViral && topViral.length > 0 ? (
           <div className="space-y-3">
             {topViral.map((post) => {
-              const engagement = post.like_count + post.comment_count + post.repost_count;
+              const engagement = post.like_count + post.comment_count;
               return (
                 <Link
                   key={post.id}

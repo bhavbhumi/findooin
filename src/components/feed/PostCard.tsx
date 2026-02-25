@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import {
   Heart, MessageSquare, Bookmark, Share2, FileText, Image, Video, Music,
   CheckCircle2, BarChart3, UserCheck, Building2, TrendingUp, BookOpen, Megaphone, Newspaper,
-  Repeat2, MoreVertical, Pencil, EyeOff, Archive, Trash2, Flag,
+  MoreVertical, Pencil, EyeOff, Archive, Trash2, Flag,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -66,7 +66,7 @@ export function PostCard({ post }: { post: FeedPost }) {
   const primaryRole = post.roles[0];
   const RoleIcon = primaryRole ? roleIcon[primaryRole.role] : null;
   const AttachIcon = getAttachmentIcon(post.attachment_type);
-  const { liked, bookmarked, reposted, currentUserId, toggleLike, toggleBookmark, toggleRepost } = usePostInteractions(post.id);
+  const { liked, bookmarked, currentUserId, toggleLike, toggleBookmark } = usePostInteractions(post.id);
   const isOwnPost = currentUserId === post.author.id;
   const canEdit = isOwnPost && differenceInMinutes(new Date(), new Date(post.created_at)) <= 60;
 
@@ -231,19 +231,8 @@ export function PostCard({ post }: { post: FeedPost }) {
           <span>{post.comment_count > 0 ? post.comment_count : ""}</span>
         </button>
 
-        {/* Repost */}
-        <button
-          className={cn(
-            "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors",
-            reposted
-              ? "text-primary bg-primary/10"
-              : "text-muted-foreground hover:text-primary hover:bg-primary/5"
-          )}
-          onClick={toggleRepost}
-        >
-          <Repeat2 className={`h-3.5 w-3.5 ${reposted ? "stroke-[2.5px]" : ""}`} />
-          <span>{post.repost_count > 0 ? post.repost_count : ""}</span>
-        </button>
+
+
 
         <div className="flex-1" />
 
