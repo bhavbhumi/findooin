@@ -73,6 +73,67 @@ export type Database = {
         }
         Relationships: []
       }
+      poll_options: {
+        Row: {
+          created_at: string
+          id: string
+          option_text: string
+          position: number
+          post_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_text: string
+          position?: number
+          post_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_text?: string
+          position?: number
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "poll_options_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      poll_votes: {
+        Row: {
+          created_at: string
+          id: string
+          poll_option_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          poll_option_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          poll_option_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "poll_votes_poll_option_id_fkey"
+            columns: ["poll_option_id"]
+            isOneToOne: false
+            referencedRelation: "poll_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_interactions: {
         Row: {
           created_at: string
@@ -115,8 +176,11 @@ export type Database = {
           created_at: string
           hashtags: string[] | null
           id: string
+          post_kind: Database["public"]["Enums"]["post_kind"]
           post_type: Database["public"]["Enums"]["post_type"]
+          scheduled_at: string | null
           updated_at: string
+          visibility: Database["public"]["Enums"]["post_visibility"]
         }
         Insert: {
           attachment_name?: string | null
@@ -127,8 +191,11 @@ export type Database = {
           created_at?: string
           hashtags?: string[] | null
           id?: string
+          post_kind?: Database["public"]["Enums"]["post_kind"]
           post_type?: Database["public"]["Enums"]["post_type"]
+          scheduled_at?: string | null
           updated_at?: string
+          visibility?: Database["public"]["Enums"]["post_visibility"]
         }
         Update: {
           attachment_name?: string | null
@@ -139,8 +206,11 @@ export type Database = {
           created_at?: string
           hashtags?: string[] | null
           id?: string
+          post_kind?: Database["public"]["Enums"]["post_kind"]
           post_type?: Database["public"]["Enums"]["post_type"]
+          scheduled_at?: string | null
           updated_at?: string
+          visibility?: Database["public"]["Enums"]["post_visibility"]
         }
         Relationships: []
       }
@@ -216,6 +286,109 @@ export type Database = {
         }
         Relationships: []
       }
+      survey_options: {
+        Row: {
+          id: string
+          option_text: string
+          position: number
+          question_id: string
+        }
+        Insert: {
+          id?: string
+          option_text: string
+          position?: number
+          question_id: string
+        }
+        Update: {
+          id?: string
+          option_text?: string
+          position?: number
+          question_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "survey_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "survey_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      survey_questions: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          post_id: string
+          question_text: string
+          question_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position?: number
+          post_id: string
+          question_text: string
+          question_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          post_id?: string
+          question_text?: string
+          question_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "survey_questions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      survey_responses: {
+        Row: {
+          created_at: string
+          id: string
+          option_id: string
+          question_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          option_id: string
+          question_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          option_id?: string
+          question_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "survey_responses_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "survey_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "survey_responses_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "survey_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -257,12 +430,20 @@ export type Database = {
       app_role: "issuer" | "intermediary" | "investor"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
+      post_kind: "normal" | "poll" | "survey"
       post_type:
         | "text"
         | "market_commentary"
         | "research_note"
         | "announcement"
         | "article"
+      post_visibility:
+        | "public"
+        | "network"
+        | "following"
+        | "followers"
+        | "connections"
+        | "private"
       user_type: "individual" | "entity"
       verification_status: "unverified" | "pending" | "verified"
     }
@@ -395,12 +576,21 @@ export const Constants = {
       app_role: ["issuer", "intermediary", "investor"],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
+      post_kind: ["normal", "poll", "survey"],
       post_type: [
         "text",
         "market_commentary",
         "research_note",
         "announcement",
         "article",
+      ],
+      post_visibility: [
+        "public",
+        "network",
+        "following",
+        "followers",
+        "connections",
+        "private",
       ],
       user_type: ["individual", "entity"],
       verification_status: ["unverified", "pending", "verified"],
