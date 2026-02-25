@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 import {
   Heart, MessageSquare, Bookmark, Share2, FileText, Image, Video, Music,
   CheckCircle2, BarChart3, UserCheck, Building2, TrendingUp, BookOpen, Megaphone, Newspaper,
@@ -6,6 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { FeedPost } from "@/hooks/useFeedPosts";
+import { usePostInteractions } from "@/hooks/usePostInteractions";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-accent/10 text-accent" },
@@ -45,25 +47,25 @@ export function PostCard({ post }: { post: FeedPost }) {
   const primaryRole = post.roles[0];
   const RoleIcon = primaryRole ? roleIcon[primaryRole.role] : null;
   const AttachIcon = getAttachmentIcon(post.attachment_type);
+  const { liked, bookmarked, toggleLike, toggleBookmark } = usePostInteractions(post.id);
 
   return (
     <article className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
-        {/* Avatar */}
-        <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-semibold text-muted-foreground shrink-0 overflow-hidden">
+        <Link to={`/profile/${post.author.id}`} className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-semibold text-muted-foreground shrink-0 overflow-hidden hover:ring-2 hover:ring-accent/30 transition-all">
           {post.author.avatar_url ? (
             <img src={post.author.avatar_url} alt={post.author.full_name} className="h-full w-full object-cover" />
           ) : (
             getInitials(post.author.full_name)
           )}
-        </div>
+        </Link>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="font-semibold text-card-foreground text-sm truncate">
+            <Link to={`/profile/${post.author.id}`} className="font-semibold text-card-foreground text-sm truncate hover:underline">
               {post.author.display_name || post.author.full_name}
-            </span>
+            </Link>
             {post.author.verification_status === "verified" && (
               <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
             )}
@@ -111,16 +113,26 @@ export function PostCard({ post }: { post: FeedPost }) {
 
       {/* Actions */}
       <div className="flex items-center gap-1 pt-2 border-t border-border">
-        <Button variant="ghost" size="sm" className="text-muted-foreground h-8 px-2.5 gap-1.5 text-xs">
-          <Heart className="h-3.5 w-3.5" />
-          {post.like_count > 0 && post.like_count}
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`h-8 px-2.5 gap-1.5 text-xs ${liked ? "text-destructive" : "text-muted-foreground"}`}
+          onClick={toggleLike}
+        >
+          <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
+          {(post.like_count + (liked ? 0 : 0)) > 0 && post.like_count}
         </Button>
         <Button variant="ghost" size="sm" className="text-muted-foreground h-8 px-2.5 gap-1.5 text-xs">
           <MessageSquare className="h-3.5 w-3.5" />
           {post.comment_count > 0 && post.comment_count}
         </Button>
-        <Button variant="ghost" size="sm" className="text-muted-foreground h-8 px-2.5 gap-1.5 text-xs">
-          <Bookmark className="h-3.5 w-3.5" />
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`h-8 px-2.5 gap-1.5 text-xs ${bookmarked ? "text-accent" : "text-muted-foreground"}`}
+          onClick={toggleBookmark}
+        >
+          <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? "fill-current" : ""}`} />
           {post.bookmark_count > 0 && post.bookmark_count}
         </Button>
         <div className="flex-1" />
