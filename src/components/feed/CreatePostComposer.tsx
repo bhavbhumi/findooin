@@ -16,18 +16,24 @@ import {
   TrendingUp, BookOpen, Megaphone, Newspaper, FileText,
   Paperclip, X, Image, File, Send, Loader2, AtSign, Clock,
   Plus, Trash2, BarChart3, ClipboardList, Sparkles,
-  Globe, Users, UserCheck, Heart, Lock, Hash,
+  Globe, Users, UserCheck, Heart, Lock, Hash, Search,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
-/* ── Post Categories (was post_type) ── */
+/* ── Post Categories for Issuers/Intermediaries ── */
 const POST_CATEGORIES = [
   { value: "text", label: "Insight", shortLabel: "Insight", icon: FileText },
   { value: "market_commentary", label: "Market Commentary", shortLabel: "Market", icon: TrendingUp },
   { value: "research_note", label: "Research Note", shortLabel: "Research", icon: BookOpen },
   { value: "announcement", label: "Announcement", shortLabel: "Announce", icon: Megaphone },
   { value: "article", label: "Article", shortLabel: "Article", icon: Newspaper },
+] as const;
+
+/* ── Post Categories for Investors (limited) ── */
+const INVESTOR_POST_CATEGORIES = [
+  { value: "requirement", label: "Requirement", shortLabel: "Requirement", icon: FileText },
+  { value: "expert_find", label: "Expert Find", shortLabel: "Expert", icon: UserCheck },
 ] as const;
 
 /* ── Post Kinds (Post, Poll, Survey) ── */
@@ -124,6 +130,7 @@ export function CreatePostComposer() {
 
   const [userId, setUserId] = useState<string | null>(null);
   const [canPost, setCanPost] = useState<boolean | null>(null);
+  const [isInvestorOnly, setIsInvestorOnly] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [initials, setInitials] = useState("U");
 
@@ -171,7 +178,10 @@ export function CreatePostComposer() {
       const roles = rolesRes.data;
       if (!roles || roles.length === 0) { setCanPost(false); return; }
       const roleSet = new Set(roles.map((r) => r.role));
-      setCanPost(!(roleSet.size === 1 && roleSet.has("investor")));
+      const investorOnly = roleSet.size === 1 && roleSet.has("investor");
+      setIsInvestorOnly(investorOnly);
+      setCanPost(true); // All roles can now post (investors with limited types)
+      if (investorOnly) setCategory("requirement"); // Default category for investors
 
       if (profileRes.data) {
         setAvatarUrl(profileRes.data.avatar_url);
@@ -292,6 +302,13 @@ export function CreatePostComposer() {
 
   if (canPost === null || !canPost) return null;
 
+  // Investors get limited categories; others get full set
+  const activeCategories = isInvestorOnly ? INVESTOR_POST_CATEGORIES : POST_CATEGORIES;
+  // Investors can only post normal posts (no polls/surveys)
+  const activePostKinds = isInvestorOnly
+    ? POST_KINDS.filter((k) => k.value === "normal")
+    : POST_KINDS;
+
   const hashtags = extractHashtags(content);
   const charCount = content.length;
   const overLimit = charCount > MAX_CONTENT_LENGTH;
@@ -314,16 +331,16 @@ export function CreatePostComposer() {
                     isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[90px]" : "w-[110px]"
                   )}>
                     {isMobile ? (
-                      (() => { const K = POST_KINDS.find(k => k.value === postKind); const Icon = K?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                      (() => { const K = activePostKinds.find(k => k.value === postKind); const Icon = K?.icon || FileText; return <Icon className="h-4 w-4" />; })()
                     ) : (
                       <SelectValue />
                     )}
                   </SelectTrigger>
                 </TooltipTrigger>
-                {isMobile && <TooltipContent side="bottom"><p>{POST_KINDS.find(k => k.value === postKind)?.label}</p></TooltipContent>}
+                {isMobile && <TooltipContent side="bottom"><p>{activePostKinds.find(k => k.value === postKind)?.label}</p></TooltipContent>}
               </Tooltip>
               <SelectContent className="z-50 bg-popover">
-                {POST_KINDS.map((k) => {
+                {activePostKinds.map((k) => {
                   const Icon = k.icon;
                   return (
                     <SelectItem key={k.value} value={k.value} disabled={k.disabled}>
@@ -346,20 +363,20 @@ export function CreatePostComposer() {
                     isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
                   )}>
                     {isMobile ? (
-                      (() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                      (() => { const C = activeCategories.find(c => c.value === category); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
                     ) : isTablet ? (
                       <span className="flex items-center gap-1.5 truncate">
-                        {(() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
+                        {(() => { const C = activeCategories.find(c => c.value === category); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
                       </span>
                     ) : (
                       <SelectValue />
                     )}
                   </SelectTrigger>
                 </TooltipTrigger>
-                {isMobile && <TooltipContent side="bottom"><p>{POST_CATEGORIES.find(c => c.value === category)?.label}</p></TooltipContent>}
+                {isMobile && <TooltipContent side="bottom"><p>{activeCategories.find(c => c.value === category)?.label}</p></TooltipContent>}
               </Tooltip>
               <SelectContent className="z-50 bg-popover">
-                {POST_CATEGORIES.map((t) => {
+                {activeCategories.map((t) => {
                   const Icon = t.icon;
                   return (
                     <SelectItem key={t.value} value={t.value}>

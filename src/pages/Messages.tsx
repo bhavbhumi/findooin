@@ -6,8 +6,21 @@ import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Send, MessageSquare, CheckCheck, Search } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { cn } from "@/lib/utils";
+
+const MESSAGE_CATEGORIES = [
+  { value: "general", label: "General" },
+  { value: "sales", label: "Sales" },
+  { value: "ops", label: "Ops" },
+  { value: "accounts", label: "Accounts" },
+  { value: "support", label: "Support" },
+  { value: "complaint", label: "Complaint" },
+] as const;
+
+type MessageCategory = typeof MESSAGE_CATEGORIES[number]["value"];
 
 interface Conversation {
   user_id: string;
@@ -26,6 +39,7 @@ interface Message {
   content: string;
   read: boolean;
   created_at: string;
+  category: MessageCategory;
 }
 
 const Messages = () => {
@@ -38,6 +52,7 @@ const Messages = () => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<MessageCategory>("general");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [selectedProfile, setSelectedProfile] = useState<{ full_name: string; display_name: string | null; avatar_url: string | null } | null>(null);
 
@@ -63,7 +78,6 @@ const Messages = () => {
         if (msg.sender_id === currentUserId || msg.receiver_id === currentUserId) {
           if (selectedUserId && (msg.sender_id === selectedUserId || msg.receiver_id === selectedUserId)) {
             setMessages((prev) => [...prev, msg]);
-            // Mark as read if we're the receiver
             if (msg.receiver_id === currentUserId) {
               supabase.from("messages").update({ read: true }).eq("id", msg.id).then(() => {});
             }
@@ -82,7 +96,6 @@ const Messages = () => {
 
   const loadConversations = async (uid: string) => {
     setLoading(true);
-    // Get all messages involving user
     const { data: allMsgs } = await supabase
       .from("messages")
       .select("*")
@@ -95,7 +108,6 @@ const Messages = () => {
       return;
     }
 
-    // Group by other user
     const convMap = new Map<string, { last_message: string; last_message_at: string; unread_count: number }>();
     allMsgs.forEach((m: any) => {
       const otherUser = m.sender_id === uid ? m.receiver_id : m.sender_id;
@@ -144,16 +156,14 @@ const Messages = () => {
     const conv = conversations.find((c) => c.user_id === userId);
     setSelectedProfile(conv ? { full_name: conv.full_name, display_name: conv.display_name, avatar_url: conv.avatar_url } : null);
 
-    // Load messages
     const { data } = await supabase
       .from("messages")
       .select("*")
       .or(`and(sender_id.eq.${currentUserId},receiver_id.eq.${userId}),and(sender_id.eq.${userId},receiver_id.eq.${currentUserId})`)
       .order("created_at", { ascending: true });
 
-    setMessages(data || []);
+    setMessages((data as Message[]) || []);
 
-    // Mark unread as read
     await supabase
       .from("messages")
       .update({ read: true })
@@ -171,10 +181,11 @@ const Messages = () => {
       sender_id: currentUserId,
       receiver_id: selectedUserId,
       content: newMessage.trim(),
-    });
+      category: activeCategory,
+    } as any);
     setNewMessage("");
     setSending(false);
-  }, [currentUserId, selectedUserId, newMessage, sending]);
+  }, [currentUserId, selectedUserId, newMessage, sending, activeCategory]);
 
   const getInitials = (name: string) =>
     name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
@@ -184,6 +195,18 @@ const Messages = () => {
     const q = searchQuery.toLowerCase();
     return c.full_name.toLowerCase().includes(q) || c.display_name?.toLowerCase().includes(q);
   });
+
+  // Filter messages by active category tab
+  const filteredMessages = messages.filter((msg) => (msg.category || "general") === activeCategory);
+
+  const categoryColor: Record<string, string> = {
+    general: "",
+    sales: "bg-accent/10 text-accent border-accent/20",
+    ops: "bg-primary/10 text-primary border-primary/20",
+    accounts: "bg-intermediary/10 text-intermediary border-intermediary/20",
+    support: "bg-issuer/10 text-issuer border-issuer/20",
+    complaint: "bg-destructive/10 text-destructive border-destructive/20",
+  };
 
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
@@ -274,9 +297,32 @@ const Messages = () => {
                   </div>
                 </div>
 
+                {/* Category tabs */}
+                <div className="flex items-center gap-1 px-3 py-2 border-b border-border overflow-x-auto scrollbar-hide">
+                  {MESSAGE_CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.value}
+                      onClick={() => setActiveCategory(cat.value)}
+                      className={cn(
+                        "px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition-colors border",
+                        activeCategory === cat.value
+                          ? categoryColor[cat.value] || "bg-foreground/10 text-foreground border-foreground/20"
+                          : "text-muted-foreground border-transparent hover:bg-muted/50"
+                      )}
+                    >
+                      {cat.label}
+                    </button>
+                  ))}
+                </div>
+
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                  {messages.map((msg) => {
+                  {filteredMessages.length === 0 && (
+                    <div className="flex-1 flex items-center justify-center py-12">
+                      <p className="text-xs text-muted-foreground">No messages in {MESSAGE_CATEGORIES.find(c => c.value === activeCategory)?.label}</p>
+                    </div>
+                  )}
+                  {filteredMessages.map((msg) => {
                     const isMine = msg.sender_id === currentUserId;
                     return (
                       <div key={msg.id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
@@ -300,13 +346,18 @@ const Messages = () => {
                 </div>
 
                 {/* Input */}
-                <div className="p-3 border-t border-border">
+                <div className="p-3 border-t border-border space-y-2">
+                  {activeCategory !== "general" && (
+                    <Badge variant="outline" className={cn("text-[10px]", categoryColor[activeCategory])}>
+                      {MESSAGE_CATEGORIES.find(c => c.value === activeCategory)?.label}
+                    </Badge>
+                  )}
                   <form
                     onSubmit={(e) => { e.preventDefault(); sendMessage(); }}
                     className="flex items-center gap-2"
                   >
                     <Input
-                      placeholder="Type a message..."
+                      placeholder={`Type a message${activeCategory !== "general" ? ` (${MESSAGE_CATEGORIES.find(c => c.value === activeCategory)?.label})` : ""}...`}
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       className="flex-1"

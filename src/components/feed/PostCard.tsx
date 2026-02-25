@@ -28,6 +28,8 @@ const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; c
   announcement: { label: "Announcement", icon: Megaphone, className: "bg-destructive/10 text-destructive" },
   article: { label: "Article", icon: Newspaper, className: "bg-intermediary/10 text-intermediary" },
   text: { label: "Insight", icon: FileText, className: "bg-muted text-muted-foreground" },
+  requirement: { label: "Requirement", icon: FileText, className: "bg-investor/10 text-investor" },
+  expert_find: { label: "Expert Find", icon: UserCheck, className: "bg-primary/10 text-primary" },
 };
 
 const roleIcon: Record<string, typeof BarChart3> = {

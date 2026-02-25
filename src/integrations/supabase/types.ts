@@ -75,6 +75,7 @@ export type Database = {
       }
       messages: {
         Row: {
+          category: Database["public"]["Enums"]["message_category"]
           content: string
           created_at: string
           id: string
@@ -83,6 +84,7 @@ export type Database = {
           sender_id: string
         }
         Insert: {
+          category?: Database["public"]["Enums"]["message_category"]
           content: string
           created_at?: string
           id?: string
@@ -91,6 +93,7 @@ export type Database = {
           sender_id: string
         }
         Update: {
+          category?: Database["public"]["Enums"]["message_category"]
           content?: string
           created_at?: string
           id?: string
@@ -593,6 +596,13 @@ export type Database = {
       app_role: "issuer" | "intermediary" | "investor"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
+      message_category:
+        | "general"
+        | "sales"
+        | "ops"
+        | "accounts"
+        | "support"
+        | "complaint"
       post_kind: "normal" | "poll" | "survey"
       post_type:
         | "text"
@@ -600,6 +610,8 @@ export type Database = {
         | "research_note"
         | "announcement"
         | "article"
+        | "requirement"
+        | "expert_find"
       post_visibility:
         | "public"
         | "network"
@@ -739,6 +751,14 @@ export const Constants = {
       app_role: ["issuer", "intermediary", "investor"],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
+      message_category: [
+        "general",
+        "sales",
+        "ops",
+        "accounts",
+        "support",
+        "complaint",
+      ],
       post_kind: ["normal", "poll", "survey"],
       post_type: [
         "text",
@@ -746,6 +766,8 @@ export const Constants = {
         "research_note",
         "announcement",
         "article",
+        "requirement",
+        "expert_find",
       ],
       post_visibility: [
         "public",
