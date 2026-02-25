@@ -87,9 +87,9 @@ export function PostCard({ post }: { post: FeedPost }) {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Content — strip trailing hashtag lines to avoid duplication with tag chips */}
       <p className="text-card-foreground text-sm leading-relaxed whitespace-pre-line mb-3">
-        {post.content}
+        {post.content.replace(/\n*(?:#\w+\s*)+$/g, "").trim()}
       </p>
 
       {/* Hashtags */}

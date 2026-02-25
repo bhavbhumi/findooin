@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useFeedPosts } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { TrendingSidebar } from "@/components/feed/TrendingSidebar";
+import { CreatePostComposer } from "@/components/feed/CreatePostComposer";
 import AppNavbar from "@/components/AppNavbar";
 
 const Feed = () => {
@@ -31,6 +32,8 @@ const Feed = () => {
         <div className="grid lg:grid-cols-[1fr_300px] gap-6 max-w-4xl mx-auto">
           {/* Feed column */}
           <div className="space-y-4">
+            <CreatePostComposer />
+
             {isLoading && (
               <>
                 {[1, 2, 3].map((i) => (
