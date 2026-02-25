@@ -6,12 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   CheckCircle2, ArrowLeft, UserPlus, UserCheck, Users, BarChart3, Building2, Clock,
-  Home, Search, Bell, MessageSquare, User, LogOut,
 } from "lucide-react";
-import findooLogo from "@/assets/findoo-logo-icon.png";
 import { useFeedPosts } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
+import AppNavbar from "@/components/AppNavbar";
 
 interface ProfileData {
   id: string;
@@ -79,50 +78,9 @@ const Profile = () => {
 
   const userPosts = allPosts?.filter((p) => p.author.id === profile?.id) ?? [];
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
-        <div className="container flex h-14 items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link to="/feed" className="flex items-center gap-2">
-              <img src={findooLogo} alt="FindOO" className="h-7 w-7" />
-              <span className="text-lg font-bold font-heading text-foreground hidden sm:block tracking-tight">FindOO</span>
-            </Link>
-            <div className="hidden md:flex items-center gap-1">
-              {[
-                { icon: Home, label: "Feed", href: "/feed" },
-                { icon: Search, label: "Discover", href: "/discover" },
-                { icon: MessageSquare, label: "Messages", href: "/messages" },
-                { icon: Bell, label: "Notifications", href: "/notifications" },
-              ].map((item) => (
-                <Button key={item.label} variant="ghost" size="sm" className="text-muted-foreground" asChild>
-                  <Link to={item.href}>
-                    <item.icon className="h-4 w-4 mr-1.5" />
-                    {item.label}
-                  </Link>
-                </Button>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/profile">
-                <User className="h-4 w-4 mr-1.5" />
-                Profile
-              </Link>
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
+      <AppNavbar />
 
       <div className="container py-6 max-w-3xl mx-auto">
         {!isOwnProfile && (
