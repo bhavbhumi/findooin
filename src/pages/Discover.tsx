@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,12 +48,13 @@ function getInitials(name: string) {
 /* ── Discover Page ── */
 const Discover = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [users, setUsers] = useState<DiscoverUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(true);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("q") || "");
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"people" | "posts">("people");
+  const [activeTab, setActiveTab] = useState<"people" | "posts">((searchParams.get("tab") as "people" | "posts") || "people");
 
   const { data: allPosts = [], isLoading: loadingPosts } = useFeedPosts();
 

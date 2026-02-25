@@ -29,6 +29,7 @@ const Network = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("connections");
 
   const [myConnections, setMyConnections] = useState<NetworkUser[]>([]);
   const [myFollowing, setMyFollowing] = useState<NetworkUser[]>([]);
@@ -185,7 +186,7 @@ const Network = () => {
             ))}
           </div>
         ) : (
-          <Tabs defaultValue="connections">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1 mb-4 overflow-x-auto">
               <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
                 Connections ({myConnections.length})
@@ -312,6 +313,7 @@ const Network = () => {
               suggestions={suggestions}
               allUsers={[...myConnections, ...myFollowing, ...myFollowers, ...suggestions]}
               getInitials={getInitials}
+              onStatClick={(tab) => setActiveTab(tab)}
             />
           </aside>
         </div>

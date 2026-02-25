@@ -2,14 +2,21 @@ import { TrendingUp, Flame } from "lucide-react";
 import { useTrendingHashtags } from "@/hooks/useTrendingHashtags";
 import { useViralPosts } from "@/hooks/useViralPosts";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 
 export function TrendingSidebar() {
+  const navigate = useNavigate();
   const { data: hashtags, isLoading: hashtagsLoading } = useTrendingHashtags(7);
   const { data: viralPosts, isLoading: viralLoading } = useViralPosts();
 
   const topViral = viralPosts?.slice(0, 3);
+
+  const handleHashtagClick = (tag: string) => {
+    // Navigate to discover with hashtag pre-filled
+    const cleanTag = tag.replace(/^#/, "");
+    navigate(`/discover?q=${encodeURIComponent(`#${cleanTag}`)}&tab=posts`);
+  };
 
   return (
     <div className="space-y-4">
@@ -32,13 +39,17 @@ export function TrendingSidebar() {
         ) : hashtags && hashtags.length > 0 ? (
           <div className="space-y-3">
             {hashtags.map((topic, idx) => (
-              <div key={topic.tag} className="flex items-center justify-between group cursor-pointer">
+              <button
+                key={topic.tag}
+                onClick={() => handleHashtagClick(topic.tag)}
+                className="flex items-center justify-between group w-full text-left"
+              >
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-medium text-muted-foreground w-4">{idx + 1}</span>
                   <span className="text-sm font-medium text-accent group-hover:underline">{topic.tag}</span>
                 </div>
                 <span className="text-xs text-muted-foreground">{topic.count} {topic.count === 1 ? "post" : "posts"}</span>
-              </div>
+              </button>
             ))}
           </div>
         ) : (
@@ -67,7 +78,11 @@ export function TrendingSidebar() {
             {topViral.map((post) => {
               const engagement = post.like_count + post.comment_count + post.repost_count;
               return (
-                <div key={post.id} className="group cursor-pointer">
+                <Link
+                  key={post.id}
+                  to={`/profile/${post.author.id}`}
+                  className="block group"
+                >
                   <p className="text-xs text-card-foreground line-clamp-2 group-hover:text-accent transition-colors">
                     {post.content.slice(0, 100)}{post.content.length > 100 ? "…" : ""}
                   </p>
@@ -78,7 +93,7 @@ export function TrendingSidebar() {
                     <span>·</span>
                     <span>{formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}</span>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
