@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, BarChart3, Settings } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, BarChart3, Settings, Building2, UserCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +14,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const ROLE_CONFIG: Record<AppRole, { label: string; icon: typeof BarChart3; color: string; bgColor: string }> = {
+  investor: { label: "Investor", icon: BarChart3, color: "text-investor", bgColor: "bg-investor/10 border-investor/20" },
+  intermediary: { label: "Intermediary", icon: UserCheck, color: "text-intermediary", bgColor: "bg-intermediary/10 border-intermediary/20" },
+  issuer: { label: "Issuer", icon: Building2, color: "text-issuer", bgColor: "bg-issuer/10 border-issuer/20" },
+};
+
 const AppNavbar = () => {
   const navigate = useNavigate();
+  const { availableRoles, activeRole, setActiveRole, loaded } = useRole();
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
@@ -90,6 +99,47 @@ const AppNavbar = () => {
             </div>
           </div>
 
+          {/* Role Switcher */}
+          {loaded && availableRoles.length > 1 && (
+            <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-lg border border-border bg-muted/30">
+              {availableRoles.map((role) => {
+                const config = ROLE_CONFIG[role];
+                const Icon = config.icon;
+                const isActive = activeRole === role;
+                return (
+                  <button
+                    key={role}
+                    onClick={() => setActiveRole(role)}
+                    className={cn(
+                      "inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all",
+                      isActive
+                        ? `${config.bgColor} ${config.color} border shadow-sm`
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent"
+                    )}
+                    title={`Switch to ${config.label} view`}
+                  >
+                    <Icon className="h-3 w-3" />
+                    {config.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+          {loaded && availableRoles.length === 1 && (
+            <div className="hidden md:flex items-center">
+              {(() => {
+                const config = ROLE_CONFIG[activeRole];
+                const Icon = config.icon;
+                return (
+                  <span className={cn("inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border", config.bgColor, config.color)}>
+                    <Icon className="h-3 w-3" />
+                    {config.label}
+                  </span>
+                );
+              })()}
+            </div>
+          )}
+
           {/* Right: Discover search + Icons + Profile dropdown */}
           <div className="flex items-center gap-2">
             {/* Discover search box */}
@@ -146,6 +196,37 @@ const AppNavbar = () => {
                     Settings
                   </Link>
                 </DropdownMenuItem>
+                {/* Role switcher in dropdown for mobile */}
+                {availableRoles.length > 1 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <div className="px-2 py-1.5">
+                      <p className="text-[10px] font-medium text-muted-foreground mb-1.5">Active Role</p>
+                      <div className="flex flex-col gap-1">
+                        {availableRoles.map((role) => {
+                          const config = ROLE_CONFIG[role];
+                          const Icon = config.icon;
+                          const isActive = activeRole === role;
+                          return (
+                            <button
+                              key={role}
+                              onClick={() => setActiveRole(role)}
+                              className={cn(
+                                "inline-flex items-center gap-1.5 px-2 py-1.5 rounded-md text-xs font-medium transition-all w-full text-left",
+                                isActive
+                                  ? `${config.bgColor} ${config.color} border`
+                                  : "text-muted-foreground hover:bg-muted/50 border border-transparent"
+                              )}
+                            >
+                              <Icon className="h-3.5 w-3.5" />
+                              {config.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleSignOut}

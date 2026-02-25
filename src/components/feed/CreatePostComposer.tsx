@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useRole } from "@/contexts/RoleContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -118,6 +119,7 @@ function getPlaceholder(postKind: string): string {
 
 export function CreatePostComposer() {
   const isMobile = useIsMobile();
+  const { activeRole, loaded: roleLoaded, userId: roleUserId } = useRole();
   const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
@@ -130,7 +132,6 @@ export function CreatePostComposer() {
 
   const [userId, setUserId] = useState<string | null>(null);
   const [canPost, setCanPost] = useState<boolean | null>(null);
-  const [isInvestorOnly, setIsInvestorOnly] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [initials, setInitials] = useState("U");
 
@@ -166,31 +167,38 @@ export function CreatePostComposer() {
 
   const queryClient = useQueryClient();
 
+  // Derive investor mode from active role context
+  const isInvestorMode = activeRole === "investor";
+
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) return;
       setUserId(session.user.id);
+      setCanPost(true);
 
-      const [rolesRes, profileRes] = await Promise.all([
-        supabase.from("user_roles").select("role").eq("user_id", session.user.id),
-        supabase.from("profiles").select("avatar_url, full_name, display_name").eq("id", session.user.id).single(),
-      ]);
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("avatar_url, full_name, display_name")
+        .eq("id", session.user.id)
+        .single();
 
-      const roles = rolesRes.data;
-      if (!roles || roles.length === 0) { setCanPost(false); return; }
-      const roleSet = new Set(roles.map((r) => r.role));
-      const investorOnly = roleSet.size === 1 && roleSet.has("investor");
-      setIsInvestorOnly(investorOnly);
-      setCanPost(true); // All roles can now post (investors with limited types)
-      if (investorOnly) setCategory("query"); // Investors always post as 'query' type
-
-      if (profileRes.data) {
-        setAvatarUrl(profileRes.data.avatar_url);
-        const name = profileRes.data.display_name || profileRes.data.full_name || "U";
+      if (profileData) {
+        setAvatarUrl(profileData.avatar_url);
+        const name = profileData.display_name || profileData.full_name || "U";
         setInitials(name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase());
       }
     });
   }, []);
+
+  // Reset post kind when switching to investor mode (no polls/surveys)
+  useEffect(() => {
+    if (isInvestorMode) {
+      setPostKind("normal");
+      setCategory("query");
+    } else {
+      if (category === "query") setCategory("text");
+    }
+  }, [isInvestorMode]);
 
   // Mention search
   useEffect(() => {
@@ -245,7 +253,7 @@ export function CreatePostComposer() {
         scheduledAt = dt.toISOString();
       }
 
-      const postType = isInvestorOnly ? "query" : category;
+      const postType = isInvestorMode ? "query" : category;
       const { data: postData, error } = await supabase.from("posts").insert({
         author_id: userId,
         content: content.trim(),
@@ -257,7 +265,7 @@ export function CreatePostComposer() {
         attachment_type: attachment ? attachment.type : null,
         attachment_url: attachment ? `attachment://${attachment.name}` : null,
         scheduled_at: scheduledAt,
-        query_category: isInvestorOnly ? queryCategory as any : null,
+        query_category: isInvestorMode ? queryCategory as any : null,
       }).select("id").single();
 
       if (error) throw error;
@@ -306,7 +314,7 @@ export function CreatePostComposer() {
   if (canPost === null || !canPost) return null;
 
   // Investors can only post normal posts (no polls/surveys)
-  const activePostKinds = isInvestorOnly
+  const activePostKinds = isInvestorMode
     ? POST_KINDS.filter((k) => k.value === "normal")
     : POST_KINDS;
 
@@ -356,7 +364,7 @@ export function CreatePostComposer() {
             </Select>
 
             {/* Category (Issuers/Intermediaries) or Query Category (Investors) */}
-            {isInvestorOnly ? (
+            {isInvestorMode ? (
               <Select value={queryCategory} onValueChange={setQueryCategory}>
                 <Tooltip>
                   <TooltipTrigger asChild>
