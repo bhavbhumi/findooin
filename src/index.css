@@ -26,8 +26,8 @@
     --muted: 220 15% 93%;
     --muted-foreground: 220 10% 45%;
 
-    /* Green — Verified, Growth */
-    --accent: 152 55% 42%;
+    /* Midnight Blue — Brand Identity */
+    --accent: 240 100% 27%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
@@ -44,18 +44,18 @@
     --issuer-foreground: 0 0% 100%;
     --intermediary: 262 50% 55%;
     --intermediary-foreground: 0 0% 100%;
-    --investor: 152 55% 42%;
+    --investor: 240 100% 35%;
     --investor-foreground: 0 0% 100%;
 
     /* Sidebar */
     --sidebar-background: 224 55% 12%;
     --sidebar-foreground: 220 20% 90%;
-    --sidebar-primary: 152 55% 50%;
-    --sidebar-primary-foreground: 224 55% 12%;
+    --sidebar-primary: 240 100% 35%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 224 40% 20%;
     --sidebar-accent-foreground: 220 20% 90%;
     --sidebar-border: 224 40% 22%;
-    --sidebar-ring: 152 55% 50%;
+    --sidebar-ring: 240 100% 35%;
 
     /* Fonts */
     --font-heading: 'Montserrat', sans-serif;
@@ -81,8 +81,8 @@
     --muted: 224 35% 18%;
     --muted-foreground: 220 15% 60%;
 
-    --accent: 152 55% 45%;
-    --accent-foreground: 224 50% 6%;
+    --accent: 240 80% 45%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 40%;
     --destructive-foreground: 0 0% 100%;
@@ -95,17 +95,17 @@
     --issuer-foreground: 0 0% 100%;
     --intermediary: 262 50% 60%;
     --intermediary-foreground: 0 0% 100%;
-    --investor: 152 55% 50%;
+    --investor: 240 80% 50%;
     --investor-foreground: 0 0% 100%;
 
     --sidebar-background: 224 50% 6%;
     --sidebar-foreground: 220 20% 90%;
-    --sidebar-primary: 152 55% 50%;
-    --sidebar-primary-foreground: 224 50% 6%;
+    --sidebar-primary: 240 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 224 40% 14%;
     --sidebar-accent-foreground: 220 20% 90%;
     --sidebar-border: 224 40% 14%;
-    --sidebar-ring: 152 55% 50%;
+    --sidebar-ring: 240 80% 50%;
   }
 }
 
