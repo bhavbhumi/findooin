@@ -26,6 +26,7 @@ interface ProfileHeaderProps {
   connect: () => void;
   connLoading: boolean;
   onEditProfile?: () => void;
+  onNavigateToNetwork?: () => void;
 }
 
 export interface ProfileData {
@@ -85,7 +86,7 @@ function getInitials(name: string) {
 }
 
 export const ProfileHeader = ({
-  profile, roles, stats, isOwnProfile, connectionStatus, follow, connect, connLoading, onEditProfile,
+  profile, roles, stats, isOwnProfile, connectionStatus, follow, connect, connLoading, onEditProfile, onNavigateToNetwork,
 }: ProfileHeaderProps) => {
   const primaryRole = roles[0]?.role;
   const bannerGradient = primaryRole ? roleBannerGradient[primaryRole] : "from-primary/15 via-primary/8 to-transparent";
@@ -125,11 +126,6 @@ export const ProfileHeader = ({
             backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
             backgroundSize: "24px 24px",
           }} />
-          {profile.verification_status === "verified" && (
-            <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-accent/90 text-accent-foreground px-2.5 py-1 rounded-full text-xs font-semibold shadow-md">
-              <ShieldCheck className="h-3.5 w-3.5" /> Verified
-            </div>
-          )}
           {profile.verification_status === "pending" && (
             <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-muted/90 text-muted-foreground px-2.5 py-1 rounded-full text-xs font-medium shadow-md">
               <Clock className="h-3.5 w-3.5" /> Pending Verification
@@ -150,23 +146,23 @@ export const ProfileHeader = ({
 
             {/* Name + Info + Actions stacked */}
             <div className="flex-1 min-w-0">
+              {/* Verified badge above name */}
+              {profile.verification_status === "verified" && (
+                <div className="flex items-center gap-1 mb-1">
+                  <ShieldCheck className="h-3.5 w-3.5 text-accent" />
+                  <span className="text-xs font-semibold text-accent">Verified</span>
+                </div>
+              )}
               {/* Name */}
               <div className="flex items-start gap-2">
                 <h1 className="text-xl sm:text-2xl font-bold font-heading text-card-foreground leading-tight break-words">
                   {profile.display_name || profile.full_name}
                 </h1>
-                {profile.verification_status === "verified" && (
-                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-1" />
-                )}
               </div>
               {profile.display_name && profile.display_name !== profile.full_name && (
                 <p className="text-sm text-muted-foreground">{profile.full_name}</p>
               )}
-              {/* Headline */}
-              {profile.headline && (
-                <p className="text-sm text-card-foreground/80 mt-0.5 leading-snug line-clamp-2">{profile.headline}</p>
-              )}
-              {/* Designation + Organization + Location */}
+              {/* Designation + Organization */}
               <div className="flex items-center gap-3 flex-wrap mt-1 text-xs text-muted-foreground">
                 {profile.designation && (
                   <span className="flex items-center gap-1">
@@ -176,11 +172,6 @@ export const ProfileHeader = ({
                 {profile.organization && (
                   <span className="flex items-center gap-1">
                     <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
-                  </span>
-                )}
-                {profile.location && (
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
                   </span>
                 )}
               </div>
@@ -248,8 +239,8 @@ export const ProfileHeader = ({
             </div>
           </div>
 
-          {/* Role Badges Row */}
-          <div className="flex items-center gap-2 flex-wrap mt-3 pb-4">
+          {/* Role Badges + Joined date */}
+          <div className="flex items-center gap-2 flex-wrap mt-3">
             <Badge variant="outline" className="text-xs capitalize gap-1">
               <Briefcase className="h-3 w-3" />
               {profile.user_type}
@@ -268,28 +259,46 @@ export const ProfileHeader = ({
               Joined {format(new Date(profile.created_at), "MMM yyyy")}
             </span>
           </div>
-        </div>
 
-        {/* Bio snippet */}
-        {profile.bio && (
-          <div className="px-5 sm:px-6 pb-4">
-            <p className="text-sm text-card-foreground leading-relaxed line-clamp-3">{profile.bio}</p>
-          </div>
-        )}
+          {/* Headline */}
+          {profile.headline && (
+            <p className="text-sm text-card-foreground/80 mt-3 leading-snug">{profile.headline}</p>
+          )}
 
-        {/* Stats Bar */}
-        <div className="border-t border-border grid grid-cols-4 divide-x divide-border">
-          {[
-            { label: "Posts", value: stats.posts },
-            { label: "Followers", value: stats.followers },
-            { label: "Following", value: stats.following },
-            { label: "Connections", value: stats.connections },
-          ].map((stat) => (
-            <button key={stat.label} className="py-3 text-center hover:bg-muted/50 transition-colors">
-              <p className="text-lg sm:text-xl font-bold font-heading text-card-foreground leading-none">{stat.value}</p>
-              <p className="text-[11px] text-muted-foreground mt-1">{stat.label}</p>
+          {/* Bio */}
+          {profile.bio && (
+            <p className="text-sm text-muted-foreground mt-2 leading-relaxed line-clamp-3">{profile.bio}</p>
+          )}
+
+          {/* Location + Followers/Following/Connections inline */}
+          <div className="flex items-center gap-3 flex-wrap mt-3 pb-4 text-xs text-muted-foreground">
+            {profile.location && (
+              <span className="flex items-center gap-1">
+                <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
+              </span>
+            )}
+            {profile.location && <span className="text-border">·</span>}
+            <button
+              onClick={onNavigateToNetwork}
+              className="hover:text-foreground transition-colors"
+            >
+              <span className="font-semibold text-card-foreground">{stats.followers}</span> Followers
             </button>
-          ))}
+            <span className="text-border">·</span>
+            <button
+              onClick={onNavigateToNetwork}
+              className="hover:text-foreground transition-colors"
+            >
+              <span className="font-semibold text-card-foreground">{stats.following}</span> Following
+            </button>
+            <span className="text-border">·</span>
+            <button
+              onClick={onNavigateToNetwork}
+              className="hover:text-foreground transition-colors"
+            >
+              <span className="font-semibold text-card-foreground">{stats.connections}</span> Connections
+            </button>
+          </div>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 import {
@@ -24,7 +24,7 @@ const AppNavbar = () => {
       {/* Top nav */}
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
         <div className="container flex h-14 items-center justify-between gap-4">
-          {/* Left: Logo + Feed */}
+          {/* Left: Logo + Feed + Network */}
           <div className="flex items-center gap-4">
             <Link to="/feed" className="flex items-center gap-2">
               <img src={findooLogo} alt="FindOO" className="h-8 w-8" />
@@ -32,11 +32,17 @@ const AppNavbar = () => {
                 FindOO
               </span>
             </Link>
-            <div className="hidden md:flex items-center">
+            <div className="hidden md:flex items-center gap-1">
               <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
                 <Link to="/feed">
                   <Home className="h-4 w-4 mr-1.5" />
                   Feed
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+                <Link to="/network">
+                  <Users className="h-4 w-4 mr-1.5" />
+                  Network
                 </Link>
               </Button>
             </div>
@@ -100,8 +106,8 @@ const AppNavbar = () => {
         <div className="flex items-center justify-around py-2">
           {[
             { icon: Home, label: "Feed", href: "/feed" },
+            { icon: Users, label: "Network", href: "/network" },
             { icon: Search, label: "Discover", href: "/discover" },
-            { icon: MessageSquare, label: "Messages", href: "/messages" },
             { icon: Bell, label: "Alerts", href: "/notifications" },
             { icon: User, label: "Profile", href: "/profile" },
           ].map((item) => (
