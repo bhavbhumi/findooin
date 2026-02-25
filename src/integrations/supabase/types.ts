@@ -73,6 +73,33 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read: boolean
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           actor_id: string | null
@@ -325,6 +352,47 @@ export type Database = {
         }
         Relationships: []
       }
+      reports: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          post_id: string | null
+          reason: string
+          reported_user_id: string | null
+          reporter_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          post_id?: string | null
+          reason: string
+          reported_user_id?: string | null
+          reporter_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          post_id?: string | null
+          reason?: string
+          reported_user_id?: string | null
+          reporter_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       survey_options: {
         Row: {
           id: string
@@ -448,6 +516,51 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           sub_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          email_notifications: boolean
+          id: string
+          notify_comments: boolean
+          notify_connections: boolean
+          notify_follows: boolean
+          notify_likes: boolean
+          notify_messages: boolean
+          profile_visibility: string
+          show_email: boolean
+          show_phone: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          email_notifications?: boolean
+          id?: string
+          notify_comments?: boolean
+          notify_connections?: boolean
+          notify_follows?: boolean
+          notify_likes?: boolean
+          notify_messages?: boolean
+          profile_visibility?: string
+          show_email?: boolean
+          show_phone?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          email_notifications?: boolean
+          id?: string
+          notify_comments?: boolean
+          notify_connections?: boolean
+          notify_follows?: boolean
+          notify_likes?: boolean
+          notify_messages?: boolean
+          profile_visibility?: string
+          show_email?: boolean
+          show_phone?: boolean
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

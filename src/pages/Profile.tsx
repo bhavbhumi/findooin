@@ -4,8 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, BarChart3 } from "lucide-react";
-import { useFeedPosts } from "@/hooks/useFeedPosts";
+import { ArrowLeft, Edit3, BarChart3, Bookmark } from "lucide-react";
+import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
 import AppNavbar from "@/components/AppNavbar";
@@ -149,6 +149,11 @@ const Profile = () => {
               <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
                 Posts
               </TabsTrigger>
+              {isOwnProfile && (
+                <TabsTrigger value="bookmarks" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
+                  Bookmarks
+                </TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="about" className="mt-0">
@@ -190,6 +195,12 @@ const Profile = () => {
                 userPosts.map((post) => <PostCard key={post.id} post={post} />)
               )}
             </TabsContent>
+
+            {isOwnProfile && (
+              <TabsContent value="bookmarks" className="space-y-4 mt-0">
+                <BookmarkedPosts allPosts={allPosts} currentUserId={currentUserId} />
+              </TabsContent>
+            )}
           </Tabs>
 
           {/* Edit Profile Dialog */}
@@ -212,5 +223,44 @@ const Profile = () => {
     </div>
   );
 };
+
+// Bookmarked posts sub-component
+function BookmarkedPosts({ allPosts, currentUserId }: { allPosts: FeedPost[] | undefined; currentUserId: string | null }) {
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!currentUserId) return;
+    supabase
+      .from("post_interactions")
+      .select("post_id")
+      .eq("user_id", currentUserId)
+      .eq("interaction_type", "bookmark")
+      .then(({ data }) => {
+        setBookmarkedIds(new Set(data?.map((d: any) => d.post_id) || []));
+        setLoading(false);
+      });
+  }, [currentUserId]);
+
+  if (loading) {
+    return <div className="rounded-xl border border-border bg-card p-10 text-center"><p className="text-muted-foreground text-sm">Loading...</p></div>;
+  }
+
+  const bookmarkedPosts = allPosts?.filter((p) => bookmarkedIds.has(p.id)) || [];
+
+  if (bookmarkedPosts.length === 0) {
+    return (
+      <div className="rounded-xl border border-border bg-card p-10 text-center">
+        <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+          <Bookmark className="h-5 w-5 text-muted-foreground" />
+        </div>
+        <p className="text-muted-foreground text-sm font-medium">No bookmarks yet</p>
+        <p className="text-muted-foreground text-xs mt-1">Posts you bookmark will appear here for easy access.</p>
+      </div>
+    );
+  }
+
+  return <>{bookmarkedPosts.map((post) => <PostCard key={post.id} post={post} />)}</>;
+}
 
 export default Profile;

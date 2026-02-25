@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import {
@@ -17,6 +18,7 @@ import type { FeedPost } from "@/hooks/useFeedPosts";
 import { usePostInteractions } from "@/hooks/usePostInteractions";
 import { toast } from "sonner";
 import { differenceInMinutes } from "date-fns";
+import { ReportDialog } from "@/components/feed/ReportDialog";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-accent/10 text-accent" },
@@ -55,6 +57,7 @@ function getInitials(name: string) {
 }
 
 export function PostCard({ post }: { post: FeedPost }) {
+  const [reportOpen, setReportOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
   const primaryRole = post.roles[0];
@@ -142,7 +145,7 @@ export function PostCard({ post }: { post: FeedPost }) {
                   <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? "fill-current text-accent" : ""}`} />
                   {bookmarked ? "Remove Bookmark" : "Bookmark"}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toast.info("Report post coming soon")} className="gap-2 text-sm text-destructive focus:text-destructive">
+                <DropdownMenuItem onClick={() => setReportOpen(true)} className="gap-2 text-sm text-destructive focus:text-destructive">
                   <Flag className="h-3.5 w-3.5" /> Report
                 </DropdownMenuItem>
               </>
@@ -235,6 +238,9 @@ export function PostCard({ post }: { post: FeedPost }) {
           <Share2 className="h-3.5 w-3.5" />
         </Button>
       </div>
+
+      {/* Report Dialog */}
+      <ReportDialog open={reportOpen} onOpenChange={setReportOpen} postId={post.id} postAuthorId={post.author.id} />
     </article>
   );
 }
