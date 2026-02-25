@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Shield, ArrowLeft, Loader2 } from "lucide-react";
+import findooLogo from "@/assets/findoo-logo-icon.png";
+import findooLogoWhite from "@/assets/findoo-logo-white.png";
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -70,10 +72,8 @@ const Auth = () => {
       {/* Left — branding */}
       <div className="hidden lg:flex lg:w-1/2 bg-primary text-primary-foreground flex-col justify-between p-12">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-foreground/20">
-            <span className="text-sm font-bold font-heading">F</span>
-          </div>
-          <span className="text-xl font-bold font-heading">FinNet</span>
+          <img src={findooLogoWhite} alt="FindOO" className="h-8 w-8" />
+          <span className="text-xl font-bold font-heading">FindOO</span>
         </Link>
         <div>
           <h2 className="text-3xl font-bold font-heading mb-4">
@@ -106,7 +106,7 @@ const Auth = () => {
             <p className="text-muted-foreground mt-1">
               {isSignUp
                 ? "Join India's regulated financial network"
-                : "Sign in to continue to FinNet"
+                : "Sign in to continue to FindOO"
               }
             </p>
           </div>
