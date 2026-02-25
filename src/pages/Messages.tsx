@@ -211,10 +211,10 @@ const Messages = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
+    <div className="h-screen flex flex-col bg-background">
       <AppNavbar />
-      <div className="container max-w-4xl mx-auto pt-4 px-4">
-        <div className="flex rounded-xl border border-border bg-card overflow-hidden" style={{ height: "calc(100vh - 120px)" }}>
+      <div className="flex-1 min-h-0 container max-w-4xl mx-auto pt-4 px-4 pb-16 md:pb-4">
+        <div className="flex rounded-xl border border-border bg-card overflow-hidden h-full">
           {/* Conversation list */}
           <div className={`w-full md:w-80 border-r border-border flex flex-col shrink-0 ${selectedUserId ? "hidden md:flex" : "flex"}`}>
             <div className="p-3 border-b border-border">
