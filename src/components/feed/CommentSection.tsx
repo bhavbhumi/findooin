@@ -27,7 +27,9 @@ export function CommentSection({ postId }: { postId: string }) {
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const queryClient = useQueryClient();
+  const MAX_VISIBLE = 5;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -45,7 +47,7 @@ export function CommentSection({ postId }: { postId: string }) {
       .from("comments")
       .select("*")
       .eq("post_id", postId)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (!commentsData || commentsData.length === 0) {
       setComments([]);
@@ -128,7 +130,7 @@ export function CommentSection({ postId }: { postId: string }) {
         <div className="text-xs text-muted-foreground text-center py-2">No comments yet. Be the first!</div>
       ) : (
         <div className="space-y-2.5 max-h-60 overflow-y-auto">
-          {comments.map((comment) => (
+          {(showAll ? comments : comments.slice(0, MAX_VISIBLE)).map((comment) => (
             <div key={comment.id} className="flex items-start gap-2">
               <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground shrink-0 overflow-hidden">
                 {comment.author.avatar_url ? (
@@ -150,6 +152,14 @@ export function CommentSection({ postId }: { postId: string }) {
               </div>
             </div>
           ))}
+          {!showAll && comments.length > MAX_VISIBLE && (
+            <button
+              onClick={() => setShowAll(true)}
+              className="text-xs text-accent hover:underline w-full text-center py-1"
+            >
+              View all {comments.length} comments
+            </button>
+          )}
         </div>
       )}
     </div>
