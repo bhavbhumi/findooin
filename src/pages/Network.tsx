@@ -236,7 +236,7 @@ const Network = () => {
                       <p className="text-[10px] text-muted-foreground mt-0.5">Wants to connect</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="default" className="gap-1" onClick={() => handleAccept(req.id)}>
+                      <Button size="sm" variant="default" className="gap-1 bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => handleAccept(req.id)}>
                         <UserCheck className="h-3.5 w-3.5" /> Accept
                       </Button>
                       <Button size="sm" variant="outline" className="gap-1" onClick={() => handleReject(req.id)}>
