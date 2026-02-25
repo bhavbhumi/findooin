@@ -120,9 +120,9 @@ export function PostCard({ post }: { post: FeedPost }) {
         {/* Post menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-card-foreground shrink-0">
+            <button className="inline-flex items-center justify-center h-8 w-8 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors shrink-0">
               <MoreVertical className="h-4 w-4" />
-            </Button>
+            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="z-50 bg-popover border border-border shadow-lg">
             {isOwnPost ? (
