@@ -138,8 +138,8 @@ const Network = () => {
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       <AppNavbar />
-      <div className="container max-w-5xl mx-auto pt-4">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+      <div className="container py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 max-w-4xl mx-auto">
           {/* Main Column */}
           <div>
         <h1 className="text-2xl font-bold font-heading text-foreground mb-1">Network</h1>
@@ -187,21 +187,21 @@ const Network = () => {
         ) : (
           <Tabs defaultValue="connections">
             <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1 mb-4 overflow-x-auto">
-              <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium sm:px-4">
+              <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
                 Connections ({myConnections.length})
               </TabsTrigger>
-              <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium sm:px-4">
+              <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
                 Followers ({myFollowers.length})
               </TabsTrigger>
-              <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium sm:px-4">
+              <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
                 Following ({myFollowing.length})
               </TabsTrigger>
               {totalPending > 0 && (
-                <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium sm:px-4">
+                <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
                   Pending ({totalPending})
                 </TabsTrigger>
               )}
-              <TabsTrigger value="suggestions" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium sm:px-4">
+              <TabsTrigger value="suggestions" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
                 <Sparkles className="h-3.5 w-3.5 mr-1" /> Discover
               </TabsTrigger>
             </TabsList>
