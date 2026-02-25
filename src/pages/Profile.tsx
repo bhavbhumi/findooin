@@ -11,6 +11,7 @@ import { useConnectionActions } from "@/hooks/useConnectionActions";
 import AppNavbar from "@/components/AppNavbar";
 import { ProfileHeader, type ProfileData, type RoleData, type ProfileStats } from "@/components/profile/ProfileHeader";
 import { ProfileAbout } from "@/components/profile/ProfileAbout";
+import { ProfileNetwork } from "@/components/profile/ProfileNetwork";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
 
 const Profile = () => {
@@ -22,6 +23,7 @@ const Profile = () => {
   const [stats, setStats] = useState<ProfileStats>({ followers: 0, following: 0, connections: 0, posts: 0 });
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("about");
   const { data: allPosts } = useFeedPosts();
   const { connectionStatus, follow, connect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
 
@@ -129,20 +131,48 @@ const Profile = () => {
             connect={connect}
             connLoading={connLoading}
             onEditProfile={() => setEditOpen(true)}
+            onNavigateToNetwork={() => setActiveTab("network")}
           />
 
-          <Tabs defaultValue="posts" className="w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1 mb-4">
-              <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
-                Posts
-              </TabsTrigger>
               <TabsTrigger value="about" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
                 About
+              </TabsTrigger>
+              <TabsTrigger value="network" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
+                Network
               </TabsTrigger>
               <TabsTrigger value="activity" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
                 Activity
               </TabsTrigger>
+              <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
+                Posts
+              </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="about" className="mt-0">
+              <ProfileAbout profile={profile} roles={roles} isOwnProfile={isOwnProfile} />
+            </TabsContent>
+
+            <TabsContent value="network" className="mt-0">
+              <ProfileNetwork
+                profileId={profile.id}
+                isOwnProfile={isOwnProfile}
+                currentUserId={currentUserId}
+              />
+            </TabsContent>
+
+            <TabsContent value="activity" className="mt-0">
+              <div className="rounded-xl border border-border bg-card p-10 text-center">
+                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                  <BarChart3 className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground text-sm font-medium">Activity insights coming soon</p>
+                <p className="text-muted-foreground text-xs mt-1">
+                  Track engagement metrics, post frequency, and network growth over time.
+                </p>
+              </div>
+            </TabsContent>
 
             <TabsContent value="posts" className="space-y-4 mt-0">
               {userPosts.length === 0 ? (
@@ -158,22 +188,6 @@ const Profile = () => {
               ) : (
                 userPosts.map((post) => <PostCard key={post.id} post={post} />)
               )}
-            </TabsContent>
-
-            <TabsContent value="about" className="mt-0">
-              <ProfileAbout profile={profile} roles={roles} isOwnProfile={isOwnProfile} />
-            </TabsContent>
-
-            <TabsContent value="activity" className="mt-0">
-              <div className="rounded-xl border border-border bg-card p-10 text-center">
-                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-                  <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                </div>
-                <p className="text-muted-foreground text-sm font-medium">Activity insights coming soon</p>
-                <p className="text-muted-foreground text-xs mt-1">
-                  Track engagement metrics, post frequency, and network growth over time.
-                </p>
-              </div>
             </TabsContent>
           </Tabs>
 
