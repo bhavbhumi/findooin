@@ -63,6 +63,8 @@ export default {
           DEFAULT: "hsl(var(--investor))",
           foreground: "hsl(var(--investor-foreground))",
         },
+        "brand-blue": "hsl(var(--brand-blue))",
+        "brand-magenta": "hsl(var(--brand-magenta))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
