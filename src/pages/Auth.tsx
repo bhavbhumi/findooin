@@ -49,33 +49,63 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const submitWithRetry = async <T,>(
+    action: () => Promise<{ error: { message?: string } | null; data?: T }>,
+    maxAttempts = 3,
+  ) => {
+    let lastError: any = null;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      const result = await action();
+      if (!result.error) return result;
+
+      lastError = result.error;
+      const isRetryableNetworkError =
+        /load failed|failed to fetch|network/i.test(result.error.message ?? "") && attempt < maxAttempts;
+
+      if (!isRetryableNetworkError) break;
+      await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
+    }
+
+    throw lastError ?? new Error("Unable to complete request");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { full_name: fullName },
-            emailRedirectTo: window.location.origin,
-          },
-        });
-        if (error) throw error;
+        await submitWithRetry(() =>
+          supabase.auth.signUp({
+            email: email.trim(),
+            password,
+            options: {
+              data: { full_name: fullName.trim() },
+              emailRedirectTo: window.location.origin,
+            },
+          }),
+        );
+
         toast({
           title: "Check your email",
           description: "We sent you a verification link. Please confirm your email to continue.",
         });
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        await submitWithRetry(() =>
+          supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          }),
+        );
       }
     } catch (error: any) {
+      const isNetworkError = /load failed|failed to fetch|network/i.test(error?.message ?? "");
       toast({
-        title: "Error",
-        description: error.message,
+        title: isNetworkError ? "Connection issue" : "Error",
+        description: isNetworkError
+          ? "We couldn't reach the authentication service. Please refresh and try again."
+          : error.message,
         variant: "destructive",
       });
     } finally {
