@@ -3,18 +3,20 @@ import { Link } from "react-router-dom";
 import {
   Heart, MessageSquare, Bookmark, Share2, FileText, Image, Video, Music,
   CheckCircle2, BarChart3, UserCheck, Building2, TrendingUp, BookOpen, Megaphone, Newspaper,
+  Repeat2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 import { usePostInteractions } from "@/hooks/usePostInteractions";
+import { toast } from "sonner";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-accent/10 text-accent" },
   research_note: { label: "Research Note", icon: BookOpen, className: "bg-issuer/10 text-issuer" },
   announcement: { label: "Announcement", icon: Megaphone, className: "bg-destructive/10 text-destructive" },
   article: { label: "Article", icon: Newspaper, className: "bg-intermediary/10 text-intermediary" },
-  text: { label: "Post", icon: FileText, className: "bg-muted text-muted-foreground" },
+  text: { label: "Insight", icon: FileText, className: "bg-muted text-muted-foreground" },
 };
 
 const roleIcon: Record<string, typeof BarChart3> = {
@@ -37,6 +39,10 @@ function getAttachmentIcon(type: string | null) {
   return FileText;
 }
 
+function isImageAttachment(type: string | null) {
+  return type?.startsWith("image");
+}
+
 function getInitials(name: string) {
   return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
 }
@@ -47,7 +53,17 @@ export function PostCard({ post }: { post: FeedPost }) {
   const primaryRole = post.roles[0];
   const RoleIcon = primaryRole ? roleIcon[primaryRole.role] : null;
   const AttachIcon = getAttachmentIcon(post.attachment_type);
-  const { liked, bookmarked, toggleLike, toggleBookmark } = usePostInteractions(post.id);
+  const { liked, bookmarked, reposted, toggleLike, toggleBookmark, toggleRepost } = usePostInteractions(post.id);
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/post/${post.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Post link copied to clipboard");
+    } catch {
+      toast.info("Could not copy link");
+    }
+  };
 
   return (
     <article className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow">
@@ -92,6 +108,34 @@ export function PostCard({ post }: { post: FeedPost }) {
         {post.content.replace(/\n*(?:#\w+\s*)+$/g, "").trim()}
       </p>
 
+      {/* Image Attachment - render inline */}
+      {post.attachment_url && isImageAttachment(post.attachment_type) && !post.attachment_url.startsWith("attachment://") && (
+        <div className="rounded-lg overflow-hidden border border-border mb-3">
+          <img
+            src={post.attachment_url}
+            alt={post.attachment_name || "Post attachment"}
+            className="w-full max-h-[400px] object-cover"
+            loading="lazy"
+          />
+        </div>
+      )}
+
+      {/* Non-image Attachment */}
+      {post.attachment_name && AttachIcon && !isImageAttachment(post.attachment_type) && (
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2 mb-3">
+          <AttachIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+          <span className="text-xs text-muted-foreground truncate">{post.attachment_name}</span>
+        </div>
+      )}
+
+      {/* Image attachment placeholder (for attachment:// URLs) */}
+      {post.attachment_name && isImageAttachment(post.attachment_type) && post.attachment_url?.startsWith("attachment://") && (
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2 mb-3">
+          <Image className="h-4 w-4 text-muted-foreground shrink-0" />
+          <span className="text-xs text-muted-foreground truncate">{post.attachment_name}</span>
+        </div>
+      )}
+
       {/* Hashtags */}
       {post.hashtags && post.hashtags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3">
@@ -103,40 +147,51 @@ export function PostCard({ post }: { post: FeedPost }) {
         </div>
       )}
 
-      {/* Attachment */}
-      {post.attachment_name && AttachIcon && (
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2 mb-3">
-          <AttachIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="text-xs text-muted-foreground truncate">{post.attachment_name}</span>
-        </div>
-      )}
-
       {/* Actions */}
       <div className="flex items-center gap-1 pt-2 border-t border-border">
+        {/* Like */}
         <Button
           variant="ghost"
           size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs ${liked ? "text-destructive" : "text-muted-foreground"}`}
+          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${liked ? "text-destructive hover:text-destructive/80" : "text-muted-foreground hover:text-destructive"}`}
           onClick={toggleLike}
         >
           <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
-          {(post.like_count + (liked ? 0 : 0)) > 0 && post.like_count}
+          <span>{post.like_count > 0 ? post.like_count : ""}</span>
         </Button>
-        <Button variant="ghost" size="sm" className="text-muted-foreground h-8 px-2.5 gap-1.5 text-xs">
+
+        {/* Comment */}
+        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-accent h-8 px-2.5 gap-1.5 text-xs transition-colors">
           <MessageSquare className="h-3.5 w-3.5" />
-          {post.comment_count > 0 && post.comment_count}
+          <span>{post.comment_count > 0 ? post.comment_count : ""}</span>
         </Button>
+
+        {/* Repost */}
         <Button
           variant="ghost"
           size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs ${bookmarked ? "text-accent" : "text-muted-foreground"}`}
+          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${reposted ? "text-green-600 hover:text-green-500" : "text-muted-foreground hover:text-green-600"}`}
+          onClick={toggleRepost}
+        >
+          <Repeat2 className={`h-3.5 w-3.5 ${reposted ? "stroke-[2.5px]" : ""}`} />
+          <span>{post.repost_count > 0 ? post.repost_count : ""}</span>
+        </Button>
+
+        {/* Bookmark */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${bookmarked ? "text-accent hover:text-accent/80" : "text-muted-foreground hover:text-accent"}`}
           onClick={toggleBookmark}
         >
           <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? "fill-current" : ""}`} />
-          {post.bookmark_count > 0 && post.bookmark_count}
+          <span>{post.bookmark_count > 0 ? post.bookmark_count : ""}</span>
         </Button>
+
         <div className="flex-1" />
-        <Button variant="ghost" size="sm" className="text-muted-foreground h-8 px-2.5">
+
+        {/* Share */}
+        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-primary h-8 px-2.5 transition-colors" onClick={handleShare}>
           <Share2 className="h-3.5 w-3.5" />
         </Button>
       </div>

@@ -6,6 +6,7 @@ export function usePostInteractions(postId: string) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [reposted, setReposted] = useState(false);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -28,54 +29,36 @@ export function usePostInteractions(postId: string) {
     data?.forEach((i) => {
       if (i.interaction_type === "like") setLiked(true);
       if (i.interaction_type === "bookmark") setBookmarked(true);
+      if (i.interaction_type === "repost") setReposted(true);
     });
   };
 
-  const toggleLike = useCallback(async () => {
+  const toggleInteraction = useCallback(async (type: string, current: boolean, setter: (v: boolean) => void) => {
     if (!currentUserId || loading) return;
     setLoading(true);
-    if (liked) {
+    if (current) {
       await supabase
         .from("post_interactions")
         .delete()
         .eq("post_id", postId)
         .eq("user_id", currentUserId)
-        .eq("interaction_type", "like");
-      setLiked(false);
+        .eq("interaction_type", type);
+      setter(false);
     } else {
       await supabase.from("post_interactions").insert({
         post_id: postId,
         user_id: currentUserId,
-        interaction_type: "like",
+        interaction_type: type,
       });
-      setLiked(true);
+      setter(true);
     }
     queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
     setLoading(false);
-  }, [currentUserId, liked, postId, loading, queryClient]);
+  }, [currentUserId, postId, loading, queryClient]);
 
-  const toggleBookmark = useCallback(async () => {
-    if (!currentUserId || loading) return;
-    setLoading(true);
-    if (bookmarked) {
-      await supabase
-        .from("post_interactions")
-        .delete()
-        .eq("post_id", postId)
-        .eq("user_id", currentUserId)
-        .eq("interaction_type", "bookmark");
-      setBookmarked(false);
-    } else {
-      await supabase.from("post_interactions").insert({
-        post_id: postId,
-        user_id: currentUserId,
-        interaction_type: "bookmark",
-      });
-      setBookmarked(true);
-    }
-    queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
-    setLoading(false);
-  }, [currentUserId, bookmarked, postId, loading, queryClient]);
+  const toggleLike = useCallback(() => toggleInteraction("like", liked, setLiked), [toggleInteraction, liked]);
+  const toggleBookmark = useCallback(() => toggleInteraction("bookmark", bookmarked, setBookmarked), [toggleInteraction, bookmarked]);
+  const toggleRepost = useCallback(() => toggleInteraction("repost", reposted, setReposted), [toggleInteraction, reposted]);
 
-  return { liked, bookmarked, toggleLike, toggleBookmark, loading };
+  return { liked, bookmarked, reposted, toggleLike, toggleBookmark, toggleRepost, loading };
 }
