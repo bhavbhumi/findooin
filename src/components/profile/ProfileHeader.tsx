@@ -149,7 +149,7 @@ export const ProfileHeader = ({
             />
 
             {/* Name + Info + Actions stacked */}
-            <div className="flex-1 min-w-0 pb-3">
+            <div className="flex-1 min-w-0">
               {/* Name */}
               <div className="flex items-start gap-2">
                 <h1 className="text-xl sm:text-2xl font-bold font-heading text-card-foreground leading-tight break-words">
@@ -249,7 +249,7 @@ export const ProfileHeader = ({
           </div>
 
           {/* Role Badges Row */}
-          <div className="flex items-center gap-2 flex-wrap pb-4">
+          <div className="flex items-center gap-2 flex-wrap mt-3 pb-4">
             <Badge variant="outline" className="text-xs capitalize gap-1">
               <Briefcase className="h-3 w-3" />
               {profile.user_type}
