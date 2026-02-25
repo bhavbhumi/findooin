@@ -129,4 +129,13 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
   }
+
+  /* Hide scrollbar for horizontal scroll containers */
+  .overflow-x-auto {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .overflow-x-auto::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -178,22 +178,24 @@ export const ProfileNetwork = ({ profileId, isOwnProfile, currentUserId, default
       </div>
 
       <Tabs defaultValue={defaultTab}>
-        <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
-          <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-4">
-            Followers ({followers.length})
-          </TabsTrigger>
-          <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-4">
-            Following ({following.length})
-          </TabsTrigger>
-          <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-4">
-            Connections ({connections.length})
-          </TabsTrigger>
-          {isOwnProfile && pendingRequests.length > 0 && (
-            <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-4">
-              Pending ({pendingRequests.length})
+        <div className="overflow-x-auto -mx-1 px-1">
+          <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
+            <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+              Followers ({followers.length})
             </TabsTrigger>
-          )}
-        </TabsList>
+            <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+              Following ({following.length})
+            </TabsTrigger>
+            <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+              Connections ({connections.length})
+            </TabsTrigger>
+            {isOwnProfile && pendingRequests.length > 0 && (
+              <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+                Pending ({pendingRequests.length})
+              </TabsTrigger>
+            )}
+          </TabsList>
+        </div>
 
         <TabsContent value="followers" className="mt-4 space-y-2">
           <UserList users={filterUsers(followers)} getInitials={getInitials} emptyMessage="No followers yet" />

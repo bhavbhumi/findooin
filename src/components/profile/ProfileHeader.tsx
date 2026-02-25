@@ -275,13 +275,13 @@ export const ProfileHeader = ({
           )}
 
           {/* Location + Followers/Following/Connections inline */}
-          <div className="flex items-center gap-3 flex-wrap mt-3 pb-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap mt-3 pb-4 text-xs text-muted-foreground">
             {profile.location && (
               <span className="flex items-center gap-1">
                 <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
               </span>
             )}
-            {profile.location && <span className="text-border">·</span>}
+            {profile.location && <span className="text-border hidden sm:inline">·</span>}
             <button
               onClick={onNavigateToNetwork}
               className="hover:text-foreground transition-colors"
@@ -302,7 +302,7 @@ export const ProfileHeader = ({
             >
               <span className="font-semibold text-card-foreground">{stats.connections}</span> Connections
             </button>
-            <span className="text-border">·</span>
+            <span className="text-border hidden sm:inline">·</span>
             <span className="inline-flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               Joined {format(new Date(profile.created_at), "MMM yyyy")}
