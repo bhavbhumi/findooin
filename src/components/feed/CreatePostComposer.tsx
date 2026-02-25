@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   TrendingUp, BookOpen, Megaphone, Newspaper, FileText,
   Paperclip, X, Image, File, Send, Loader2, AtSign, Clock,
@@ -22,29 +23,29 @@ import { format } from "date-fns";
 
 /* ── Post Categories (was post_type) ── */
 const POST_CATEGORIES = [
-  { value: "text", label: "Insight", icon: FileText },
-  { value: "market_commentary", label: "Market Commentary", icon: TrendingUp },
-  { value: "research_note", label: "Research Note", icon: BookOpen },
-  { value: "announcement", label: "Announcement", icon: Megaphone },
-  { value: "article", label: "Article", icon: Newspaper },
+  { value: "text", label: "Insight", shortLabel: "Insight", icon: FileText },
+  { value: "market_commentary", label: "Market Commentary", shortLabel: "Market", icon: TrendingUp },
+  { value: "research_note", label: "Research Note", shortLabel: "Research", icon: BookOpen },
+  { value: "announcement", label: "Announcement", shortLabel: "Announce", icon: Megaphone },
+  { value: "article", label: "Article", shortLabel: "Article", icon: Newspaper },
 ] as const;
 
 /* ── Post Kinds (Post, Poll, Survey) ── */
 const POST_KINDS = [
-  { value: "normal", label: "Post", icon: FileText, disabled: false },
-  { value: "poll", label: "Poll", icon: BarChart3, disabled: false },
-  { value: "survey", label: "Survey", icon: ClipboardList, disabled: false },
-  { value: "more", label: "More Coming", icon: Sparkles, disabled: true },
+  { value: "normal", label: "Post", shortLabel: "Post", icon: FileText, disabled: false },
+  { value: "poll", label: "Poll", shortLabel: "Poll", icon: BarChart3, disabled: false },
+  { value: "survey", label: "Survey", shortLabel: "Survey", icon: ClipboardList, disabled: false },
+  { value: "more", label: "More Coming", shortLabel: "More", icon: Sparkles, disabled: true },
 ] as const;
 
 /* ── Audience / Visibility ── */
 const AUDIENCES = [
-  { value: "public", label: "Public", icon: Globe },
-  { value: "network", label: "Whole Network", icon: Users },
-  { value: "following", label: "Following Only", icon: UserCheck },
-  { value: "followers", label: "Followers Only", icon: Heart },
-  { value: "connections", label: "Connections Only", icon: Users },
-  { value: "private", label: "For Me Only", icon: Lock },
+  { value: "public", label: "Public", shortLabel: "Public", icon: Globe },
+  { value: "network", label: "Whole Network", shortLabel: "Network", icon: Users },
+  { value: "following", label: "Following Only", shortLabel: "Following", icon: UserCheck },
+  { value: "followers", label: "Followers Only", shortLabel: "Followers", icon: Heart },
+  { value: "connections", label: "Connections Only", shortLabel: "Connections", icon: Users },
+  { value: "private", label: "For Me Only", shortLabel: "Private", icon: Lock },
 ] as const;
 
 const ALLOWED_FILE_TYPES: Record<string, string[]> = {
@@ -110,6 +111,17 @@ function getPlaceholder(postKind: string): string {
 }
 
 export function CreatePostComposer() {
+  const isMobile = useIsMobile();
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
+    const onChange = () => setIsTablet(mql.matches);
+    mql.addEventListener("change", onChange);
+    setIsTablet(mql.matches);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
   const [userId, setUserId] = useState<string | null>(null);
   const [canPost, setCanPost] = useState<boolean | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -292,12 +304,24 @@ export function CreatePostComposer() {
         <div className="flex items-center gap-3">
           <NetworkAvatar src={avatarUrl} initials={initials} size="sm" className="shrink-0" />
 
-          <div className="flex-1 flex flex-wrap items-center gap-2">
+          <div className="flex-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
             {/* Post Type */}
             <Select value={postKind} onValueChange={(v) => v !== "more" && setPostKind(v)}>
-              <SelectTrigger className="w-[110px] h-8 text-xs border-primary/20 bg-primary/5 text-primary font-medium">
-                <SelectValue />
-              </SelectTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SelectTrigger className={cn(
+                    "h-8 text-xs border-primary/20 bg-primary/5 text-primary font-medium",
+                    isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[90px]" : "w-[110px]"
+                  )}>
+                    {isMobile ? (
+                      (() => { const K = POST_KINDS.find(k => k.value === postKind); const Icon = K?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                    ) : (
+                      <SelectValue />
+                    )}
+                  </SelectTrigger>
+                </TooltipTrigger>
+                {isMobile && <TooltipContent side="bottom"><p>{POST_KINDS.find(k => k.value === postKind)?.label}</p></TooltipContent>}
+              </Tooltip>
               <SelectContent className="z-50 bg-popover">
                 {POST_KINDS.map((k) => {
                   const Icon = k.icon;
@@ -315,9 +339,25 @@ export function CreatePostComposer() {
 
             {/* Category */}
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-[170px] h-8 text-xs border-accent/20 bg-accent/5 text-foreground font-medium">
-                <SelectValue />
-              </SelectTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SelectTrigger className={cn(
+                    "h-8 text-xs border-accent/20 bg-accent/5 text-foreground font-medium",
+                    isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
+                  )}>
+                    {isMobile ? (
+                      (() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                    ) : isTablet ? (
+                      <span className="flex items-center gap-1.5 truncate">
+                        {(() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
+                      </span>
+                    ) : (
+                      <SelectValue />
+                    )}
+                  </SelectTrigger>
+                </TooltipTrigger>
+                {isMobile && <TooltipContent side="bottom"><p>{POST_CATEGORIES.find(c => c.value === category)?.label}</p></TooltipContent>}
+              </Tooltip>
               <SelectContent className="z-50 bg-popover">
                 {POST_CATEGORIES.map((t) => {
                   const Icon = t.icon;
@@ -335,9 +375,25 @@ export function CreatePostComposer() {
 
             {/* Audience */}
             <Select value={audience} onValueChange={setAudience}>
-              <SelectTrigger className="w-[155px] h-8 text-xs">
-                <SelectValue />
-              </SelectTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SelectTrigger className={cn(
+                    "h-8 text-xs",
+                    isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[115px]" : "w-[155px]"
+                  )}>
+                    {isMobile ? (
+                      (() => { const A = AUDIENCES.find(a => a.value === audience); const Icon = A?.icon || Globe; return <Icon className="h-4 w-4" />; })()
+                    ) : isTablet ? (
+                      <span className="flex items-center gap-1.5 truncate">
+                        {(() => { const A = AUDIENCES.find(a => a.value === audience); const Icon = A?.icon || Globe; return <><Icon className="h-3.5 w-3.5 shrink-0" />{A?.shortLabel}</>; })()}
+                      </span>
+                    ) : (
+                      <SelectValue />
+                    )}
+                  </SelectTrigger>
+                </TooltipTrigger>
+                {isMobile && <TooltipContent side="bottom"><p>{AUDIENCES.find(a => a.value === audience)?.label}</p></TooltipContent>}
+              </Tooltip>
               <SelectContent className="z-50 bg-popover">
                 {AUDIENCES.map((a) => {
                   const Icon = a.icon;
