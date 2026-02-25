@@ -111,7 +111,7 @@ const Onboarding = () => {
     setLoading(true);
     try {
       // For now, just navigate — DB tables will be created next
-      toast({ title: "Profile created!", description: "Welcome to FinNet." });
+      toast({ title: "Profile created!", description: "Welcome to FindOO." });
       navigate("/feed");
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -166,7 +166,7 @@ const Onboarding = () => {
             {step === 1 && (
               <div>
                 <h1 className="text-2xl font-bold font-heading text-foreground mb-2">
-                  How will you use FinNet?
+                  How will you use FindOO?
                 </h1>
                 <p className="text-muted-foreground mb-8">
                   This helps us tailor your experience. You can add more roles later.
@@ -379,7 +379,7 @@ const Onboarding = () => {
           ) : (
             <Button onClick={handleComplete} disabled={loading || !canProceed()}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Launch FinNet
+              Launch FindOO
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           )}

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, Users, TrendingUp, Building2, UserCheck, BarChart3, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import findooLogo from "@/assets/findoo-logo-icon.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -47,10 +48,8 @@ const Landing = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <span className="text-sm font-bold text-primary-foreground font-heading">F</span>
-            </div>
-            <span className="text-xl font-bold font-heading text-foreground">FinNet</span>
+            <img src={findooLogo} alt="FindOO" className="h-8 w-8" />
+            <span className="text-xl font-bold font-heading text-foreground tracking-tight">FindOO</span>
           </Link>
           <div className="flex items-center gap-3">
             <Button variant="ghost" asChild>
@@ -78,7 +77,7 @@ const Landing = () => {
               <Shield className="h-3.5 w-3.5 text-accent" />
               India's Regulated Financial Network
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.1] mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-foreground leading-[1.1] mb-6">
               Where India's financial
               <br />
               ecosystem <span className="text-accent">connects</span>
@@ -90,7 +89,7 @@ const Landing = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button size="lg" className="h-12 px-8 text-base" asChild>
                 <Link to="/auth?mode=signup">
-                  Join FinNet
+                  Join FindOO
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -215,13 +214,11 @@ const Landing = () => {
       <footer className="border-t border-border py-8">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-primary">
-              <span className="text-xs font-bold text-primary-foreground font-heading">F</span>
-            </div>
-            <span className="text-sm font-semibold font-heading text-foreground">FinNet</span>
+            <img src={findooLogo} alt="FindOO" className="h-6 w-6" />
+            <span className="text-sm font-semibold font-heading text-foreground">FindOO</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} FinNet. India's regulated financial network.
+            © {new Date().getFullYear()} FindOO. India's regulated financial network.
           </p>
         </div>
       </footer>

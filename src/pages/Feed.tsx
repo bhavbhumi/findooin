@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, Home, Search, Bell, MessageSquare, User, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import findooLogo from "@/assets/findoo-logo-icon.png";
 
 const Feed = () => {
   const navigate = useNavigate();
@@ -19,10 +20,8 @@ const Feed = () => {
         <div className="container flex h-14 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/feed" className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary">
-                <span className="text-xs font-bold text-primary-foreground font-heading">F</span>
-              </div>
-              <span className="text-lg font-bold font-heading text-foreground hidden sm:block">FinNet</span>
+              <img src={findooLogo} alt="FindOO" className="h-7 w-7" />
+              <span className="text-lg font-bold font-heading text-foreground hidden sm:block tracking-tight">FindOO</span>
             </Link>
             <div className="hidden md:flex items-center gap-1">
               {[
@@ -61,7 +60,7 @@ const Feed = () => {
             <Shield className="h-8 w-8 text-accent" />
           </div>
           <h1 className="text-2xl font-bold font-heading text-foreground mb-3">
-            Welcome to FinNet
+            Welcome to FindOO
           </h1>
           <p className="text-muted-foreground mb-8">
             Your feed will appear here once you start connecting with verified entities and professionals.
