@@ -148,46 +148,45 @@ export const ProfileHeader = ({
               )}
             </div>
 
-            {/* Name + Actions */}
-            <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3">
-              <div className="min-w-0 overflow-hidden">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold font-heading text-card-foreground leading-tight truncate">
-                    {profile.display_name || profile.full_name}
-                  </h1>
-                  {profile.verification_status === "verified" && (
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0" />
-                  )}
-                </div>
-                {profile.display_name && profile.display_name !== profile.full_name && (
-                  <p className="text-sm text-muted-foreground truncate">{profile.full_name}</p>
+            {/* Name + Info + Actions stacked */}
+            <div className="flex-1 min-w-0 pb-3">
+              {/* Name */}
+              <div className="flex items-start gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold font-heading text-card-foreground leading-tight break-words">
+                  {profile.display_name || profile.full_name}
+                </h1>
+                {profile.verification_status === "verified" && (
+                  <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-1" />
                 )}
-                {/* Headline */}
-                {profile.headline && (
-                  <p className="text-sm text-card-foreground/80 mt-0.5 leading-snug line-clamp-2">{profile.headline}</p>
+              </div>
+              {profile.display_name && profile.display_name !== profile.full_name && (
+                <p className="text-sm text-muted-foreground">{profile.full_name}</p>
+              )}
+              {/* Headline */}
+              {profile.headline && (
+                <p className="text-sm text-card-foreground/80 mt-0.5 leading-snug line-clamp-2">{profile.headline}</p>
+              )}
+              {/* Designation + Organization + Location */}
+              <div className="flex items-center gap-3 flex-wrap mt-1 text-xs text-muted-foreground">
+                {profile.designation && (
+                  <span className="flex items-center gap-1">
+                    <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
+                  </span>
                 )}
-                {/* Designation + Organization + Location — always show */}
-                <div className="flex items-center gap-3 flex-wrap mt-1 text-xs text-muted-foreground">
-                  {profile.designation && (
-                    <span className="flex items-center gap-1 truncate max-w-[180px]">
-                      <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
-                    </span>
-                  )}
-                  {profile.organization && (
-                    <span className="flex items-center gap-1 truncate max-w-[180px]">
-                      <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
-                    </span>
-                  )}
-                  {profile.location && (
-                    <span className="flex items-center gap-1 truncate max-w-[180px]">
-                      <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
-                    </span>
-                  )}
-                </div>
+                {profile.organization && (
+                  <span className="flex items-center gap-1">
+                    <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
+                  </span>
+                )}
+                {profile.location && (
+                  <span className="flex items-center gap-1">
+                    <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
+                  </span>
+                )}
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2 shrink-0">
+              {/* Action Buttons — below name block */}
+              <div className="flex items-center gap-2 mt-3 flex-wrap">
                 {isOwnProfile ? (
                   <Button variant="outline" size="sm" className="gap-1.5" onClick={onEditProfile}>
                     <Edit3 className="h-3.5 w-3.5" /> Edit Profile
