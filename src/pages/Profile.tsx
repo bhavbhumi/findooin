@@ -57,6 +57,7 @@ const Profile = () => {
         user_type: d.user_type,
         bio: d.bio,
         avatar_url: d.avatar_url,
+        banner_url: d.banner_url ?? null,
         verification_status: d.verification_status,
         created_at: d.created_at,
         headline: d.headline ?? null,

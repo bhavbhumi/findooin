@@ -36,6 +36,7 @@ export interface ProfileData {
   user_type: string;
   bio: string | null;
   avatar_url: string | null;
+  banner_url: string | null;
   verification_status: string;
   created_at: string;
   headline: string | null;
@@ -120,12 +121,19 @@ export const ProfileHeader = ({
     <>
       <div className="rounded-xl border border-border bg-card overflow-hidden mb-4">
         {/* Banner */}
-        <div className={`h-32 sm:h-40 bg-gradient-to-br ${bannerGradient} relative`}>
-          <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent" />
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }} />
+        <div className={`h-32 sm:h-40 relative ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
+          {profile.banner_url ? (
+            <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" />
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent" />
+              <div className="absolute inset-0 opacity-[0.03]" style={{
+                backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
+                backgroundSize: "24px 24px",
+              }} />
+            </>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-card/40 to-transparent" />
           {profile.verification_status === "pending" && (
             <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-muted/90 text-muted-foreground px-2.5 py-1 rounded-full text-xs font-medium shadow-md">
               <Clock className="h-3.5 w-3.5" /> Pending Verification

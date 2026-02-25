@@ -46,6 +46,8 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
   const [saving, setSaving] = useState(false);
 
   // Basic
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
+  const [bannerUrl, setBannerUrl] = useState(profile.banner_url || "");
   const [displayName, setDisplayName] = useState(profile.display_name || "");
   const [headline, setHeadline] = useState(profile.headline || "");
   const [bio, setBio] = useState(profile.bio || "");
@@ -77,6 +79,8 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
 
   // Reset when profile changes
   useEffect(() => {
+    setAvatarUrl(profile.avatar_url || "");
+    setBannerUrl(profile.banner_url || "");
     setDisplayName(profile.display_name || "");
     setHeadline(profile.headline || "");
     setBio(profile.bio || "");
@@ -109,6 +113,8 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
     const { error } = await supabase
       .from("profiles")
       .update({
+        avatar_url: avatarUrl || null,
+        banner_url: bannerUrl || null,
         display_name: displayName || null,
         headline: headline || null,
         bio: bio || null,
@@ -155,6 +161,25 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
 
           {/* Basic Tab */}
           <TabsContent value="basic" className="space-y-4 mt-4">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Avatar URL</Label>
+              <Input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://… or /images/avatar.png" className="mt-1 text-sm" />
+              {avatarUrl && (
+                <div className="mt-2 flex items-center gap-2">
+                  <img src={avatarUrl} alt="Avatar preview" className="h-10 w-10 rounded-lg object-cover border border-border" />
+                  <span className="text-[10px] text-muted-foreground">Preview</span>
+                </div>
+              )}
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Banner URL</Label>
+              <Input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} placeholder="https://… or /images/banner.png" className="mt-1 text-sm" />
+              {bannerUrl && (
+                <div className="mt-2">
+                  <img src={bannerUrl} alt="Banner preview" className="h-16 w-full rounded-lg object-cover border border-border" />
+                </div>
+              )}
+            </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Display Name</Label>
               <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="How you want to appear" className="mt-1" />
