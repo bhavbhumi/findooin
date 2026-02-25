@@ -47,6 +47,10 @@
     --investor: 240 100% 35%;
     --investor-foreground: 0 0% 100%;
 
+    /* Brand Gold */
+    --gold: 46 65% 52%;
+    --gold-foreground: 0 0% 100%;
+
     /* Sidebar */
     --sidebar-background: 224 55% 12%;
     --sidebar-foreground: 220 20% 90%;
@@ -97,6 +101,9 @@
     --intermediary-foreground: 0 0% 100%;
     --investor: 240 80% 50%;
     --investor-foreground: 0 0% 100%;
+
+    --gold: 46 65% 45%;
+    --gold-foreground: 0 0% 100%;
 
     --sidebar-background: 224 50% 6%;
     --sidebar-foreground: 220 20% 90%;
