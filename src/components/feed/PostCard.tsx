@@ -3,13 +3,20 @@ import { Link } from "react-router-dom";
 import {
   Heart, MessageSquare, Bookmark, Share2, FileText, Image, Video, Music,
   CheckCircle2, BarChart3, UserCheck, Building2, TrendingUp, BookOpen, Megaphone, Newspaper,
-  Repeat2,
+  Repeat2, MoreVertical, Pencil, EyeOff, Archive, Trash2, Flag,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 import { usePostInteractions } from "@/hooks/usePostInteractions";
 import { toast } from "sonner";
+import { differenceInMinutes } from "date-fns";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-accent/10 text-accent" },
@@ -53,7 +60,9 @@ export function PostCard({ post }: { post: FeedPost }) {
   const primaryRole = post.roles[0];
   const RoleIcon = primaryRole ? roleIcon[primaryRole.role] : null;
   const AttachIcon = getAttachmentIcon(post.attachment_type);
-  const { liked, bookmarked, reposted, toggleLike, toggleBookmark, toggleRepost } = usePostInteractions(post.id);
+  const { liked, bookmarked, reposted, currentUserId, toggleLike, toggleBookmark, toggleRepost } = usePostInteractions(post.id);
+  const isOwnPost = currentUserId === post.author.id;
+  const canEdit = isOwnPost && differenceInMinutes(new Date(), new Date(post.created_at)) <= 60;
 
   const handleShare = async () => {
     const url = `${window.location.origin}/post/${post.id}`;
@@ -101,6 +110,45 @@ export function PostCard({ post }: { post: FeedPost }) {
             </span>
           </div>
         </div>
+
+        {/* Post menu */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-muted-foreground hover:text-card-foreground shrink-0">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="z-50 bg-popover border border-border shadow-lg">
+            {isOwnPost ? (
+              <>
+                {canEdit && (
+                  <DropdownMenuItem onClick={() => toast.info("Edit post coming soon")} className="gap-2 text-sm">
+                    <Pencil className="h-3.5 w-3.5" /> Edit
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={() => toast.info("Hide post coming soon")} className="gap-2 text-sm">
+                  <EyeOff className="h-3.5 w-3.5" /> Hide
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => toast.info("Archive post coming soon")} className="gap-2 text-sm">
+                  <Archive className="h-3.5 w-3.5" /> Archive
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => toast.info("Delete post coming soon")} className="gap-2 text-sm text-destructive focus:text-destructive">
+                  <Trash2 className="h-3.5 w-3.5" /> Delete
+                </DropdownMenuItem>
+              </>
+            ) : (
+              <>
+                <DropdownMenuItem onClick={toggleBookmark} className="gap-2 text-sm">
+                  <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? "fill-current text-accent" : ""}`} />
+                  {bookmarked ? "Remove Bookmark" : "Bookmark"}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => toast.info("Report post coming soon")} className="gap-2 text-sm text-destructive focus:text-destructive">
+                  <Flag className="h-3.5 w-3.5" /> Report
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Content — strip trailing hashtag lines to avoid duplication with tag chips */}
@@ -177,16 +225,8 @@ export function PostCard({ post }: { post: FeedPost }) {
           <span>{post.repost_count > 0 ? post.repost_count : ""}</span>
         </Button>
 
-        {/* Bookmark */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${bookmarked ? "text-accent hover:text-accent/80" : "text-muted-foreground hover:text-accent"}`}
-          onClick={toggleBookmark}
-        >
-          <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? "fill-current" : ""}`} />
-          <span>{post.bookmark_count > 0 ? post.bookmark_count : ""}</span>
-        </Button>
+
+        <div className="flex-1" />
 
         <div className="flex-1" />
 

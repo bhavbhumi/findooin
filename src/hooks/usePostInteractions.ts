@@ -60,5 +60,5 @@ export function usePostInteractions(postId: string) {
   const toggleBookmark = useCallback(() => toggleInteraction("bookmark", bookmarked, setBookmarked), [toggleInteraction, bookmarked]);
   const toggleRepost = useCallback(() => toggleInteraction("repost", reposted, setReposted), [toggleInteraction, reposted]);
 
-  return { liked, bookmarked, reposted, toggleLike, toggleBookmark, toggleRepost, loading };
+  return { liked, bookmarked, reposted, currentUserId, toggleLike, toggleBookmark, toggleRepost, loading };
 }
