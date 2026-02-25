@@ -19,6 +19,7 @@ import { usePostInteractions } from "@/hooks/usePostInteractions";
 import { toast } from "sonner";
 import { differenceInMinutes } from "date-fns";
 import { ReportDialog } from "@/components/feed/ReportDialog";
+import { CommentSection } from "@/components/feed/CommentSection";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-accent/10 text-accent" },
@@ -58,6 +59,7 @@ function getInitials(name: string) {
 
 export function PostCard({ post }: { post: FeedPost }) {
   const [reportOpen, setReportOpen] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
   const primaryRole = post.roles[0];
@@ -212,8 +214,13 @@ export function PostCard({ post }: { post: FeedPost }) {
         </Button>
 
         {/* Comment */}
-        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-accent h-8 px-2.5 gap-1.5 text-xs transition-colors">
-          <MessageSquare className="h-3.5 w-3.5" />
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${commentsOpen ? "text-accent" : "text-muted-foreground hover:text-accent"}`}
+          onClick={() => setCommentsOpen(!commentsOpen)}
+        >
+          <MessageSquare className={`h-3.5 w-3.5 ${commentsOpen ? "fill-current" : ""}`} />
           <span>{post.comment_count > 0 ? post.comment_count : ""}</span>
         </Button>
 
@@ -238,6 +245,9 @@ export function PostCard({ post }: { post: FeedPost }) {
           <Share2 className="h-3.5 w-3.5" />
         </Button>
       </div>
+
+      {/* Inline Comments */}
+      {commentsOpen && <CommentSection postId={post.id} />}
 
       {/* Report Dialog */}
       <ReportDialog open={reportOpen} onOpenChange={setReportOpen} postId={post.id} postAuthorId={post.author.id} />
