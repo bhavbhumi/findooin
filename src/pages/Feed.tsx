@@ -1,12 +1,29 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Shield, Home, Search, Bell, MessageSquare, User, LogOut } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Home, Search, Bell, MessageSquare, User, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import findooLogo from "@/assets/findoo-logo-icon.png";
+import { useFeedPosts } from "@/hooks/useFeedPosts";
+import { PostCard } from "@/components/feed/PostCard";
+import { TrendingSidebar } from "@/components/feed/TrendingSidebar";
 
 const Feed = () => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
+  const { data: posts, isLoading, error } = useFeedPosts();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        navigate("/auth");
+        return;
+      }
+      setUserName(session.user.user_metadata?.full_name || "User");
+    });
+  }, [navigate]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -53,25 +70,50 @@ const Feed = () => {
         </div>
       </nav>
 
-      {/* Main content placeholder */}
-      <div className="container py-12">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/10 mb-6">
-            <Shield className="h-8 w-8 text-accent" />
+      {/* Main content */}
+      <div className="container py-6">
+        <div className="grid lg:grid-cols-[1fr_300px] gap-6 max-w-4xl mx-auto">
+          {/* Feed column */}
+          <div className="space-y-4">
+            {isLoading && (
+              <>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-10 w-10 rounded-full" />
+                      <div className="space-y-1.5">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-20" />
+                      </div>
+                    </div>
+                    <Skeleton className="h-16 w-full" />
+                    <Skeleton className="h-8 w-48" />
+                  </div>
+                ))}
+              </>
+            )}
+
+            {error && (
+              <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center">
+                <p className="text-sm text-destructive">Failed to load feed. Please try again.</p>
+              </div>
+            )}
+
+            {posts && posts.length === 0 && (
+              <div className="rounded-xl border border-border bg-card p-12 text-center">
+                <p className="text-muted-foreground">No posts yet. Start following accounts to see their posts here.</p>
+              </div>
+            )}
+
+            {posts?.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
           </div>
-          <h1 className="text-2xl font-bold font-heading text-foreground mb-3">
-            Welcome to FindOO
-          </h1>
-          <p className="text-muted-foreground mb-8">
-            Your feed will appear here once you start connecting with verified entities and professionals.
-            Start by discovering and following accounts.
-          </p>
-          <Button asChild>
-            <Link to="/discover">
-              <Search className="mr-2 h-4 w-4" />
-              Discover Entities
-            </Link>
-          </Button>
+
+          {/* Sidebar */}
+          <aside className="hidden lg:block space-y-4">
+            <TrendingSidebar />
+          </aside>
         </div>
       </div>
 

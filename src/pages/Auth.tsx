@@ -20,14 +20,30 @@ const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const checkSession = async (session: any) => {
+      if (!session) return;
+      // Check if onboarding is completed
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      
+      if (profile?.onboarding_completed) {
+        navigate("/feed");
+      } else {
+        navigate("/onboarding");
+      }
+    };
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
-        navigate("/onboarding");
+        checkSession(session);
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate("/onboarding");
+      if (session) checkSession(session);
     });
 
     return () => subscription.unsubscribe();

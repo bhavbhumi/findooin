@@ -110,7 +110,30 @@ const Onboarding = () => {
     if (!userId) return;
     setLoading(true);
     try {
-      // For now, just navigate — DB tables will be created next
+      // Upsert profile
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .upsert({
+          id: userId,
+          full_name: displayName,
+          display_name: displayName,
+          bio,
+          user_type: userType!,
+          onboarding_completed: true,
+        }, { onConflict: "id" });
+      if (profileError) throw profileError;
+
+      // Delete existing roles, then insert new ones
+      await supabase.from("user_roles").delete().eq("user_id", userId);
+      
+      const roleInserts = selectedRoles.map((role) => ({
+        user_id: userId,
+        role,
+        sub_type: selectedSubTypes[role] || null,
+      }));
+      const { error: rolesError } = await supabase.from("user_roles").insert(roleInserts);
+      if (rolesError) throw rolesError;
+
       toast({ title: "Profile created!", description: "Welcome to FindOO." });
       navigate("/feed");
     } catch (error: any) {
