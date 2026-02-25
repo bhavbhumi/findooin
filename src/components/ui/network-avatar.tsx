@@ -9,10 +9,10 @@ interface NetworkAvatarProps {
 }
 
 const sizeMap = {
-  sm: { box: "h-10 w-10", text: "text-xs", radius: "rounded-[22%]", node: "h-1.5 w-1.5", offset: "-2px" },
-  md: { box: "h-14 w-14", text: "text-sm", radius: "rounded-[22%]", node: "h-2 w-2", offset: "-3px" },
-  lg: { box: "h-24 w-24", text: "text-2xl", radius: "rounded-[22%]", node: "h-2.5 w-2.5", offset: "-4px" },
-  xl: { box: "h-28 w-28 sm:h-32 sm:w-32", text: "text-3xl sm:text-4xl", radius: "rounded-[22%]", node: "h-3 w-3", offset: "-5px" },
+  sm: { box: "h-10 w-10", text: "text-xs", radius: "rounded-[var(--radius)]", node: "h-1.5 w-1.5", offset: "1px" },
+  md: { box: "h-14 w-14", text: "text-sm", radius: "rounded-[var(--radius)]", node: "h-2 w-2", offset: "1px" },
+  lg: { box: "h-24 w-24", text: "text-2xl", radius: "rounded-[var(--radius)]", node: "h-2.5 w-2.5", offset: "2px" },
+  xl: { box: "h-28 w-28 sm:h-32 sm:w-32", text: "text-3xl sm:text-4xl", radius: "rounded-[var(--radius)]", node: "h-3 w-3", offset: "2px" },
 };
 
 export const NetworkAvatar = ({
