@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, BarChart3 } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, BarChart3, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 import {
@@ -138,6 +138,12 @@ const AppNavbar = () => {
                   <Link to="/analytics" className="flex items-center gap-2 cursor-pointer">
                     <BarChart3 className="h-4 w-4" />
                     Analytics
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
+                    <Settings className="h-4 w-4" />
+                    Settings
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
