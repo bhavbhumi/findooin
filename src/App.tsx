@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Network from "./pages/Network";
 import Discover from "./pages/Discover";
 import PostAnalytics from "./pages/PostAnalytics";
+import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/network" element={<Network />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/analytics" element={<PostAnalytics />} />
+          <Route path="/notifications" element={<Notifications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
