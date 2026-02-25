@@ -258,7 +258,7 @@ export const ProfileHeader = ({
 
           {/* Headline */}
           {profile.headline && (
-            <p className="text-sm text-card-foreground/80 mt-3 leading-snug">{profile.headline}</p>
+            <p className="text-sm font-semibold text-card-foreground/80 mt-3 leading-snug">{profile.headline}</p>
           )}
 
           {/* Bio */}
