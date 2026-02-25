@@ -4,13 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3 } from "lucide-react";
+import { ArrowLeft, Edit3, BarChart3 } from "lucide-react";
 import { useFeedPosts } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
 import AppNavbar from "@/components/AppNavbar";
 import { ProfileHeader, type ProfileData, type RoleData, type ProfileStats } from "@/components/profile/ProfileHeader";
 import { ProfileAbout } from "@/components/profile/ProfileAbout";
+import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ const Profile = () => {
   const [roles, setRoles] = useState<RoleData[]>([]);
   const [stats, setStats] = useState<ProfileStats>({ followers: 0, following: 0, connections: 0, posts: 0 });
   const [loading, setLoading] = useState(true);
+  const [editOpen, setEditOpen] = useState(false);
   const { data: allPosts } = useFeedPosts();
   const { connectionStatus, follow, connect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
 
@@ -78,6 +80,11 @@ const Profile = () => {
     setLoading(false);
   };
 
+  const handleProfileSaved = () => {
+    const targetId = id || currentUserId;
+    if (targetId) loadProfile(targetId);
+  };
+
   const userPosts = allPosts?.filter((p) => p.author.id === profile?.id) ?? [];
 
   return (
@@ -121,9 +128,9 @@ const Profile = () => {
             follow={follow}
             connect={connect}
             connLoading={connLoading}
+            onEditProfile={() => setEditOpen(true)}
           />
 
-          {/* Tabs: Posts / About / Activity */}
           <Tabs defaultValue="posts" className="w-full">
             <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1 mb-4">
               <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium flex-1 sm:flex-none sm:px-6">
@@ -169,6 +176,16 @@ const Profile = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          {/* Edit Profile Dialog */}
+          {isOwnProfile && profile && (
+            <EditProfileDialog
+              open={editOpen}
+              onOpenChange={setEditOpen}
+              profile={profile}
+              onSaved={handleProfileSaved}
+            />
+          )}
         </div>
       ) : (
         <div className="container max-w-3xl mx-auto pt-4">
@@ -180,8 +197,5 @@ const Profile = () => {
     </div>
   );
 };
-
-// Need to import for Activity tab placeholder
-import { BarChart3 } from "lucide-react";
 
 export default Profile;
