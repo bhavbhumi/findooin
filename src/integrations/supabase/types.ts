@@ -244,6 +244,7 @@ export type Database = {
           id: string
           post_kind: Database["public"]["Enums"]["post_kind"]
           post_type: Database["public"]["Enums"]["post_type"]
+          query_category: Database["public"]["Enums"]["query_category"] | null
           scheduled_at: string | null
           updated_at: string
           visibility: Database["public"]["Enums"]["post_visibility"]
@@ -259,6 +260,7 @@ export type Database = {
           id?: string
           post_kind?: Database["public"]["Enums"]["post_kind"]
           post_type?: Database["public"]["Enums"]["post_type"]
+          query_category?: Database["public"]["Enums"]["query_category"] | null
           scheduled_at?: string | null
           updated_at?: string
           visibility?: Database["public"]["Enums"]["post_visibility"]
@@ -274,6 +276,7 @@ export type Database = {
           id?: string
           post_kind?: Database["public"]["Enums"]["post_kind"]
           post_type?: Database["public"]["Enums"]["post_type"]
+          query_category?: Database["public"]["Enums"]["query_category"] | null
           scheduled_at?: string | null
           updated_at?: string
           visibility?: Database["public"]["Enums"]["post_visibility"]
@@ -612,6 +615,7 @@ export type Database = {
         | "article"
         | "requirement"
         | "expert_find"
+        | "query"
       post_visibility:
         | "public"
         | "network"
@@ -619,6 +623,7 @@ export type Database = {
         | "followers"
         | "connections"
         | "private"
+      query_category: "expert_find" | "requirement"
       user_type: "individual" | "entity"
       verification_status: "unverified" | "pending" | "verified"
     }
@@ -768,6 +773,7 @@ export const Constants = {
         "article",
         "requirement",
         "expert_find",
+        "query",
       ],
       post_visibility: [
         "public",
@@ -777,6 +783,7 @@ export const Constants = {
         "connections",
         "private",
       ],
+      query_category: ["expert_find", "requirement"],
       user_type: ["individual", "entity"],
       verification_status: ["unverified", "pending", "verified"],
     },

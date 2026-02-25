@@ -5,6 +5,7 @@ export interface FeedPost {
   id: string;
   content: string;
   post_type: string;
+  query_category: string | null;
   hashtags: string[] | null;
   attachment_url: string | null;
   attachment_name: string | null;
@@ -74,6 +75,7 @@ export function useFeedPosts() {
           id: post.id,
           content: post.content,
           post_type: post.post_type,
+          query_category: post.query_category || null,
           hashtags: post.hashtags,
           attachment_url: post.attachment_url,
           attachment_name: post.attachment_name,
