@@ -315,7 +315,7 @@ export function CreatePostComposer() {
 
             {/* Category */}
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-[170px] h-8 text-xs border-accent/20 bg-accent/5 text-accent-foreground font-medium">
+              <SelectTrigger className="w-[170px] h-8 text-xs border-accent/20 bg-accent/5 text-foreground font-medium">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="z-50 bg-popover">
