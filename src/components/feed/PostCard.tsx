@@ -28,6 +28,10 @@ const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; c
   announcement: { label: "Announcement", icon: Megaphone, className: "bg-destructive/10 text-destructive" },
   article: { label: "Article", icon: Newspaper, className: "bg-intermediary/10 text-intermediary" },
   text: { label: "Insight", icon: FileText, className: "bg-muted text-muted-foreground" },
+  query: { label: "Query", icon: FileText, className: "bg-investor/10 text-investor" },
+};
+
+const queryCategoryConfig: Record<string, { label: string; icon: typeof FileText; className: string }> = {
   requirement: { label: "Requirement", icon: FileText, className: "bg-investor/10 text-investor" },
   expert_find: { label: "Expert Find", icon: UserCheck, className: "bg-primary/10 text-primary" },
 };
@@ -116,6 +120,16 @@ export function PostCard({ post }: { post: FeedPost }) {
               <TypeIcon className="h-2.5 w-2.5" />
               {typeConfig.label}
             </span>
+            {post.post_type === "query" && post.query_category && queryCategoryConfig[post.query_category] && (() => {
+              const qc = queryCategoryConfig[post.query_category!];
+              const QcIcon = qc.icon;
+              return (
+                <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${qc.className}`}>
+                  <QcIcon className="h-2.5 w-2.5" />
+                  {qc.label}
+                </span>
+              );
+            })()}
           </div>
         </div>
 

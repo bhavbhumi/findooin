@@ -77,6 +77,7 @@ export function useTrendingPosts() {
           id: post.id,
           content: post.content,
           post_type: post.post_type,
+          query_category: post.query_category || null,
           hashtags: post.hashtags,
           attachment_url: post.attachment_url,
           attachment_name: post.attachment_name,

@@ -30,10 +30,10 @@ const POST_CATEGORIES = [
   { value: "article", label: "Article", shortLabel: "Article", icon: Newspaper },
 ] as const;
 
-/* ── Post Categories for Investors (limited) ── */
-const INVESTOR_POST_CATEGORIES = [
+/* ── Query Categories for Investors ── */
+const QUERY_CATEGORIES = [
   { value: "requirement", label: "Requirement", shortLabel: "Requirement", icon: FileText },
-  { value: "expert_find", label: "Expert Find", shortLabel: "Expert", icon: UserCheck },
+  { value: "expert_find", label: "Expert Find", shortLabel: "Expert", icon: Search },
 ] as const;
 
 /* ── Post Kinds (Post, Poll, Survey) ── */
@@ -136,6 +136,7 @@ export function CreatePostComposer() {
 
   const [postKind, setPostKind] = useState("normal");
   const [category, setCategory] = useState("text");
+  const [queryCategory, setQueryCategory] = useState<string>("requirement");
   const [audience, setAudience] = useState("public");
   const [content, setContent] = useState("");
   const [attachment, setAttachment] = useState<File | null>(null);
@@ -181,7 +182,7 @@ export function CreatePostComposer() {
       const investorOnly = roleSet.size === 1 && roleSet.has("investor");
       setIsInvestorOnly(investorOnly);
       setCanPost(true); // All roles can now post (investors with limited types)
-      if (investorOnly) setCategory("requirement"); // Default category for investors
+      if (investorOnly) setCategory("query"); // Investors always post as 'query' type
 
       if (profileRes.data) {
         setAvatarUrl(profileRes.data.avatar_url);
@@ -244,10 +245,11 @@ export function CreatePostComposer() {
         scheduledAt = dt.toISOString();
       }
 
+      const postType = isInvestorOnly ? "query" : category;
       const { data: postData, error } = await supabase.from("posts").insert({
         author_id: userId,
         content: content.trim(),
-        post_type: category as any,
+        post_type: postType as any,
         post_kind: postKind as any,
         visibility: audience as any,
         hashtags: hashtags.length > 0 ? hashtags : null,
@@ -255,6 +257,7 @@ export function CreatePostComposer() {
         attachment_type: attachment ? attachment.type : null,
         attachment_url: attachment ? `attachment://${attachment.name}` : null,
         scheduled_at: scheduledAt,
+        query_category: isInvestorOnly ? queryCategory as any : null,
       }).select("id").single();
 
       if (error) throw error;
@@ -302,8 +305,6 @@ export function CreatePostComposer() {
 
   if (canPost === null || !canPost) return null;
 
-  // Investors get limited categories; others get full set
-  const activeCategories = isInvestorOnly ? INVESTOR_POST_CATEGORIES : POST_CATEGORIES;
   // Investors can only post normal posts (no polls/surveys)
   const activePostKinds = isInvestorOnly
     ? POST_KINDS.filter((k) => k.value === "normal")
@@ -354,41 +355,78 @@ export function CreatePostComposer() {
               </SelectContent>
             </Select>
 
-            {/* Category */}
-            <Select value={category} onValueChange={setCategory}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <SelectTrigger className={cn(
-                    "h-8 text-xs border-accent/20 bg-accent/5 text-foreground font-medium",
-                    isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
-                  )}>
-                    {isMobile ? (
-                      (() => { const C = activeCategories.find(c => c.value === category); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
-                    ) : isTablet ? (
-                      <span className="flex items-center gap-1.5 truncate">
-                        {(() => { const C = activeCategories.find(c => c.value === category); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
-                      </span>
-                    ) : (
-                      <SelectValue />
-                    )}
-                  </SelectTrigger>
-                </TooltipTrigger>
-                {isMobile && <TooltipContent side="bottom"><p>{activeCategories.find(c => c.value === category)?.label}</p></TooltipContent>}
-              </Tooltip>
-              <SelectContent className="z-50 bg-popover">
-                {activeCategories.map((t) => {
-                  const Icon = t.icon;
-                  return (
-                    <SelectItem key={t.value} value={t.value}>
-                      <span className="flex items-center gap-2">
-                        <Icon className="h-3.5 w-3.5" />
-                        {t.label}
-                      </span>
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
+            {/* Category (Issuers/Intermediaries) or Query Category (Investors) */}
+            {isInvestorOnly ? (
+              <Select value={queryCategory} onValueChange={setQueryCategory}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SelectTrigger className={cn(
+                      "h-8 text-xs border-investor/20 bg-investor/5 text-investor font-medium",
+                      isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
+                    )}>
+                      {isMobile ? (
+                        (() => { const C = QUERY_CATEGORIES.find(c => c.value === queryCategory); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                      ) : isTablet ? (
+                        <span className="flex items-center gap-1.5 truncate">
+                          {(() => { const C = QUERY_CATEGORIES.find(c => c.value === queryCategory); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
+                        </span>
+                      ) : (
+                        <SelectValue />
+                      )}
+                    </SelectTrigger>
+                  </TooltipTrigger>
+                  {isMobile && <TooltipContent side="bottom"><p>{QUERY_CATEGORIES.find(c => c.value === queryCategory)?.label}</p></TooltipContent>}
+                </Tooltip>
+                <SelectContent className="z-50 bg-popover">
+                  {QUERY_CATEGORIES.map((t) => {
+                    const Icon = t.icon;
+                    return (
+                      <SelectItem key={t.value} value={t.value}>
+                        <span className="flex items-center gap-2">
+                          <Icon className="h-3.5 w-3.5" />
+                          {t.label}
+                        </span>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Select value={category} onValueChange={setCategory}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SelectTrigger className={cn(
+                      "h-8 text-xs border-accent/20 bg-accent/5 text-foreground font-medium",
+                      isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
+                    )}>
+                      {isMobile ? (
+                        (() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                      ) : isTablet ? (
+                        <span className="flex items-center gap-1.5 truncate">
+                          {(() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
+                        </span>
+                      ) : (
+                        <SelectValue />
+                      )}
+                    </SelectTrigger>
+                  </TooltipTrigger>
+                  {isMobile && <TooltipContent side="bottom"><p>{POST_CATEGORIES.find(c => c.value === category)?.label}</p></TooltipContent>}
+                </Tooltip>
+                <SelectContent className="z-50 bg-popover">
+                  {POST_CATEGORIES.map((t) => {
+                    const Icon = t.icon;
+                    return (
+                      <SelectItem key={t.value} value={t.value}>
+                        <span className="flex items-center gap-2">
+                          <Icon className="h-3.5 w-3.5" />
+                          {t.label}
+                        </span>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            )}
 
             {/* Audience */}
             <Select value={audience} onValueChange={setAudience}>
