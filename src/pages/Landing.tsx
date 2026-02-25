@@ -77,7 +77,7 @@ const Landing = () => {
               <Shield className="h-3.5 w-3.5 text-accent" />
               India's Regulated Financial Network
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-heading tracking-tight text-foreground leading-[1.1] mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.1] mb-6">
               Where India's financial
               <br />
               ecosystem <span className="text-accent">connects</span>
