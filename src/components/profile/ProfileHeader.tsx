@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -139,14 +140,13 @@ export const ProfileHeader = ({
         {/* Avatar + Identity */}
         <div className="px-5 sm:px-6">
           <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-14 sm:-mt-16">
-            {/* Avatar */}
-            <div className="h-24 w-24 sm:h-28 sm:w-28 rounded-full bg-muted flex items-center justify-center text-2xl sm:text-3xl font-bold text-muted-foreground shrink-0 overflow-hidden border-4 border-card shadow-lg ring-2 ring-border">
-              {profile.avatar_url ? (
-                <img src={profile.avatar_url} alt={profile.full_name} className="h-full w-full object-cover" />
-              ) : (
-                getInitials(profile.full_name)
-              )}
-            </div>
+            {/* Avatar — Network-styled rounded square */}
+            <NetworkAvatar
+              src={profile.avatar_url}
+              initials={getInitials(profile.full_name)}
+              size="xl"
+              roleColor={primaryRole ? `hsl(var(--${primaryRole}))` : undefined}
+            />
 
             {/* Name + Info + Actions stacked */}
             <div className="flex-1 min-w-0 pb-3">
