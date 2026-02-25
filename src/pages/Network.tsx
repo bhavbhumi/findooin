@@ -144,7 +144,6 @@ const Network = () => {
           <div>
         <h1 className="text-2xl font-bold font-heading text-foreground mb-1">Network</h1>
         <p className="text-sm text-muted-foreground mb-4">Manage your professional relationships and grow your network.</p>
-        <p className="text-sm text-muted-foreground mb-4">Manage your professional relationships and grow your network.</p>
 
         {/* Pending requests banner */}
         {pendingIncoming.length > 0 && (
@@ -311,7 +310,7 @@ const Network = () => {
               followingCount={myFollowing.length}
               pendingCount={pendingIncoming.length + pendingOutgoing.length}
               suggestions={suggestions}
-              allUsers={[...myConnections, ...myFollowing, ...myFollowers]}
+              allUsers={[...myConnections, ...myFollowing, ...myFollowers, ...suggestions]}
               getInitials={getInitials}
             />
           </aside>
