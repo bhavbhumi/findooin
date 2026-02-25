@@ -148,38 +148,71 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          certifications: string[] | null
           created_at: string
+          designation: string | null
           display_name: string | null
+          experience_years: number | null
           full_name: string
+          headline: string | null
           id: string
+          languages: string[] | null
+          location: string | null
           onboarding_completed: boolean
+          organization: string | null
+          regulatory_ids: Json | null
+          social_links: Json | null
+          specializations: string[] | null
           updated_at: string
           user_type: Database["public"]["Enums"]["user_type"]
           verification_status: Database["public"]["Enums"]["verification_status"]
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          certifications?: string[] | null
           created_at?: string
+          designation?: string | null
           display_name?: string | null
+          experience_years?: number | null
           full_name?: string
+          headline?: string | null
           id: string
+          languages?: string[] | null
+          location?: string | null
           onboarding_completed?: boolean
+          organization?: string | null
+          regulatory_ids?: Json | null
+          social_links?: Json | null
+          specializations?: string[] | null
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]
           verification_status?: Database["public"]["Enums"]["verification_status"]
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          certifications?: string[] | null
           created_at?: string
+          designation?: string | null
           display_name?: string | null
+          experience_years?: number | null
           full_name?: string
+          headline?: string | null
           id?: string
+          languages?: string[] | null
+          location?: string | null
           onboarding_completed?: boolean
+          organization?: string | null
+          regulatory_ids?: Json | null
+          social_links?: Json | null
+          specializations?: string[] | null
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]
           verification_status?: Database["public"]["Enums"]["verification_status"]
+          website?: string | null
         }
         Relationships: []
       }
