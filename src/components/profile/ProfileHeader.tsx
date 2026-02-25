@@ -139,7 +139,7 @@ export const ProfileHeader = ({
 
         {/* Avatar + Identity */}
         <div className="px-5 sm:px-6">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 -mt-14 sm:-mt-16">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-14 sm:-mt-16">
             {/* Avatar — Network-styled rounded square */}
             <NetworkAvatar
               src={profile.avatar_url}
