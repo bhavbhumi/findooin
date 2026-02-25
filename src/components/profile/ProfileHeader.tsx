@@ -239,7 +239,7 @@ export const ProfileHeader = ({
             </div>
           </div>
 
-          {/* Role Badges + Joined date */}
+          {/* Role Badges */}
           <div className="flex items-center gap-2 flex-wrap mt-3">
             <Badge variant="outline" className="text-xs capitalize gap-1">
               <Briefcase className="h-3 w-3" />
@@ -254,10 +254,6 @@ export const ProfileHeader = ({
                 </span>
               );
             })}
-            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground ml-auto">
-              <Calendar className="h-3 w-3" />
-              Joined {format(new Date(profile.created_at), "MMM yyyy")}
-            </span>
           </div>
 
           {/* Headline */}
@@ -298,6 +294,11 @@ export const ProfileHeader = ({
             >
               <span className="font-semibold text-card-foreground">{stats.connections}</span> Connections
             </button>
+            <span className="text-border">·</span>
+            <span className="inline-flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              Joined {format(new Date(profile.created_at), "MMM yyyy")}
+            </span>
           </div>
         </div>
       </div>
