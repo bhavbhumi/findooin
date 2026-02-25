@@ -38,11 +38,10 @@ export function useViralPosts() {
 
       const likeMap = new Map<string, number>();
       const bookmarkMap = new Map<string, number>();
-      const repostMap = new Map<string, number>();
+      
       interactionsRes.data?.forEach((i) => {
         if (i.interaction_type === "like") likeMap.set(i.post_id, (likeMap.get(i.post_id) || 0) + 1);
         else if (i.interaction_type === "bookmark") bookmarkMap.set(i.post_id, (bookmarkMap.get(i.post_id) || 0) + 1);
-        else if (i.interaction_type === "repost") repostMap.set(i.post_id, (repostMap.get(i.post_id) || 0) + 1);
       });
 
       const commentCountMap = new Map<string, number>();
@@ -72,15 +71,14 @@ export function useViralPosts() {
           like_count: likeMap.get(post.id) || 0,
           comment_count: commentCountMap.get(post.id) || 0,
           bookmark_count: bookmarkMap.get(post.id) || 0,
-          repost_count: repostMap.get(post.id) || 0,
         };
       });
 
-      // Sort by total engagement (likes + comments + reposts)
+      // Sort by total engagement (likes + comments)
       return feedPosts
         .map((p) => ({
           ...p,
-          _engagement: p.like_count + p.comment_count * 2 + p.repost_count * 3,
+          _engagement: p.like_count + p.comment_count * 2,
         }))
         .sort((a, b) => b._engagement - a._engagement)
         .map(({ _engagement, ...p }) => p);

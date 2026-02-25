@@ -6,7 +6,6 @@ export function usePostInteractions(postId: string) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
-  const [reposted, setReposted] = useState(false);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -29,7 +28,6 @@ export function usePostInteractions(postId: string) {
     data?.forEach((i) => {
       if (i.interaction_type === "like") setLiked(true);
       if (i.interaction_type === "bookmark") setBookmarked(true);
-      if (i.interaction_type === "repost") setReposted(true);
     });
   };
 
@@ -58,7 +56,6 @@ export function usePostInteractions(postId: string) {
 
   const toggleLike = useCallback(() => toggleInteraction("like", liked, setLiked), [toggleInteraction, liked]);
   const toggleBookmark = useCallback(() => toggleInteraction("bookmark", bookmarked, setBookmarked), [toggleInteraction, bookmarked]);
-  const toggleRepost = useCallback(() => toggleInteraction("repost", reposted, setReposted), [toggleInteraction, reposted]);
 
-  return { liked, bookmarked, reposted, currentUserId, toggleLike, toggleBookmark, toggleRepost, loading };
+  return { liked, bookmarked, currentUserId, toggleLike, toggleBookmark, loading };
 }

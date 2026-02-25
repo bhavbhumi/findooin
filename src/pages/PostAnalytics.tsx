@@ -10,7 +10,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, Legend,
 } from "recharts";
-import { TrendingUp, Flame, Heart, MessageSquare, Repeat2, Eye, FileText } from "lucide-react";
+import { TrendingUp, Flame, Heart, MessageSquare, Eye, FileText } from "lucide-react";
 
 const COLORS = ["hsl(152,55%,42%)", "hsl(224,60%,55%)", "hsl(262,50%,55%)", "hsl(0,72%,51%)", "hsl(40,80%,55%)"];
 
@@ -36,7 +36,6 @@ function useAnalyticsData(userId: string | null) {
       const myInteractions = allInteractions.filter((i) => myPostIds.has(i.post_id));
       const myCommentsCount = allComments.filter((c) => myPostIds.has(c.post_id)).length;
       const myLikes = myInteractions.filter((i) => i.interaction_type === "like").length;
-      const myReposts = myInteractions.filter((i) => i.interaction_type === "repost").length;
       const myBookmarks = myInteractions.filter((i) => i.interaction_type === "bookmark").length;
 
       // Post type breakdown for my posts
@@ -46,7 +45,7 @@ function useAnalyticsData(userId: string | null) {
       });
 
       // Daily engagement for my posts (last 14 days)
-      const dailyEngagement: { date: string; likes: number; comments: number; reposts: number }[] = [];
+      const dailyEngagement: { date: string; likes: number; comments: number }[] = [];
       for (let i = 13; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
@@ -57,7 +56,6 @@ function useAnalyticsData(userId: string | null) {
           date: dateStr.slice(5),
           likes: dayInteractions.filter((x) => x.interaction_type === "like").length,
           comments: dayComments.length,
-          reposts: dayInteractions.filter((x) => x.interaction_type === "repost").length,
         });
       }
 
@@ -84,9 +82,8 @@ function useAnalyticsData(userId: string | null) {
       // Top posts by engagement
       const postEngagement = allPosts.map((p) => {
         const likes = allInteractions.filter((i) => i.post_id === p.id && i.interaction_type === "like").length;
-        const reposts = allInteractions.filter((i) => i.post_id === p.id && i.interaction_type === "repost").length;
         const comments = allComments.filter((c) => c.post_id === p.id).length;
-        return { ...p, likes, reposts, comments, total: likes + comments * 2 + reposts * 3 };
+        return { ...p, likes, comments, total: likes + comments * 2 };
       });
       const topPosts = postEngagement.sort((a, b) => b.total - a.total).slice(0, 5);
 
@@ -108,7 +105,6 @@ function useAnalyticsData(userId: string | null) {
           totalPosts: myPosts.length,
           totalLikes: myLikes,
           totalComments: myCommentsCount,
-          totalReposts: myReposts,
           totalBookmarks: myBookmarks,
           typeBreakdown: Object.entries(myTypeBreakdown).map(([type, count]) => ({ type, count })),
           dailyEngagement,
@@ -172,11 +168,10 @@ const PostAnalytics = () => {
               </div>
             ) : data ? (
               <div className="space-y-6">
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {statCard(<FileText className="h-5 w-5 text-accent" />, "Posts", data.personal.totalPosts)}
                   {statCard(<Heart className="h-5 w-5 text-destructive" />, "Likes", data.personal.totalLikes)}
                   {statCard(<MessageSquare className="h-5 w-5 text-accent" />, "Comments", data.personal.totalComments)}
-                  {statCard(<Repeat2 className="h-5 w-5 text-green-600" />, "Reposts", data.personal.totalReposts)}
                   {statCard(<Eye className="h-5 w-5 text-muted-foreground" />, "Bookmarks", data.personal.totalBookmarks)}
                 </div>
 
@@ -191,7 +186,6 @@ const PostAnalytics = () => {
                       <Legend />
                       <Line type="monotone" dataKey="likes" stroke="hsl(0,72%,51%)" strokeWidth={2} dot={false} />
                       <Line type="monotone" dataKey="comments" stroke="hsl(152,55%,42%)" strokeWidth={2} dot={false} />
-                      <Line type="monotone" dataKey="reposts" stroke="hsl(224,60%,55%)" strokeWidth={2} dot={false} />
                     </LineChart>
                   </ResponsiveContainer>
                 </Card>
@@ -271,7 +265,6 @@ const PostAnalytics = () => {
                           <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted-foreground">
                             <span className="flex items-center gap-1"><Heart className="h-3 w-3" />{post.likes}</span>
                             <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" />{post.comments}</span>
-                            <span className="flex items-center gap-1"><Repeat2 className="h-3 w-3" />{post.reposts}</span>
                           </div>
                         </div>
                       </div>

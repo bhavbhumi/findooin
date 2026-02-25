@@ -7,7 +7,7 @@ import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Heart, MessageCircle, Repeat2, UserPlus, UserCheck, Users,
+  Heart, MessageCircle, UserPlus, UserCheck, Users,
   Bell, BellOff, CheckCheck,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
@@ -15,7 +15,7 @@ import { formatDistanceToNow } from "date-fns";
 const typeIconMap: Record<string, React.ElementType> = {
   like: Heart,
   comment: MessageCircle,
-  repost: Repeat2,
+  
   follow: UserPlus,
   connection_request: Users,
   connection_accepted: UserCheck,
@@ -24,7 +24,7 @@ const typeIconMap: Record<string, React.ElementType> = {
 const typeColorMap: Record<string, string> = {
   like: "text-destructive",
   comment: "text-primary",
-  repost: "text-accent",
+  
   follow: "text-accent",
   connection_request: "text-primary",
   connection_accepted: "text-accent",
