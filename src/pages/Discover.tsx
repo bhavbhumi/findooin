@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
 import AppNavbar from "@/components/AppNavbar";
 import { PostCard } from "@/components/feed/PostCard";
 import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
+import { DiscoverSidebar, saveRecentSearch } from "@/components/discover/DiscoverSidebar";
 
 /* ── Types ── */
 interface DiscoverUser {
@@ -123,115 +124,145 @@ const Discover = () => {
   const peopleCount = filteredPeople.length;
   const postsCount = filteredPosts.length;
 
+  const handleSearch = useCallback((query: string) => {
+    setSearch(query);
+    saveRecentSearch(query);
+  }, []);
+
+  const handleHashtagClick = useCallback((tag: string) => {
+    setSearch(`#${tag}`);
+    setActiveTab("posts");
+    saveRecentSearch(`#${tag}`);
+  }, []);
+
+  const handleTopicClick = useCallback((topic: string) => {
+    setSearch(topic);
+    saveRecentSearch(topic);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       <AppNavbar />
 
-      <div className="container py-6 max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="mb-5">
-          <h1 className="text-xl font-bold font-heading text-foreground">Discover</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Find people, posts, and insights across the network</p>
-        </div>
-
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder={activeTab === "people" ? "Search people by name, headline, org…" : "Search posts by content, hashtag, author…"}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-11"
-          />
-        </div>
-
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "people" | "posts")} className="mb-5">
-          <TabsList className="w-full grid grid-cols-2 h-10">
-            <TabsTrigger value="people" className="gap-1.5 text-sm">
-              <Users className="h-4 w-4" />
-              People
-              {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{peopleCount}</span>}
-            </TabsTrigger>
-            <TabsTrigger value="posts" className="gap-1.5 text-sm">
-              <FileText className="h-4 w-4" />
-              Posts
-              {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{postsCount}</span>}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        {/* People Tab */}
-        {activeTab === "people" && (
-          <>
-            {/* Role filters */}
-            <div className="flex gap-2 mb-4">
-              {["investor", "intermediary", "issuer"].map((r) => (
-                <Button
-                  key={r}
-                  variant={roleFilter === r ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setRoleFilter(roleFilter === r ? null : r)}
-                  className="capitalize text-xs"
-                >
-                  {r}
-                </Button>
-              ))}
+      <div className="container py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 max-w-4xl mx-auto">
+          {/* Main Column */}
+          <div>
+            {/* Header */}
+            <div className="mb-5">
+              <h1 className="text-xl font-bold font-heading text-foreground">Discover</h1>
+              <p className="text-sm text-muted-foreground mt-0.5">Find people, posts, and insights across the network</p>
             </div>
 
-            {loadingUsers ? (
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
-                    <Skeleton className="h-12 w-12 rounded-full" />
-                    <div className="space-y-1.5 flex-1">
-                      <Skeleton className="h-4 w-32" />
-                      <Skeleton className="h-3 w-48" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : filteredPeople.length === 0 ? (
-              <EmptyState icon={Users} text="No people found" />
-            ) : (
-              <div className="space-y-3">
-                {filteredPeople.map((user) => (
-                  <PersonCard key={user.id} user={user} />
-                ))}
-              </div>
-            )}
-          </>
-        )}
+            {/* Search */}
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder={activeTab === "people" ? "Search people by name, headline, org…" : "Search posts by content, hashtag, author…"}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onBlur={() => { if (search.trim()) saveRecentSearch(search.trim()); }}
+                className="pl-9 h-11"
+              />
+            </div>
 
-        {/* Posts Tab */}
-        {activeTab === "posts" && (
-          <>
-            {loadingPosts ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="rounded-xl border border-border bg-card p-6">
-                    <Skeleton className="h-4 w-3/4 mb-3" />
-                    <Skeleton className="h-3 w-full mb-2" />
-                    <Skeleton className="h-3 w-2/3" />
+            {/* Tabs */}
+            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "people" | "posts")} className="mb-5">
+              <TabsList className="w-full grid grid-cols-2 h-10">
+                <TabsTrigger value="people" className="gap-1.5 text-sm">
+                  <Users className="h-4 w-4" />
+                  People
+                  {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{peopleCount}</span>}
+                </TabsTrigger>
+                <TabsTrigger value="posts" className="gap-1.5 text-sm">
+                  <FileText className="h-4 w-4" />
+                  Posts
+                  {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{postsCount}</span>}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {/* People Tab */}
+            {activeTab === "people" && (
+              <>
+                {/* Role filters */}
+                <div className="flex gap-2 mb-4">
+                  {["investor", "intermediary", "issuer"].map((r) => (
+                    <Button
+                      key={r}
+                      variant={roleFilter === r ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setRoleFilter(roleFilter === r ? null : r)}
+                      className="capitalize text-xs"
+                    >
+                      {r}
+                    </Button>
+                  ))}
+                </div>
+
+                {loadingUsers ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
+                        <Skeleton className="h-12 w-12 rounded-full" />
+                        <div className="space-y-1.5 flex-1">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-48" />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ) : filteredPosts.length === 0 ? (
-              <EmptyState icon={FileText} text="No posts found" />
-            ) : (
-              <div className="space-y-4">
-                {!search.trim() && (
-                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    <TrendingUp className="h-3.5 w-3.5" /> Showing recent posts — search to find specific content
-                  </p>
+                ) : filteredPeople.length === 0 ? (
+                  <EmptyState icon={Users} text="No people found" />
+                ) : (
+                  <div className="space-y-3">
+                    {filteredPeople.map((user) => (
+                      <PersonCard key={user.id} user={user} />
+                    ))}
+                  </div>
                 )}
-                {filteredPosts.map((post) => (
-                  <PostCard key={post.id} post={post} />
-                ))}
-              </div>
+              </>
             )}
-          </>
-        )}
+
+            {/* Posts Tab */}
+            {activeTab === "posts" && (
+              <>
+                {loadingPosts ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="rounded-xl border border-border bg-card p-6">
+                        <Skeleton className="h-4 w-3/4 mb-3" />
+                        <Skeleton className="h-3 w-full mb-2" />
+                        <Skeleton className="h-3 w-2/3" />
+                      </div>
+                    ))}
+                  </div>
+                ) : filteredPosts.length === 0 ? (
+                  <EmptyState icon={FileText} text="No posts found" />
+                ) : (
+                  <div className="space-y-4">
+                    {!search.trim() && (
+                      <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                        <TrendingUp className="h-3.5 w-3.5" /> Showing recent posts — search to find specific content
+                      </p>
+                    )}
+                    {filteredPosts.map((post) => (
+                      <PostCard key={post.id} post={post} />
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <aside className="hidden lg:block">
+            <DiscoverSidebar
+              onHashtagClick={handleHashtagClick}
+              onTopicClick={handleTopicClick}
+            />
+          </aside>
+        </div>
       </div>
     </div>
   );
