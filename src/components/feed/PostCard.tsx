@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 import { usePostInteractions } from "@/hooks/usePostInteractions";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { differenceInMinutes } from "date-fns";
 import { ReportDialog } from "@/components/feed/ReportDialog";
@@ -203,47 +204,56 @@ export function PostCard({ post }: { post: FeedPost }) {
       {/* Actions */}
       <div className="flex items-center gap-1 pt-2 border-t border-border">
         {/* Like */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${liked ? "text-destructive hover:text-destructive/80" : "text-muted-foreground hover:text-foreground/70"}`}
+        <button
+          className={cn(
+            "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors",
+            liked
+              ? "text-destructive bg-destructive/10"
+              : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+          )}
           onClick={toggleLike}
         >
           <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
           <span>{post.like_count > 0 ? post.like_count : ""}</span>
-        </Button>
+        </button>
 
         {/* Comment */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${commentsOpen ? "text-primary" : "text-muted-foreground hover:text-foreground/70"}`}
+        <button
+          className={cn(
+            "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors",
+            commentsOpen
+              ? "text-primary bg-primary/10"
+              : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+          )}
           onClick={() => setCommentsOpen(!commentsOpen)}
         >
           <MessageSquare className={`h-3.5 w-3.5 ${commentsOpen ? "fill-current" : ""}`} />
           <span>{post.comment_count > 0 ? post.comment_count : ""}</span>
-        </Button>
+        </button>
 
         {/* Repost */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${reposted ? "text-primary" : "text-muted-foreground hover:text-foreground/70"}`}
+        <button
+          className={cn(
+            "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors",
+            reposted
+              ? "text-primary bg-primary/10"
+              : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+          )}
           onClick={toggleRepost}
         >
           <Repeat2 className={`h-3.5 w-3.5 ${reposted ? "stroke-[2.5px]" : ""}`} />
           <span>{post.repost_count > 0 ? post.repost_count : ""}</span>
-        </Button>
-
-
-        <div className="flex-1" />
+        </button>
 
         <div className="flex-1" />
 
         {/* Share */}
-        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground/70 h-8 px-2.5 transition-colors" onClick={handleShare}>
+        <button
+          className="inline-flex items-center px-2.5 py-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+          onClick={handleShare}
+        >
           <Share2 className="h-3.5 w-3.5" />
-        </Button>
+        </button>
       </div>
 
       {/* Inline Comments */}
