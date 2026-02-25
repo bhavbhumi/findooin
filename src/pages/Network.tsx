@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import AppNavbar from "@/components/AppNavbar";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
+import { NetworkSidebar } from "@/components/network/NetworkSidebar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -137,8 +138,12 @@ const Network = () => {
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       <AppNavbar />
-      <div className="container max-w-3xl mx-auto pt-4">
+      <div className="container max-w-5xl mx-auto pt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+          {/* Main Column */}
+          <div>
         <h1 className="text-2xl font-bold font-heading text-foreground mb-1">Network</h1>
+        <p className="text-sm text-muted-foreground mb-4">Manage your professional relationships and grow your network.</p>
         <p className="text-sm text-muted-foreground mb-4">Manage your professional relationships and grow your network.</p>
 
         {/* Pending requests banner */}
@@ -296,6 +301,21 @@ const Network = () => {
             </TabsContent>
           </Tabs>
         )}
+          </div>
+
+          {/* Sidebar */}
+          <aside className="hidden lg:block">
+            <NetworkSidebar
+              connectionsCount={myConnections.length}
+              followersCount={myFollowers.length}
+              followingCount={myFollowing.length}
+              pendingCount={pendingIncoming.length + pendingOutgoing.length}
+              suggestions={suggestions}
+              allUsers={[...myConnections, ...myFollowing, ...myFollowers]}
+              getInitials={getInitials}
+            />
+          </aside>
+        </div>
       </div>
     </div>
   );
