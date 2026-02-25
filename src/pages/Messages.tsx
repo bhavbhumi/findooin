@@ -213,8 +213,14 @@ const Messages = () => {
   return (
     <div className="h-screen flex flex-col bg-background">
       <AppNavbar />
-      <div className="flex-1 min-h-0 container max-w-4xl mx-auto pt-4 px-4 pb-16 md:pb-4">
-        <div className="flex rounded-xl border border-border bg-card overflow-hidden h-full">
+      <div className={cn(
+        "flex-1 min-h-0 container max-w-4xl mx-auto md:pt-4 md:px-4 md:pb-4 pb-16",
+        selectedUserId ? "px-0 pt-0" : "px-2 pt-2"
+      )}>
+        <div className={cn(
+          "flex bg-card overflow-hidden h-full",
+          selectedUserId ? "md:rounded-xl md:border md:border-border" : "rounded-xl border border-border"
+        )}>
           {/* Conversation list */}
           <div className={`w-full md:w-80 border-r border-border flex flex-col shrink-0 ${selectedUserId ? "hidden md:flex" : "flex"}`}>
             <div className="p-3 border-b border-border">
@@ -283,7 +289,7 @@ const Messages = () => {
           </div>
 
           {/* Chat area */}
-          <div className={`flex-1 flex flex-col ${!selectedUserId ? "hidden md:flex" : "flex"}`}>
+          <div className={`flex-1 flex flex-col min-w-0 ${!selectedUserId ? "hidden md:flex" : "flex"}`}>
             {selectedUserId && selectedProfile ? (
               <>
                 {/* Chat header */}
@@ -300,13 +306,13 @@ const Messages = () => {
                 </div>
 
                 {/* Category tabs */}
-                <div className="flex items-center gap-1 px-3 py-2 border-b border-border overflow-x-auto scrollbar-hide">
+                <div className="flex items-center gap-0.5 px-2.5 py-1.5 border-b border-border overflow-x-auto scrollbar-hide">
                   {MESSAGE_CATEGORIES.map((cat) => (
                     <button
                       key={cat.value}
                       onClick={() => setActiveCategory(cat.value)}
                       className={cn(
-                        "px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition-colors border",
+                        "px-2 py-0.5 rounded-full text-[11px] font-medium whitespace-nowrap transition-colors border",
                         activeCategory === cat.value
                           ? categoryColor[cat.value] || "bg-foreground/10 text-foreground border-foreground/20"
                           : "text-muted-foreground border-transparent hover:bg-muted/50"
@@ -328,12 +334,12 @@ const Messages = () => {
                     const isMine = msg.sender_id === currentUserId;
                     return (
                       <div key={msg.id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
-                        <div className={`max-w-[80%] rounded-2xl px-3 py-1.5 ${
+                        <div className={`max-w-[75%] rounded-2xl px-3 py-1.5 ${
                           isMine
                             ? "bg-primary text-primary-foreground rounded-br-md"
                             : "bg-muted text-foreground rounded-bl-md"
                         }`}>
-                          <p className="text-[13px] leading-snug">{msg.content}</p>
+                          <p className="text-[13px] leading-snug break-words">{msg.content}</p>
                           <div className={`flex items-center gap-1 mt-0.5 ${isMine ? "justify-end" : ""}`}>
                             <span className={`text-[10px] ${isMine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
                               {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true })}
