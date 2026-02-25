@@ -287,13 +287,13 @@ const Messages = () => {
             {selectedUserId && selectedProfile ? (
               <>
                 {/* Chat header */}
-                <div className="p-3 border-b border-border flex items-center gap-3">
-                  <Button variant="ghost" size="icon" className="md:hidden shrink-0" onClick={() => setSelectedUserId(null)}>
+                <div className="p-2.5 border-b border-border flex items-center gap-2.5">
+                  <Button variant="ghost" size="icon" className="md:hidden shrink-0 h-8 w-8" onClick={() => setSelectedUserId(null)}>
                     <ArrowLeft className="h-4 w-4" />
                   </Button>
-                  <NetworkAvatar src={selectedProfile.avatar_url} initials={getInitials(selectedProfile.full_name)} size="sm" />
+                  <NetworkAvatar src={selectedProfile.avatar_url} initials={getInitials(selectedProfile.full_name)} size="sm" className="!h-8 !w-8 text-xs" />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-foreground truncate">
+                    <p className="text-[13px] font-semibold text-foreground truncate">
                       {selectedProfile.display_name || selectedProfile.full_name}
                     </p>
                   </div>
@@ -318,7 +318,7 @@ const Messages = () => {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                <div className="flex-1 overflow-y-auto p-3 space-y-2">
                   {filteredMessages.length === 0 && (
                     <div className="flex-1 flex items-center justify-center py-12">
                       <p className="text-xs text-muted-foreground">No messages in {MESSAGE_CATEGORIES.find(c => c.value === activeCategory)?.label}</p>
@@ -328,12 +328,12 @@ const Messages = () => {
                     const isMine = msg.sender_id === currentUserId;
                     return (
                       <div key={msg.id} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
-                        <div className={`max-w-[75%] rounded-2xl px-4 py-2 ${
+                        <div className={`max-w-[80%] rounded-2xl px-3 py-1.5 ${
                           isMine
                             ? "bg-primary text-primary-foreground rounded-br-md"
                             : "bg-muted text-foreground rounded-bl-md"
                         }`}>
-                          <p className="text-sm">{msg.content}</p>
+                          <p className="text-[13px] leading-snug">{msg.content}</p>
                           <div className={`flex items-center gap-1 mt-0.5 ${isMine ? "justify-end" : ""}`}>
                             <span className={`text-[10px] ${isMine ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
                               {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true })}
@@ -348,7 +348,7 @@ const Messages = () => {
                 </div>
 
                 {/* Input */}
-                <div className="p-3 border-t border-border space-y-2">
+                <div className="p-2.5 border-t border-border space-y-1.5">
                   {activeCategory !== "general" && (
                     <Badge variant="outline" className={cn("text-[10px]", categoryColor[activeCategory])}>
                       {MESSAGE_CATEGORIES.find(c => c.value === activeCategory)?.label}
@@ -362,10 +362,10 @@ const Messages = () => {
                       placeholder={`Type a message${activeCategory !== "general" ? ` (${MESSAGE_CATEGORIES.find(c => c.value === activeCategory)?.label})` : ""}...`}
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
-                      className="flex-1"
+                      className="flex-1 h-9 text-[13px]"
                       autoFocus
                     />
-                    <Button type="submit" size="icon" disabled={!newMessage.trim() || sending}>
+                    <Button type="submit" size="icon" className="h-9 w-9" disabled={!newMessage.trim() || sending}>
                       <Send className="h-4 w-4" />
                     </Button>
                   </form>
