@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 import {
@@ -13,6 +14,47 @@ import {
 
 const AppNavbar = () => {
   const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    let channel: any;
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) return;
+      const uid = session.user.id;
+
+      // Load initial count
+      supabase
+        .from("notifications")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", uid)
+        .eq("read", false)
+        .then(({ count }) => setUnreadCount(count || 0));
+
+      // Realtime for new notifications
+      channel = supabase
+        .channel("navbar-notif-count")
+        .on("postgres_changes", {
+          event: "*",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${uid}`,
+        }, () => {
+          // Reload count on any change
+          supabase
+            .from("notifications")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", uid)
+            .eq("read", false)
+            .then(({ count }) => setUnreadCount(count || 0));
+        })
+        .subscribe();
+    });
+
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -67,9 +109,14 @@ const AppNavbar = () => {
             </Button>
 
             {/* Notifications icon */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild>
+            <Button variant="ghost" size="icon" className="text-muted-foreground relative" asChild>
               <Link to="/notifications">
                 <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-4 min-w-4 px-1 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </Link>
             </Button>
 
@@ -85,6 +132,12 @@ const AppNavbar = () => {
                   <Link to="/profile" className="flex items-center gap-2 cursor-pointer">
                     <User className="h-4 w-4" />
                     Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/analytics" className="flex items-center gap-2 cursor-pointer">
+                    <BarChart3 className="h-4 w-4" />
+                    Analytics
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
