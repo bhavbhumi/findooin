@@ -217,7 +217,7 @@ export function PostCard({ post }: { post: FeedPost }) {
         <Button
           variant="ghost"
           size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${commentsOpen ? "text-accent" : "text-muted-foreground hover:text-accent"}`}
+          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${commentsOpen ? "text-brand-blue" : "text-muted-foreground hover:text-brand-blue"}`}
           onClick={() => setCommentsOpen(!commentsOpen)}
         >
           <MessageSquare className={`h-3.5 w-3.5 ${commentsOpen ? "fill-current" : ""}`} />
@@ -228,7 +228,7 @@ export function PostCard({ post }: { post: FeedPost }) {
         <Button
           variant="ghost"
           size="sm"
-          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${reposted ? "text-green-600 hover:text-green-500" : "text-muted-foreground hover:text-green-600"}`}
+          className={`h-8 px-2.5 gap-1.5 text-xs transition-colors ${reposted ? "text-accent hover:text-accent/80" : "text-muted-foreground hover:text-accent"}`}
           onClick={toggleRepost}
         >
           <Repeat2 className={`h-3.5 w-3.5 ${reposted ? "stroke-[2.5px]" : ""}`} />
