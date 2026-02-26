@@ -74,6 +74,7 @@ const Messages = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<{ full_name: string; display_name: string | null; avatar_url: string | null } | null>(null);
+  const [recipientRoles, setRecipientRoles] = useState<string[]>([]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -219,6 +220,17 @@ const Messages = () => {
     const conv = conversations.find((c) => c.user_id === userId);
     setSelectedProfile(conv ? { full_name: conv.full_name, display_name: conv.display_name, avatar_url: conv.avatar_url } : null);
 
+    // Fetch recipient's roles to determine allowed message categories
+    const { data: rolesData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId);
+    const roles = rolesData?.map((r) => r.role) || ["investor"];
+    setRecipientRoles(roles);
+    // If recipient is investor-only, force category to general
+    const isInvestorOnly = roles.length === 1 && roles[0] === "investor";
+    if (isInvestorOnly) setActiveCategory("general");
+
     const { data } = await supabase
       .from("messages")
       .select("*")
@@ -263,6 +275,12 @@ const Messages = () => {
   });
 
   const totalUnread = conversations.reduce((sum, c) => sum + c.unread_count, 0);
+
+  // If recipient is investor-only, restrict to general messages only
+  const recipientIsInvestorOnly = recipientRoles.length > 0 && recipientRoles.length === 1 && recipientRoles[0] === "investor";
+  const allowedCategories = recipientIsInvestorOnly
+    ? MESSAGE_CATEGORIES.filter((c) => c.value === "general")
+    : MESSAGE_CATEGORIES;
 
   const categoryColor: Record<string, string> = {
     general: "",
@@ -419,7 +437,7 @@ const Messages = () => {
 
                 {/* Category tabs */}
                 <div className="flex items-center gap-0.5 px-2.5 py-1.5 border-b border-border overflow-x-auto scrollbar-hide">
-                  {MESSAGE_CATEGORIES.map((cat) => {
+                  {allowedCategories.map((cat) => {
                     const catMsgCount = messages.filter((m) => (m.category || "general") === cat.value).length;
                     return (
                       <button
