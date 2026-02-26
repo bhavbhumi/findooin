@@ -143,9 +143,9 @@ export const ProfileHeader = ({
 
         {/* Avatar + Identity row */}
         <div className="px-4 sm:px-6 relative z-10">
-          <div className="flex items-end gap-3 sm:gap-4 -mt-12 sm:-mt-14 md:-mt-16">
+          <div className="flex items-end gap-3 sm:gap-4 -mt-14 sm:-mt-16 md:-mt-20">
             {/* Round avatar overlapping banner */}
-            <div className="shrink-0 relative z-10">
+            <div className="shrink-0 relative z-10 group">
               <div className={`h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted flex items-center justify-center`}>
                 {profile.avatar_url ? (
                   <img src={profile.avatar_url} alt="avatar" className="h-full w-full object-cover" />
@@ -155,6 +155,15 @@ export const ProfileHeader = ({
                   </span>
                 )}
               </div>
+              {isOwnProfile && (
+                <button
+                  onClick={onEditProfile}
+                  className="absolute bottom-0 right-0 h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-md border-2 border-card hover:bg-primary/90 transition-colors"
+                  title="Edit Profile"
+                >
+                  <Edit3 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                </button>
+              )}
             </div>
 
             {/* Name + badge + role tags inline beside avatar */}
@@ -205,11 +214,7 @@ export const ProfileHeader = ({
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2 mt-3 flex-wrap">
-            {isOwnProfile ? (
-              <Button variant="outline" size="sm" className="gap-1.5" onClick={onEditProfile}>
-                <Edit3 className="h-3.5 w-3.5" /> Edit Profile
-              </Button>
-            ) : (
+            {!isOwnProfile && (
               <>
                 {connectionStatus.following ? (
                   <Button variant="secondary" size="sm" className="gap-1.5" disabled>
@@ -239,7 +244,7 @@ export const ProfileHeader = ({
               </>
             )}
 
-            {/* Share */}
+            {/* Share (always visible) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
