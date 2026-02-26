@@ -214,15 +214,32 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-8">
-        <div className="container flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <img src={findooLogo} alt="FindOO" className="h-6 w-6" />
-            <span className="text-sm font-semibold font-heading text-foreground">FindOO</span>
+      <footer className="border-t border-border py-10 bg-muted/30">
+        <div className="container">
+          <div className="flex flex-col md:flex-row items-start justify-between gap-8">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <img src={findooLogo} alt="FindOO" className="h-6 w-6" />
+                <span className="text-sm font-semibold font-heading text-foreground">FindOO</span>
+              </div>
+              <p className="text-sm text-muted-foreground max-w-xs">
+                India's regulated financial network.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</Link>
+              <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
+              <Link to="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</Link>
+              <Link to="/community-guidelines" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Community Guidelines</Link>
+              <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
+              <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} FindOO. India's regulated financial network.
-          </p>
+          <div className="mt-8 pt-6 border-t border-border text-center">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} FindOO. India's regulated financial network.
+            </p>
+          </div>
         </div>
       </footer>
     </div>
