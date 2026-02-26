@@ -11,6 +11,10 @@ import {
   Building2, UserCheck, BarChart3, ArrowRight, ArrowLeft, Loader2, CheckCircle2,
   Upload, ShieldCheck,
 } from "lucide-react";
+import { LocationSelector } from "@/components/selectors/LocationSelector";
+import { CertificationSelector } from "@/components/selectors/CertificationSelector";
+import { LanguageSelector } from "@/components/selectors/LanguageSelector";
+import type { UserLanguage } from "@/data/languages";
 
 type UserType = "individual" | "entity";
 type Role = "investor" | "intermediary" | "issuer";
@@ -71,6 +75,9 @@ const Onboarding = () => {
   const [bio, setBio] = useState("");
   const [organization, setOrganization] = useState("");
   const [designation, setDesignation] = useState("");
+  const [location, setLocation] = useState("");
+  const [certifications, setCertifications] = useState<string[]>([]);
+  const [languages, setLanguages] = useState<UserLanguage[]>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
@@ -152,8 +159,11 @@ const Onboarding = () => {
           user_type: userType!,
           organization: userType === "entity" ? organization : null,
           designation: designation || null,
+          location: location || null,
+          certifications: certifications.length > 0 ? certifications : null,
+          languages: languages.length > 0 ? languages : null,
           onboarding_completed: true,
-        }, { onConflict: "id" });
+        } as any, { onConflict: "id" });
       if (profileError) throw profileError;
 
       await supabase.from("user_roles").delete().eq("user_id", userId);
@@ -417,6 +427,21 @@ const Onboarding = () => {
                       placeholder="Tell the network about yourself or your organization..."
                       rows={3}
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Location</Label>
+                    <LocationSelector value={location} onChange={setLocation} placeholder="Search your city..." />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Certifications & Licenses <span className="text-muted-foreground">(optional)</span></Label>
+                    <CertificationSelector value={certifications} onChange={setCertifications} />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Languages <span className="text-muted-foreground">(optional)</span></Label>
+                    <LanguageSelector value={languages} onChange={setLanguages} />
                   </div>
 
                   <div className="rounded-lg bg-secondary p-4">

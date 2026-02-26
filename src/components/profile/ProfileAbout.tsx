@@ -2,7 +2,7 @@ import {
   CheckCircle2, UserCheck, BarChart3, Building2, Clock,
   Calendar, Briefcase, MapPin, Globe, Shield, ShieldCheck,
   Award, Languages, GraduationCap, FileCheck, ExternalLink,
-  Landmark, Hash, BadgeCheck, TrendingUp, Users,
+  Landmark, Hash, BadgeCheck, TrendingUp, Users, Star,
 } from "lucide-react";
 import { format } from "date-fns";
 import type { ProfileData, RoleData } from "./ProfileHeader";
@@ -42,7 +42,9 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile }: ProfileAboutProps
   const hasRegulatoryIds = profile.regulatory_ids && Object.keys(profile.regulatory_ids).length > 0;
   const hasCertifications = profile.certifications && profile.certifications.length > 0;
   const hasSpecializations = profile.specializations && profile.specializations.length > 0;
-  const hasLanguages = profile.languages && profile.languages.length > 0;
+  // Languages is now jsonb (array of objects) or legacy text[]
+  const langArray: any[] = Array.isArray(profile.languages) ? profile.languages : [];
+  const hasLanguages = langArray.length > 0;
   const hasSocialLinks = profile.social_links && Object.keys(profile.social_links).length > 0;
   const hasAnyDetail = profile.bio || profile.organization || profile.designation || profile.location || profile.website || profile.experience_years || hasRegulatoryIds || hasCertifications || hasSpecializations || hasLanguages;
 
@@ -223,11 +225,18 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile }: ProfileAboutProps
               <div className={(hasSpecializations || hasCertifications) ? "pt-3 border-t border-border" : ""}>
                 <p className="text-xs font-medium text-muted-foreground mb-2">Languages</p>
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  {profile.languages!.map((l, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full">
-                      <Languages className="h-3 w-3" /> {l}
-                    </span>
-                  ))}
+                  {langArray.map((l: any, i: number) => {
+                    const name = typeof l === "string" ? l : l.name;
+                    const proficiency = typeof l === "object" ? l.proficiency : null;
+                    const isMotherTongue = typeof l === "object" ? l.isMotherTongue : false;
+                    return (
+                      <span key={i} className="inline-flex items-center gap-1 text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full">
+                        {isMotherTongue ? <Star className="h-3 w-3 fill-current text-gold" /> : <Languages className="h-3 w-3" />}
+                        {name}
+                        {proficiency && <span className="text-[10px] opacity-60 capitalize">· {proficiency}</span>}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             )}

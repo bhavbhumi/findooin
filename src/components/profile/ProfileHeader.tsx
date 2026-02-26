@@ -51,7 +51,7 @@ export interface ProfileData {
   specializations: string[] | null;
   regulatory_ids: Record<string, string> | null;
   social_links: Record<string, string> | null;
-  languages: string[] | null;
+  languages: any[] | null;
   certifications: string[] | null;
 }
 
