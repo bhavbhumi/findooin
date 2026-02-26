@@ -53,6 +53,19 @@ export function useConnectionActions(currentUserId: string | null, targetUserId:
     setLoading(false);
   }, [currentUserId, targetUserId]);
 
+  const unfollow = useCallback(async () => {
+    if (!currentUserId || !targetUserId) return;
+    setLoading(true);
+    await supabase
+      .from("connections")
+      .delete()
+      .eq("from_user_id", currentUserId)
+      .eq("to_user_id", targetUserId)
+      .eq("connection_type", "follow");
+    setConnectionStatus((s) => ({ ...s, following: false }));
+    setLoading(false);
+  }, [currentUserId, targetUserId]);
+
   const connect = useCallback(async () => {
     if (!currentUserId || !targetUserId) return;
     setLoading(true);
@@ -66,5 +79,17 @@ export function useConnectionActions(currentUserId: string | null, targetUserId:
     setLoading(false);
   }, [currentUserId, targetUserId]);
 
-  return { connectionStatus, follow, connect, loading };
+  const disconnect = useCallback(async () => {
+    if (!currentUserId || !targetUserId) return;
+    setLoading(true);
+    await supabase
+      .from("connections")
+      .delete()
+      .eq("connection_type", "connect")
+      .or(`and(from_user_id.eq.${currentUserId},to_user_id.eq.${targetUserId}),and(from_user_id.eq.${targetUserId},to_user_id.eq.${currentUserId})`);
+    setConnectionStatus((s) => ({ ...s, connected: "none" }));
+    setLoading(false);
+  }, [currentUserId, targetUserId]);
+
+  return { connectionStatus, follow, unfollow, connect, disconnect, loading };
 }
