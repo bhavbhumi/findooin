@@ -115,6 +115,8 @@ const Settings = () => {
   };
 
   const handleSignOut = async () => {
+    const { removeSession } = await import("@/lib/session-manager");
+    await removeSession();
     await supabase.auth.signOut();
     window.location.href = "/";
   };
