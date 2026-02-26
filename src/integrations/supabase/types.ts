@@ -296,7 +296,7 @@ export type Database = {
           full_name: string
           headline: string | null
           id: string
-          languages: string[] | null
+          languages: Json | null
           location: string | null
           onboarding_completed: boolean
           organization: string | null
@@ -320,7 +320,7 @@ export type Database = {
           full_name?: string
           headline?: string | null
           id: string
-          languages?: string[] | null
+          languages?: Json | null
           location?: string | null
           onboarding_completed?: boolean
           organization?: string | null
@@ -344,7 +344,7 @@ export type Database = {
           full_name?: string
           headline?: string | null
           id?: string
-          languages?: string[] | null
+          languages?: Json | null
           location?: string | null
           onboarding_completed?: boolean
           organization?: string | null

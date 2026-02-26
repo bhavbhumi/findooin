@@ -14,6 +14,10 @@ import {
   GraduationCap, Landmark, Save, X, Plus, Trash2,
 } from "lucide-react";
 import type { ProfileData } from "./ProfileHeader";
+import { LocationSelector } from "@/components/selectors/LocationSelector";
+import { CertificationSelector } from "@/components/selectors/CertificationSelector";
+import { LanguageSelector } from "@/components/selectors/LanguageSelector";
+import type { UserLanguage } from "@/data/languages";
 
 interface EditProfileDialogProps {
   open: boolean;
@@ -24,12 +28,18 @@ interface EditProfileDialogProps {
 
 const regulatoryOptions = [
   { key: "sebi", label: "SEBI Registration" },
+  { key: "sebi_ria", label: "SEBI RIA" },
+  { key: "sebi_ra", label: "SEBI Research Analyst" },
+  { key: "sebi_amc", label: "SEBI AMC" },
+  { key: "sebi_pms", label: "SEBI PMS" },
   { key: "rbi", label: "RBI License" },
+  { key: "rbi_nbfc", label: "RBI NBFC" },
   { key: "irdai", label: "IRDAI Registration" },
   { key: "amfi", label: "AMFI ARN" },
   { key: "pfrda", label: "PFRDA Registration" },
   { key: "nse", label: "NSE Membership" },
   { key: "bse", label: "BSE Membership" },
+  { key: "icai", label: "ICAI Membership" },
   { key: "gstin", label: "GSTIN" },
   { key: "cin", label: "CIN" },
   { key: "pan", label: "PAN" },
@@ -41,6 +51,20 @@ const socialOptions = [
   { key: "website", label: "Website" },
   { key: "youtube", label: "YouTube" },
 ];
+
+/** Parse languages from DB — handles both old text[] and new jsonb format */
+function parseLanguages(raw: any): UserLanguage[] {
+  if (!raw) return [];
+  if (Array.isArray(raw)) {
+    return raw.map((item: any) => {
+      if (typeof item === "string") {
+        return { code: "", name: item, proficiency: "fluent" as const, isMotherTongue: false };
+      }
+      return item as UserLanguage;
+    });
+  }
+  return [];
+}
 
 export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: EditProfileDialogProps) => {
   const [saving, setSaving] = useState(false);
@@ -62,10 +86,8 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
   // Expertise
   const [specializations, setSpecializations] = useState<string[]>(profile.specializations || []);
   const [certifications, setCertifications] = useState<string[]>(profile.certifications || []);
-  const [languages, setLanguages] = useState<string[]>(profile.languages || []);
+  const [languages, setLanguages] = useState<UserLanguage[]>(parseLanguages(profile.languages));
   const [newSpec, setNewSpec] = useState("");
-  const [newCert, setNewCert] = useState("");
-  const [newLang, setNewLang] = useState("");
 
   // Regulatory
   const [regulatoryIds, setRegulatoryIds] = useState<Record<string, string>>(
@@ -91,21 +113,17 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
     setExperienceYears(profile.experience_years?.toString() || "");
     setSpecializations(profile.specializations || []);
     setCertifications(profile.certifications || []);
-    setLanguages(profile.languages || []);
+    setLanguages(parseLanguages(profile.languages));
     setRegulatoryIds((profile.regulatory_ids as Record<string, string>) || {});
     setSocialLinks((profile.social_links as Record<string, string>) || {});
   }, [profile]);
 
-  const addToList = (list: string[], setter: (v: string[]) => void, value: string, clearFn: (v: string) => void) => {
-    const trimmed = value.trim();
-    if (trimmed && !list.includes(trimmed)) {
-      setter([...list, trimmed]);
-      clearFn("");
+  const addSpec = () => {
+    const trimmed = newSpec.trim();
+    if (trimmed && !specializations.includes(trimmed)) {
+      setSpecializations([...specializations, trimmed]);
+      setNewSpec("");
     }
-  };
-
-  const removeFromList = (list: string[], setter: (v: string[]) => void, index: number) => {
-    setter(list.filter((_, i) => i !== index));
   };
 
   const handleSave = async () => {
@@ -232,8 +250,8 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
                 <Input value={designation} onChange={(e) => setDesignation(e.target.value)} placeholder="Your title or role" className="mt-1" />
               </div>
               <div>
-                <Label className="text-xs font-medium text-muted-foreground">Location</Label>
-                <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="City, Country" className="mt-1" />
+                <Label className="text-xs font-medium text-muted-foreground mb-1 block">Location</Label>
+                <LocationSelector value={location} onChange={setLocation} />
               </div>
               <div>
                 <Label className="text-xs font-medium text-muted-foreground">Experience (years)</Label>
@@ -248,13 +266,13 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
 
           {/* Expertise Tab */}
           <TabsContent value="expertise" className="space-y-5 mt-4">
-            {/* Specializations */}
+            {/* Specializations — free-text add */}
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Specializations</Label>
               <div className="flex items-center gap-2 mt-1">
                 <Input value={newSpec} onChange={(e) => setNewSpec(e.target.value)} placeholder="e.g. Mutual Funds" className="text-sm"
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addToList(specializations, setSpecializations, newSpec, setNewSpec); } }} />
-                <Button type="button" size="icon" variant="outline" className="shrink-0 h-9 w-9" onClick={() => addToList(specializations, setSpecializations, newSpec, setNewSpec)}>
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addSpec(); } }} />
+                <Button type="button" size="icon" variant="outline" className="shrink-0 h-9 w-9" onClick={addSpec}>
                   <Plus className="h-3.5 w-3.5" />
                 </Button>
               </div>
@@ -263,55 +281,23 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
                   {specializations.map((s, i) => (
                     <span key={i} className="inline-flex items-center gap-1 text-xs bg-primary/5 text-primary border border-primary/10 px-2 py-1 rounded-full">
                       {s}
-                      <button onClick={() => removeFromList(specializations, setSpecializations, i)} className="hover:text-destructive"><X className="h-3 w-3" /></button>
+                      <button onClick={() => setSpecializations(specializations.filter((_, j) => j !== i))} className="hover:text-destructive"><X className="h-3 w-3" /></button>
                     </span>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Certifications */}
+            {/* Certifications — curated multi-select */}
             <div>
-              <Label className="text-xs font-medium text-muted-foreground">Certifications</Label>
-              <div className="flex items-center gap-2 mt-1">
-                <Input value={newCert} onChange={(e) => setNewCert(e.target.value)} placeholder="e.g. CFA Level III" className="text-sm"
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addToList(certifications, setCertifications, newCert, setNewCert); } }} />
-                <Button type="button" size="icon" variant="outline" className="shrink-0 h-9 w-9" onClick={() => addToList(certifications, setCertifications, newCert, setNewCert)}>
-                  <Plus className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-              {certifications.length > 0 && (
-                <div className="space-y-1.5 mt-2">
-                  {certifications.map((c, i) => (
-                    <div key={i} className="flex items-center justify-between bg-muted/50 rounded-lg px-3 py-2">
-                      <span className="text-xs font-medium flex items-center gap-1.5"><GraduationCap className="h-3 w-3 text-muted-foreground" />{c}</span>
-                      <button onClick={() => removeFromList(certifications, setCertifications, i)} className="text-muted-foreground hover:text-destructive"><Trash2 className="h-3 w-3" /></button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <Label className="text-xs font-medium text-muted-foreground mb-1 block">Certifications & Licenses</Label>
+              <CertificationSelector value={certifications} onChange={setCertifications} />
             </div>
 
-            {/* Languages */}
+            {/* Languages — with proficiency & mother tongue */}
             <div>
-              <Label className="text-xs font-medium text-muted-foreground">Languages</Label>
-              <div className="flex items-center gap-2 mt-1">
-                <Input value={newLang} onChange={(e) => setNewLang(e.target.value)} placeholder="e.g. Hindi" className="text-sm"
-                  onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addToList(languages, setLanguages, newLang, setNewLang); } }} />
-                <Button type="button" size="icon" variant="outline" className="shrink-0 h-9 w-9" onClick={() => addToList(languages, setLanguages, newLang, setNewLang)}>
-                  <Plus className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-              {languages.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {languages.map((l, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
-                      <Languages className="h-3 w-3" />{l}
-                      <button onClick={() => removeFromList(languages, setLanguages, i)} className="hover:text-destructive"><X className="h-3 w-3" /></button>
-                    </span>
-                  ))}
-                </div>
-              )}
+              <Label className="text-xs font-medium text-muted-foreground mb-1 block">Languages</Label>
+              <LanguageSelector value={languages} onChange={setLanguages} />
             </div>
           </TabsContent>
 
