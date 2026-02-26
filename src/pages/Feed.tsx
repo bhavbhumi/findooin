@@ -1,7 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
 import { useFeedPosts } from "@/hooks/useFeedPosts";
 import { useTrendingPosts } from "@/hooks/useTrendingPosts";
 import { useViralPosts } from "@/hooks/useViralPosts";
@@ -9,88 +5,95 @@ import { PostCard } from "@/components/feed/PostCard";
 import { TrendingSidebar } from "@/components/feed/TrendingSidebar";
 import { CreatePostComposer } from "@/components/feed/CreatePostComposer";
 import { FeedTabs, type FeedFilter } from "@/components/feed/FeedTabs";
-import AppNavbar from "@/components/AppNavbar";
+import AppLayout from "@/components/AppLayout";
+import { FindooLoader } from "@/components/FindooLoader";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+
+const POSTS_PER_PAGE = 10;
 
 const Feed = () => {
-  const navigate = useNavigate();
-  const [userName, setUserName] = useState("");
   const [filter, setFilter] = useState<FeedFilter>("foryou");
 
   const { data: forYouPosts, isLoading: forYouLoading, error: forYouError } = useFeedPosts();
   const { data: trendingPosts, isLoading: trendingLoading, error: trendingError } = useTrendingPosts();
   const { data: viralPosts, isLoading: viralLoading, error: viralError } = useViralPosts();
 
-  const posts = filter === "foryou" ? forYouPosts : filter === "trending" ? trendingPosts : viralPosts;
+  const allPosts = filter === "foryou" ? forYouPosts : filter === "trending" ? trendingPosts : viralPosts;
   const isLoading = filter === "foryou" ? forYouLoading : filter === "trending" ? trendingLoading : viralLoading;
   const error = filter === "foryou" ? forYouError : filter === "trending" ? trendingError : viralError;
 
+  // Pagination
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  // Reset pagination on filter change
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth");
-        return;
-      }
-      setUserName(session.user.user_metadata?.full_name || "User");
-    });
-  }, [navigate]);
+    setVisibleCount(POSTS_PER_PAGE);
+  }, [filter]);
+
+  const visiblePosts = allPosts?.slice(0, visibleCount);
+  const hasMore = (allPosts?.length ?? 0) > visibleCount;
+
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!hasMore || isLoading) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCount((prev) => prev + POSTS_PER_PAGE);
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    const el = observerRef.current;
+    if (el) observer.observe(el);
+    return () => { if (el) observer.unobserve(el); };
+  }, [hasMore, isLoading, visibleCount]);
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
-      <AppNavbar />
-
-      <div className="container py-6">
-        <div className="grid lg:grid-cols-[1fr_300px] gap-6 max-w-4xl mx-auto">
-          <div className="space-y-4">
+    <AppLayout>
+      <div className="grid lg:grid-cols-[1fr_300px] gap-6">
+        <div className="space-y-4">
+          <ErrorBoundary fallbackTitle="Error loading composer">
             <CreatePostComposer />
-            <FeedTabs value={filter} onChange={setFilter} />
+          </ErrorBoundary>
+          <FeedTabs value={filter} onChange={setFilter} />
 
-            {isLoading && (
-              <>
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="rounded-xl border border-border bg-card p-5 space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Skeleton className="h-10 w-10 rounded-full" />
-                      <div className="space-y-1.5">
-                        <Skeleton className="h-4 w-32" />
-                        <Skeleton className="h-3 w-20" />
-                      </div>
-                    </div>
-                    <Skeleton className="h-16 w-full" />
-                    <Skeleton className="h-8 w-48" />
-                  </div>
-                ))}
-              </>
-            )}
+          {isLoading && <FindooLoader text="Loading your feed..." />}
 
-            {error && (
-              <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center">
-                <p className="text-sm text-destructive">Failed to load feed. Please try again.</p>
-              </div>
-            )}
+          {error && (
+            <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center">
+              <p className="text-sm text-destructive">Failed to load feed. Please try again.</p>
+            </div>
+          )}
 
-            {posts && posts.length === 0 && (
-              <div className="rounded-xl border border-border bg-card p-12 text-center">
-                <p className="text-muted-foreground">
-                  {filter === "foryou"
-                    ? "No posts yet. Start following accounts to see their posts here."
-                    : filter === "trending"
-                    ? "No trending posts right now. Check back later."
-                    : "No viral posts right now. Check back later."}
-                </p>
-              </div>
-            )}
+          {visiblePosts && visiblePosts.length === 0 && !isLoading && (
+            <div className="rounded-xl border border-border bg-card p-12 text-center">
+              <p className="text-muted-foreground">
+                {filter === "foryou"
+                  ? "No posts yet. Start following accounts to see their posts here."
+                  : filter === "trending"
+                  ? "No trending posts right now. Check back later."
+                  : "No viral posts right now. Check back later."}
+              </p>
+            </div>
+          )}
 
-            {posts?.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </div>
+          {visiblePosts?.map((post) => (
+            <PostCard key={post.id} post={post} />
+          ))}
 
-          <aside className="hidden lg:block space-y-4">
-            <TrendingSidebar />
-          </aside>
+          {/* Infinite scroll trigger */}
+          {hasMore && <div ref={observerRef} className="h-1" />}
+          {hasMore && <FindooLoader size="sm" />}
         </div>
+
+        <aside className="hidden lg:block space-y-4">
+          <TrendingSidebar />
+        </aside>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 

@@ -5,9 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, ArrowLeft, Loader2 } from "lucide-react";
+import { Shield, ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 import findooLogoWhite from "@/assets/findoo-logo-white.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+const MAX_LOGIN_ATTEMPTS = 3;
+const LOCKOUT_DURATION_MS = 60_000; // 1 minute
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -19,10 +29,35 @@ const Auth = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Login attempt tracking
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [lockedUntil, setLockedUntil] = useState<number | null>(null);
+  const [lockCountdown, setLockCountdown] = useState(0);
+
+  // Forgot password
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+
+  // Lockout countdown timer
+  useEffect(() => {
+    if (!lockedUntil) return;
+    const interval = setInterval(() => {
+      const remaining = Math.max(0, Math.ceil((lockedUntil - Date.now()) / 1000));
+      setLockCountdown(remaining);
+      if (remaining <= 0) {
+        setLockedUntil(null);
+        setLoginAttempts(0);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [lockedUntil]);
+
+  const isLockedOut = lockedUntil !== null && Date.now() < lockedUntil;
+
   useEffect(() => {
     const checkSession = async (session: any) => {
       if (!session) return;
-      // Check if onboarding is completed
       const { data: profile } = await supabase
         .from("profiles")
         .select("onboarding_completed")
@@ -54,24 +89,31 @@ const Auth = () => {
     maxAttempts = 3,
   ) => {
     let lastError: any = null;
-
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       const result = await action();
       if (!result.error) return result;
-
       lastError = result.error;
       const isRetryableNetworkError =
         /load failed|failed to fetch|network/i.test(result.error.message ?? "") && attempt < maxAttempts;
-
       if (!isRetryableNetworkError) break;
       await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
     }
-
     throw lastError ?? new Error("Unable to complete request");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check lockout
+    if (isLockedOut) {
+      toast({
+        title: "Too many attempts",
+        description: `Please wait ${lockCountdown} seconds before trying again.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -86,7 +128,6 @@ const Auth = () => {
             },
           }),
         );
-
         toast({
           title: "Check your email",
           description: "We sent you a verification link. Please confirm your email to continue.",
@@ -98,13 +139,26 @@ const Auth = () => {
             password,
           }),
         );
+        // Reset attempts on success
+        setLoginAttempts(0);
       }
     } catch (error: any) {
       const isNetworkError = /load failed|failed to fetch|network/i.test(error?.message ?? "");
+
+      if (!isSignUp && !isNetworkError) {
+        const newAttempts = loginAttempts + 1;
+        setLoginAttempts(newAttempts);
+        if (newAttempts >= MAX_LOGIN_ATTEMPTS) {
+          setLockedUntil(Date.now() + LOCKOUT_DURATION_MS);
+        }
+      }
+
       toast({
         title: isNetworkError ? "Connection issue" : "Error",
         description: isNetworkError
           ? "We couldn't reach the authentication service. Please refresh and try again."
+          : !isSignUp && loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS
+          ? `Account locked for 60 seconds after ${MAX_LOGIN_ATTEMPTS} failed attempts.`
           : error.message,
         variant: "destructive",
       });
@@ -113,15 +167,41 @@ const Auth = () => {
     }
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail.trim()) return;
+    setForgotLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail.trim(), {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast({
+        title: "Reset link sent",
+        description: "Check your email for a password reset link.",
+      });
+      setShowForgotPassword(false);
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex">
-      {/* Left — branding */}
-      <div className="hidden lg:flex lg:w-1/2 text-white flex-col justify-between p-12 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #191970 0%, #3367D6 30%, #005DFF 50%, #C137A2 75%, #D4AF37 100%)' }}>
-        <Link to="/" className="flex items-center gap-2">
+      {/* Left — branding panel using design tokens */}
+      <div className="hidden lg:flex lg:w-1/2 text-primary-foreground flex-col justify-between p-12 relative overflow-hidden bg-primary">
+        {/* Decorative gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-primary to-primary/90" />
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-accent/10 blur-3xl -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-gold/10 blur-3xl translate-y-1/3 -translate-x-1/4" />
+
+        <Link to="/" className="flex items-center gap-2 relative z-10">
           <img src={findooLogoWhite} alt="FindOO" className="h-8 w-8" />
           <span className="text-xl font-bold font-heading">FindOO</span>
         </Link>
-        <div>
+        <div className="relative z-10">
           <h2 className="text-3xl font-bold font-heading mb-4">
             India's trust-first
             <br />
@@ -131,7 +211,7 @@ const Auth = () => {
             Connect with verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA regulated markets.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-primary-foreground/50 text-sm">
+        <div className="flex items-center gap-2 text-primary-foreground/50 text-sm relative z-10">
           <Shield className="h-4 w-4" />
           Regulated. Verified. Trusted.
         </div>
@@ -156,6 +236,16 @@ const Auth = () => {
               }
             </p>
           </div>
+
+          {/* Lockout warning */}
+          {isLockedOut && (
+            <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-3 mb-4">
+              <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
+              <p className="text-xs text-destructive">
+                Too many failed attempts. Try again in <span className="font-bold">{lockCountdown}s</span>
+              </p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {isSignUp && (
@@ -182,7 +272,18 @@ const Auth = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                {!isSignUp && (
+                  <button
+                    type="button"
+                    onClick={() => { setForgotEmail(email); setShowForgotPassword(true); }}
+                    className="text-xs text-accent hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                )}
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -193,7 +294,15 @@ const Auth = () => {
                 minLength={6}
               />
             </div>
-            <Button type="submit" className="w-full h-11" disabled={loading}>
+
+            {/* Attempt counter */}
+            {!isSignUp && loginAttempts > 0 && !isLockedOut && (
+              <p className="text-xs text-muted-foreground">
+                {MAX_LOGIN_ATTEMPTS - loginAttempts} attempt{MAX_LOGIN_ATTEMPTS - loginAttempts !== 1 ? "s" : ""} remaining
+              </p>
+            )}
+
+            <Button type="submit" className="w-full h-11" disabled={loading || isLockedOut}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSignUp ? "Create Account" : "Sign In"}
             </Button>
@@ -203,7 +312,7 @@ const Auth = () => {
             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
             <button
               type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => { setIsSignUp(!isSignUp); setLoginAttempts(0); setLockedUntil(null); }}
               className="text-foreground font-medium underline underline-offset-4 hover:text-accent"
             >
               {isSignUp ? "Sign In" : "Sign Up"}
@@ -211,6 +320,35 @@ const Auth = () => {
           </p>
         </div>
       </div>
+
+      {/* Forgot Password Dialog */}
+      <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Reset Password</DialogTitle>
+            <DialogDescription>
+              Enter your email and we'll send you a link to reset your password.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleForgotPassword} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="forgotEmail">Email</Label>
+              <Input
+                id="forgotEmail"
+                type="email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={forgotLoading}>
+              {forgotLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Send Reset Link
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

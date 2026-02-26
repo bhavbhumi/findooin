@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import AppNavbar from "@/components/AppNavbar";
+import AppLayout from "@/components/AppLayout";
+import { FindooLoader } from "@/components/FindooLoader";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -134,23 +134,19 @@ const statCard = (icon: React.ReactNode, label: string, value: number) => (
 );
 
 const PostAnalytics = () => {
-  const navigate = useNavigate();
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { navigate("/auth"); return; }
-      setUserId(session.user.id);
+      if (session) setUserId(session.user.id);
     });
-  }, [navigate]);
+  }, []);
 
   const { data, isLoading } = useAnalyticsData(userId);
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
-      <AppNavbar />
-      <div className="container py-6 max-w-5xl mx-auto">
-        <h1 className="text-xl font-heading font-bold text-foreground mb-6">Post Analytics</h1>
+    <AppLayout maxWidth="max-w-5xl">
+      <h1 className="text-xl font-heading font-bold text-foreground mb-6">Post Analytics</h1>
 
         <Tabs defaultValue="personal">
           <TabsList className="mb-6 bg-secondary/50">
@@ -160,12 +156,7 @@ const PostAnalytics = () => {
 
           <TabsContent value="personal">
             {isLoading ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {[1,2,3,4].map(i => <Skeleton key={i} className="h-20 rounded-xl" />)}
-                </div>
-                <Skeleton className="h-64 rounded-xl" />
-              </div>
+              <FindooLoader text="Crunching your analytics..." />
             ) : data ? (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -211,10 +202,7 @@ const PostAnalytics = () => {
 
           <TabsContent value="platform">
             {isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-64 rounded-xl" />
-                <Skeleton className="h-64 rounded-xl" />
-              </div>
+              <FindooLoader text="Loading platform trends..." />
             ) : data ? (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-3">
@@ -291,8 +279,7 @@ const PostAnalytics = () => {
             ) : null}
           </TabsContent>
         </Tabs>
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

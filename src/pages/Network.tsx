@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import AppNavbar from "@/components/AppNavbar";
+import AppLayout from "@/components/AppLayout";
+import { FindooLoader } from "@/components/FindooLoader";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
 import { NetworkSidebar } from "@/components/network/NetworkSidebar";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Users, UserPlus, UserCheck, UserMinus, Clock, Search, CheckCircle2,
@@ -25,7 +25,6 @@ interface NetworkUser {
 }
 
 const Network = () => {
-  const navigate = useNavigate();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,11 +39,11 @@ const Network = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { navigate("/auth"); return; }
+      if (!session) return;
       setCurrentUserId(session.user.id);
       loadNetwork(session.user.id);
     });
-  }, [navigate]);
+  }, []);
 
   const loadNetwork = async (userId: string) => {
     setLoading(true);
@@ -137,10 +136,8 @@ const Network = () => {
   const totalPending = pendingIncoming.length + pendingOutgoing.length;
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
-      <AppNavbar />
-      <div className="container py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 max-w-4xl mx-auto">
+    <AppLayout>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
           {/* Main Column */}
           <div>
         <h1 className="text-2xl font-bold font-heading text-foreground mb-1">Network</h1>
@@ -174,17 +171,7 @@ const Network = () => {
         </div>
 
         {loading ? (
-          <div className="space-y-3">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
-                <Skeleton className="h-12 w-12 rounded-lg" />
-                <div className="space-y-2 flex-1">
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-3 w-48" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <FindooLoader text="Loading your network..." />
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1 mb-4 overflow-x-auto">
@@ -317,8 +304,7 @@ const Network = () => {
             />
           </aside>
         </div>
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 
