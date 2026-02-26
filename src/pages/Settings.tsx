@@ -165,24 +165,22 @@ const Settings = () => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
-  const SettingRow = ({ icon: Icon, label, description, checked, onCheckedChange }: {
-    icon: React.ElementType;
-    label: string;
-    description: string;
-    checked: boolean;
-    onCheckedChange: (v: boolean) => void;
-  }) => (
-    <div className="flex items-center justify-between py-3">
-      <div className="flex items-start gap-3">
-        <Icon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
-        <div>
-          <Label className="text-sm font-medium text-foreground">{label}</Label>
-          <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+  // Extracted outside render to avoid forwardRef warning
+  const renderSettingRow = (icon: React.ElementType, label: string, description: string, checked: boolean, onCheckedChange: (v: boolean) => void) => {
+    const Icon = icon;
+    return (
+      <div className="flex items-center justify-between py-3">
+        <div className="flex items-start gap-3">
+          <Icon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-foreground">{label}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+          </div>
         </div>
+        <Switch checked={checked} onCheckedChange={onCheckedChange} />
       </div>
-      <Switch checked={checked} onCheckedChange={onCheckedChange} />
-    </div>
-  );
+    );
+  };
 
   return (
     <AppLayout maxWidth="max-w-2xl" className="pt-4 px-4">
@@ -245,17 +243,17 @@ const Settings = () => {
               <Bell className="h-4 w-4 text-foreground" />
               <h2 className="text-base font-semibold font-heading text-foreground">Notifications</h2>
             </div>
-            <SettingRow icon={Mail} label="Email notifications" description="Receive email notifications for important activity" checked={settings.email_notifications} onCheckedChange={(v) => updateSetting("email_notifications", v)} />
+            {renderSettingRow(Mail, "Email notifications", "Receive email notifications for important activity", settings.email_notifications, (v) => updateSetting("email_notifications", v))}
             <Separator />
-            <SettingRow icon={Heart} label="Likes" description="When someone likes your post" checked={settings.notify_likes} onCheckedChange={(v) => updateSetting("notify_likes", v)} />
+            {renderSettingRow(Heart, "Likes", "When someone likes your post", settings.notify_likes, (v) => updateSetting("notify_likes", v))}
             <Separator />
-            <SettingRow icon={MessageCircle} label="Comments" description="When someone comments on your post" checked={settings.notify_comments} onCheckedChange={(v) => updateSetting("notify_comments", v)} />
+            {renderSettingRow(MessageCircle, "Comments", "When someone comments on your post", settings.notify_comments, (v) => updateSetting("notify_comments", v))}
             <Separator />
-            <SettingRow icon={UserPlus} label="Follows" description="When someone follows you" checked={settings.notify_follows} onCheckedChange={(v) => updateSetting("notify_follows", v)} />
+            {renderSettingRow(UserPlus, "Follows", "When someone follows you", settings.notify_follows, (v) => updateSetting("notify_follows", v))}
             <Separator />
-            <SettingRow icon={Users} label="Connection requests" description="When someone sends you a connection request" checked={settings.notify_connections} onCheckedChange={(v) => updateSetting("notify_connections", v)} />
+            {renderSettingRow(Users, "Connection requests", "When someone sends you a connection request", settings.notify_connections, (v) => updateSetting("notify_connections", v))}
             <Separator />
-            <SettingRow icon={MessageSquare} label="Messages" description="When someone sends you a direct message" checked={settings.notify_messages} onCheckedChange={(v) => updateSetting("notify_messages", v)} />
+            {renderSettingRow(MessageSquare, "Messages", "When someone sends you a direct message", settings.notify_messages, (v) => updateSetting("notify_messages", v))}
           </section>
 
           {/* Privacy */}
@@ -264,9 +262,9 @@ const Settings = () => {
               <Shield className="h-4 w-4 text-foreground" />
               <h2 className="text-base font-semibold font-heading text-foreground">Privacy</h2>
             </div>
-            <SettingRow icon={Eye} label="Show email on profile" description="Allow others to see your email address" checked={settings.show_email} onCheckedChange={(v) => updateSetting("show_email", v)} />
+            {renderSettingRow(Eye, "Show email on profile", "Allow others to see your email address", settings.show_email, (v) => updateSetting("show_email", v))}
             <Separator />
-            <SettingRow icon={Eye} label="Show phone on profile" description="Allow others to see your phone number" checked={settings.show_phone} onCheckedChange={(v) => updateSetting("show_phone", v)} />
+            {renderSettingRow(Eye, "Show phone on profile", "Allow others to see your phone number", settings.show_phone, (v) => updateSetting("show_phone", v))}
           </section>
 
           {/* Save */}

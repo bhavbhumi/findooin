@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { uploadFile } from "@/lib/storage";
 
 /* ── Post Categories for Issuers/Intermediaries ── */
 const POST_CATEGORIES = [
@@ -250,7 +251,28 @@ export function CreatePostComposer() {
         const [h, m] = scheduleTime.split(":").map(Number);
         const dt = new Date(scheduleDate);
         dt.setHours(h, m, 0, 0);
+        if (dt <= new Date()) {
+          toast.error("Scheduled time must be in the future.");
+          setSubmitting(false);
+          return;
+        }
         scheduledAt = dt.toISOString();
+      }
+
+      // Upload attachment if present
+      let attachmentUrl: string | null = null;
+      let attachmentName: string | null = null;
+      let attachmentType: string | null = null;
+      if (attachment) {
+        const result = await uploadFile("post-attachments", attachment, userId);
+        if ("error" in result) {
+          toast.error(`File upload failed: ${result.error}`);
+          setSubmitting(false);
+          return;
+        }
+        attachmentUrl = result.url;
+        attachmentName = attachment.name;
+        attachmentType = attachment.type;
       }
 
       const postType = isInvestorMode ? "query" : category;
@@ -261,9 +283,9 @@ export function CreatePostComposer() {
         post_kind: postKind as any,
         visibility: audience as any,
         hashtags: hashtags.length > 0 ? hashtags : null,
-        attachment_name: attachment ? attachment.name : null,
-        attachment_type: attachment ? attachment.type : null,
-        attachment_url: attachment ? `attachment://${attachment.name}` : null,
+        attachment_name: attachmentName,
+        attachment_type: attachmentType,
+        attachment_url: attachmentUrl,
         scheduled_at: scheduledAt,
         query_category: isInvestorMode ? queryCategory as any : null,
       }).select("id").single();
