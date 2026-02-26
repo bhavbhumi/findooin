@@ -121,7 +121,7 @@ export const ProfileHeader = ({
     <>
       <div className="rounded-xl border border-border bg-card overflow-hidden mb-4">
         {/* Banner */}
-        <div className={`h-28 sm:h-36 md:h-44 relative ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
+        <div className={`h-32 sm:h-40 md:h-48 relative ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
           {profile.banner_url ? (
             <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" />
           ) : (
