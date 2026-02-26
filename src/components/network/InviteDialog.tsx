@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,15 +12,12 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { Copy, Mail, Share2, Check, Loader2, UserPlus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface InviteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-const INVITE_LINK = typeof window !== "undefined"
-  ? `${window.location.origin}/auth?mode=signup&ref=invite`
-  : "";
 
 const INVITE_MESSAGE =
   "Join FindOO — India's trust-first financial network for verified Issuers, Intermediaries & Investors.";
@@ -29,12 +26,22 @@ export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
   const [emails, setEmails] = useState("");
   const [sending, setSending] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [inviteLink, setInviteLink] = useState("");
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      const uid = data.user?.id;
+      if (uid && typeof window !== "undefined") {
+        setInviteLink(`${window.location.origin}/auth?mode=signup&ref=${uid}`);
+      }
+    });
+  }, [open]);
 
   const canShare = typeof navigator !== "undefined" && !!navigator.share;
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(INVITE_LINK);
+      await navigator.clipboard.writeText(inviteLink);
       setCopied(true);
       toast.success("Invite link copied!");
       setTimeout(() => setCopied(false), 2000);
@@ -48,7 +55,7 @@ export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
       await navigator.share({
         title: "Join FindOO",
         text: INVITE_MESSAGE,
-        url: INVITE_LINK,
+        url: inviteLink,
       });
     } catch (err: any) {
       if (err?.name !== "AbortError") {
@@ -74,7 +81,7 @@ export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
     // Generate mailto link as a fallback (no backend email service required)
     const subject = encodeURIComponent("Join me on FindOO");
     const body = encodeURIComponent(
-      `${INVITE_MESSAGE}\n\nSign up here: ${INVITE_LINK}`
+      `${INVITE_MESSAGE}\n\nSign up here: ${inviteLink}`
     );
     const mailtoUrl = `mailto:${list.join(",")}?subject=${subject}&body=${body}`;
 
@@ -103,7 +110,7 @@ export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
           <Label className="text-xs font-medium text-muted-foreground">Share invite link</Label>
           <div className="flex gap-2">
             <Input
-              value={INVITE_LINK}
+              value={inviteLink}
               readOnly
               className="text-xs bg-muted/50 font-mono"
               onClick={(e) => (e.target as HTMLInputElement).select()}

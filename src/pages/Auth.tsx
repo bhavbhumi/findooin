@@ -58,15 +58,43 @@ const Auth = () => {
 
   const isLockedOut = lockedUntil !== null && Date.now() < lockedUntil;
 
+  // Get referrer ID from URL
+  const referrerId = searchParams.get("ref");
+
+  const createReferralConnections = async (newUserId: string, refId: string) => {
+    try {
+      // Auto-follow: new user follows the invitor
+      await supabase.from("connections").insert({
+        from_user_id: newUserId,
+        to_user_id: refId,
+        connection_type: "follow",
+        status: "accepted",
+      });
+      // Pending connection request: new user → invitor
+      await supabase.from("connections").insert({
+        from_user_id: newUserId,
+        to_user_id: refId,
+        connection_type: "connect",
+        status: "pending",
+      });
+    } catch (err) {
+      console.warn("Referral connection creation failed:", err);
+    }
+  };
+
   const handleSignedInSession = useCallback(
     async (session: any) => {
       if (!session) return;
 
       try {
-        // Non-blocking: login must continue even if session tracking fails on some mobile browsers
         await registerSession(session.user.id);
       } catch (err) {
         console.warn("Session registration skipped:", err);
+      }
+
+      // Handle referral connections if ref param exists
+      if (referrerId && referrerId !== session.user.id) {
+        await createReferralConnections(session.user.id, referrerId);
       }
 
       try {
@@ -97,7 +125,7 @@ const Auth = () => {
         setTimeout(() => navigate("/onboarding"), 1500);
       }
     },
-    [navigate, toast],
+    [navigate, toast, referrerId],
   );
 
   useEffect(() => {
