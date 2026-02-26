@@ -143,7 +143,7 @@ export const ProfileHeader = ({
 
         {/* Avatar + Identity row */}
         <div className="px-4 sm:px-6 relative z-10">
-          <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
+          <div className="flex items-end gap-3 sm:gap-4 -mt-12 sm:-mt-14 md:-mt-16">
             {/* Round avatar overlapping banner */}
             <div className="shrink-0 relative z-10">
               <div className={`h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted flex items-center justify-center`}>
