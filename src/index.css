@@ -8,10 +8,10 @@
   :root {
     /* FinNet Design System — Minimal & Clean, Trust-First */
     --background: 220 20% 98%;
-    --foreground: 224 50% 10%;
+    --foreground: 240 45% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 50% 10%;
+    --card-foreground: 240 45% 15%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 224 50% 10%;
