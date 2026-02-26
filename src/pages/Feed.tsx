@@ -62,7 +62,7 @@ const Feed = () => {
   }, [hasMore, isLoading, visibleCount]);
 
   return (
-    <AppLayout>
+    <AppLayout maxWidth="max-w-6xl">
       <div className="grid lg:grid-cols-[1fr_300px] gap-6">
         <div className="space-y-4">
           <ErrorBoundary fallbackTitle="Error loading composer">
