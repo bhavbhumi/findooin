@@ -361,9 +361,6 @@ const Auth = () => {
           <p className="text-white/60 text-base max-w-md leading-relaxed">
             Build trusted relationships with verified professionals across India's financial ecosystem — and turn insights into opportunities.
           </p>
-          <p className="text-white/60 text-base max-w-md leading-relaxed">
-            Build trusted relationships with verified professionals across India's financial ecosystem — and turn insights into opportunities.
-          </p>
         </div>
 
         <div className="flex items-center gap-2 text-white/50 text-sm relative z-10">
