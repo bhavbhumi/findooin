@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NetworkAvatar } from "@/components/ui/network-avatar";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -141,113 +141,127 @@ export const ProfileHeader = ({
           )}
         </div>
 
-        {/* Avatar + Identity */}
+        {/* Avatar + Identity row */}
         <div className="px-4 sm:px-6">
-          {/* Avatar pulled up over banner */}
-          <div className="-mt-12 sm:-mt-16 md:-mt-20 mb-3">
-            <NetworkAvatar
-              src={profile.avatar_url}
-              initials={getInitials(profile.full_name)}
-              size="xl"
-              roleColor={primaryRole ? `hsl(var(--${primaryRole}))` : undefined}
-            />
-          </div>
-
-          {/* Identity + Actions — fully below banner */}
-          <div className="flex-1 min-w-0">
-              {/* Verified badge above name */}
-              {profile.verification_status === "verified" && (
-                <div className="flex items-center gap-1 mb-1">
-                  <ShieldCheck className="h-3.5 w-3.5 text-accent" />
-                  <span className="text-xs font-semibold text-accent">Verified</span>
-                </div>
-              )}
-              {/* Name */}
-              <div className="flex items-start gap-2">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold font-heading text-card-foreground leading-tight break-words">
-                  {profile.display_name || profile.full_name}
-                </h1>
-              </div>
-              {profile.display_name && profile.display_name !== profile.full_name && (
-                <p className="text-sm text-muted-foreground">{profile.full_name}</p>
-              )}
-              {/* Designation + Organization */}
-              <div className="flex items-center gap-3 flex-wrap mt-1 text-xs text-muted-foreground">
-                {profile.designation && (
-                  <span className="flex items-center gap-1">
-                    <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
-                  </span>
-                )}
-                {profile.organization && (
-                  <span className="flex items-center gap-1">
-                    <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
-                  </span>
-                )}
-              </div>
-
-              {/* Action Buttons — below name block */}
-              <div className="flex items-center gap-2 mt-3 flex-wrap">
-                {isOwnProfile ? (
-                  <Button variant="outline" size="sm" className="gap-1.5" onClick={onEditProfile}>
-                    <Edit3 className="h-3.5 w-3.5" /> Edit Profile
-                  </Button>
+          <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-14 md:-mt-16">
+            {/* Round avatar overlapping banner */}
+            <div className="shrink-0">
+              <div className={`h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted flex items-center justify-center`}>
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt="avatar" className="h-full w-full object-cover" />
                 ) : (
-                  <>
-                    {connectionStatus.following ? (
-                      <Button variant="secondary" size="sm" className="gap-1.5" disabled>
-                        <UserCheck className="h-3.5 w-3.5" /> Following
-                      </Button>
-                    ) : (
-                      <Button variant="outline" size="sm" className="gap-1.5" onClick={follow} disabled={connLoading}>
-                        <UserPlus className="h-3.5 w-3.5" /> Follow
-                      </Button>
-                    )}
-                    {connectionStatus.connected === "accepted" ? (
-                      <Button variant="secondary" size="sm" className="gap-1.5" disabled>
-                        <Users className="h-3.5 w-3.5" /> Connected
-                      </Button>
-                    ) : connectionStatus.connected === "pending" ? (
-                      <Button variant="secondary" size="sm" className="gap-1.5" disabled>
-                        <Clock className="h-3.5 w-3.5" /> Pending
-                      </Button>
-                    ) : (
-                      <Button variant="default" size="sm" className="gap-1.5" onClick={connect} disabled={connLoading}>
-                        <Users className="h-3.5 w-3.5" /> Connect
-                      </Button>
-                    )}
-                    <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
-                      <MessageSquare className="h-4 w-4" />
-                    </Button>
-                  </>
-                )}
-
-                {/* Share */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
-                      <Share2 className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem onClick={handleCopyLink} className="gap-2 text-sm">
-                      <Copy className="h-3.5 w-3.5" /> Copy profile link
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleShareExternal} className="gap-2 text-sm">
-                      <ExternalLink className="h-3.5 w-3.5" /> Share externally
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {/* Report/Flag — only for other users */}
-                {!isOwnProfile && (
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={() => setReportOpen(true)}>
-                    <Flag className="h-4 w-4" />
-                  </Button>
+                  <span className="text-xl sm:text-2xl md:text-3xl font-bold font-heading text-muted-foreground">
+                    {getInitials(profile.full_name)}
+                  </span>
                 )}
               </div>
             </div>
 
-          {/* Role Badges */}
+            {/* Name + badge + role tags inline beside avatar */}
+            <div className="flex-1 min-w-0 pb-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-base sm:text-lg md:text-xl font-bold font-heading text-card-foreground leading-tight break-words">
+                  {profile.display_name || profile.full_name}
+                </h1>
+                {profile.verification_status === "verified" && (
+                  <span className="inline-flex items-center gap-0.5 text-accent">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    <span className="text-[10px] sm:text-xs font-semibold">Verified</span>
+                  </span>
+                )}
+                {/* Role tags beside name */}
+                {roles.map((r, i) => {
+                  const Icon = roleIcon[r.role];
+                  return (
+                    <span key={i} className={`inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full border ${roleColor[r.role] || ""}`}>
+                      {Icon && <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
+                      <span className="capitalize">{r.sub_type || r.role}</span>
+                    </span>
+                  );
+                })}
+              </div>
+              {profile.display_name && profile.display_name !== profile.full_name && (
+                <p className="text-xs sm:text-sm text-muted-foreground">{profile.full_name}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Designation + Organization */}
+          <div className="flex items-center gap-3 flex-wrap mt-2 text-xs text-muted-foreground">
+            {profile.designation && (
+              <span className="flex items-center gap-1">
+                <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
+              </span>
+            )}
+            {profile.organization && (
+              <span className="flex items-center gap-1">
+                <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
+              </span>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 mt-3 flex-wrap">
+            {isOwnProfile ? (
+              <Button variant="outline" size="sm" className="gap-1.5" onClick={onEditProfile}>
+                <Edit3 className="h-3.5 w-3.5" /> Edit Profile
+              </Button>
+            ) : (
+              <>
+                {connectionStatus.following ? (
+                  <Button variant="secondary" size="sm" className="gap-1.5" disabled>
+                    <UserCheck className="h-3.5 w-3.5" /> Following
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" className="gap-1.5" onClick={follow} disabled={connLoading}>
+                    <UserPlus className="h-3.5 w-3.5" /> Follow
+                  </Button>
+                )}
+                {connectionStatus.connected === "accepted" ? (
+                  <Button variant="secondary" size="sm" className="gap-1.5" disabled>
+                    <Users className="h-3.5 w-3.5" /> Connected
+                  </Button>
+                ) : connectionStatus.connected === "pending" ? (
+                  <Button variant="secondary" size="sm" className="gap-1.5" disabled>
+                    <Clock className="h-3.5 w-3.5" /> Pending
+                  </Button>
+                ) : (
+                  <Button variant="default" size="sm" className="gap-1.5" onClick={connect} disabled={connLoading}>
+                    <Users className="h-3.5 w-3.5" /> Connect
+                  </Button>
+                )}
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
+                  <MessageSquare className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+
+            {/* Share */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
+                  <Share2 className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={handleCopyLink} className="gap-2 text-sm">
+                  <Copy className="h-3.5 w-3.5" /> Copy profile link
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleShareExternal} className="gap-2 text-sm">
+                  <ExternalLink className="h-3.5 w-3.5" /> Share externally
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Report */}
+            {!isOwnProfile && (
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={() => setReportOpen(true)}>
+                <Flag className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+
+          {/* User type badge */}
           <div className="flex items-center gap-2 flex-wrap mt-3">
             <Badge variant="outline" className="text-xs capitalize gap-1">
               <Briefcase className="h-3 w-3" />
