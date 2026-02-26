@@ -2,17 +2,14 @@ import { useFeedPosts } from "@/hooks/useFeedPosts";
 import { useTrendingPosts } from "@/hooks/useTrendingPosts";
 import { useViralPosts } from "@/hooks/useViralPosts";
 import { PostCard } from "@/components/feed/PostCard";
-import { TrendingSidebar } from "@/components/feed/TrendingSidebar";
 import { CreatePostComposer } from "@/components/feed/CreatePostComposer";
 import { FeedTabs, type FeedFilter } from "@/components/feed/FeedTabs";
-import { DraftsPanel } from "@/components/feed/DraftsPanel";
-import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
+import { FeedSidebar } from "@/components/feed/FeedSidebar";
 import AppLayout from "@/components/AppLayout";
 import { FindooLoader } from "@/components/FindooLoader";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { supabase } from "@/integrations/supabase/client";
-import { PostDraft } from "@/hooks/useDrafts";
 import { toast } from "sonner";
 
 const POSTS_PER_PAGE = 10;
@@ -99,13 +96,10 @@ const Feed = () => {
           {hasMore && <FindooLoader size="sm" />}
         </div>
 
-        <aside className="hidden lg:block space-y-4">
-          <ScheduledPostsManager />
-          <DraftsPanel userId={feedUserId} onLoadDraft={(draft) => {
-            // For now, just toast — full integration requires composer ref
+        <aside className="hidden lg:block">
+          <FeedSidebar userId={feedUserId} onLoadDraft={(draft) => {
             toast.info("Draft loaded — resume editing in composer above");
           }} />
-          <TrendingSidebar />
         </aside>
       </div>
     </AppLayout>

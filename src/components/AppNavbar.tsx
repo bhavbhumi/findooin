@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3 } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
@@ -159,6 +159,22 @@ const AppNavbar = () => {
                     Settings
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator className="lg:hidden" />
+                <div className="lg:hidden px-2 py-1.5">
+                  <p className="text-[10px] font-medium text-muted-foreground mb-1.5">My Content</p>
+                  <DropdownMenuItem asChild>
+                    <Link to="/feed?panel=drafts" className="flex items-center gap-2 cursor-pointer">
+                      <FileEdit className="h-4 w-4" />
+                      Drafts
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/feed?panel=scheduled" className="flex items-center gap-2 cursor-pointer">
+                      <Clock className="h-4 w-4" />
+                      Scheduled Posts
+                    </Link>
+                  </DropdownMenuItem>
+                </div>
                 {/* Role switcher in dropdown for mobile */}
                 {availableRoles.length > 1 && (
                   <>
