@@ -223,7 +223,7 @@ export const ProfileHeader = ({
               )}
             </div>
 
-            {/* Name + badge + role tags */}
+            {/* Row 1: Name + Badge + Role Tag */}
             <div className="flex-1 min-w-0 pb-1">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <h1 className="text-base sm:text-lg md:text-xl font-bold font-heading text-card-foreground leading-tight break-words">
@@ -249,29 +249,39 @@ export const ProfileHeader = ({
                   );
                 })()}
               </div>
-              {secondaryName && (
-                <p className="text-xs sm:text-sm text-muted-foreground">{secondaryName}</p>
-              )}
-            </div>
-          </div>
 
-          {/* Designation + Organization (for entities, show representative name here) */}
-          <div className="flex items-center gap-3 flex-wrap mt-2 text-xs text-muted-foreground">
-            {isEntity && (
-              <span className="flex items-center gap-1">
-                <Users className="h-3 w-3 shrink-0" /> Rep: {profile.full_name}
-              </span>
-            )}
-            {profile.designation && (
-              <span className="flex items-center gap-1">
-                <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
-              </span>
-            )}
-            {!isEntity && profile.organization && (
-              <span className="flex items-center gap-1">
-                <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
-              </span>
-            )}
+              {/* Row 2: Contextual secondary info per profile type */}
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap mt-1 text-xs text-muted-foreground">
+                {isEntity ? (
+                  <>
+                    <span className="flex items-center gap-1">
+                      <Users className="h-3 w-3 shrink-0" /> Rep: {profile.full_name}
+                    </span>
+                    {profile.designation && (
+                      <span className="flex items-center gap-1">
+                        <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {profile.designation && (
+                      <span className="flex items-center gap-1">
+                        <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
+                      </span>
+                    )}
+                    {profile.organization && (
+                      <span className="flex items-center gap-1">
+                        <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
+                      </span>
+                    )}
+                    {secondaryName && (
+                      <span className="text-muted-foreground">({secondaryName})</span>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Action Buttons */}
