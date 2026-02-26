@@ -47,6 +47,34 @@ Deno.serve(async (req) => {
 
     const allUsers = [rajesh, priya, arjun, sneha, vikram, anita, karan, meera];
 
+    // ===== CLEANUP: Delete all existing seeded data (order matters for FK constraints) =====
+    await supabaseAdmin.from("reports").delete().in("reporter_id", allUsers);
+    await supabaseAdmin.from("notifications").delete().in("user_id", allUsers);
+    await supabaseAdmin.from("survey_responses").delete().in("user_id", allUsers);
+    // Delete survey_options & survey_questions via posts
+    const { data: existingPosts } = await supabaseAdmin.from("posts").select("id").in("author_id", allUsers);
+    const existingPostIds = (existingPosts || []).map(p => p.id);
+    if (existingPostIds.length) {
+      const { data: existingQuestions } = await supabaseAdmin.from("survey_questions").select("id").in("post_id", existingPostIds);
+      const existingQuestionIds = (existingQuestions || []).map(q => q.id);
+      if (existingQuestionIds.length) {
+        await supabaseAdmin.from("survey_options").delete().in("question_id", existingQuestionIds);
+        await supabaseAdmin.from("survey_questions").delete().in("id", existingQuestionIds);
+      }
+      const { data: existingPollOpts } = await supabaseAdmin.from("poll_options").select("id").in("post_id", existingPostIds);
+      const existingPollOptIds = (existingPollOpts || []).map(o => o.id);
+      if (existingPollOptIds.length) {
+        await supabaseAdmin.from("poll_votes").delete().in("poll_option_id", existingPollOptIds);
+        await supabaseAdmin.from("poll_options").delete().in("id", existingPollOptIds);
+      }
+      await supabaseAdmin.from("post_interactions").delete().in("post_id", existingPostIds);
+      await supabaseAdmin.from("comments").delete().in("post_id", existingPostIds);
+      await supabaseAdmin.from("posts").delete().in("id", existingPostIds);
+    }
+    await supabaseAdmin.from("messages").delete().in("sender_id", allUsers);
+    await supabaseAdmin.from("connections").delete().in("from_user_id", allUsers);
+    await supabaseAdmin.from("connections").delete().in("to_user_id", allUsers);
+
     // ===== BATCH INSERT POSTS =====
     const normalPosts = [
       { author_id: rajesh, content: "Just started my SIP journey with index funds. Looking for recommendations on the best Nifty 50 index funds with lowest tracking error. 📈\n\n#IndexFunds #SIP #PassiveInvesting", post_type: "query", query_category: "requirement", hashtags: ["IndexFunds", "SIP", "PassiveInvesting"] },
