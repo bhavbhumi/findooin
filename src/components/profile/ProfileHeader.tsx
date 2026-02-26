@@ -235,10 +235,19 @@ export const ProfileHeader = ({
                     <span className="text-[10px] sm:text-xs font-semibold">Verified</span>
                   </span>
                 )}
-                <Badge variant="outline" className="text-[10px] sm:text-xs gap-0.5 px-1.5 py-0">
+                <Badge variant="outline" className="text-[10px] sm:text-xs capitalize gap-0.5 px-1.5 py-0">
                   {isEntity ? <Building2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <Briefcase className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
-                  {isEntity ? "Organization" : "Individual"}
+                  {profile.user_type}
                 </Badge>
+                {primaryRole && (() => {
+                  const Icon = roleIcon[primaryRole];
+                  return (
+                    <span className={`inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full border ${roleColor[primaryRole] || ""}`}>
+                      {Icon && <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
+                      <span className="capitalize">{primaryRole}</span>
+                    </span>
+                  );
+                })()}
               </div>
               {secondaryName && (
                 <p className="text-xs sm:text-sm text-muted-foreground">{secondaryName}</p>
