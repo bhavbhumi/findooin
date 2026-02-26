@@ -53,6 +53,12 @@ const Landing = () => {
           </Link>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" asChild>
+              <Link to="/about">About</Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/contact">Contact</Link>
+            </Button>
+            <Button variant="ghost" size="sm" asChild>
               <Link to="/blog">Blog</Link>
             </Button>
             <Button variant="ghost" asChild>
