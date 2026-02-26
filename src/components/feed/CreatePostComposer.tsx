@@ -367,7 +367,7 @@ export function CreatePostComposer() {
         <div className="flex items-center gap-3">
           <NetworkAvatar src={avatarUrl} initials={initials} size="sm" className="shrink-0" />
 
-          <div className="flex-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <div className="flex-1 flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
             {/* Post Type */}
             <Select value={postKind} onValueChange={(v) => v !== "more" && setPostKind(v)}>
               <Tooltip>
