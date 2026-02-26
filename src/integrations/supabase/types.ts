@@ -702,6 +702,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit: {
+        Args: {
+          p_action: string
+          p_max_count: number
+          p_table: string
+          p_user_id: string
+          p_window_minutes: number
+        }
+        Returns: boolean
+      }
       cleanup_stale_sessions: { Args: never; Returns: undefined }
       create_notification: {
         Args: {
@@ -719,6 +729,11 @@ export type Database = {
         Returns: {
           session_token: string
         }[]
+      }
+      get_conversations: { Args: { p_user_id: string }; Returns: Json }
+      get_feed_posts: {
+        Args: { p_limit?: number; p_offset?: number }
+        Returns: Json
       }
       has_role: {
         Args: {
