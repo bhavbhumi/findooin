@@ -1,0 +1,21 @@
+{
+  "name": "FindOO — India's Financial Network",
+  "short_name": "FindOO",
+  "description": "India's trust-first financial network connecting verified Issuers, Intermediaries, and Investors.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A1628",
+  "theme_color": "#0A1628",
+  "icons": [
+    {
+      "src": "/images/BV_Avatar.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/BV_Avatar.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
