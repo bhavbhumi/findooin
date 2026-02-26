@@ -119,9 +119,9 @@ export const ProfileHeader = ({
 
   return (
     <>
-      <div className="rounded-xl border border-border bg-card overflow-hidden mb-4">
+      <div className="rounded-xl border border-border bg-card mb-4">
         {/* Banner */}
-        <div className={`h-32 sm:h-40 md:h-48 relative ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
+        <div className={`h-32 sm:h-40 md:h-48 relative rounded-t-xl overflow-hidden ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
           {profile.banner_url ? (
             <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" />
           ) : (
@@ -159,7 +159,7 @@ export const ProfileHeader = ({
 
             {/* Name + badge + role tags inline beside avatar */}
             <div className="flex-1 min-w-0 pb-1">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <h1 className="text-base sm:text-lg md:text-xl font-bold font-heading text-card-foreground leading-tight break-words">
                   {profile.display_name || profile.full_name}
                 </h1>
@@ -169,7 +169,10 @@ export const ProfileHeader = ({
                     <span className="text-[10px] sm:text-xs font-semibold">Verified</span>
                   </span>
                 )}
-                {/* Role tags beside name */}
+                <Badge variant="outline" className="text-[10px] sm:text-xs capitalize gap-0.5 px-1.5 py-0">
+                  <Briefcase className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                  {profile.user_type}
+                </Badge>
                 {roles.map((r, i) => {
                   const Icon = roleIcon[r.role];
                   return (
@@ -261,13 +264,6 @@ export const ProfileHeader = ({
             )}
           </div>
 
-          {/* User type badge */}
-          <div className="flex items-center gap-2 flex-wrap mt-3">
-            <Badge variant="outline" className="text-xs capitalize gap-1">
-              <Briefcase className="h-3 w-3" />
-              {profile.user_type}
-            </Badge>
-          </div>
 
           {/* Headline */}
           {profile.headline && (
