@@ -1,4 +1,4 @@
-import { BarChart3, UserCheck, Building2 } from "lucide-react";
+import { BarChart3, UserCheck, Landmark } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface RoleConfig {
@@ -29,7 +29,7 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
   },
   issuer: {
     label: "Issuer",
-    icon: Building2,
+    icon: Landmark,
     color: "text-issuer",
     bgColor: "bg-issuer/10 text-issuer border-issuer/20",
     bannerGradient: "from-issuer/20 via-issuer/10 to-transparent",

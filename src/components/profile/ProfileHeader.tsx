@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  CheckCircle2, UserPlus, UserCheck, Users, Clock,
+  CheckCircle2, UserPlus, UserCheck, Users, User, Clock,
   Calendar, Edit3, Briefcase, MessageSquare, MapPin, Globe, Shield, ShieldCheck,
   Share2, Flag, Copy, ExternalLink, UserMinus, Unlink, Compass, Mail,
   Building2,
@@ -222,7 +222,7 @@ export const ProfileHeader = ({
                   </span>
                 )}
                 <Badge variant="outline" className="text-[10px] sm:text-xs capitalize gap-0.5 px-1.5 py-0">
-                  {isEntity ? <Building2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <Briefcase className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
+                  {isEntity ? <Building2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <User className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
                   {profile.user_type}
                 </Badge>
                 {primaryRoleConf && (() => {
