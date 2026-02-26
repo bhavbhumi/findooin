@@ -9,10 +9,10 @@ interface NetworkAvatarProps {
 }
 
 const sizeMap = {
-  sm: { box: "h-10 w-10", text: "text-xs", radius: "rounded-[var(--radius)]", node: "h-1.5 w-1.5", offset: "1px" },
-  md: { box: "h-14 w-14", text: "text-sm", radius: "rounded-[var(--radius)]", node: "h-2 w-2", offset: "1px" },
-  lg: { box: "h-24 w-24", text: "text-2xl", radius: "rounded-[var(--radius)]", node: "h-2.5 w-2.5", offset: "2px" },
-  xl: { box: "h-28 w-28 sm:h-32 sm:w-32", text: "text-3xl sm:text-4xl", radius: "rounded-[var(--radius)]", node: "h-3 w-3", offset: "2px" },
+  sm: { box: "h-9 w-9 sm:h-10 sm:w-10", text: "text-xs", radius: "rounded-[var(--radius)]", node: "h-1.5 w-1.5", offset: "1px" },
+  md: { box: "h-11 w-11 sm:h-14 sm:w-14", text: "text-xs sm:text-sm", radius: "rounded-[var(--radius)]", node: "h-2 w-2", offset: "1px" },
+  lg: { box: "h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24", text: "text-lg sm:text-xl md:text-2xl", radius: "rounded-[var(--radius)]", node: "h-2 w-2 sm:h-2.5 sm:w-2.5", offset: "2px" },
+  xl: { box: "h-20 w-20 sm:h-28 sm:w-28 md:h-32 md:w-32", text: "text-2xl sm:text-3xl md:text-4xl", radius: "rounded-[var(--radius)]", node: "h-2.5 w-2.5 sm:h-3 sm:w-3", offset: "2px" },
 };
 
 export const NetworkAvatar = ({
