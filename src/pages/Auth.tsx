@@ -58,16 +58,34 @@ const Auth = () => {
   useEffect(() => {
     const checkSession = async (session: any) => {
       if (!session) return;
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("onboarding_completed")
-        .eq("id", session.user.id)
-        .maybeSingle();
-      
-      if (profile?.onboarding_completed) {
-        navigate("/feed");
-      } else {
-        navigate("/onboarding");
+      try {
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("onboarding_completed")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error("Profile fetch error:", error);
+          // Still navigate — onboarding will handle missing profile
+          navigate("/onboarding");
+          return;
+        }
+        
+        if (profile?.onboarding_completed) {
+          navigate("/feed");
+        } else {
+          navigate("/onboarding");
+        }
+      } catch (err) {
+        console.error("Session check failed:", err);
+        toast({
+          title: "Connection issue",
+          description: "Signed in but couldn't load your profile. Redirecting...",
+          variant: "destructive",
+        });
+        // Fallback: navigate to onboarding which will re-check
+        setTimeout(() => navigate("/onboarding"), 1500);
       }
     };
 
@@ -82,7 +100,7 @@ const Auth = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, toast]);
 
   const submitWithRetry = async <T,>(
     action: () => Promise<{ error: { message?: string } | null; data?: T }>,
