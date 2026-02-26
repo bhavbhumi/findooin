@@ -19,7 +19,7 @@ import {
 
 const MAX_LOGIN_ATTEMPTS = 3;
 const LOCKOUT_DURATION_MS = 60_000; // 1 minute
-const REQUEST_TIMEOUT_MS = 12_000;
+const REQUEST_TIMEOUT_MS = 30_000;
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -171,19 +171,39 @@ const Auth = () => {
           description: "We sent you a verification link. Please confirm your email to continue.",
         });
       } else {
-        const result = await submitWithRetry(() =>
-          supabase.auth.signInWithPassword({
+        let result: any;
+
+        try {
+          result = await submitWithRetry(() =>
+            supabase.auth.signInWithPassword({
+              email: email.trim(),
+              password,
+            }),
+          );
+        } catch (submitError: any) {
+          const isTimeoutOrNetwork = /load failed|failed to fetch|network|timed out/i.test(
+            submitError?.message ?? "",
+          );
+
+          if (!isTimeoutOrNetwork) throw submitError;
+
+          // Fallback: one direct attempt without local timeout wrapper for slow mobile networks
+          const fallbackResult = await supabase.auth.signInWithPassword({
             email: email.trim(),
             password,
-          }),
-        );
+          });
+          if (fallbackResult.error) throw fallbackResult.error;
+          result = fallbackResult;
+        }
 
         // Handle success immediately (mobile resilience) instead of relying only on auth event listeners
-        const signedInSession = (result as any)?.data?.session;
+        const signedInSession = result?.data?.session;
         if (signedInSession) {
           await handleSignedInSession(signedInSession);
         } else {
-          const { data: { session } } = await supabase.auth.getSession();
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
           if (session) await handleSignedInSession(session);
         }
 
@@ -192,6 +212,22 @@ const Auth = () => {
       }
     } catch (error: any) {
       const isNetworkError = /load failed|failed to fetch|network|timed out/i.test(error?.message ?? "");
+
+      if (isNetworkError && !isSignUp) {
+        try {
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+
+          if (session) {
+            await handleSignedInSession(session);
+            setLoginAttempts(0);
+            return;
+          }
+        } catch {
+          // continue to user-facing error toast below
+        }
+      }
 
       if (!isSignUp && !isNetworkError) {
         const newAttempts = loginAttempts + 1;
@@ -206,8 +242,8 @@ const Auth = () => {
         description: isNetworkError
           ? "We couldn't reach the authentication service. Please refresh and try again."
           : !isSignUp && loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS
-          ? `Account locked for 60 seconds after ${MAX_LOGIN_ATTEMPTS} failed attempts.`
-          : error.message,
+            ? `Account locked for 60 seconds after ${MAX_LOGIN_ATTEMPTS} failed attempts.`
+            : error.message,
         variant: "destructive",
       });
     } finally {
