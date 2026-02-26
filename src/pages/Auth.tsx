@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { registerSession } from "@/lib/session-manager";
@@ -57,8 +57,8 @@ const Auth = () => {
 
   const isLockedOut = lockedUntil !== null && Date.now() < lockedUntil;
 
-  useEffect(() => {
-    const checkSession = async (session: any) => {
+  const handleSignedInSession = useCallback(
+    async (session: any) => {
       if (!session) return;
 
       try {
@@ -95,20 +95,23 @@ const Auth = () => {
         });
         setTimeout(() => navigate("/onboarding"), 1500);
       }
-    };
+    },
+    [navigate, toast],
+  );
 
+  useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
-        checkSession(session);
+        handleSignedInSession(session);
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) checkSession(session);
+      if (session) handleSignedInSession(session);
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, toast]);
+  }, [handleSignedInSession]);
 
   const withTimeout = async <T,>(promise: Promise<T>, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> => {
     return await Promise.race([
@@ -168,12 +171,22 @@ const Auth = () => {
           description: "We sent you a verification link. Please confirm your email to continue.",
         });
       } else {
-        await submitWithRetry(() =>
+        const result = await submitWithRetry(() =>
           supabase.auth.signInWithPassword({
             email: email.trim(),
             password,
           }),
         );
+
+        // Handle success immediately (mobile resilience) instead of relying only on auth event listeners
+        const signedInSession = (result as any)?.data?.session;
+        if (signedInSession) {
+          await handleSignedInSession(signedInSession);
+        } else {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) await handleSignedInSession(session);
+        }
+
         // Reset attempts on success
         setLoginAttempts(0);
       }
