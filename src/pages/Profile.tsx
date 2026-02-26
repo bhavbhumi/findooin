@@ -138,20 +138,20 @@ const Profile = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="overflow-x-auto -mx-1 px-1 mb-4">
               <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
-                <TabsTrigger value="about" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
+                <TabsTrigger value="about" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
                   About
                 </TabsTrigger>
-                <TabsTrigger value="network" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
+                <TabsTrigger value="network" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
                   Network
                 </TabsTrigger>
-                <TabsTrigger value="activity" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
+                <TabsTrigger value="activity" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
                   Activity
                 </TabsTrigger>
-                <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
+                <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
                   Posts
                 </TabsTrigger>
                 {isOwnProfile && (
-                  <TabsTrigger value="bookmarks" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
+                  <TabsTrigger value="bookmarks" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
                     Bookmarks
                   </TabsTrigger>
                 )}

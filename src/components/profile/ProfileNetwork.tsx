@@ -180,17 +180,17 @@ export const ProfileNetwork = ({ profileId, isOwnProfile, currentUserId, default
       <Tabs defaultValue={defaultTab}>
         <div className="overflow-x-auto -mx-1 px-1">
           <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
-            <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+            <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
               Followers ({followers.length})
             </TabsTrigger>
-            <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+            <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
               Following ({following.length})
             </TabsTrigger>
-            <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+            <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
               Connections ({connections.length})
             </TabsTrigger>
             {isOwnProfile && pendingRequests.length > 0 && (
-              <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+              <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
                 Pending ({pendingRequests.length})
               </TabsTrigger>
             )}
