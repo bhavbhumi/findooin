@@ -358,8 +358,11 @@ const Auth = () => {
           <p className="text-xl text-white/80 font-medium">
             Trust First Financial Network Made In India with ❤️
           </p>
+          <p className="text-white/80 text-lg font-medium max-w-md">
+            Connect. Share. Discover. Prosper — together.
+          </p>
           <p className="text-white/60 text-base max-w-md leading-relaxed">
-            Join, Connect, Share and Discover to Prosper together. Build meaningful relationships across India's financial ecosystem — from issuers and intermediaries to investors. Exchange insights, explore opportunities, and grow your network with verified professionals you can trust.
+            Build trusted relationships with verified professionals across India's financial ecosystem — and turn insights into opportunities.
           </p>
         </div>
 
