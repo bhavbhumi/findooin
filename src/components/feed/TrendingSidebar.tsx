@@ -4,6 +4,7 @@ import { useViralPosts } from "@/hooks/useViralPosts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link, useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { BlogSidebarWidget } from "./BlogSidebarWidget";
 
 export function TrendingSidebar() {
   const navigate = useNavigate();
@@ -56,6 +57,9 @@ export function TrendingSidebar() {
           <p className="text-xs text-muted-foreground">No trending topics yet.</p>
         )}
       </div>
+
+      {/* Blog Widget */}
+      <BlogSidebarWidget />
 
       {/* Viral Posts */}
       <div className="rounded-xl border border-border bg-card p-5">
