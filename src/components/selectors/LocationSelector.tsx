@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { MapPin, Search, X } from "lucide-react";
+import { MapPin, Search, X, Globe, Map } from "lucide-react";
 import { searchLocations, type LocationEntry } from "@/data/locations";
 import { Input } from "@/components/ui/input";
 
@@ -67,20 +67,20 @@ export const LocationSelector = ({ value, onChange, placeholder = "Search city..
 
       {open && results.length > 0 && (
         <div className="absolute z-50 w-full mt-1 bg-popover border border-border rounded-lg shadow-lg max-h-52 overflow-y-auto">
-          {results.map((loc, i) => (
-            <button
-              key={i}
-              onClick={() => handleSelect(loc)}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-accent/10 transition-colors"
-            >
-              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span>
-                <span className="font-medium">{loc.city}</span>
-                {loc.state && <span className="text-muted-foreground">, {loc.state}</span>}
-                <span className="text-muted-foreground">, {loc.country}</span>
-              </span>
-            </button>
-          ))}
+          {results.map((loc, i) => {
+            const Icon = loc.type === "country" ? Globe : loc.type === "state" ? Map : MapPin;
+            return (
+              <button
+                key={i}
+                onClick={() => handleSelect(loc)}
+                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-left hover:bg-accent/10 transition-colors"
+              >
+                <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <span className="flex-1">{loc.label}</span>
+                <span className="text-[10px] text-muted-foreground capitalize">{loc.type}</span>
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
