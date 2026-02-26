@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_sessions: {
+        Row: {
+          created_at: string
+          device_info: string | null
+          id: string
+          last_active_at: string
+          session_token: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_info?: string | null
+          id?: string
+          last_active_at?: string
+          session_token: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_info?: string | null
+          id?: string
+          last_active_at?: string
+          session_token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           author_id: string
@@ -612,6 +639,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_stale_sessions: { Args: never; Returns: undefined }
       create_notification: {
         Args: {
           p_actor_id: string
@@ -622,6 +650,12 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      enforce_session_limit: {
+        Args: { p_max_sessions?: number; p_user_id: string }
+        Returns: {
+          session_token: string
+        }[]
       }
       has_role: {
         Args: {
