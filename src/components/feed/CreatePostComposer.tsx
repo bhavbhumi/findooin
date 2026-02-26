@@ -99,7 +99,12 @@ function getPlaceholder(postKind: string): string {
   }
 }
 
-export function CreatePostComposer() {
+interface CreatePostComposerProps {
+  draftToLoad?: PostDraft | null;
+  onDraftLoaded?: () => void;
+}
+
+export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostComposerProps = {}) {
   const isMobile = useIsMobile();
   const { activeRole, loaded: roleLoaded, userId: roleUserId } = useRole();
   const [isTablet, setIsTablet] = useState(false);
@@ -185,6 +190,38 @@ export function CreatePostComposer() {
       if (category === "query") setCategory("text");
     }
   }, [isInvestorMode]);
+
+  // Load draft into composer when draftToLoad changes
+  useEffect(() => {
+    if (!draftToLoad) return;
+    setContent(draftToLoad.content || "");
+    setPostKind(draftToLoad.post_kind || "normal");
+    if (draftToLoad.post_type === "query") {
+      setCategory("query");
+      setQueryCategory(draftToLoad.query_category || "requirement");
+    } else {
+      setCategory(draftToLoad.post_type || "text");
+    }
+    setAudience(draftToLoad.visibility || "public");
+    setActiveDraftId(draftToLoad.id);
+    if (draftToLoad.poll_options && Array.isArray(draftToLoad.poll_options)) {
+      setPollOptions(draftToLoad.poll_options);
+    }
+    if (draftToLoad.survey_questions && Array.isArray(draftToLoad.survey_questions)) {
+      setSurveyQuestions(draftToLoad.survey_questions);
+    }
+    if (draftToLoad.mentioned_users && Array.isArray(draftToLoad.mentioned_users)) {
+      setMentionedUsers(draftToLoad.mentioned_users);
+    }
+    if (draftToLoad.scheduled_at) {
+      setScheduleDate(new Date(draftToLoad.scheduled_at));
+      setShowSchedule(true);
+    }
+    if (draftToLoad.schedule_time) {
+      setScheduleTime(draftToLoad.schedule_time);
+    }
+    onDraftLoaded?.();
+  }, [draftToLoad]);
 
   // Mention search
   useEffect(() => {

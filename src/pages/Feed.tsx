@@ -8,19 +8,43 @@ import { FeedSidebar } from "@/components/feed/FeedSidebar";
 import AppLayout from "@/components/AppLayout";
 import { FindooLoader } from "@/components/FindooLoader";
 import { useState, useCallback, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { PostDraft } from "@/hooks/useDrafts";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { DraftsPanel } from "@/components/feed/DraftsPanel";
+import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 
 const POSTS_PER_PAGE = 10;
 
 const Feed = () => {
   const [filter, setFilter] = useState<FeedFilter>("foryou");
   const [feedUserId, setFeedUserId] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [draftToLoad, setDraftToLoad] = useState<PostDraft | null>(null);
+
+  // Mobile sheet for drafts/scheduled from profile dropdown
+  const panelParam = searchParams.get("panel");
+  const [mobileSheet, setMobileSheet] = useState<"drafts" | "scheduled" | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setFeedUserId(data.user?.id ?? null));
   }, []);
+
+  // Handle ?panel= URL param for mobile access
+  useEffect(() => {
+    if (panelParam === "drafts" || panelParam === "scheduled") {
+      // On mobile/tablet (no sidebar), open a sheet
+      const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+      if (!isDesktop) {
+        setMobileSheet(panelParam);
+      }
+      // Clear the param so it doesn't persist
+      setSearchParams({}, { replace: true });
+    }
+  }, [panelParam, setSearchParams]);
 
   const { data: forYouPosts, isLoading: forYouLoading, error: forYouError } = useFeedPosts();
   const { data: trendingPosts, isLoading: trendingLoading, error: trendingError } = useTrendingPosts();
@@ -58,12 +82,26 @@ const Feed = () => {
     return () => { if (el) observer.unobserve(el); };
   }, [hasMore, isLoading, visibleCount]);
 
+  const handleLoadDraft = useCallback((draft: PostDraft) => {
+    setDraftToLoad(draft);
+    setMobileSheet(null);
+    // Scroll to top where composer is
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    toast.info("Draft loaded — resume editing in composer above");
+  }, []);
+
+  // Derive initial sidebar tab from URL param (desktop)
+  const initialSidebarTab = panelParam === "drafts" ? "drafts" : panelParam === "scheduled" ? "scheduled" : undefined;
+
   return (
     <AppLayout maxWidth="max-w-6xl">
       <div className="grid lg:grid-cols-[1fr_300px] gap-6">
         <div className="space-y-4">
           <ErrorBoundary fallbackTitle="Error loading composer">
-            <CreatePostComposer />
+            <CreatePostComposer
+              draftToLoad={draftToLoad}
+              onDraftLoaded={() => setDraftToLoad(null)}
+            />
           </ErrorBoundary>
           <FeedTabs value={filter} onChange={setFilter} />
 
@@ -97,11 +135,30 @@ const Feed = () => {
         </div>
 
         <aside className="hidden lg:block">
-          <FeedSidebar userId={feedUserId} onLoadDraft={(draft) => {
-            toast.info("Draft loaded — resume editing in composer above");
-          }} />
+          <FeedSidebar
+            userId={feedUserId}
+            onLoadDraft={handleLoadDraft}
+            initialTab={initialSidebarTab}
+          />
         </aside>
       </div>
+
+      {/* Mobile sheet for Drafts/Scheduled */}
+      <Sheet open={!!mobileSheet} onOpenChange={(open) => !open && setMobileSheet(null)}>
+        <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>{mobileSheet === "drafts" ? "My Drafts" : "Scheduled Posts"}</SheetTitle>
+          </SheetHeader>
+          <div className="mt-4">
+            {mobileSheet === "drafts" && (
+              <DraftsPanel userId={feedUserId} onLoadDraft={handleLoadDraft} />
+            )}
+            {mobileSheet === "scheduled" && (
+              <ScheduledPostsManager />
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </AppLayout>
   );
 };

@@ -9,10 +9,11 @@ import { TrendingUp, FileEdit, Clock } from "lucide-react";
 interface FeedSidebarProps {
   userId: string | null;
   onLoadDraft: (draft: PostDraft) => void;
+  initialTab?: string;
 }
 
-export function FeedSidebar({ userId, onLoadDraft }: FeedSidebarProps) {
-  const [tab, setTab] = useState("trending");
+export function FeedSidebar({ userId, onLoadDraft, initialTab }: FeedSidebarProps) {
+  const [tab, setTab] = useState(initialTab || "trending");
 
   return (
     <div className="space-y-0">
