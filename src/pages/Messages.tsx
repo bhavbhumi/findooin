@@ -174,50 +174,25 @@ const Messages = () => {
 
   const loadConversations = async (uid: string) => {
     setLoading(true);
-    const { data: allMsgs } = await supabase
-      .from("messages")
-      .select("*")
-      .or(`sender_id.eq.${uid},receiver_id.eq.${uid}`)
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.rpc("get_conversations", {
+      p_user_id: uid,
+    });
 
-    if (!allMsgs || allMsgs.length === 0) {
+    if (error || !data) {
       setConversations([]);
       setLoading(false);
       return;
     }
 
-    const convMap = new Map<string, { last_message: string; last_message_at: string; unread_count: number }>();
-    allMsgs.forEach((m: any) => {
-      const otherUser = m.sender_id === uid ? m.receiver_id : m.sender_id;
-      if (!convMap.has(otherUser)) {
-        convMap.set(otherUser, { last_message: m.content, last_message_at: m.created_at, unread_count: 0 });
-      }
-      if (m.receiver_id === uid && !m.read) {
-        convMap.get(otherUser)!.unread_count++;
-      }
-    });
-
-    const otherIds = Array.from(convMap.keys());
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, full_name, display_name, avatar_url")
-      .in("id", otherIds);
-
-    const profileMap = new Map(profiles?.map((p: any) => [p.id, p]));
-
-    const convList: Conversation[] = otherIds
-      .map((id) => {
-        const p = profileMap.get(id);
-        const c = convMap.get(id)!;
-        return {
-          user_id: id,
-          full_name: p?.full_name || "Unknown",
-          display_name: p?.display_name || null,
-          avatar_url: p?.avatar_url || null,
-          ...c,
-        };
-      })
-      .sort((a, b) => new Date(b.last_message_at).getTime() - new Date(a.last_message_at).getTime());
+    const convList: Conversation[] = ((data as any[]) || []).map((c: any) => ({
+      user_id: c.user_id,
+      full_name: c.full_name || "Unknown",
+      display_name: c.display_name || null,
+      avatar_url: c.avatar_url || null,
+      last_message: c.last_message || "",
+      last_message_at: c.last_message_at || "",
+      unread_count: Number(c.unread_count) || 0,
+    }));
 
     setConversations(convList);
     setLoading(false);
