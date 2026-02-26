@@ -5,6 +5,7 @@ export interface FeedPost {
   id: string;
   content: string;
   post_type: string;
+  post_kind?: string;
   query_category: string | null;
   hashtags: string[] | null;
   attachment_url: string | null;
@@ -28,77 +29,40 @@ export function useFeedPosts() {
   return useQuery({
     queryKey: ["feed-posts"],
     queryFn: async (): Promise<FeedPost[]> => {
-      // Fetch published posts (exclude future-scheduled ones)
-      const { data: posts, error } = await supabase
-        .from("posts")
-        .select("*")
-        .is("scheduled_at", null)
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.rpc("get_feed_posts", {
+        p_limit: 50,
+        p_offset: 0,
+      });
 
       if (error) throw error;
 
-      // Fetch all profiles, roles, interactions, comments in parallel
-      const authorIds = [...new Set(posts.map((p) => p.author_id))];
-      
-      const postIds = posts.map((p) => p.id);
-
-      const [profilesRes, rolesRes, interactionsRes, commentsRes] = await Promise.all([
-        supabase.from("profiles").select("*").in("id", authorIds),
-        supabase.from("user_roles").select("*").in("user_id", authorIds),
-        supabase.from("post_interactions").select("post_id, interaction_type").in("post_id", postIds),
-        supabase.from("comments").select("post_id").in("post_id", postIds),
-      ]);
-
-      const profileMap = new Map(profilesRes.data?.map((p) => [p.id, p]));
-      const roleMap = new Map<string, { role: string; sub_type: string | null }[]>();
-      rolesRes.data?.forEach((r) => {
-        if (!roleMap.has(r.user_id)) roleMap.set(r.user_id, []);
-        roleMap.get(r.user_id)!.push({ role: r.role, sub_type: r.sub_type });
-      });
-
-      // Count interactions per post
-      const likeMap = new Map<string, number>();
-      const bookmarkMap = new Map<string, number>();
-      interactionsRes.data?.forEach((i) => {
-        if (i.interaction_type === "like") {
-          likeMap.set(i.post_id, (likeMap.get(i.post_id) || 0) + 1);
-        } else if (i.interaction_type === "bookmark") {
-          bookmarkMap.set(i.post_id, (bookmarkMap.get(i.post_id) || 0) + 1);
-        }
-      });
-
-      const commentCountMap = new Map<string, number>();
-      commentsRes.data?.forEach((c) => {
-        commentCountMap.set(c.post_id, (commentCountMap.get(c.post_id) || 0) + 1);
-      });
-
-      return posts.map((post) => {
-        const profile = profileMap.get(post.author_id);
-        return {
-          id: post.id,
-          content: post.content,
-          post_type: post.post_type,
-          query_category: post.query_category || null,
-          hashtags: post.hashtags,
-          attachment_url: post.attachment_url,
-          attachment_name: post.attachment_name,
-          attachment_type: post.attachment_type,
-          created_at: post.created_at,
-          author: {
-            id: post.author_id,
-            full_name: profile?.full_name || "Unknown",
-            display_name: profile?.display_name,
-            avatar_url: profile?.avatar_url,
-            verification_status: profile?.verification_status || "unverified",
-          },
-          roles: roleMap.get(post.author_id) || [],
-          like_count: likeMap.get(post.id) || 0,
-          comment_count: commentCountMap.get(post.id) || 0,
-          bookmark_count: bookmarkMap.get(post.id) || 0,
-        };
-      });
+      // RPC returns JSON — parse and normalize
+      const posts = (data as any[]) || [];
+      return posts.map((p: any) => ({
+        id: p.id,
+        content: p.content,
+        post_type: p.post_type,
+        post_kind: p.post_kind,
+        query_category: p.query_category || null,
+        hashtags: p.hashtags,
+        attachment_url: p.attachment_url,
+        attachment_name: p.attachment_name,
+        attachment_type: p.attachment_type,
+        created_at: p.created_at,
+        author: {
+          id: p.author?.id || "",
+          full_name: p.author?.full_name || "Unknown",
+          display_name: p.author?.display_name || null,
+          avatar_url: p.author?.avatar_url || null,
+          verification_status: p.author?.verification_status || "unverified",
+        },
+        roles: p.roles || [],
+        like_count: Number(p.like_count) || 0,
+        comment_count: Number(p.comment_count) || 0,
+        bookmark_count: Number(p.bookmark_count) || 0,
+      }));
     },
-    staleTime: 30_000, // 30s — avoid refetching on every tab switch
+    staleTime: 30_000,
     refetchOnWindowFocus: false,
   });
 }
