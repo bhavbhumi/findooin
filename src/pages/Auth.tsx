@@ -356,10 +356,10 @@ const Auth = () => {
             Financially Social
           </h2>
           <p className="text-xl text-white/80 font-medium">
-            Trust First Financial Network Made In India with ❤️
-          </p>
-          <p className="text-white/80 text-lg font-medium max-w-md">
             Connect. Share. Discover. Prosper — together.
+          </p>
+          <p className="text-white/60 text-base max-w-md leading-relaxed">
+            Build trusted relationships with verified professionals across India's financial ecosystem — and turn insights into opportunities.
           </p>
           <p className="text-white/60 text-base max-w-md leading-relaxed">
             Build trusted relationships with verified professionals across India's financial ecosystem — and turn insights into opportunities.
