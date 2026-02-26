@@ -28,6 +28,10 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Settings = lazy(() => import("./pages/Settings"));
 
+// Public pages
+import Blog from "./pages/Blog";
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+
 const queryClient = new QueryClient();
 
 const LazyFallback = () => (
@@ -52,6 +56,8 @@ const App = () => (
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/install" element={<Install />} />
                   <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
                   <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

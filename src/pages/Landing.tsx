@@ -52,6 +52,9 @@ const Landing = () => {
             <span className="text-xl font-bold font-heading text-foreground tracking-tight">FindOO</span>
           </Link>
           <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/blog">Blog</Link>
+            </Button>
             <Button variant="ghost" asChild>
               <Link to="/auth">Sign In</Link>
             </Button>
