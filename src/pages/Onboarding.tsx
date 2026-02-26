@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, UserCheck, BarChart3, ArrowRight, ArrowLeft, Loader2, CheckCircle2,
+  Upload, ShieldCheck,
 } from "lucide-react";
 
 type UserType = "individual" | "entity";
@@ -44,6 +45,19 @@ const issuerSubTypes: SubTypeOption[] = [
   { value: "government", label: "Government Entity" },
 ];
 
+const getSubTypesForRole = (role: Role): SubTypeOption[] => {
+  switch (role) {
+    case "investor": return investorSubTypes;
+    case "intermediary": return intermediarySubTypes;
+    case "issuer": return issuerSubTypes;
+  }
+};
+
+const needsVerification = (roles: Role[]) =>
+  roles.includes("issuer") || roles.includes("intermediary");
+
+const TOTAL_STEPS = 5; // Step 5 = verification nudge (conditional)
+
 const Onboarding = () => {
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState<UserType | null>(null);
@@ -55,26 +69,42 @@ const Onboarding = () => {
   });
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [designation, setDesignation] = useState("");
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Check auth + guard against re-onboarding
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) {
-        navigate("/auth");
+        navigate("/auth", { replace: true });
         return;
       }
+
+      // Guard: if already onboarded, redirect to feed
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+      if (profile?.onboarding_completed) {
+        navigate("/feed", { replace: true });
+        return;
+      }
+
       setUserId(session.user.id);
       setDisplayName(session.user.user_metadata?.full_name || "");
+      setInitialLoading(false);
     });
   }, [navigate]);
 
   const toggleRole = (role: Role) => {
-    // Investor is always on for individuals
     if (role === "investor" && userType === "individual") return;
-    // Issuer only for entities
     if (role === "issuer" && userType === "individual") return;
 
     setSelectedRoles((prev) =>
@@ -88,7 +118,7 @@ const Onboarding = () => {
       icon: BarChart3,
       label: "Investor",
       description: "Discover opportunities & insights",
-      disabled: userType === "individual", // always on
+      disabled: userType === "individual",
     },
     {
       role: "intermediary",
@@ -106,11 +136,12 @@ const Onboarding = () => {
     },
   ];
 
+  const actualTotalSteps = needsVerification(selectedRoles) ? TOTAL_STEPS : 4;
+
   const handleComplete = async () => {
     if (!userId) return;
     setLoading(true);
     try {
-      // Upsert profile
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert({
@@ -119,13 +150,14 @@ const Onboarding = () => {
           display_name: displayName,
           bio,
           user_type: userType!,
+          organization: userType === "entity" ? organization : null,
+          designation: designation || null,
           onboarding_completed: true,
         }, { onConflict: "id" });
       if (profileError) throw profileError;
 
-      // Delete existing roles, then insert new ones
       await supabase.from("user_roles").delete().eq("user_id", userId);
-      
+
       const roleInserts = selectedRoles.map((role) => ({
         user_id: userId,
         role,
@@ -143,31 +175,41 @@ const Onboarding = () => {
     }
   };
 
+  const handleNext = () => {
+    if (step === 4 && !needsVerification(selectedRoles)) {
+      handleComplete();
+    } else if (step === 5) {
+      handleComplete();
+    } else {
+      setStep((s) => s + 1);
+    }
+  };
+
   const canProceed = () => {
     switch (step) {
       case 1: return userType !== null;
       case 2: return selectedRoles.length > 0;
-      case 3:
-        return selectedRoles.every((role) => selectedSubTypes[role] !== "");
+      case 3: return selectedRoles.every((role) => selectedSubTypes[role] !== "");
       case 4: return displayName.trim().length > 0;
+      case 5: return true; // verification nudge is optional
       default: return false;
     }
   };
 
-  const getSubTypesForRole = (role: Role) => {
-    switch (role) {
-      case "investor": return investorSubTypes;
-      case "intermediary": return intermediarySubTypes;
-      case "issuer": return issuerSubTypes;
-    }
-  };
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
         {/* Progress */}
         <div className="flex items-center gap-2 mb-8">
-          {[1, 2, 3, 4].map((s) => (
+          {Array.from({ length: actualTotalSteps }, (_, i) => i + 1).map((s) => (
             <div
               key={s}
               className={`h-1.5 flex-1 rounded-full transition-colors ${
@@ -327,7 +369,7 @@ const Onboarding = () => {
                   Complete your profile
                 </h1>
                 <p className="text-muted-foreground mb-8">
-                  This is how others will see you on FinNet.
+                  This is how others will see you on FindOO.
                 </p>
                 <div className="space-y-4">
                   <div className="space-y-2">
@@ -341,6 +383,31 @@ const Onboarding = () => {
                       placeholder={userType === "entity" ? "Your company name" : "Your name"}
                     />
                   </div>
+
+                  {userType === "entity" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="organization">Organization / Firm</Label>
+                      <Input
+                        id="organization"
+                        value={organization}
+                        onChange={(e) => setOrganization(e.target.value)}
+                        placeholder="Parent organization or firm name"
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="designation">
+                      Designation <span className="text-muted-foreground">(optional)</span>
+                    </Label>
+                    <Input
+                      id="designation"
+                      value={designation}
+                      onChange={(e) => setDesignation(e.target.value)}
+                      placeholder={userType === "entity" ? "e.g. Fund Manager, CEO" : "e.g. Portfolio Manager, RIA"}
+                    />
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="bio">Bio <span className="text-muted-foreground">(optional)</span></Label>
                     <Textarea
@@ -351,6 +418,7 @@ const Onboarding = () => {
                       rows={3}
                     />
                   </div>
+
                   <div className="rounded-lg bg-secondary p-4">
                     <p className="text-sm text-muted-foreground mb-2">Your roles:</p>
                     <div className="flex flex-wrap gap-2">
@@ -381,6 +449,55 @@ const Onboarding = () => {
                 </div>
               </div>
             )}
+
+            {/* Step 5: Verification nudge (Issuers & Intermediaries only) */}
+            {step === 5 && (
+              <div>
+                <div className="flex items-center justify-center mb-6">
+                  <div className="h-16 w-16 rounded-2xl bg-accent/10 flex items-center justify-center">
+                    <ShieldCheck className="h-8 w-8 text-accent" />
+                  </div>
+                </div>
+                <h1 className="text-2xl font-bold font-heading text-foreground mb-2 text-center">
+                  Get verified on FindOO
+                </h1>
+                <p className="text-muted-foreground mb-8 text-center">
+                  Verified profiles earn more trust and visibility. Upload your regulatory registration certificate to get started.
+                </p>
+
+                <div className="space-y-4">
+                  {selectedRoles.filter((r) => r !== "investor").map((role) => (
+                    <div key={role} className="rounded-xl border-2 border-dashed border-border p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        {role === "issuer" ? (
+                          <Building2 className="h-5 w-5 text-issuer" />
+                        ) : (
+                          <UserCheck className="h-5 w-5 text-intermediary" />
+                        )}
+                        <div>
+                          <h3 className="font-semibold font-heading text-foreground capitalize">{role} Verification</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {role === "issuer"
+                              ? "SEBI / RBI / IRDAI registration certificate"
+                              : "SEBI RIA / AMFI / IRDAI / ICAI registration"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center rounded-lg bg-muted/50 border border-border h-24 cursor-pointer hover:bg-muted transition-colors">
+                        <div className="flex flex-col items-center gap-1 text-muted-foreground">
+                          <Upload className="h-5 w-5" />
+                          <span className="text-xs">Upload certificate (PDF / Image)</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="text-xs text-muted-foreground text-center mt-6">
+                  You can skip this now and upload later from your profile settings. Verification is reviewed manually and usually takes 1–2 business days.
+                </p>
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -394,31 +511,35 @@ const Onboarding = () => {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
+
           {step < 4 ? (
-            <Button onClick={() => setStep((s) => s + 1)} disabled={!canProceed()}>
+            <Button onClick={handleNext} disabled={!canProceed()}>
+              Continue
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          ) : step === 4 && needsVerification(selectedRoles) ? (
+            <Button onClick={handleNext} disabled={!canProceed()}>
               Continue
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           ) : (
-            <Button onClick={handleComplete} disabled={loading || !canProceed()}>
-              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Launch FindOO
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              {step === 5 && (
+                <Button variant="ghost" onClick={handleComplete} disabled={loading}>
+                  Skip for now
+                </Button>
+              )}
+              <Button onClick={handleNext} disabled={loading || !canProceed()}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {step === 5 ? "Submit & Verify" : "Launch FindOO"}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           )}
         </div>
       </div>
     </div>
   );
-};
-
-// Helper to get sub-types outside component scope
-const getSubTypesForRole = (role: Role): SubTypeOption[] => {
-  switch (role) {
-    case "investor": return investorSubTypes;
-    case "intermediary": return intermediarySubTypes;
-    case "issuer": return issuerSubTypes;
-  }
 };
 
 export default Onboarding;
