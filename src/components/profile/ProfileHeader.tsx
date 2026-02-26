@@ -143,17 +143,18 @@ export const ProfileHeader = ({
 
         {/* Avatar + Identity */}
         <div className="px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-10 sm:-mt-14 md:-mt-16">
-            {/* Avatar — Network-styled rounded square */}
+          {/* Avatar pulled up over banner */}
+          <div className="-mt-12 sm:-mt-16 md:-mt-20 mb-3">
             <NetworkAvatar
               src={profile.avatar_url}
               initials={getInitials(profile.full_name)}
               size="xl"
               roleColor={primaryRole ? `hsl(var(--${primaryRole}))` : undefined}
             />
+          </div>
 
-            {/* Name + Info + Actions stacked */}
-            <div className="flex-1 min-w-0">
+          {/* Identity + Actions — fully below banner */}
+          <div className="flex-1 min-w-0">
               {/* Verified badge above name */}
               {profile.verification_status === "verified" && (
                 <div className="flex items-center gap-1 mb-1">
@@ -245,7 +246,6 @@ export const ProfileHeader = ({
                 )}
               </div>
             </div>
-          </div>
 
           {/* Role Badges */}
           <div className="flex items-center gap-2 flex-wrap mt-3">
