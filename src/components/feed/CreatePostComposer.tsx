@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { useQueryClient } from "@tanstack/react-query";
@@ -13,11 +13,13 @@ import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useDrafts, PostDraft } from "@/hooks/useDrafts";
 import {
   TrendingUp, BookOpen, Megaphone, Newspaper, FileText,
   Paperclip, X, Image, File, Send, Loader2, AtSign, Clock,
   Plus, Trash2, BarChart3, ClipboardList, Sparkles,
   Globe, Users, UserCheck, Heart, Lock, Hash, Search,
+  Save,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -121,7 +123,10 @@ export function CreatePostComposer() {
   const [audience, setAudience] = useState("public");
   const [content, setContent] = useState("");
   const [attachment, setAttachment] = useState<File | null>(null);
+  const [attachmentPreviewUrl, setAttachmentPreviewUrl] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [savingDraft, setSavingDraft] = useState(false);
+  const [activeDraftId, setActiveDraftId] = useState<string | null>(null);
 
   // Schedule
   const [scheduleDate, setScheduleDate] = useState<Date | undefined>();
@@ -146,6 +151,7 @@ export function CreatePostComposer() {
   const [mentionedUsers, setMentionedUsers] = useState<{ id: string; full_name: string }[]>([]);
 
   const queryClient = useQueryClient();
+  const { saveDraft } = useDrafts(userId);
 
   // Derive investor mode from active role context
   const isInvestorMode = activeRole === "investor";
@@ -201,8 +207,36 @@ export function CreatePostComposer() {
     const err = validateFile(file, "post-attachments");
     if (err) { toast.error(err); e.target.value = ""; return; }
     setAttachment(file);
+    // Generate image preview
+    if (file.type.startsWith("image/")) {
+      const url = URL.createObjectURL(file);
+      setAttachmentPreviewUrl(url);
+    } else {
+      setAttachmentPreviewUrl(null);
+    }
     e.target.value = "";
   }, []);
+
+  const handleSaveDraft = async () => {
+    if (!userId) return;
+    setSavingDraft(true);
+    const id = await saveDraft({
+      id: activeDraftId || undefined,
+      content,
+      post_kind: postKind,
+      post_type: isInvestorMode ? "query" : category,
+      query_category: isInvestorMode ? queryCategory : null,
+      visibility: audience,
+      poll_options: postKind === "poll" ? pollOptions : null,
+      survey_questions: postKind === "survey" ? surveyQuestions : null,
+      mentioned_users: mentionedUsers.length > 0 ? mentionedUsers : null,
+      hashtags: extractHashtags(content),
+      scheduled_at: scheduleDate?.toISOString() || null,
+      schedule_time: scheduleTime,
+    });
+    if (id) setActiveDraftId(id);
+    setSavingDraft(false);
+  };
 
   const handleSubmit = async () => {
     if (!userId || !content.trim()) return;
@@ -298,6 +332,8 @@ export function CreatePostComposer() {
       setPostKind("normal");
       setAudience("public");
       setAttachment(null);
+      setAttachmentPreviewUrl(null);
+      setActiveDraftId(null);
       setScheduleDate(undefined);
       setShowSchedule(false);
       setMentionedUsers([]);
@@ -480,7 +516,10 @@ export function CreatePostComposer() {
           placeholder={getPlaceholder(postKind)}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="min-h-[80px] resize-none text-sm border-none shadow-none focus-visible:ring-0 p-0"
+          className={cn(
+            "resize-none text-sm border-none shadow-none focus-visible:ring-0 p-0",
+            isMobile ? "min-h-[100px] text-base" : "min-h-[80px]"
+          )}
           maxLength={MAX_CONTENT_LENGTH + 100}
         />
 
@@ -645,17 +684,29 @@ export function CreatePostComposer() {
 
         {/* Attachment preview */}
         {attachment && (
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2">
-            {attachment.type.startsWith("image") ? (
-              <Image className="h-4 w-4 text-muted-foreground shrink-0" />
-            ) : (
-              <File className="h-4 w-4 text-muted-foreground shrink-0" />
+          <div className="rounded-lg border border-border bg-secondary/50 p-3 space-y-2">
+            {/* Image thumbnail */}
+            {attachmentPreviewUrl && (
+              <div className="relative w-full max-h-48 rounded-md overflow-hidden bg-muted">
+                <img
+                  src={attachmentPreviewUrl}
+                  alt="Preview"
+                  className="w-full h-full max-h-48 object-cover rounded-md"
+                />
+              </div>
             )}
-            <span className="text-xs text-muted-foreground truncate flex-1">{attachment.name}</span>
-            <span className="text-[10px] text-muted-foreground">{(attachment.size / 1024 / 1024).toFixed(1)}MB</span>
-            <button onClick={() => setAttachment(null)} className="text-muted-foreground hover:text-destructive">
-              <X className="h-3.5 w-3.5" />
-            </button>
+            <div className="flex items-center gap-2">
+              {attachment.type.startsWith("image") ? (
+                <Image className="h-4 w-4 text-muted-foreground shrink-0" />
+              ) : (
+                <File className="h-4 w-4 text-muted-foreground shrink-0" />
+              )}
+              <span className="text-xs text-muted-foreground truncate flex-1">{attachment.name}</span>
+              <span className="text-[10px] text-muted-foreground">{(attachment.size / 1024 / 1024).toFixed(1)}MB</span>
+              <button onClick={() => { setAttachment(null); setAttachmentPreviewUrl(null); }} className="text-muted-foreground hover:text-destructive">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
         )}
 
@@ -771,17 +822,31 @@ export function CreatePostComposer() {
             <TooltipContent side="bottom" className="text-xs">Schedule for later</TooltipContent>
           </Tooltip>
 
+          {/* Save Draft */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleSaveDraft}
+                disabled={savingDraft || (!content.trim() && postKind === "normal")}
+                className="p-1 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors disabled:opacity-40"
+              >
+                {savingDraft ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">Save as draft</TooltipContent>
+          </Tooltip>
+
           <Button
             size="sm"
             className={cn(
-              "h-8 px-4 gap-1.5 font-medium",
+              "h-8 sm:h-9 px-3 sm:px-4 gap-1.5 font-medium text-xs sm:text-sm",
               isScheduled && "bg-accent hover:bg-accent/90 text-accent-foreground"
             )}
             disabled={!content.trim() || overLimit || submitting}
             onClick={handleSubmit}
           >
             {submitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-            {isScheduled ? "Post Later" : "Post Now"}
+            {isMobile ? "" : isScheduled ? "Post Later" : "Post Now"}
           </Button>
         </div>
       </div>
