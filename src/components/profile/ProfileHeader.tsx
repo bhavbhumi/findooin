@@ -104,8 +104,8 @@ export const ProfileHeader = ({
   const primaryName = isEntity && profile.organization
     ? profile.organization
     : (profile.display_name || profile.full_name);
-  const secondaryName = isEntity && profile.organization
-    ? profile.full_name
+  const secondaryName = isEntity
+    ? null
     : (profile.display_name && profile.display_name !== profile.full_name ? profile.full_name : null);
 
   const profileUrl = `${window.location.origin}/profile/${profile.id}`;
