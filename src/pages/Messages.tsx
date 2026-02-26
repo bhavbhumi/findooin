@@ -140,12 +140,21 @@ const Messages = () => {
     return () => { supabase.removeChannel(channel); };
   }, [currentUserId, selectedUserId]);
 
-  const broadcastTyping = useCallback((typing: boolean) => {
-    if (!currentUserId || !selectedUserId) return;
+  const typingChannelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+
+  // Keep a ref to the current typing channel so broadcastTyping reuses it
+  useEffect(() => {
+    if (!currentUserId || !selectedUserId) {
+      typingChannelRef.current = null;
+      return;
+    }
     const roomId = [currentUserId, selectedUserId].sort().join("-");
-    const channel = supabase.channel(`typing:${roomId}`);
-    channel.track({ typing });
+    typingChannelRef.current = supabase.channel(`typing:${roomId}`);
   }, [currentUserId, selectedUserId]);
+
+  const broadcastTyping = useCallback((typing: boolean) => {
+    typingChannelRef.current?.track({ typing });
+  }, []);
 
   const handleTyping = useCallback(() => {
     if (!isTyping) {

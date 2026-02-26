@@ -40,11 +40,13 @@ export function useFeedPosts() {
       // Fetch all profiles, roles, interactions, comments in parallel
       const authorIds = [...new Set(posts.map((p) => p.author_id))];
       
+      const postIds = posts.map((p) => p.id);
+
       const [profilesRes, rolesRes, interactionsRes, commentsRes] = await Promise.all([
         supabase.from("profiles").select("*").in("id", authorIds),
         supabase.from("user_roles").select("*").in("user_id", authorIds),
-        supabase.from("post_interactions").select("post_id, interaction_type"),
-        supabase.from("comments").select("post_id"),
+        supabase.from("post_interactions").select("post_id, interaction_type").in("post_id", postIds),
+        supabase.from("comments").select("post_id").in("post_id", postIds),
       ]);
 
       const profileMap = new Map(profilesRes.data?.map((p) => [p.id, p]));
@@ -96,5 +98,7 @@ export function useFeedPosts() {
         };
       });
     },
+    staleTime: 30_000, // 30s — avoid refetching on every tab switch
+    refetchOnWindowFocus: false,
   });
 }
