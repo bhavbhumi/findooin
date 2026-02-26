@@ -229,7 +229,7 @@ const Messages = () => {
     setRecipientRoles(roles);
     // If recipient is investor-only, force category to general
     const isInvestorOnly = roles.length === 1 && roles[0] === "investor";
-    if (isInvestorOnly || activeRole === "investor") setActiveCategory("general");
+    if (isInvestorOnly) setActiveCategory("general");
 
     const { data } = await supabase
       .from("messages")
@@ -276,11 +276,9 @@ const Messages = () => {
 
   const totalUnread = conversations.reduce((sum, c) => sum + c.unread_count, 0);
 
-  // Restrict to general-only if sender is investor OR recipient is investor-only
+  // Restrict to general-only when the recipient is an investor-only user
   const recipientIsInvestorOnly = recipientRoles.length > 0 && recipientRoles.length === 1 && recipientRoles[0] === "investor";
-  const senderIsInvestor = activeRole === "investor";
-  const restrictToGeneral = senderIsInvestor || recipientIsInvestorOnly;
-  const allowedCategories = restrictToGeneral
+  const allowedCategories = recipientIsInvestorOnly
     ? MESSAGE_CATEGORIES.filter((c) => c.value === "general")
     : MESSAGE_CATEGORIES;
 
