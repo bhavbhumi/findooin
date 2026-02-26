@@ -346,9 +346,9 @@ const Auth = () => {
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-accent/10 blur-3xl -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-gold/10 blur-3xl translate-y-1/3 -translate-x-1/4" />
 
-        <Link to="/" className="flex items-center gap-2 relative z-10">
-          <img src={findooLogoWhite} alt="FindOO" className="h-8 w-8" />
-          <span className="text-xl font-bold font-heading">FindOO</span>
+        <Link to="/" className="flex items-center gap-3 relative z-10">
+          <img src={findooLogoWhite} alt="FindOO" className="h-10" />
+          <span className="text-2xl font-bold font-heading">FindOO</span>
         </Link>
         <div className="relative z-10">
           <h2 className="text-3xl font-bold font-heading mb-4">
