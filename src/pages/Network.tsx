@@ -6,11 +6,12 @@ import { FindooLoader } from "@/components/FindooLoader";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
 import { NetworkSidebar } from "@/components/network/NetworkSidebar";
+import { InviteDialog } from "@/components/network/InviteDialog";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Users, UserPlus, UserCheck, UserMinus, Clock, Search, CheckCircle2,
-  TrendingUp, Sparkles,
+  TrendingUp, Sparkles, Send,
 } from "lucide-react";
 
 interface NetworkUser {
@@ -29,6 +30,7 @@ const Network = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("connections");
+  const [inviteOpen, setInviteOpen] = useState(false);
 
   const [myConnections, setMyConnections] = useState<NetworkUser[]>([]);
   const [myFollowing, setMyFollowing] = useState<NetworkUser[]>([]);
@@ -140,7 +142,17 @@ const Network = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
           {/* Main Column */}
           <div>
-        <h1 className="text-2xl font-bold font-heading text-foreground mb-1">Network</h1>
+        <div className="flex items-center justify-between mb-1">
+          <h1 className="text-2xl font-bold font-heading text-foreground">Network</h1>
+          <Button
+            size="sm"
+            className="gap-1.5 bg-accent text-accent-foreground hover:bg-gold hover:text-gold-foreground"
+            onClick={() => setInviteOpen(true)}
+          >
+            <Send className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Invite</span>
+          </Button>
+        </div>
         <p className="text-sm text-muted-foreground mb-4">Manage your professional relationships and grow your network.</p>
 
         {/* Pending requests banner */}
@@ -304,6 +316,8 @@ const Network = () => {
             />
           </aside>
         </div>
+
+      <InviteDialog open={inviteOpen} onOpenChange={setInviteOpen} />
     </AppLayout>
   );
 };
