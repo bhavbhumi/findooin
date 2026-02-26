@@ -73,6 +73,42 @@ export type Database = {
         }
         Relationships: []
       }
+      file_uploads: {
+        Row: {
+          bucket: string
+          created_at: string
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id: string
+          public_url: string | null
+          user_id: string
+        }
+        Insert: {
+          bucket: string
+          created_at?: string
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id?: string
+          public_url?: string | null
+          user_id: string
+        }
+        Update: {
+          bucket?: string
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          public_url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           category: Database["public"]["Enums"]["message_category"]

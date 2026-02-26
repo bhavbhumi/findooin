@@ -11,13 +11,14 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   User, Building2, Briefcase, MapPin, Globe, Award, Languages,
-  GraduationCap, Landmark, Save, X, Plus, Trash2,
+  GraduationCap, Landmark, Save, X, Plus, Trash2, Upload, Loader2,
 } from "lucide-react";
 import type { ProfileData } from "./ProfileHeader";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
 import { LanguageSelector } from "@/components/selectors/LanguageSelector";
 import type { UserLanguage } from "@/data/languages";
+import { uploadFile, validateFile } from "@/lib/storage";
 
 interface EditProfileDialogProps {
   open: boolean;
@@ -68,7 +69,8 @@ function parseLanguages(raw: any): UserLanguage[] {
 
 export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: EditProfileDialogProps) => {
   const [saving, setSaving] = useState(false);
-
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [bannerUploading, setBannerUploading] = useState(false);
   // Basic
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
   const [bannerUrl, setBannerUrl] = useState(profile.banner_url || "");
@@ -177,26 +179,64 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
             <TabsTrigger value="regulatory" className="text-xs gap-1"><Landmark className="h-3 w-3" /> Regulatory</TabsTrigger>
           </TabsList>
 
-          {/* Basic Tab */}
           <TabsContent value="basic" className="space-y-4 mt-4">
             <div>
-              <Label className="text-xs font-medium text-muted-foreground">Avatar URL</Label>
-              <Input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://… or /images/avatar.png" className="mt-1 text-sm" />
-              {avatarUrl && (
-                <div className="mt-2 flex items-center gap-2">
-                  <img src={avatarUrl} alt="Avatar preview" className="h-10 w-10 rounded-lg object-cover border border-border" />
-                  <span className="text-[10px] text-muted-foreground">Preview</span>
-                </div>
-              )}
+              <Label className="text-xs font-medium text-muted-foreground">Avatar</Label>
+              <div className="flex items-center gap-3 mt-1">
+                {avatarUrl && (
+                  <img src={avatarUrl} alt="Avatar preview" className="h-12 w-12 rounded-lg object-cover border border-border" />
+                )}
+                <label className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-md border border-border bg-muted/50 hover:bg-muted transition-colors">
+                  {avatarUploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                  {avatarUploading ? "Uploading..." : "Upload Avatar"}
+                  <input type="file" className="hidden" accept="image/jpeg,image/png,image/webp" disabled={avatarUploading}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const err = validateFile(file, "avatars");
+                      if (err) { toast.error(err); e.target.value = ""; return; }
+                      setAvatarUploading(true);
+                      const result = await uploadFile("avatars", file, profile.id);
+                      if ("error" in result) { toast.error(result.error); }
+                      else { setAvatarUrl(result.url); toast.success("Avatar uploaded!"); }
+                      setAvatarUploading(false);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+                <span className="text-[10px] text-muted-foreground">or paste URL:</span>
+                <Input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} placeholder="https://..." className="text-sm flex-1" />
+              </div>
             </div>
             <div>
-              <Label className="text-xs font-medium text-muted-foreground">Banner URL</Label>
-              <Input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} placeholder="https://… or /images/banner.png" className="mt-1 text-sm" />
-              {bannerUrl && (
-                <div className="mt-2">
-                  <img src={bannerUrl} alt="Banner preview" className="h-16 w-full rounded-lg object-cover border border-border" />
+              <Label className="text-xs font-medium text-muted-foreground">Banner</Label>
+              <div className="mt-1 space-y-2">
+                {bannerUrl && (
+                  <img src={bannerUrl} alt="Banner preview" className="h-20 w-full rounded-lg object-cover border border-border" />
+                )}
+                <div className="flex items-center gap-3">
+                  <label className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-medium px-3 py-2 rounded-md border border-border bg-muted/50 hover:bg-muted transition-colors">
+                    {bannerUploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                    {bannerUploading ? "Uploading..." : "Upload Banner"}
+                    <input type="file" className="hidden" accept="image/jpeg,image/png,image/webp" disabled={bannerUploading}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const err = validateFile(file, "banners");
+                        if (err) { toast.error(err); e.target.value = ""; return; }
+                        setBannerUploading(true);
+                        const result = await uploadFile("banners", file, profile.id);
+                        if ("error" in result) { toast.error(result.error); }
+                        else { setBannerUrl(result.url); toast.success("Banner uploaded!"); }
+                        setBannerUploading(false);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                  <span className="text-[10px] text-muted-foreground">or paste URL:</span>
+                  <Input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} placeholder="https://..." className="text-sm flex-1" />
                 </div>
-              )}
+              </div>
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Display Name</Label>
