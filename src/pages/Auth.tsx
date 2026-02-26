@@ -18,6 +18,7 @@ import {
 
 const MAX_LOGIN_ATTEMPTS = 3;
 const LOCKOUT_DURATION_MS = 60_000; // 1 minute
+const REQUEST_TIMEOUT_MS = 12_000;
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -102,17 +103,26 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate, toast]);
 
+  const withTimeout = async <T,>(promise: Promise<T>, timeoutMs = REQUEST_TIMEOUT_MS): Promise<T> => {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out. Please try again.")), timeoutMs),
+      ),
+    ]);
+  };
+
   const submitWithRetry = async <T,>(
     action: () => Promise<{ error: { message?: string } | null; data?: T }>,
     maxAttempts = 3,
   ) => {
     let lastError: any = null;
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-      const result = await action();
+      const result = await withTimeout(action());
       if (!result.error) return result;
       lastError = result.error;
       const isRetryableNetworkError =
-        /load failed|failed to fetch|network/i.test(result.error.message ?? "") && attempt < maxAttempts;
+        /load failed|failed to fetch|network|timed out/i.test(result.error.message ?? "") && attempt < maxAttempts;
       if (!isRetryableNetworkError) break;
       await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
     }
@@ -161,7 +171,7 @@ const Auth = () => {
         setLoginAttempts(0);
       }
     } catch (error: any) {
-      const isNetworkError = /load failed|failed to fetch|network/i.test(error?.message ?? "");
+      const isNetworkError = /load failed|failed to fetch|network|timed out/i.test(error?.message ?? "");
 
       if (!isSignUp && !isNetworkError) {
         const newAttempts = loginAttempts + 1;

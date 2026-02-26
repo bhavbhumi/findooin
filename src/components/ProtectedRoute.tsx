@@ -17,28 +17,36 @@ export default function ProtectedRoute({ children, requireOnboarding = true }: P
     let cancelled = false;
 
     const check = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      if (!session) {
-        navigate("/auth", { replace: true });
-        return;
-      }
-
-      if (requireOnboarding) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("onboarding_completed")
-          .eq("id", session.user.id)
-          .maybeSingle();
-
-        if (!profile?.onboarding_completed) {
-          navigate("/onboarding", { replace: true });
+        if (!session) {
+          navigate("/auth", { replace: true });
           return;
         }
-      }
 
-      if (!cancelled) setReady(true);
+        if (requireOnboarding) {
+          const { data: profile, error } = await supabase
+            .from("profiles")
+            .select("onboarding_completed")
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+          if (error || !profile?.onboarding_completed) {
+            navigate("/onboarding", { replace: true });
+            return;
+          }
+        }
+
+        if (!cancelled) setReady(true);
+      } catch (error) {
+        console.error("Protected route session check failed:", error);
+        navigate("/auth", { replace: true });
+      }
     };
+
 
     check();
 
