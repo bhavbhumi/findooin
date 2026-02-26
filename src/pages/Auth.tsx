@@ -40,6 +40,7 @@ const Auth = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [magicLinkLoading, setMagicLinkLoading] = useState(false);
 
   // Lockout countdown timer
   useEffect(() => {
@@ -272,6 +273,42 @@ const Auth = () => {
     }
   };
 
+  const handleMagicLinkSignIn = async () => {
+    if (!email.trim()) {
+      toast({
+        title: "Email required",
+        description: "Enter your email first, then tap Magic Link.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setMagicLinkLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: {
+          emailRedirectTo: window.location.origin,
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Magic link sent",
+        description: "Check your email and open the secure sign-in link on this mobile device.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Couldn't send magic link",
+        description: error?.message ?? "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setMagicLinkLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex">
       {/* Left — branding panel using design tokens */}
@@ -390,6 +427,19 @@ const Auth = () => {
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isSignUp ? "Create Account" : "Sign In"}
             </Button>
+
+            {!isSignUp && (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-11"
+                onClick={handleMagicLinkSignIn}
+                disabled={magicLinkLoading || loading}
+              >
+                {magicLinkLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Sign in with Magic Link
+              </Button>
+            )}
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
