@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Clock, ArrowRight, Tag, BookOpen } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Clock, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBlogPosts, BlogPost } from "@/hooks/useBlogPosts";
-import findooLogo from "@/assets/findoo-logo-icon.png";
+import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { formatDistanceToNow } from "date-fns";
 
 const categoryColors: Record<string, string> = {
@@ -37,7 +36,6 @@ function BlogCard({ post, index, size = "normal" }: { post: BlogPost; index: num
     >
       <Link to={`/blog/${post.slug}`}>
         <div className={`rounded-xl border border-border bg-card overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 ${isFeatured ? "md:flex" : ""}`}>
-          {/* Cover image placeholder */}
           {post.cover_image_url ? (
             <div className={`bg-muted overflow-hidden ${isFeatured ? "md:w-1/2 h-64 md:h-auto" : "h-40"}`}>
               <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -105,30 +103,9 @@ const Blog = () => {
   const regular = posts?.filter((p) => !p.featured) || [];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
-        <div className="container flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={findooLogo} alt="FindOO" className="h-8 w-8" />
-            <span className="text-xl font-bold font-heading text-foreground tracking-tight">FindOO</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/blog">Blog</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/auth">Sign In</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link to="/auth?mode=signup">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
+    <PublicPageLayout>
       {/* Hero */}
-      <section className="pt-28 pb-12">
+      <section className="pt-12 pb-12">
         <div className="container">
           <motion.div
             className="max-w-2xl"
@@ -167,7 +144,6 @@ const Blog = () => {
             </div>
           ) : posts && posts.length > 0 ? (
             <>
-              {/* Featured posts */}
               {featured.length > 0 && (
                 <div className="mb-8">
                   {featured.map((post, i) => (
@@ -175,8 +151,6 @@ const Blog = () => {
                   ))}
                 </div>
               )}
-
-              {/* Masonry grid */}
               <div className="columns-1 md:columns-2 lg:columns-3 gap-5">
                 {regular.map((post, i) => (
                   <BlogCard key={post.id} post={post} index={i + featured.length} />
@@ -191,20 +165,7 @@ const Blog = () => {
           )}
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border py-8">
-        <div className="container flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <img src={findooLogo} alt="FindOO" className="h-6 w-6" />
-            <span className="text-sm font-semibold font-heading text-foreground">FindOO</span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} FindOO. India's regulated financial network.
-          </p>
-        </div>
-      </footer>
-    </div>
+    </PublicPageLayout>
   );
 };
 
