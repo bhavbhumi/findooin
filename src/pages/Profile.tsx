@@ -25,7 +25,7 @@ const Profile = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
   const { data: allPosts } = useFeedPosts();
-  const { connectionStatus, follow, connect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
+  const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
 
   const isOwnProfile = !id || id === currentUserId;
 
@@ -129,7 +129,9 @@ const Profile = () => {
             isOwnProfile={isOwnProfile}
             connectionStatus={connectionStatus}
             follow={follow}
+            unfollow={unfollow}
             connect={connect}
+            disconnect={disconnect}
             connLoading={connLoading}
             onEditProfile={() => setEditOpen(true)}
             onNavigateToNetwork={() => setActiveTab("network")}

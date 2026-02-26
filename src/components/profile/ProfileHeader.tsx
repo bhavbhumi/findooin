@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   CheckCircle2, UserPlus, UserCheck, Users, BarChart3, Building2, Clock,
   Calendar, Edit3, Briefcase, MessageSquare, MapPin, Globe, Shield, ShieldCheck,
-  Share2, Flag, Copy, ExternalLink,
+  Share2, Flag, Copy, ExternalLink, UserMinus, Unlink, Compass, Mail,
 } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -24,6 +25,8 @@ interface ProfileHeaderProps {
   connectionStatus: any;
   follow: () => void;
   connect: () => void;
+  unfollow?: () => void;
+  disconnect?: () => void;
   connLoading: boolean;
   onEditProfile?: () => void;
   onNavigateToNetwork?: () => void;
@@ -87,11 +90,23 @@ function getInitials(name: string) {
 }
 
 export const ProfileHeader = ({
-  profile, roles, stats, isOwnProfile, connectionStatus, follow, connect, connLoading, onEditProfile, onNavigateToNetwork,
+  profile, roles, stats, isOwnProfile, connectionStatus, follow, connect, unfollow, disconnect, connLoading, onEditProfile, onNavigateToNetwork,
 }: ProfileHeaderProps) => {
+  const navigate = useNavigate();
   const primaryRole = roles[0]?.role;
   const bannerGradient = primaryRole ? roleBannerGradient[primaryRole] : "from-primary/15 via-primary/8 to-transparent";
   const [reportOpen, setReportOpen] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+
+  const isEntity = profile.user_type === "entity";
+  // For entities: show organization as primary name, full_name as secondary
+  const primaryName = isEntity && profile.organization
+    ? profile.organization
+    : (profile.display_name || profile.full_name);
+  const secondaryName = isEntity && profile.organization
+    ? profile.full_name
+    : (profile.display_name && profile.display_name !== profile.full_name ? profile.full_name : null);
 
   const profileUrl = `${window.location.origin}/profile/${profile.id}`;
 
@@ -103,8 +118,8 @@ export const ProfileHeader = ({
   const handleShareExternal = () => {
     if (navigator.share) {
       navigator.share({
-        title: `${profile.display_name || profile.full_name} on FindOO`,
-        text: profile.headline || `Check out ${profile.display_name || profile.full_name}'s profile on FindOO`,
+        title: `${primaryName} on FindOO`,
+        text: profile.headline || `Check out ${primaryName}'s profile on FindOO`,
         url: profileUrl,
       }).catch(() => {});
     } else {
@@ -116,6 +131,21 @@ export const ProfileHeader = ({
     setReportOpen(false);
     toast.success("Report submitted. Our team will review this profile.");
   };
+
+  const handleInvite = () => {
+    if (!inviteEmail.trim() || !inviteEmail.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+    // For now, copy invite link with a toast — real email sending can be added later
+    const inviteLink = `${window.location.origin}/auth?ref=${profile.id}`;
+    navigator.clipboard.writeText(inviteLink);
+    toast.success(`Invite link copied! Share it with ${inviteEmail}`);
+    setInviteEmail("");
+    setInviteOpen(false);
+  };
+
+  const isMutualConnection = connectionStatus.connected === "accepted";
 
   return (
     <>
@@ -134,16 +164,43 @@ export const ProfileHeader = ({
             </>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-card/40 to-transparent" />
-          {profile.verification_status === "pending" && (
-            <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-muted/90 text-muted-foreground px-2.5 py-1 rounded-full text-xs font-medium shadow-md">
-              <Clock className="h-3.5 w-3.5" /> Pending Verification
-            </div>
-          )}
+
+          {/* Top-right banner actions: Share + Report (always visible) */}
+          <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
+            {profile.verification_status === "pending" && (
+              <span className="flex items-center gap-1.5 bg-card/80 backdrop-blur-sm text-muted-foreground px-2.5 py-1 rounded-full text-xs font-medium shadow-md mr-1">
+                <Clock className="h-3.5 w-3.5" /> Pending
+              </span>
+            )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="h-8 w-8 rounded-full bg-card/80 backdrop-blur-sm text-foreground flex items-center justify-center shadow-md hover:bg-card transition-colors">
+                  <Share2 className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={handleCopyLink} className="gap-2 text-sm">
+                  <Copy className="h-3.5 w-3.5" /> Copy profile link
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleShareExternal} className="gap-2 text-sm">
+                  <ExternalLink className="h-3.5 w-3.5" /> Share externally
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {!isOwnProfile && (
+              <button
+                className="h-8 w-8 rounded-full bg-card/80 backdrop-blur-sm text-foreground flex items-center justify-center shadow-md hover:bg-card transition-colors"
+                onClick={() => setReportOpen(true)}
+              >
+                <Flag className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Avatar + Identity row */}
+        {/* Avatar + Identity — pushed lower with smaller negative margin */}
         <div className="px-4 sm:px-6 relative z-10">
-          <div className="flex items-end gap-3 sm:gap-4 -mt-14 sm:-mt-16 md:-mt-20">
+          <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
             {/* Round avatar overlapping banner */}
             <div className="shrink-0 relative z-10 group">
               <div className={`h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted flex items-center justify-center`}>
@@ -151,7 +208,7 @@ export const ProfileHeader = ({
                   <img src={profile.avatar_url} alt="avatar" className="h-full w-full object-cover" />
                 ) : (
                   <span className="text-xl sm:text-2xl md:text-3xl font-bold font-heading text-muted-foreground">
-                    {getInitials(profile.full_name)}
+                    {getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
                   </span>
                 )}
               </div>
@@ -166,11 +223,11 @@ export const ProfileHeader = ({
               )}
             </div>
 
-            {/* Name + badge + role tags inline beside avatar */}
+            {/* Name + badge + role tags */}
             <div className="flex-1 min-w-0 pb-1">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <h1 className="text-base sm:text-lg md:text-xl font-bold font-heading text-card-foreground leading-tight break-words">
-                  {profile.display_name || profile.full_name}
+                  {primaryName}
                 </h1>
                 {profile.verification_status === "verified" && (
                   <span className="inline-flex items-center gap-0.5 text-accent">
@@ -179,7 +236,7 @@ export const ProfileHeader = ({
                   </span>
                 )}
                 <Badge variant="outline" className="text-[10px] sm:text-xs capitalize gap-0.5 px-1.5 py-0">
-                  <Briefcase className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                  {isEntity ? <Building2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <Briefcase className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
                   {profile.user_type}
                 </Badge>
                 {roles.map((r, i) => {
@@ -192,20 +249,25 @@ export const ProfileHeader = ({
                   );
                 })}
               </div>
-              {profile.display_name && profile.display_name !== profile.full_name && (
-                <p className="text-xs sm:text-sm text-muted-foreground">{profile.full_name}</p>
+              {secondaryName && (
+                <p className="text-xs sm:text-sm text-muted-foreground">{secondaryName}</p>
               )}
             </div>
           </div>
 
-          {/* Designation + Organization */}
+          {/* Designation + Organization (for entities, show representative name here) */}
           <div className="flex items-center gap-3 flex-wrap mt-2 text-xs text-muted-foreground">
+            {isEntity && (
+              <span className="flex items-center gap-1">
+                <Users className="h-3 w-3 shrink-0" /> Rep: {profile.full_name}
+              </span>
+            )}
             {profile.designation && (
               <span className="flex items-center gap-1">
                 <Briefcase className="h-3 w-3 shrink-0" /> {profile.designation}
               </span>
             )}
-            {profile.organization && (
+            {!isEntity && profile.organization && (
               <span className="flex items-center gap-1">
                 <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
               </span>
@@ -217,7 +279,7 @@ export const ProfileHeader = ({
             {!isOwnProfile && (
               <>
                 {connectionStatus.following ? (
-                  <Button variant="secondary" size="sm" className="gap-1.5" disabled>
+                  <Button variant="secondary" size="sm" className="gap-1.5" onClick={unfollow} disabled={connLoading}>
                     <UserCheck className="h-3.5 w-3.5" /> Following
                   </Button>
                 ) : (
@@ -226,7 +288,7 @@ export const ProfileHeader = ({
                   </Button>
                 )}
                 {connectionStatus.connected === "accepted" ? (
-                  <Button variant="secondary" size="sm" className="gap-1.5" disabled>
+                  <Button variant="secondary" size="sm" className="gap-1.5" onClick={disconnect} disabled={connLoading}>
                     <Users className="h-3.5 w-3.5" /> Connected
                   </Button>
                 ) : connectionStatus.connected === "pending" ? (
@@ -238,37 +300,31 @@ export const ProfileHeader = ({
                     <Users className="h-3.5 w-3.5" /> Connect
                   </Button>
                 )}
-                <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`h-9 w-9 ${isMutualConnection ? "text-foreground" : "text-muted-foreground opacity-50 cursor-not-allowed"}`}
+                  disabled={!isMutualConnection}
+                  title={isMutualConnection ? "Send message" : "You must be connected to message"}
+                  onClick={() => isMutualConnection && navigate("/messages")}
+                >
                   <MessageSquare className="h-4 w-4" />
                 </Button>
               </>
             )}
 
-            {/* Share (always visible) */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
-                  <Share2 className="h-4 w-4" />
+            {/* Own profile: Invite & Discover */}
+            {isOwnProfile && (
+              <>
+                <Button variant="default" size="sm" className="gap-1.5" onClick={() => setInviteOpen(true)}>
+                  <Mail className="h-3.5 w-3.5" /> Invite
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={handleCopyLink} className="gap-2 text-sm">
-                  <Copy className="h-3.5 w-3.5" /> Copy profile link
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleShareExternal} className="gap-2 text-sm">
-                  <ExternalLink className="h-3.5 w-3.5" /> Share externally
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Report */}
-            {!isOwnProfile && (
-              <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground" onClick={() => setReportOpen(true)}>
-                <Flag className="h-4 w-4" />
-              </Button>
+                <Button variant="outline" size="sm" className="gap-1.5" onClick={() => navigate("/discover")}>
+                  <Compass className="h-3.5 w-3.5" /> Discover
+                </Button>
+              </>
             )}
           </div>
-
 
           {/* Headline */}
           {profile.headline && (
@@ -288,24 +344,15 @@ export const ProfileHeader = ({
               </span>
             )}
             {profile.location && <span className="text-border hidden sm:inline">·</span>}
-            <button
-              onClick={onNavigateToNetwork}
-              className="hover:text-foreground transition-colors"
-            >
+            <button onClick={onNavigateToNetwork} className="hover:text-foreground transition-colors">
               <span className="font-semibold text-card-foreground">{stats.followers}</span> Followers
             </button>
             <span className="text-border">·</span>
-            <button
-              onClick={onNavigateToNetwork}
-              className="hover:text-foreground transition-colors"
-            >
+            <button onClick={onNavigateToNetwork} className="hover:text-foreground transition-colors">
               <span className="font-semibold text-card-foreground">{stats.following}</span> Following
             </button>
             <span className="text-border">·</span>
-            <button
-              onClick={onNavigateToNetwork}
-              className="hover:text-foreground transition-colors"
-            >
+            <button onClick={onNavigateToNetwork} className="hover:text-foreground transition-colors">
               <span className="font-semibold text-card-foreground">{stats.connections}</span> Connections
             </button>
             <span className="text-border hidden sm:inline">·</span>
@@ -328,15 +375,49 @@ export const ProfileHeader = ({
           </DialogHeader>
           <div className="space-y-2 pt-2">
             {["Fake or misleading identity", "Impersonation", "Inappropriate content", "Spam or scam", "Other"].map((reason) => (
-              <Button
-                key={reason}
-                variant="outline"
-                className="w-full justify-start text-sm h-10"
-                onClick={handleReport}
-              >
+              <Button key={reason} variant="outline" className="w-full justify-start text-sm h-10" onClick={handleReport}>
                 {reason}
               </Button>
             ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite Dialog */}
+      <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Invite to FindOO</DialogTitle>
+            <DialogDescription>
+              Invite a colleague or contact to join the FindOO platform.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">Email address</label>
+              <input
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="colleague@example.com"
+                className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button variant="default" className="flex-1 gap-1.5" onClick={handleInvite}>
+                <Mail className="h-3.5 w-3.5" /> Send Invite Link
+              </Button>
+              <Button variant="outline" onClick={() => {
+                const inviteLink = `${window.location.origin}/auth?ref=${profile.id}`;
+                navigator.clipboard.writeText(inviteLink);
+                toast.success("Invite link copied to clipboard");
+              }}>
+                <Copy className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              An invite link will be copied to your clipboard. You can share it via email or messaging.
+            </p>
           </div>
         </DialogContent>
       </Dialog>
