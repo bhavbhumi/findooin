@@ -350,19 +350,22 @@ const Auth = () => {
           <img src={findooLogo} alt="FindOO" className="h-12 w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
           <span className="text-2xl font-bold font-heading text-white tracking-tight">FindOO</span>
         </Link>
-        <div className="relative z-10">
-          <h2 className="text-3xl font-bold font-heading mb-4 text-white">
-            India's trust-first
-            <br />
-            financial network
+
+        <div className="relative z-10 space-y-4">
+          <h2 className="text-4xl font-bold font-heading text-white leading-tight">
+            Financially Social
           </h2>
-          <p className="text-white/70 text-lg max-w-md">
-            Connect with verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA regulated markets.
+          <p className="text-xl text-white/80 font-medium">
+            Trust First Financial Network Made In India with ❤️
+          </p>
+          <p className="text-white/60 text-base max-w-md leading-relaxed">
+            Join, Connect, Share and Discover to Prosper together. Build meaningful relationships across India's financial ecosystem — from issuers and intermediaries to investors. Exchange insights, explore opportunities, and grow your network with verified professionals you can trust.
           </p>
         </div>
+
         <div className="flex items-center gap-2 text-white/50 text-sm relative z-10">
           <Shield className="h-4 w-4" />
-          Regulated. Verified. Trusted.
+          Trusted. Verified. Regulator Ready.
         </div>
       </div>
 
