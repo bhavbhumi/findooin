@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  CheckCircle2, Search, BarChart3, UserCheck as UserCheckIcon, Building2,
+  CheckCircle2, Search,
   Users, FileText, Hash, TrendingUp, Clock,
 } from "lucide-react";
 import AppNavbar from "@/components/AppNavbar";
@@ -29,18 +29,8 @@ interface DiscoverUser {
   roles: { role: string; sub_type: string | null }[];
 }
 
-/* ── Constants ── */
-const roleIcon: Record<string, typeof BarChart3> = {
-  investor: BarChart3,
-  intermediary: UserCheckIcon,
-  issuer: Building2,
-};
-
-const roleColor: Record<string, string> = {
-  investor: "bg-investor/10 text-investor",
-  intermediary: "bg-intermediary/10 text-intermediary",
-  issuer: "bg-issuer/10 text-issuer",
-};
+/* ── Use shared role config ── */
+import { ROLE_CONFIG } from "@/lib/role-config";
 
 function getInitials(name: string) {
   return name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
@@ -283,7 +273,7 @@ function PersonCard({ user }: { user: DiscoverUser }) {
           src={user.avatar_url}
           initials={getInitials(user.full_name)}
           size="md"
-          roleColor={user.roles[0] ? `hsl(var(--${user.roles[0].role}))` : undefined}
+          roleColor={user.roles[0] ? ROLE_CONFIG[user.roles[0].role]?.hslVar : undefined}
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
@@ -299,9 +289,10 @@ function PersonCard({ user }: { user: DiscoverUser }) {
           )}
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             {user.roles.map((r, i) => {
-              const Icon = roleIcon[r.role];
+              const conf = ROLE_CONFIG[r.role];
+              const Icon = conf?.icon;
               return (
-                <span key={i} className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${roleColor[r.role] || ""}`}>
+                <span key={i} className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${conf?.bgColor || ""}`}>
                   {Icon && <Icon className="h-2.5 w-2.5" />}
                   {r.sub_type || r.role}
                 </span>
