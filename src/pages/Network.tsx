@@ -138,7 +138,7 @@ const Network = () => {
   const totalPending = pendingIncoming.length + pendingOutgoing.length;
 
   return (
-    <AppLayout>
+    <AppLayout maxWidth="max-w-6xl">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
           {/* Main Column */}
           <div>
