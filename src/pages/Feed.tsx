@@ -5,15 +5,25 @@ import { PostCard } from "@/components/feed/PostCard";
 import { TrendingSidebar } from "@/components/feed/TrendingSidebar";
 import { CreatePostComposer } from "@/components/feed/CreatePostComposer";
 import { FeedTabs, type FeedFilter } from "@/components/feed/FeedTabs";
+import { DraftsPanel } from "@/components/feed/DraftsPanel";
+import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 import AppLayout from "@/components/AppLayout";
 import { FindooLoader } from "@/components/FindooLoader";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { supabase } from "@/integrations/supabase/client";
+import { PostDraft } from "@/hooks/useDrafts";
+import { toast } from "sonner";
 
 const POSTS_PER_PAGE = 10;
 
 const Feed = () => {
   const [filter, setFilter] = useState<FeedFilter>("foryou");
+  const [feedUserId, setFeedUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setFeedUserId(data.user?.id ?? null));
+  }, []);
 
   const { data: forYouPosts, isLoading: forYouLoading, error: forYouError } = useFeedPosts();
   const { data: trendingPosts, isLoading: trendingLoading, error: trendingError } = useTrendingPosts();
@@ -90,6 +100,11 @@ const Feed = () => {
         </div>
 
         <aside className="hidden lg:block space-y-4">
+          <ScheduledPostsManager />
+          <DraftsPanel userId={feedUserId} onLoadDraft={(draft) => {
+            // For now, just toast — full integration requires composer ref
+            toast.info("Draft loaded — resume editing in composer above");
+          }} />
           <TrendingSidebar />
         </aside>
       </div>
