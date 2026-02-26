@@ -31,6 +31,11 @@ const Settings = lazy(() => import("./pages/Settings"));
 // Public pages
 import Blog from "./pages/Blog";
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const CommunityGuidelines = lazy(() => import("./pages/CommunityGuidelines"));
+const Terms = lazy(() => import("./pages/Terms"));
+const Privacy = lazy(() => import("./pages/Privacy"));
 
 const queryClient = new QueryClient();
 
@@ -58,6 +63,11 @@ const App = () => (
                   <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/community-guidelines" element={<CommunityGuidelines />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
                   <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
