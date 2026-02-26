@@ -60,11 +60,11 @@ const Messages = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { navigate("/auth"); return; }
+      if (!session) return;
       setCurrentUserId(session.user.id);
       loadConversations(session.user.id);
     });
-  }, [navigate]);
+  }, []);
 
   // Realtime for new messages
   useEffect(() => {

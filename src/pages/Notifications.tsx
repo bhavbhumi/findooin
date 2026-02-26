@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import AppNavbar from "@/components/AppNavbar";
 import { useNotifications, Notification } from "@/hooks/useNotifications";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import AppLayout from "@/components/AppLayout";
+import { FindooLoader } from "@/components/FindooLoader";
+import { useNavigate } from "react-router-dom";
 import {
   Heart, MessageCircle, UserPlus, UserCheck, Users,
   Bell, BellOff, CheckCheck,
@@ -32,13 +30,7 @@ const typeColorMap: Record<string, string> = {
 
 const Notifications = () => {
   const navigate = useNavigate();
-  const { notifications, unreadCount, loading, markAsRead, markAllAsRead } = useNotifications();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) navigate("/auth");
-    });
-  }, [navigate]);
+  const { notifications, unreadCount, loading, markAsRead, markAllAsRead }= useNotifications();
 
   const handleNotificationClick = (notif: Notification) => {
     if (!notif.read) markAsRead(notif.id);
@@ -55,9 +47,7 @@ const Notifications = () => {
     name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
-      <AppNavbar />
-      <div className="container max-w-2xl mx-auto pt-4 px-4">
+    <AppLayout maxWidth="max-w-2xl" className="pt-4 px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -76,17 +66,7 @@ const Notifications = () => {
 
         {/* Notifications list */}
         {loading ? (
-          <div className="space-y-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
-                <Skeleton className="h-10 w-10 rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/4" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <FindooLoader text="Loading notifications..." />
         ) : notifications.length === 0 ? (
           <div className="rounded-xl border border-border bg-card p-12 text-center">
             <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
@@ -145,8 +125,7 @@ const Notifications = () => {
             })}
           </div>
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

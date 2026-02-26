@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Edit3, BarChart3, Bookmark } from "lucide-react";
 import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
-import AppNavbar from "@/components/AppNavbar";
+import AppLayout from "@/components/AppLayout";
+import { FindooLoader } from "@/components/FindooLoader";
 import { ProfileHeader, type ProfileData, type RoleData, type ProfileStats } from "@/components/profile/ProfileHeader";
 import { ProfileAbout } from "@/components/profile/ProfileAbout";
 import { ProfileNetwork } from "@/components/profile/ProfileNetwork";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,12 +32,12 @@ const Profile = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) { navigate("/auth"); return; }
+      if (!session) return;
       setCurrentUserId(session.user.id);
       const targetId = id || session.user.id;
       loadProfile(targetId);
     });
-  }, [id, navigate]);
+  }, [id]);
 
   const loadProfile = async (targetId: string) => {
     setLoading(true);
@@ -90,72 +91,47 @@ const Profile = () => {
 
   const userPosts = allPosts?.filter((p) => p.author.id === profile?.id) ?? [];
 
-  return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
-      <AppNavbar />
+  // Common tab trigger style
+  const tabTriggerClass = "rounded-lg text-sm font-medium whitespace-nowrap px-4 sm:px-6 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground";
 
+  return (
+    <AppLayout maxWidth="max-w-3xl" className="pt-4">
       {!isOwnProfile && !loading && (
-        <div className="container max-w-3xl mx-auto pt-3">
-          <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
-          </Button>
-        </div>
+        <Button variant="ghost" size="sm" className="text-muted-foreground mb-3" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
+        </Button>
       )}
 
       {loading ? (
-        <div className="container max-w-3xl mx-auto pt-4">
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <Skeleton className="h-40 w-full" />
-            <div className="px-6 pb-6">
-              <div className="-mt-14 flex items-end gap-4 mb-4">
-                <Skeleton className="h-28 w-28 rounded-full border-4 border-card" />
-                <div className="space-y-2 pb-1">
-                  <Skeleton className="h-6 w-48" />
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-3 w-56" />
-                </div>
-              </div>
-              <Skeleton className="h-12 w-full mb-3" />
-              <Skeleton className="h-8 w-64" />
-            </div>
-          </div>
-        </div>
+        <FindooLoader text="Loading profile..." />
       ) : profile ? (
-        <div className="container max-w-3xl mx-auto pt-4">
-          <ProfileHeader
-            profile={profile}
-            roles={roles}
-            stats={stats}
-            isOwnProfile={isOwnProfile}
-            connectionStatus={connectionStatus}
-            follow={follow}
-            unfollow={unfollow}
-            connect={connect}
-            disconnect={disconnect}
-            connLoading={connLoading}
-            onEditProfile={() => setEditOpen(true)}
-            onNavigateToNetwork={() => setActiveTab("network")}
-          />
+        <>
+          <ErrorBoundary fallbackTitle="Error loading profile header">
+            <ProfileHeader
+              profile={profile}
+              roles={roles}
+              stats={stats}
+              isOwnProfile={isOwnProfile}
+              connectionStatus={connectionStatus}
+              follow={follow}
+              unfollow={unfollow}
+              connect={connect}
+              disconnect={disconnect}
+              connLoading={connLoading}
+              onEditProfile={() => setEditOpen(true)}
+              onNavigateToNetwork={() => setActiveTab("network")}
+            />
+          </ErrorBoundary>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="overflow-x-auto -mx-1 px-1 mb-4">
               <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
-                <TabsTrigger value="about" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
-                  About
-                </TabsTrigger>
-                <TabsTrigger value="network" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
-                  Network
-                </TabsTrigger>
-                <TabsTrigger value="activity" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
-                  Activity
-                </TabsTrigger>
-                <TabsTrigger value="posts" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
-                  Posts
-                </TabsTrigger>
+                <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
+                <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
+                <TabsTrigger value="activity" className={tabTriggerClass}>Activity</TabsTrigger>
+                <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
                 {isOwnProfile && (
-                  <TabsTrigger value="bookmarks" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:hover:bg-gold data-[state=active]:hover:text-gold-foreground text-sm font-medium whitespace-nowrap px-4 sm:px-6">
-                    Bookmarks
-                  </TabsTrigger>
+                  <TabsTrigger value="bookmarks" className={tabTriggerClass}>Bookmarks</TabsTrigger>
                 )}
               </TabsList>
             </div>
@@ -165,11 +141,7 @@ const Profile = () => {
             </TabsContent>
 
             <TabsContent value="network" className="mt-0">
-              <ProfileNetwork
-                profileId={profile.id}
-                isOwnProfile={isOwnProfile}
-                currentUserId={currentUserId}
-              />
+              <ProfileNetwork profileId={profile.id} isOwnProfile={isOwnProfile} currentUserId={currentUserId} />
             </TabsContent>
 
             <TabsContent value="activity" className="mt-0">
@@ -207,7 +179,6 @@ const Profile = () => {
             )}
           </Tabs>
 
-          {/* Edit Profile Dialog */}
           {isOwnProfile && profile && (
             <EditProfileDialog
               open={editOpen}
@@ -216,19 +187,16 @@ const Profile = () => {
               onSaved={handleProfileSaved}
             />
           )}
-        </div>
+        </>
       ) : (
-        <div className="container max-w-3xl mx-auto pt-4">
-          <div className="rounded-xl border border-border bg-card p-12 text-center">
-            <p className="text-muted-foreground">Profile not found.</p>
-          </div>
+        <div className="rounded-xl border border-border bg-card p-12 text-center">
+          <p className="text-muted-foreground">Profile not found.</p>
         </div>
       )}
-    </div>
+    </AppLayout>
   );
 };
 
-// Bookmarked posts sub-component
 function BookmarkedPosts({ allPosts, currentUserId }: { allPosts: FeedPost[] | undefined; currentUserId: string | null }) {
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
@@ -246,9 +214,7 @@ function BookmarkedPosts({ allPosts, currentUserId }: { allPosts: FeedPost[] | u
       });
   }, [currentUserId]);
 
-  if (loading) {
-    return <div className="rounded-xl border border-border bg-card p-10 text-center"><p className="text-muted-foreground text-sm">Loading...</p></div>;
-  }
+  if (loading) return <FindooLoader size="sm" text="Loading bookmarks..." />;
 
   const bookmarkedPosts = allPosts?.filter((p) => bookmarkedIds.has(p.id)) || [];
 
