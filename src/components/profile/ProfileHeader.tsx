@@ -235,19 +235,10 @@ export const ProfileHeader = ({
                     <span className="text-[10px] sm:text-xs font-semibold">Verified</span>
                   </span>
                 )}
-                <Badge variant="outline" className="text-[10px] sm:text-xs capitalize gap-0.5 px-1.5 py-0">
+                <Badge variant="outline" className="text-[10px] sm:text-xs gap-0.5 px-1.5 py-0">
                   {isEntity ? <Building2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <Briefcase className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
-                  {profile.user_type}
+                  {isEntity ? "Organization" : "Individual"}
                 </Badge>
-                {roles.map((r, i) => {
-                  const Icon = roleIcon[r.role];
-                  return (
-                    <span key={i} className={`inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full border ${roleColor[r.role] || ""}`}>
-                      {Icon && <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
-                      <span className="capitalize">{r.sub_type || r.role}</span>
-                    </span>
-                  );
-                })}
               </div>
               {secondaryName && (
                 <p className="text-xs sm:text-sm text-muted-foreground">{secondaryName}</p>
