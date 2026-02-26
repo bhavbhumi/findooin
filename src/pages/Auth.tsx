@@ -60,10 +60,15 @@ const Auth = () => {
   useEffect(() => {
     const checkSession = async (session: any) => {
       if (!session) return;
-      try {
-        // Register this session (enforces max 3 concurrent sessions)
-        await registerSession(session.user.id);
 
+      try {
+        // Non-blocking: login must continue even if session tracking fails on some mobile browsers
+        await registerSession(session.user.id);
+      } catch (err) {
+        console.warn("Session registration skipped:", err);
+      }
+
+      try {
         const { data: profile, error } = await supabase
           .from("profiles")
           .select("onboarding_completed")
@@ -75,7 +80,7 @@ const Auth = () => {
           navigate("/onboarding");
           return;
         }
-        
+
         if (profile?.onboarding_completed) {
           navigate("/feed");
         } else {
