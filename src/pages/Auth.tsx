@@ -340,14 +340,14 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left — branding panel with rich gradient */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(240 100% 15%) 0%, hsl(240 100% 27%) 40%, hsl(240 80% 35%) 70%, hsl(260 60% 45%) 100%)' }}>
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a0a3a 0%, #000080 40%, #1a1a8c 70%, #4b2d8c 100%)' }}>
         {/* Decorative blurred circles */}
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" style={{ background: 'hsl(260 80% 50% / 0.2)' }} />
-        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" style={{ background: 'hsl(45 80% 55% / 0.1)' }} />
-        <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" style={{ background: 'hsl(240 100% 40% / 0.15)' }} />
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" style={{ background: 'rgba(100, 50, 200, 0.25)' }} />
+        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" style={{ background: 'rgba(212, 175, 55, 0.12)' }} />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" style={{ background: 'rgba(50, 50, 200, 0.2)' }} />
 
         <Link to="/" className="flex items-center gap-3 relative z-10">
-          <img src={findooLogoWhite} alt="FindOO" className="h-12 w-auto" />
+          <img src={findooLogo} alt="FindOO" className="h-12 w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
           <span className="text-2xl font-bold font-heading text-white tracking-tight">FindOO</span>
         </Link>
         <div className="relative z-10">
