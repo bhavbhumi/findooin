@@ -339,28 +339,28 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left — branding panel using design tokens */}
-      <div className="hidden lg:flex lg:w-1/2 text-primary-foreground flex-col justify-between p-12 relative overflow-hidden bg-primary">
-        {/* Decorative gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-primary to-primary/90" />
-        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-accent/10 blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-gold/10 blur-3xl translate-y-1/3 -translate-x-1/4" />
+      {/* Left — branding panel with rich gradient */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, hsl(240 100% 15%) 0%, hsl(240 100% 27%) 40%, hsl(240 80% 35%) 70%, hsl(260 60% 45%) 100%)' }}>
+        {/* Decorative blurred circles */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" style={{ background: 'hsl(260 80% 50% / 0.2)' }} />
+        <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" style={{ background: 'hsl(45 80% 55% / 0.1)' }} />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" style={{ background: 'hsl(240 100% 40% / 0.15)' }} />
 
         <Link to="/" className="flex items-center gap-3 relative z-10">
-          <img src={findooLogoWhite} alt="FindOO" className="h-10" />
-          <span className="text-2xl font-bold font-heading">FindOO</span>
+          <img src={findooLogoWhite} alt="FindOO" className="h-12 w-auto" />
+          <span className="text-2xl font-bold font-heading text-white tracking-tight">FindOO</span>
         </Link>
         <div className="relative z-10">
-          <h2 className="text-3xl font-bold font-heading mb-4">
+          <h2 className="text-3xl font-bold font-heading mb-4 text-white">
             India's trust-first
             <br />
             financial network
           </h2>
-          <p className="text-primary-foreground/70 text-lg max-w-md">
+          <p className="text-white/70 text-lg max-w-md">
             Connect with verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA regulated markets.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-primary-foreground/50 text-sm relative z-10">
+        <div className="flex items-center gap-2 text-white/50 text-sm relative z-10">
           <Shield className="h-4 w-4" />
           Regulated. Verified. Trusted.
         </div>
