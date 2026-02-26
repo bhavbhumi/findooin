@@ -121,7 +121,7 @@ export const ProfileHeader = ({
     <>
       <div className="rounded-xl border border-border bg-card mb-4">
         {/* Banner */}
-        <div className={`h-32 sm:h-40 md:h-48 relative rounded-t-xl overflow-hidden ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
+        <div className={`h-28 sm:h-36 md:h-44 relative rounded-t-xl overflow-hidden ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
           {profile.banner_url ? (
             <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" />
           ) : (
@@ -142,10 +142,10 @@ export const ProfileHeader = ({
         </div>
 
         {/* Avatar + Identity row */}
-        <div className="px-4 sm:px-6">
-          <div className="flex items-end gap-3 sm:gap-4 -mt-12 sm:-mt-16 md:-mt-20">
+        <div className="px-4 sm:px-6 relative z-10">
+          <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
             {/* Round avatar overlapping banner */}
-            <div className="shrink-0">
+            <div className="shrink-0 relative z-10">
               <div className={`h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted flex items-center justify-center`}>
                 {profile.avatar_url ? (
                   <img src={profile.avatar_url} alt="avatar" className="h-full w-full object-cover" />
