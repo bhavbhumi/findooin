@@ -99,47 +99,6 @@ const AppNavbar = () => {
             </div>
           </div>
 
-          {/* Role Switcher */}
-          {loaded && availableRoles.length > 1 && (
-            <div className="hidden md:flex items-center gap-1 px-2 py-1 rounded-lg border border-border bg-muted/30">
-              {availableRoles.map((role) => {
-                const config = ROLE_CONFIG[role];
-                const Icon = config.icon;
-                const isActive = activeRole === role;
-                return (
-                  <button
-                    key={role}
-                    onClick={() => setActiveRole(role)}
-                    className={cn(
-                      "inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium transition-all",
-                      isActive
-                        ? `${config.bgColor} ${config.color} border shadow-sm`
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-transparent"
-                    )}
-                    title={`Switch to ${config.label} view`}
-                  >
-                    <Icon className="h-3 w-3" />
-                    {config.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-          {loaded && availableRoles.length === 1 && (
-            <div className="hidden md:flex items-center">
-              {(() => {
-                const config = ROLE_CONFIG[activeRole];
-                const Icon = config.icon;
-                return (
-                  <span className={cn("inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border", config.bgColor, config.color)}>
-                    <Icon className="h-3 w-3" />
-                    {config.label}
-                  </span>
-                );
-              })()}
-            </div>
-          )}
-
           {/* Right: Discover search + Icons + Profile dropdown */}
           <div className="flex items-center gap-2">
             {/* Discover search box */}
