@@ -28,10 +28,11 @@ export function useFeedPosts() {
   return useQuery({
     queryKey: ["feed-posts"],
     queryFn: async (): Promise<FeedPost[]> => {
-      // Fetch posts with author profile
+      // Fetch published posts (exclude future-scheduled ones)
       const { data: posts, error } = await supabase
         .from("posts")
         .select("*")
+        .is("scheduled_at", null)
         .order("created_at", { ascending: false });
 
       if (error) throw error;

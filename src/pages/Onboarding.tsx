@@ -9,8 +9,9 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, UserCheck, BarChart3, ArrowRight, ArrowLeft, Loader2, CheckCircle2,
-  Upload, ShieldCheck,
+  Upload, ShieldCheck, File, X,
 } from "lucide-react";
+import { uploadFile } from "@/lib/storage";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
 import { LanguageSelector } from "@/components/selectors/LanguageSelector";
@@ -79,6 +80,7 @@ const Onboarding = () => {
   const [certifications, setCertifications] = useState<string[]>([]);
   const [languages, setLanguages] = useState<UserLanguage[]>([]);
   const [loading, setLoading] = useState(false);
+  const [verificationFiles, setVerificationFiles] = useState<Record<string, File | null>>({});
   const [initialLoading, setInitialLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
@@ -163,8 +165,19 @@ const Onboarding = () => {
           certifications: certifications.length > 0 ? certifications : null,
           languages: languages.length > 0 ? languages : null,
           onboarding_completed: true,
+          verification_status: Object.values(verificationFiles).some(f => f) ? "pending" : "unverified",
         } as any, { onConflict: "id" });
       if (profileError) throw profileError;
+
+      // Upload verification documents
+      for (const [role, file] of Object.entries(verificationFiles)) {
+        if (file) {
+          const result = await uploadFile("verification-docs", file, userId);
+          if ("error" in result) {
+            console.error(`Verification upload failed for ${role}:`, result.error);
+          }
+        }
+      }
 
       await supabase.from("user_roles").delete().eq("user_id", userId);
 
@@ -508,18 +521,45 @@ const Onboarding = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center justify-center rounded-lg bg-muted/50 border border-border h-24 cursor-pointer hover:bg-muted transition-colors">
-                        <div className="flex flex-col items-center gap-1 text-muted-foreground">
-                          <Upload className="h-5 w-5" />
-                          <span className="text-xs">Upload certificate (PDF / Image)</span>
+                      {verificationFiles[role] ? (
+                        <div className="flex items-center gap-2 rounded-lg bg-accent/5 border border-accent/20 px-3 py-2">
+                          <File className="h-4 w-4 text-accent shrink-0" />
+                          <span className="text-xs text-foreground truncate flex-1">{verificationFiles[role]!.name}</span>
+                          <span className="text-[10px] text-muted-foreground">{(verificationFiles[role]!.size / 1024 / 1024).toFixed(1)}MB</span>
+                          <button onClick={() => setVerificationFiles(prev => ({ ...prev, [role]: null }))} className="text-muted-foreground hover:text-destructive">
+                            <X className="h-3.5 w-3.5" />
+                          </button>
                         </div>
-                      </div>
+                      ) : (
+                        <label className="flex items-center justify-center rounded-lg bg-muted/50 border border-border h-24 cursor-pointer hover:bg-muted transition-colors">
+                          <input
+                            type="file"
+                            className="hidden"
+                            accept="application/pdf,image/jpeg,image/png,image/webp"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                if (file.size > 10 * 1024 * 1024) {
+                                  toast({ title: "File too large", description: "Max 10MB allowed", variant: "destructive" });
+                                  return;
+                                }
+                                setVerificationFiles(prev => ({ ...prev, [role]: file }));
+                              }
+                              e.target.value = "";
+                            }}
+                          />
+                          <div className="flex flex-col items-center gap-1 text-muted-foreground">
+                            <Upload className="h-5 w-5" />
+                            <span className="text-xs">Upload certificate (PDF / Image)</span>
+                          </div>
+                        </label>
+                      )}
                     </div>
                   ))}
                 </div>
 
                 <p className="text-xs text-muted-foreground text-center mt-6">
-                  You can skip this now and upload later from your profile settings. Verification is reviewed manually and usually takes 1–2 business days.
+                  Upload your verification documents to earn a verified badge. You can also upload later from your profile settings. Verification is reviewed manually and usually takes 1–2 business days.
                 </p>
               </div>
             )}
