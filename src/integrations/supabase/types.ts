@@ -263,6 +263,69 @@ export type Database = {
           },
         ]
       }
+      post_drafts: {
+        Row: {
+          attachment_name: string | null
+          attachment_type: string | null
+          attachment_url: string | null
+          content: string
+          created_at: string
+          hashtags: string[] | null
+          id: string
+          mentioned_users: Json | null
+          poll_options: Json | null
+          post_kind: string
+          post_type: string
+          query_category: string | null
+          schedule_time: string | null
+          scheduled_at: string | null
+          survey_questions: Json | null
+          updated_at: string
+          user_id: string
+          visibility: string
+        }
+        Insert: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          content?: string
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          mentioned_users?: Json | null
+          poll_options?: Json | null
+          post_kind?: string
+          post_type?: string
+          query_category?: string | null
+          schedule_time?: string | null
+          scheduled_at?: string | null
+          survey_questions?: Json | null
+          updated_at?: string
+          user_id: string
+          visibility?: string
+        }
+        Update: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          content?: string
+          created_at?: string
+          hashtags?: string[] | null
+          id?: string
+          mentioned_users?: Json | null
+          poll_options?: Json | null
+          post_kind?: string
+          post_type?: string
+          query_category?: string | null
+          schedule_time?: string | null
+          scheduled_at?: string | null
+          survey_questions?: Json | null
+          updated_at?: string
+          user_id?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
       post_interactions: {
         Row: {
           created_at: string
