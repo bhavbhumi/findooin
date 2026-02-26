@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, BarChart3, Settings, Building2, UserCheck } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
@@ -14,10 +14,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const ROLE_CONFIG: Record<AppRole, { label: string; icon: typeof BarChart3; color: string; bgColor: string }> = {
-  investor: { label: "Investor", icon: BarChart3, color: "text-investor", bgColor: "bg-investor/10 border-investor/20" },
-  intermediary: { label: "Intermediary", icon: UserCheck, color: "text-intermediary", bgColor: "bg-intermediary/10 border-intermediary/20" },
-  issuer: { label: "Issuer", icon: Building2, color: "text-issuer", bgColor: "bg-issuer/10 border-issuer/20" },
+import { ROLE_CONFIG as SHARED_ROLE_CONFIG } from "@/lib/role-config";
+
+const NAVBAR_ROLE_CONFIG: Record<AppRole, { label: string; icon: typeof Users; color: string; bgColor: string }> = {
+  investor: { label: SHARED_ROLE_CONFIG.investor.label, icon: SHARED_ROLE_CONFIG.investor.icon, color: SHARED_ROLE_CONFIG.investor.color, bgColor: "bg-investor/10 border-investor/20" },
+  intermediary: { label: SHARED_ROLE_CONFIG.intermediary.label, icon: SHARED_ROLE_CONFIG.intermediary.icon, color: SHARED_ROLE_CONFIG.intermediary.color, bgColor: "bg-intermediary/10 border-intermediary/20" },
+  issuer: { label: SHARED_ROLE_CONFIG.issuer.label, icon: SHARED_ROLE_CONFIG.issuer.icon, color: SHARED_ROLE_CONFIG.issuer.color, bgColor: "bg-issuer/10 border-issuer/20" },
 };
 
 const AppNavbar = () => {
@@ -163,7 +165,7 @@ const AppNavbar = () => {
                       <p className="text-[10px] font-medium text-muted-foreground mb-1.5">Active Role</p>
                       <div className="flex flex-col gap-1">
                         {availableRoles.map((role) => {
-                          const config = ROLE_CONFIG[role];
+                          const config = NAVBAR_ROLE_CONFIG[role];
                           const Icon = config.icon;
                           const isActive = activeRole === role;
                           return (

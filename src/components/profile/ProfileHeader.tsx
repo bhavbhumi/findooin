@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  CheckCircle2, UserPlus, UserCheck, Users, BarChart3, Building2, Clock,
+  CheckCircle2, UserPlus, UserCheck, Users, Clock,
   Calendar, Edit3, Briefcase, MessageSquare, MapPin, Globe, Shield, ShieldCheck,
   Share2, Flag, Copy, ExternalLink, UserMinus, Unlink, Compass, Mail,
+  Building2,
 } from "lucide-react";
+import { ROLE_CONFIG } from "@/lib/role-config";
 import { format } from "date-fns";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
@@ -67,23 +69,6 @@ export interface ProfileStats {
   posts: number;
 }
 
-const roleIcon: Record<string, typeof BarChart3> = {
-  investor: BarChart3,
-  intermediary: UserCheck,
-  issuer: Building2,
-};
-
-const roleColor: Record<string, string> = {
-  investor: "bg-investor/10 text-investor border-investor/20",
-  intermediary: "bg-intermediary/10 text-intermediary border-intermediary/20",
-  issuer: "bg-issuer/10 text-issuer border-issuer/20",
-};
-
-const roleBannerGradient: Record<string, string> = {
-  investor: "from-investor/20 via-investor/10 to-transparent",
-  intermediary: "from-intermediary/20 via-intermediary/10 to-transparent",
-  issuer: "from-issuer/20 via-issuer/10 to-transparent",
-};
 
 function getInitials(name: string) {
   return name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
@@ -94,7 +79,8 @@ export const ProfileHeader = ({
 }: ProfileHeaderProps) => {
   const navigate = useNavigate();
   const primaryRole = roles[0]?.role;
-  const bannerGradient = primaryRole ? roleBannerGradient[primaryRole] : "from-primary/15 via-primary/8 to-transparent";
+  const primaryRoleConf = primaryRole ? ROLE_CONFIG[primaryRole] : null;
+  const bannerGradient = primaryRoleConf?.bannerGradient || "from-primary/15 via-primary/8 to-transparent";
   const [reportOpen, setReportOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -239,12 +225,13 @@ export const ProfileHeader = ({
                   {isEntity ? <Building2 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <Briefcase className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
                   {profile.user_type}
                 </Badge>
-                {primaryRole && (() => {
-                  const Icon = roleIcon[primaryRole];
+                {primaryRoleConf && (() => {
+                  const Icon = primaryRoleConf.icon;
                   return (
-                    <span className={`inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full border ${roleColor[primaryRole] || ""}`}>
-                      {Icon && <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
-                      <span className="capitalize">{primaryRole}</span>
+                    <span className={`inline-flex items-center gap-0.5 text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full border ${primaryRoleConf.bgColor}`}
+                      title={primaryRoleConf.label}
+                    >
+                      <Icon className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                     </span>
                   );
                 })()}

@@ -3,8 +3,8 @@ import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import {
   Heart, MessageSquare, Bookmark, Share2, FileText, Image, Video, Music,
-  CheckCircle2, BarChart3, UserCheck, Building2, TrendingUp, BookOpen, Megaphone, Newspaper,
-  MoreVertical, Pencil, EyeOff, Trash2, Flag,
+  CheckCircle2, Megaphone, Newspaper,
+  MoreVertical, Pencil, EyeOff, Trash2, Flag, TrendingUp, BookOpen,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,8 @@ import { toast } from "sonner";
 import { differenceInMinutes } from "date-fns";
 import { ReportDialog } from "@/components/feed/ReportDialog";
 import { CommentSection } from "@/components/feed/CommentSection";
+import { ROLE_CONFIG } from "@/lib/role-config";
+import { UserCheck } from "lucide-react";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-accent/10 text-accent" },
@@ -35,18 +37,6 @@ const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; c
 const queryCategoryConfig: Record<string, { label: string; icon: typeof FileText; className: string }> = {
   requirement: { label: "Requirement", icon: FileText, className: "bg-investor/10 text-investor" },
   expert_find: { label: "Expert Find", icon: UserCheck, className: "bg-primary/10 text-primary" },
-};
-
-const roleIcon: Record<string, typeof BarChart3> = {
-  investor: BarChart3,
-  intermediary: UserCheck,
-  issuer: Building2,
-};
-
-const roleColor: Record<string, string> = {
-  investor: "bg-investor/10 text-investor",
-  intermediary: "bg-intermediary/10 text-intermediary",
-  issuer: "bg-issuer/10 text-issuer",
 };
 
 function getAttachmentIcon(type: string | null) {
@@ -65,13 +55,15 @@ function getInitials(name: string) {
   return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
 }
 
+
 export function PostCard({ post }: { post: FeedPost }) {
   const [reportOpen, setReportOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
   const primaryRole = post.roles[0];
-  const RoleIcon = primaryRole ? roleIcon[primaryRole.role] : null;
+  const roleConf = primaryRole ? ROLE_CONFIG[primaryRole.role] : null;
+  const RoleIcon = roleConf?.icon ?? null;
   const AttachIcon = getAttachmentIcon(post.attachment_type);
   const { liked, bookmarked, currentUserId, toggleLike, toggleBookmark } = usePostInteractions(post.id);
   const isOwnPost = currentUserId === post.author.id;
@@ -96,7 +88,7 @@ export function PostCard({ post }: { post: FeedPost }) {
             src={post.author.avatar_url}
             initials={getInitials(post.author.full_name)}
             size="sm"
-            roleColor={primaryRole ? `hsl(var(--${primaryRole.role}))` : undefined}
+            roleColor={roleConf?.hslVar}
           />
         </Link>
 
@@ -108,8 +100,8 @@ export function PostCard({ post }: { post: FeedPost }) {
             {post.author.verification_status === "verified" && (
               <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
             )}
-            {primaryRole && (
-              <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${roleColor[primaryRole.role] || ""}`}>
+            {primaryRole && roleConf && (
+              <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${roleConf.bgColor}`}>
                 {RoleIcon && <RoleIcon className="h-2.5 w-2.5" />}
                 <span className="capitalize">{primaryRole.role}</span>
               </span>

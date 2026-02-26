@@ -1,23 +1,12 @@
 import {
-  CheckCircle2, UserCheck, BarChart3, Building2, Clock,
+  CheckCircle2, Clock, Building2,
   Calendar, Briefcase, MapPin, Globe, Shield, ShieldCheck,
   Award, Languages, GraduationCap, FileCheck, ExternalLink,
   Landmark, Hash, BadgeCheck, TrendingUp, Users, Star,
 } from "lucide-react";
 import { format } from "date-fns";
 import type { ProfileData, RoleData } from "./ProfileHeader";
-
-const roleIcon: Record<string, typeof BarChart3> = {
-  investor: BarChart3,
-  intermediary: UserCheck,
-  issuer: Building2,
-};
-
-const roleColor: Record<string, string> = {
-  investor: "bg-investor/10 text-investor border-investor/20",
-  intermediary: "bg-intermediary/10 text-intermediary border-intermediary/20",
-  issuer: "bg-issuer/10 text-issuer border-issuer/20",
-};
+import { ROLE_CONFIG } from "@/lib/role-config";
 
 const regulatoryLabels: Record<string, string> = {
   sebi: "SEBI Registration",
@@ -136,9 +125,10 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile }: ProfileAboutProps
               <p className="text-xs font-medium text-muted-foreground mb-2">Roles & Capacities</p>
               <div className="flex items-center gap-2 flex-wrap">
                 {roles.map((r, i) => {
-                  const Icon = roleIcon[r.role];
+                  const conf = ROLE_CONFIG[r.role];
+                  const Icon = conf?.icon;
                   return (
-                    <span key={i} className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border ${roleColor[r.role] || ""}`}>
+                    <span key={i} className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border ${conf?.bgColor || ""}`}>
                       {Icon && <Icon className="h-3.5 w-3.5" />}
                       <span className="capitalize">{r.sub_type || r.role}</span>
                     </span>
