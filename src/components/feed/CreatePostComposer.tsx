@@ -370,22 +370,17 @@ export function CreatePostComposer() {
           <div className="flex-1 flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
             {/* Post Type */}
             <Select value={postKind} onValueChange={(v) => v !== "more" && setPostKind(v)}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <SelectTrigger className={cn(
-                    "h-8 text-xs border-primary/20 bg-primary/5 text-primary font-medium",
-                    isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[90px]" : "w-[110px]"
-                  )}>
-                    {isMobile ? (
-                      (() => { const K = activePostKinds.find(k => k.value === postKind); const Icon = K?.icon || FileText; return <Icon className="h-4 w-4" />; })()
-                    ) : (
-                      <SelectValue />
-                    )}
-                  </SelectTrigger>
-                </TooltipTrigger>
-                {isMobile && <TooltipContent side="bottom"><p>{activePostKinds.find(k => k.value === postKind)?.label}</p></TooltipContent>}
-              </Tooltip>
-              <SelectContent className="z-50 bg-popover">
+              <SelectTrigger className={cn(
+                "h-8 text-xs border-primary/20 bg-primary/5 text-primary font-medium",
+                isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[90px]" : "w-[110px]"
+              )}>
+                {isMobile ? (
+                  (() => { const K = activePostKinds.find(k => k.value === postKind); const Icon = K?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                ) : (
+                  <SelectValue />
+                )}
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover border border-border shadow-lg">
                 {activePostKinds.map((k) => {
                   const Icon = k.icon;
                   return (
@@ -403,26 +398,21 @@ export function CreatePostComposer() {
             {/* Category (Issuers/Intermediaries) or Query Category (Investors) */}
             {isInvestorMode ? (
               <Select value={queryCategory} onValueChange={setQueryCategory}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SelectTrigger className={cn(
-                      "h-8 text-xs border-investor/20 bg-investor/5 text-investor font-medium",
-                      isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
-                    )}>
-                      {isMobile ? (
-                        (() => { const C = QUERY_CATEGORIES.find(c => c.value === queryCategory); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
-                      ) : isTablet ? (
-                        <span className="flex items-center gap-1.5 truncate">
-                          {(() => { const C = QUERY_CATEGORIES.find(c => c.value === queryCategory); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
-                        </span>
-                      ) : (
-                        <SelectValue />
-                      )}
-                    </SelectTrigger>
-                  </TooltipTrigger>
-                  {isMobile && <TooltipContent side="bottom"><p>{QUERY_CATEGORIES.find(c => c.value === queryCategory)?.label}</p></TooltipContent>}
-                </Tooltip>
-                <SelectContent className="z-50 bg-popover">
+                <SelectTrigger className={cn(
+                  "h-8 text-xs border-investor/20 bg-investor/5 text-investor font-medium",
+                  isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
+                )}>
+                  {isMobile ? (
+                    (() => { const C = QUERY_CATEGORIES.find(c => c.value === queryCategory); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                  ) : isTablet ? (
+                    <span className="flex items-center gap-1.5 truncate">
+                      {(() => { const C = QUERY_CATEGORIES.find(c => c.value === queryCategory); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
+                    </span>
+                  ) : (
+                    <SelectValue />
+                  )}
+                </SelectTrigger>
+                <SelectContent className="z-50 bg-popover border border-border shadow-lg">
                   {QUERY_CATEGORIES.map((t) => {
                     const Icon = t.icon;
                     return (
@@ -438,26 +428,21 @@ export function CreatePostComposer() {
               </Select>
             ) : (
               <Select value={category} onValueChange={setCategory}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SelectTrigger className={cn(
-                      "h-8 text-xs border-accent/20 bg-accent/5 text-foreground font-medium",
-                      isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
-                    )}>
-                      {isMobile ? (
-                        (() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
-                      ) : isTablet ? (
-                        <span className="flex items-center gap-1.5 truncate">
-                          {(() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
-                        </span>
-                      ) : (
-                        <SelectValue />
-                      )}
-                    </SelectTrigger>
-                  </TooltipTrigger>
-                  {isMobile && <TooltipContent side="bottom"><p>{POST_CATEGORIES.find(c => c.value === category)?.label}</p></TooltipContent>}
-                </Tooltip>
-                <SelectContent className="z-50 bg-popover">
+                <SelectTrigger className={cn(
+                  "h-8 text-xs border-accent/20 bg-accent/5 text-foreground font-medium",
+                  isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[110px]" : "w-[170px]"
+                )}>
+                  {isMobile ? (
+                    (() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <Icon className="h-4 w-4" />; })()
+                  ) : isTablet ? (
+                    <span className="flex items-center gap-1.5 truncate">
+                      {(() => { const C = POST_CATEGORIES.find(c => c.value === category); const Icon = C?.icon || FileText; return <><Icon className="h-3.5 w-3.5 shrink-0" />{C?.shortLabel}</>; })()}
+                    </span>
+                  ) : (
+                    <SelectValue />
+                  )}
+                </SelectTrigger>
+                <SelectContent className="z-50 bg-popover border border-border shadow-lg">
                   {POST_CATEGORIES.map((t) => {
                     const Icon = t.icon;
                     return (
@@ -475,26 +460,21 @@ export function CreatePostComposer() {
 
             {/* Audience */}
             <Select value={audience} onValueChange={setAudience}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <SelectTrigger className={cn(
-                    "h-8 text-xs",
-                    isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[115px]" : "w-[155px]"
-                  )}>
-                    {isMobile ? (
-                      (() => { const A = AUDIENCES.find(a => a.value === audience); const Icon = A?.icon || Globe; return <Icon className="h-4 w-4" />; })()
-                    ) : isTablet ? (
-                      <span className="flex items-center gap-1.5 truncate">
-                        {(() => { const A = AUDIENCES.find(a => a.value === audience); const Icon = A?.icon || Globe; return <><Icon className="h-3.5 w-3.5 shrink-0" />{A?.shortLabel}</>; })()}
-                      </span>
-                    ) : (
-                      <SelectValue />
-                    )}
-                  </SelectTrigger>
-                </TooltipTrigger>
-                {isMobile && <TooltipContent side="bottom"><p>{AUDIENCES.find(a => a.value === audience)?.label}</p></TooltipContent>}
-              </Tooltip>
-              <SelectContent className="z-50 bg-popover">
+              <SelectTrigger className={cn(
+                "h-8 text-xs",
+                isMobile ? "w-9 px-0 justify-center [&>svg:last-child]:hidden" : isTablet ? "w-[115px]" : "w-[155px]"
+              )}>
+                {isMobile ? (
+                  (() => { const A = AUDIENCES.find(a => a.value === audience); const Icon = A?.icon || Globe; return <Icon className="h-4 w-4" />; })()
+                ) : isTablet ? (
+                  <span className="flex items-center gap-1.5 truncate">
+                    {(() => { const A = AUDIENCES.find(a => a.value === audience); const Icon = A?.icon || Globe; return <><Icon className="h-3.5 w-3.5 shrink-0" />{A?.shortLabel}</>; })()}
+                  </span>
+                ) : (
+                  <SelectValue />
+                )}
+              </SelectTrigger>
+              <SelectContent className="z-50 bg-popover border border-border shadow-lg">
                 {AUDIENCES.map((a) => {
                   const Icon = a.icon;
                   return (
