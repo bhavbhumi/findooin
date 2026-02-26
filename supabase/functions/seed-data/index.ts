@@ -49,8 +49,8 @@ Deno.serve(async (req) => {
 
     // ===== BATCH INSERT POSTS =====
     const normalPosts = [
-      { author_id: rajesh, content: "Just started my SIP journey with index funds. The power of compounding is real! 📈\n\n#IndexFunds #SIP #PassiveInvesting", post_type: "text", hashtags: ["IndexFunds", "SIP", "PassiveInvesting"] },
-      { author_id: karan, content: "As an NRI, navigating Indian market regulations is complex. Looking for a good RIA who understands cross-border tax implications.\n\n#NRIInvesting #TaxPlanning", post_type: "text", hashtags: ["NRIInvesting", "TaxPlanning"] },
+      { author_id: rajesh, content: "Just started my SIP journey with index funds. Looking for recommendations on the best Nifty 50 index funds with lowest tracking error. 📈\n\n#IndexFunds #SIP #PassiveInvesting", post_type: "query", query_category: "requirement", hashtags: ["IndexFunds", "SIP", "PassiveInvesting"] },
+      { author_id: karan, content: "As an NRI, navigating Indian market regulations is complex. Looking for a good RIA who understands cross-border tax implications and DTAA provisions.\n\n#NRIInvesting #TaxPlanning", post_type: "query", query_category: "expert_find", hashtags: ["NRIInvesting", "TaxPlanning"] },
       { author_id: priya, content: "🔍 Market Commentary — Feb 2026\n\nNifty 50 consolidation around 24,500. FII selling moderated, DII flows robust.\n\nSectors to watch: IT, Pharma, Banking.\n\n#MarketCommentary #Nifty50", post_type: "market_commentary", hashtags: ["MarketCommentary", "Nifty50"] },
       { author_id: meera, content: "📊 Weekly Pharma Sector Update\n\nSun Pharma & Dr. Reddy's leading. Generic pipeline robust for CY2026.\n\nTop picks: Sun Pharma, Cipla, Divi's Labs\n\n#Pharma #ResearchNote", post_type: "market_commentary", hashtags: ["Pharma", "ResearchNote"] },
       { author_id: meera, content: "📝 Deep Dive: India's IT Services Sector — Q3 FY26\n\nIT showed resilience with 4-6% QoQ revenue growth. AI/ML revenues now 8-12% of total.\n\n#ITSector #ResearchNote", post_type: "research_note", hashtags: ["ITSector", "ResearchNote"], attachment_type: "document", attachment_url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800", attachment_name: "IT_Sector_Q3FY26.pdf" },
@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
       { author_id: priya, content: "🎙️ New podcast: \"Why Most Retail Investors Underperform\"\n\nBehavior gap, SIP vs lump-sum, common biases.\n\n#InvestorEducation #Podcast", post_type: "article", hashtags: ["InvestorEducation", "Podcast"] },
       { author_id: arjun, content: "🎥 CIO discusses H1 CY2026 outlook. Sector rotation, mid-cap allocation, top 5 conviction ideas.\n\n#MarketOutlook #AMC", post_type: "market_commentary", hashtags: ["MarketOutlook", "AMC"], attachment_type: "video", attachment_url: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800", attachment_name: "CIO_Outlook.mp4" },
       { author_id: anita, content: "Attended AMFI conference. MF industry grew from ₹10L Cr to ₹60L Cr AUM in 10 years. Incredible! 🙏\n\n#AMFI #MutualFunds", post_type: "text", hashtags: ["AMFI", "MutualFunds"] },
-      { author_id: rajesh, content: "6 months on FindOO — learned more from verified RIAs here than any YouTube channel. 💯\n\n#FindOO #RetailInvestor", post_type: "text", hashtags: ["FindOO", "RetailInvestor"] },
+      { author_id: rajesh, content: "6 months on FindOO — need help finding a SEBI-registered advisor for long-term equity portfolio review. Any recommendations? 💯\n\n#FindOO #RetailInvestor", post_type: "query", query_category: "expert_find", hashtags: ["FindOO", "RetailInvestor"] },
       { author_id: vikram, content: "🏗️ Q3 FY26 Results — Revenue ₹1,840 Cr (+22%), PAT ₹142 Cr (+28%). Order Book ₹12,800 Cr.\n\n#QuarterlyResults #Earnings", post_type: "announcement", hashtags: ["QuarterlyResults", "Earnings"] },
     ];
 
