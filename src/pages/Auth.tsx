@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { registerSession } from "@/lib/session-manager";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,6 +61,9 @@ const Auth = () => {
     const checkSession = async (session: any) => {
       if (!session) return;
       try {
+        // Register this session (enforces max 3 concurrent sessions)
+        await registerSession(session.user.id);
+
         const { data: profile, error } = await supabase
           .from("profiles")
           .select("onboarding_completed")
@@ -68,7 +72,6 @@ const Auth = () => {
 
         if (error) {
           console.error("Profile fetch error:", error);
-          // Still navigate — onboarding will handle missing profile
           navigate("/onboarding");
           return;
         }
@@ -85,7 +88,6 @@ const Auth = () => {
           description: "Signed in but couldn't load your profile. Redirecting...",
           variant: "destructive",
         });
-        // Fallback: navigate to onboarding which will re-check
         setTimeout(() => navigate("/onboarding"), 1500);
       }
     };

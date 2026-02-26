@@ -1,4 +1,5 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
+import { touchSession } from "@/lib/session-manager";
 import AppNavbar from "@/components/AppNavbar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -21,6 +22,13 @@ export default function AppLayout({
   className = "",
   fullBleed = false,
 }: AppLayoutProps) {
+  // Keep session heartbeat alive every 5 minutes
+  useEffect(() => {
+    touchSession();
+    const interval = setInterval(touchSession, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       {showNavbar && <AppNavbar />}
