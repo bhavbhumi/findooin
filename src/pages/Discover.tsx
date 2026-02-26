@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -278,13 +279,12 @@ function PersonCard({ user }: { user: DiscoverUser }) {
       className="block rounded-xl border border-border bg-card p-4 hover:shadow-md transition-shadow"
     >
       <div className="flex items-center gap-3">
-        <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center text-sm font-semibold text-muted-foreground shrink-0 overflow-hidden">
-          {user.avatar_url ? (
-            <img src={user.avatar_url} alt={user.full_name} className="h-full w-full object-cover" />
-          ) : (
-            getInitials(user.full_name)
-          )}
-        </div>
+        <NetworkAvatar
+          src={user.avatar_url}
+          initials={getInitials(user.full_name)}
+          size="md"
+          roleColor={user.roles[0] ? `hsl(var(--${user.roles[0].role}))` : undefined}
+        />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="font-semibold text-card-foreground text-sm truncate">

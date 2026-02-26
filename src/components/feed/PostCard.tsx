@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { NetworkAvatar } from "@/components/ui/network-avatar";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 import { usePostInteractions } from "@/hooks/usePostInteractions";
 import { cn } from "@/lib/utils";
@@ -90,12 +91,13 @@ export function PostCard({ post }: { post: FeedPost }) {
     <article className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow">
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
-        <Link to={`/profile/${post.author.id}`} className="h-10 w-10 rounded-full bg-muted flex items-center justify-center text-sm font-semibold text-muted-foreground shrink-0 overflow-hidden hover:ring-2 hover:ring-accent/30 transition-all">
-          {post.author.avatar_url ? (
-            <img src={post.author.avatar_url} alt={post.author.full_name} className="h-full w-full object-cover" />
-          ) : (
-            getInitials(post.author.full_name)
-          )}
+        <Link to={`/profile/${post.author.id}`} className="shrink-0 hover:opacity-90 transition-opacity">
+          <NetworkAvatar
+            src={post.author.avatar_url}
+            initials={getInitials(post.author.full_name)}
+            size="sm"
+            roleColor={primaryRole ? `hsl(var(--${primaryRole.role}))` : undefined}
+          />
         </Link>
 
         <div className="flex-1 min-w-0">

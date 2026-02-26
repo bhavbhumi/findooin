@@ -121,7 +121,7 @@ export const ProfileHeader = ({
     <>
       <div className="rounded-xl border border-border bg-card overflow-hidden mb-4">
         {/* Banner */}
-        <div className={`h-32 sm:h-40 relative ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
+        <div className={`h-28 sm:h-36 md:h-44 relative ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
           {profile.banner_url ? (
             <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" />
           ) : (
@@ -142,8 +142,8 @@ export const ProfileHeader = ({
         </div>
 
         {/* Avatar + Identity */}
-        <div className="px-5 sm:px-6">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-14 sm:-mt-16">
+        <div className="px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4 -mt-10 sm:-mt-14 md:-mt-16">
             {/* Avatar — Network-styled rounded square */}
             <NetworkAvatar
               src={profile.avatar_url}
@@ -163,7 +163,7 @@ export const ProfileHeader = ({
               )}
               {/* Name */}
               <div className="flex items-start gap-2">
-                <h1 className="text-xl sm:text-2xl font-bold font-heading text-card-foreground leading-tight break-words">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold font-heading text-card-foreground leading-tight break-words">
                   {profile.display_name || profile.full_name}
                 </h1>
               </div>
@@ -275,7 +275,7 @@ export const ProfileHeader = ({
           )}
 
           {/* Location + Followers/Following/Connections inline */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap mt-3 pb-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-wrap mt-3 pb-4 text-[11px] sm:text-xs text-muted-foreground">
             {profile.location && (
               <span className="flex items-center gap-1">
                 <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
