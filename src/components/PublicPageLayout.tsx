@@ -10,17 +10,12 @@ interface PublicPageLayoutProps {
   children: React.ReactNode;
 }
 
-const primaryLink = { label: "About", to: "/about" };
-
-const moreLinks = [
+const navLinks = [
+  { label: "About", to: "/about" },
+  { label: "How it Works", to: "/community-guidelines" },
   { label: "Blog", to: "/blog" },
   { label: "Contact", to: "/contact" },
-  { label: "Community Guidelines", to: "/community-guidelines" },
-  { label: "Terms", to: "/terms" },
-  { label: "Privacy", to: "/privacy" },
 ];
-
-const allNavLinks = [primaryLink, ...moreLinks];
 
 const languages = [
   { code: "en", label: "English" },
@@ -124,7 +119,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       {/* ── Header ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
         <div className="container flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <img src={findooLogo} alt="FindOO" className="h-10 w-10" />
             <span className="text-2xl font-bold font-heading text-foreground tracking-tight">
@@ -132,34 +127,25 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
             </span>
           </Link>
 
-          {/* Desktop nav */}
+          {/* Right: all items inline, no gaps */}
           {!isMobile && (
-            <div className="flex items-center gap-1">
-              {/* Single visible link */}
-              <Link
-                to={primaryLink.to}
-                className={`px-4 py-2 text-[15px] font-medium transition-colors rounded-md hover:bg-muted ${
-                  isActive(primaryLink.to)
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {primaryLink.label}
-              </Link>
+            <div className="flex items-center">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`px-3 py-2 text-[15px] font-medium transition-colors hover:text-foreground ${
+                    isActive(link.to)
+                      ? "text-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
 
-              {/* More dropdown */}
-              <DropdownMenu
-                trigger={<span>More</span>}
-                items={moreLinks}
-                isActive={isActive}
-              />
-            </div>
-          )}
+              <ThemeToggle />
 
-          {/* Right side */}
-          <div className="flex items-center gap-1.5">
-            {/* Language dropdown */}
-            {!isMobile && (
               <DropdownMenu
                 trigger={
                   <>
@@ -172,24 +158,20 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                   onClick: () => setCurrentLang(lang.code),
                 }))}
               />
-            )}
 
-            <ThemeToggle />
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/auth" className="text-[15px]">Sign In</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link to="/auth?mode=signup" className="text-[15px]">Get Started</Link>
+              </Button>
+            </div>
+          )}
 
-            {!isMobile && (
-              <>
-                <div className="h-5 w-px bg-border mx-1" />
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/auth" className="text-[15px]">Sign In</Link>
-                </Button>
-                <Button size="sm" asChild>
-                  <Link to="/auth?mode=signup" className="text-[15px]">Get Started</Link>
-                </Button>
-              </>
-            )}
-
-            {/* Mobile hamburger */}
-            {isMobile && (
+          {/* Mobile hamburger */}
+          {isMobile && (
+            <div className="flex items-center gap-1.5">
+              <ThemeToggle />
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
@@ -197,14 +179,14 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Mobile menu dropdown */}
         {isMobile && mobileMenuOpen && (
           <div className="border-t border-border bg-background px-4 pb-4 pt-2 space-y-1 animate-in slide-in-from-top-2 duration-200">
-            {allNavLinks.map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
