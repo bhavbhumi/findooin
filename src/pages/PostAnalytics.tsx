@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useRole } from "@/contexts/RoleContext";
 import { useQuery } from "@tanstack/react-query";
 import AppLayout from "@/components/AppLayout";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -146,6 +147,7 @@ const StatCard = ({ icon, label, value, subtitle }: { icon: React.ReactNode; lab
 
 const PostAnalytics = () => {
   const [userId, setUserId] = useState<string | null>(null);
+  const { activeRole } = useRole();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -155,10 +157,70 @@ const PostAnalytics = () => {
 
   const { data, isLoading } = useAnalyticsData(userId);
 
+  const isInvestor = activeRole === "investor";
+
   return (
     <AppLayout maxWidth="max-w-5xl">
-      <h1 className="text-xl font-heading font-bold text-foreground mb-6">Post Analytics</h1>
+      <h1 className="text-xl font-heading font-bold text-foreground mb-6">
+        {isInvestor ? "Platform Insights" : "Post Analytics"}
+      </h1>
 
+      {isInvestor ? (
+        /* Investors see platform trends only — personal performance is not relevant */
+        <div className="space-y-6">
+          <Card className="p-4 border-dashed border-accent/30 bg-accent/5">
+            <p className="text-sm text-muted-foreground">
+              As an investor, explore platform-wide trends and top-performing content to stay informed.
+            </p>
+          </Card>
+
+          {isLoading ? (
+            <FindooLoader text="Loading platform insights..." />
+          ) : data ? (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <StatCard icon={<FileText className="h-5 w-5 text-accent" />} label="Total Posts" value={data.platform.totalPosts} />
+                <StatCard icon={<TrendingUp className="h-5 w-5 text-accent" />} label="Total Interactions" value={data.platform.totalInteractions} />
+              </div>
+
+              <Card className="p-5">
+                <h3 className="text-sm font-heading font-semibold mb-4 flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-accent" /> Trending Hashtags
+                </h3>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={data.platform.topHashtags}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(220,15%,90%)" />
+                    <XAxis dataKey="tag" tick={{ fontSize: 10 }} angle={-30} textAnchor="end" height={60} />
+                    <YAxis tick={{ fontSize: 10 }} />
+                    <Tooltip />
+                    <Bar dataKey="count" fill="hsl(152,55%,42%)" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </Card>
+
+              <Card className="p-5">
+                <h3 className="text-sm font-heading font-semibold mb-4 flex items-center gap-2">
+                  <Flame className="h-4 w-4 text-destructive" /> Top Performing Posts
+                </h3>
+                <div className="space-y-3">
+                  {data.platform.topPosts.map((post, idx) => (
+                    <div key={post.id} className="flex items-start gap-3 p-3 rounded-lg bg-secondary/30">
+                      <span className="text-lg font-heading font-bold text-muted-foreground w-6">{idx + 1}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-card-foreground line-clamp-2">{post.content.slice(0, 120)}</p>
+                        <div className="flex items-center gap-3 mt-1.5 text-[10px] text-muted-foreground">
+                          <span className="flex items-center gap-1"><Heart className="h-3 w-3" />{post.likes}</span>
+                          <span className="flex items-center gap-1"><MessageSquare className="h-3 w-3" />{post.comments}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </>
+          ) : null}
+        </div>
+      ) : (
       <Tabs defaultValue="personal">
         <TabsList className="mb-6 bg-secondary/50">
           <TabsTrigger value="personal" className="text-xs font-medium">My Performance</TabsTrigger>
@@ -363,6 +425,7 @@ const PostAnalytics = () => {
           ) : null}
         </TabsContent>
       </Tabs>
+      )}
     </AppLayout>
   );
 };
