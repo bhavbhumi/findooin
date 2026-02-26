@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { PageHero } from "@/components/PageHero";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.06, duration: 0.4, ease: "easeOut" as const },
+  }),
 };
 
 const sections = [
@@ -21,26 +25,23 @@ const sections = [
 
 const Terms = () => (
   <PublicPageLayout>
-    <section className="relative py-20 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.04] to-transparent" />
-      <div className="container relative">
-        <motion.div className="max-w-3xl mx-auto text-center" initial="hidden" animate="visible" variants={fadeUp}>
-          <h1 className="text-4xl sm:text-5xl font-bold font-heading text-foreground tracking-tight mb-4">Terms of Service</h1>
-          <p className="text-sm text-muted-foreground">Last updated: February 2026</p>
-        </motion.div>
-      </div>
-    </section>
+    <PageHero
+      breadcrumb="Terms of Service"
+      title="Terms of"
+      titleAccent="Service"
+      subtitle="Last updated: February 2026"
+    />
 
-    <section className="py-16 border-t border-border">
+    <section className="py-14">
       <div className="container max-w-3xl">
-        <motion.div className="space-y-8" initial="hidden" animate="visible" variants={fadeUp}>
-          {sections.map((s) => (
-            <div key={s.title}>
-              <h2 className="text-xl font-bold font-heading text-foreground mb-3">{s.title}</h2>
+        <div className="space-y-8">
+          {sections.map((s, i) => (
+            <motion.div key={s.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
+              <h2 className="text-lg font-bold font-heading text-foreground mb-2">{s.title}</h2>
               <p className="text-muted-foreground leading-relaxed">{s.content}</p>
-            </div>
+            </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   </PublicPageLayout>

@@ -1,23 +1,27 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Shield, AlertTriangle, Heart, Scale, MessageSquare, Ban } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { PageHero } from "@/components/PageHero";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { delay: i * 0.08, duration: 0.5, ease: "easeOut" as const },
+    transition: { delay: i * 0.08, duration: 0.45, ease: "easeOut" as const },
   }),
 };
 
+const tabs = ["Guidelines", "FAQ"];
+
 const rules = [
-  { icon: Shield, title: "Be Authentic", description: "Use your real identity and credentials. Misrepresenting your qualifications, role, or regulatory status is strictly prohibited." },
-  { icon: Heart, title: "Be Respectful", description: "Engage with professionalism and courtesy. No personal attacks, harassment, discrimination, or abusive language." },
-  { icon: Scale, title: "Be Compliant", description: "Do not share unregistered investment advice, insider information, or content that violates SEBI, RBI, or other regulatory guidelines." },
-  { icon: MessageSquare, title: "Be Constructive", description: "Share insights that add value. Market commentary and research should be well-reasoned and clearly labelled as opinions when applicable." },
-  { icon: AlertTriangle, title: "No Spam or Manipulation", description: "Avoid repetitive posting, misleading claims, pump-and-dump schemes, or any form of market manipulation." },
-  { icon: Ban, title: "No Solicitation", description: "Direct solicitation of clients, unsolicited investment tips, or promotional content disguised as organic posts is not allowed." },
+  { letter: "1", icon: Shield, title: "Be Authentic", description: "Use your real identity and credentials. Misrepresenting your qualifications, role, or regulatory status is strictly prohibited." },
+  { letter: "2", icon: Heart, title: "Be Respectful", description: "Engage with professionalism and courtesy. No personal attacks, harassment, discrimination, or abusive language." },
+  { letter: "3", icon: Scale, title: "Be Compliant", description: "Do not share unregistered investment advice, insider information, or content that violates SEBI, RBI, or other regulatory guidelines." },
+  { letter: "4", icon: MessageSquare, title: "Be Constructive", description: "Share insights that add value. Market commentary and research should be well-reasoned and clearly labelled as opinions when applicable." },
+  { letter: "5", icon: AlertTriangle, title: "No Spam or Manipulation", description: "Avoid repetitive posting, misleading claims, pump-and-dump schemes, or any form of market manipulation." },
+  { letter: "6", icon: Ban, title: "No Solicitation", description: "Direct solicitation of clients, unsolicited investment tips, or promotional content disguised as organic posts is not allowed." },
 ];
 
 const faqs = [
@@ -28,57 +32,81 @@ const faqs = [
   { q: "Can I promote my services?", a: "Verified Intermediaries may share educational content about their services, but direct solicitation and cold outreach are not permitted." },
 ];
 
-const CommunityGuidelines = () => (
-  <PublicPageLayout>
-    {/* Hero */}
-    <section className="relative py-20 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.04] to-transparent" />
-      <div className="container relative">
-        <motion.div className="max-w-3xl mx-auto text-center" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-          <h1 className="text-4xl sm:text-5xl font-bold font-heading text-foreground tracking-tight mb-6">Community Guidelines</h1>
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            FindOO is a professional financial network. These guidelines ensure every interaction upholds the trust and integrity our community deserves.
-          </p>
-        </motion.div>
-      </div>
-    </section>
+const CommunityGuidelines = () => {
+  const [activeTab, setActiveTab] = useState("Guidelines");
 
-    {/* Rules Grid */}
-    <section className="py-16 border-t border-border">
-      <div className="container max-w-5xl">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rules.map((rule, i) => (
-            <motion.div key={rule.title} className="rounded-xl border border-border bg-card p-6" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
-                <rule.icon className="h-5 w-5" />
-              </div>
-              <h3 className="text-lg font-bold font-heading text-card-foreground mb-2">{rule.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{rule.description}</p>
-            </motion.div>
+  return (
+    <PublicPageLayout>
+      <PageHero
+        breadcrumb="Community Guidelines"
+        title="Professional conduct for a"
+        titleAccent="trusted network"
+        subtitle="These guidelines ensure every interaction upholds the trust and integrity our community deserves."
+      />
+
+      {/* Tabs */}
+      <div className="border-b border-border bg-background sticky top-16 z-30">
+        <div className="container flex gap-0">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-5 py-3.5 text-sm font-medium transition-colors relative ${
+                activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {tab}
+              {activeTab === tab && (
+                <motion.div layoutId="cg-tab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />
+              )}
+            </button>
           ))}
         </div>
       </div>
-    </section>
 
-    {/* FAQ */}
-    <section className="py-16 bg-muted/30">
-      <div className="container max-w-3xl">
-        <motion.h2 className="text-3xl font-bold font-heading text-foreground text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
-          Frequently Asked Questions
-        </motion.h2>
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}>
-          <Accordion type="single" collapsible className="space-y-3">
-            {faqs.map((faq, i) => (
-              <AccordionItem key={i} value={`faq-${i}`} className="rounded-lg border border-border bg-card px-6">
-                <AccordionTrigger className="text-left font-heading font-semibold text-card-foreground">{faq.q}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground leading-relaxed">{faq.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </motion.div>
-      </div>
-    </section>
-  </PublicPageLayout>
-);
+      {activeTab === "Guidelines" && (
+        <section className="py-14">
+          <div className="container max-w-5xl">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {rules.map((rule, i) => (
+                <motion.div key={rule.title} className="rounded-xl border border-border bg-card p-6 flex items-start gap-4"
+                  initial="hidden" animate="visible" variants={fadeUp} custom={i}>
+                  <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 text-sm font-bold">
+                    {rule.letter}
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold font-heading text-card-foreground mb-1">{rule.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{rule.description}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {activeTab === "FAQ" && (
+        <section className="py-14">
+          <div className="container max-w-3xl">
+            <motion.h2 className="text-2xl font-bold font-heading text-foreground text-center mb-8"
+              initial="hidden" animate="visible" variants={fadeUp} custom={0}>
+              Frequently Asked Questions
+            </motion.h2>
+            <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={1}>
+              <Accordion type="single" collapsible className="space-y-3">
+                {faqs.map((faq, i) => (
+                  <AccordionItem key={i} value={`faq-${i}`} className="rounded-lg border border-border bg-card px-6">
+                    <AccordionTrigger className="text-left font-heading font-semibold text-card-foreground">{faq.q}</AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground leading-relaxed">{faq.a}</AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </motion.div>
+          </div>
+        </section>
+      )}
+    </PublicPageLayout>
+  );
+};
 
 export default CommunityGuidelines;
