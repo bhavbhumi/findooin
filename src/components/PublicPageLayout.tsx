@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import findooLogo from "@/assets/findoo-logo-icon.png";
@@ -10,10 +10,24 @@ interface PublicPageLayoutProps {
   children: React.ReactNode;
 }
 
-const navLinks = [
-  { label: "About", to: "/about" },
+const primaryLink = { label: "About", to: "/about" };
+
+const moreLinks = [
   { label: "Blog", to: "/blog" },
   { label: "Contact", to: "/contact" },
+  { label: "Community Guidelines", to: "/community-guidelines" },
+  { label: "Terms", to: "/terms" },
+  { label: "Privacy", to: "/privacy" },
+];
+
+const allNavLinks = [primaryLink, ...moreLinks];
+
+const languages = [
+  { code: "en", label: "English" },
+  { code: "hi", label: "हिन्दी" },
+  { code: "mr", label: "मराठी" },
+  { code: "gu", label: "ગુજરાતી" },
+  { code: "ta", label: "தமிழ்" },
 ];
 
 const footerSections = [
@@ -35,12 +49,75 @@ const footerSections = [
   },
 ];
 
+const DropdownMenu = ({
+  trigger,
+  items,
+  isActive,
+  onClose,
+}: {
+  trigger: React.ReactNode;
+  items: { label: string; to?: string; onClick?: () => void }[];
+  isActive?: (to: string) => boolean;
+  onClose?: () => void;
+}) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-3 py-2 text-[15px] font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+      >
+        {trigger}
+        <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="absolute top-full right-0 mt-1.5 min-w-[180px] rounded-lg border border-border bg-popover shadow-lg py-1.5 animate-in fade-in-0 zoom-in-95 duration-150 z-50">
+          {items.map((item, i) =>
+            item.to ? (
+              <Link
+                key={i}
+                to={item.to}
+                onClick={() => { setOpen(false); onClose?.(); }}
+                className={`block px-4 py-2 text-sm font-medium transition-colors hover:bg-muted ${
+                  isActive?.(item.to) ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <button
+                key={i}
+                onClick={() => { item.onClick?.(); setOpen(false); onClose?.(); }}
+                className="block w-full text-left px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                {item.label}
+              </button>
+            )
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState("en");
   const isMobile = useIsMobile();
   const location = useLocation();
 
   const isActive = (to: string) => location.pathname === to;
+  const currentLangLabel = languages.find((l) => l.code === currentLang)?.label || "English";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -49,8 +126,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
         <div className="container flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <img src={findooLogo} alt="FindOO" className="h-8 w-8" />
-            <span className="text-xl font-bold font-heading text-foreground tracking-tight">
+            <img src={findooLogo} alt="FindOO" className="h-10 w-10" />
+            <span className="text-2xl font-bold font-heading text-foreground tracking-tight">
               FindOO
             </span>
           </Link>
@@ -58,34 +135,55 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
           {/* Desktop nav */}
           {!isMobile && (
             <div className="flex items-center gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`px-4 py-2 text-sm font-medium transition-colors rounded-md hover:bg-muted ${
-                    isActive(link.to)
-                      ? "text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {/* Single visible link */}
+              <Link
+                to={primaryLink.to}
+                className={`px-4 py-2 text-[15px] font-medium transition-colors rounded-md hover:bg-muted ${
+                  isActive(primaryLink.to)
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {primaryLink.label}
+              </Link>
+
+              {/* More dropdown */}
+              <DropdownMenu
+                trigger={<span>More</span>}
+                items={moreLinks}
+                isActive={isActive}
+              />
             </div>
           )}
 
           {/* Right side */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            {/* Language dropdown */}
+            {!isMobile && (
+              <DropdownMenu
+                trigger={
+                  <>
+                    <Globe className="h-4 w-4" />
+                    <span className="text-sm">{currentLangLabel}</span>
+                  </>
+                }
+                items={languages.map((lang) => ({
+                  label: lang.label,
+                  onClick: () => setCurrentLang(lang.code),
+                }))}
+              />
+            )}
+
             <ThemeToggle />
 
             {!isMobile && (
               <>
                 <div className="h-5 w-px bg-border mx-1" />
                 <Button variant="ghost" size="sm" asChild>
-                  <Link to="/auth">Sign In</Link>
+                  <Link to="/auth" className="text-[15px]">Sign In</Link>
                 </Button>
                 <Button size="sm" asChild>
-                  <Link to="/auth?mode=signup">Get Started</Link>
+                  <Link to="/auth?mode=signup" className="text-[15px]">Get Started</Link>
                 </Button>
               </>
             )}
@@ -106,7 +204,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
         {/* Mobile menu dropdown */}
         {isMobile && mobileMenuOpen && (
           <div className="border-t border-border bg-background px-4 pb-4 pt-2 space-y-1 animate-in slide-in-from-top-2 duration-200">
-            {navLinks.map((link) => (
+            {allNavLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
@@ -120,6 +218,26 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                 {link.label}
               </Link>
             ))}
+            {/* Language selector in mobile */}
+            <div className="h-px bg-border my-2" />
+            <div className="px-3 py-2">
+              <p className="text-xs text-muted-foreground mb-2 font-medium">Language</p>
+              <div className="flex flex-wrap gap-2">
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setCurrentLang(lang.code)}
+                    className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
+                      currentLang === lang.code
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border text-muted-foreground hover:text-foreground hover:bg-muted"
+                    }`}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="h-px bg-border my-2" />
             <div className="flex flex-col gap-2 pt-1">
               <Button variant="outline" size="sm" asChild className="w-full">
