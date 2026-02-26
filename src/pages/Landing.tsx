@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, Users, TrendingUp, Building2, UserCheck, BarChart3, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import findooLogo from "@/assets/findoo-logo-icon.png";
+import { PublicPageLayout } from "@/components/PublicPageLayout";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -43,36 +43,9 @@ const trustPoints = [
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
-        <div className="container flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={findooLogo} alt="FindOO" className="h-8 w-8" />
-            <span className="text-xl font-bold font-heading text-foreground tracking-tight">FindOO</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/about">About</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/contact">Contact</Link>
-            </Button>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/blog">Blog</Link>
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link to="/auth">Sign In</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/auth?mode=signup">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
+    <PublicPageLayout>
       {/* Hero */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-16 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent" />
         <div className="container relative">
           <motion.div
@@ -218,37 +191,7 @@ const Landing = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border py-10 bg-muted/30">
-        <div className="container">
-          <div className="flex flex-col md:flex-row items-start justify-between gap-8">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2">
-                <img src={findooLogo} alt="FindOO" className="h-6 w-6" />
-                <span className="text-sm font-semibold font-heading text-foreground">FindOO</span>
-              </div>
-              <p className="text-sm text-muted-foreground max-w-xs">
-                India's regulated financial network.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2">
-              <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</Link>
-              <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Contact</Link>
-              <Link to="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</Link>
-              <Link to="/community-guidelines" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Community Guidelines</Link>
-              <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms</Link>
-              <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy</Link>
-            </div>
-          </div>
-          <div className="mt-8 pt-6 border-t border-border text-center">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} FindOO. India's regulated financial network.
-            </p>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PublicPageLayout>
   );
 };
 
