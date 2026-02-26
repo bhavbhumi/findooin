@@ -179,23 +179,34 @@ export function PostCard({ post }: { post: FeedPost }) {
             alt={post.attachment_name || "Post attachment"}
             className="w-full max-h-[400px] object-cover"
             loading="lazy"
+            onError={(e) => {
+              // Hide broken images gracefully
+              (e.target as HTMLImageElement).style.display = "none";
+            }}
           />
         </div>
       )}
 
-      {/* Non-image Attachment */}
-      {post.attachment_name && AttachIcon && !isImageAttachment(post.attachment_type) && (
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2 mb-3">
+      {/* Non-image Attachment — download link */}
+      {post.attachment_name && AttachIcon && !isImageAttachment(post.attachment_type) && post.attachment_url && !post.attachment_url.startsWith("attachment://") && (
+        <a
+          href={post.attachment_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2 mb-3 hover:bg-secondary transition-colors"
+        >
           <AttachIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="text-xs text-muted-foreground truncate">{post.attachment_name}</span>
-        </div>
+          <span className="text-xs text-foreground truncate flex-1">{post.attachment_name}</span>
+          <span className="text-[10px] text-accent font-medium shrink-0">Download</span>
+        </a>
       )}
 
-      {/* Image attachment placeholder (for attachment:// URLs) */}
-      {post.attachment_name && isImageAttachment(post.attachment_type) && post.attachment_url?.startsWith("attachment://") && (
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/50 px-3 py-2 mb-3">
-          <Image className="h-4 w-4 text-muted-foreground shrink-0" />
+      {/* Placeholder for legacy attachment:// URLs */}
+      {post.attachment_name && post.attachment_url?.startsWith("attachment://") && (
+        <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-2 mb-3">
+          {AttachIcon && <AttachIcon className="h-4 w-4 text-muted-foreground shrink-0" />}
           <span className="text-xs text-muted-foreground truncate">{post.attachment_name}</span>
+          <span className="text-[10px] text-muted-foreground italic shrink-0">Pending upload</span>
         </div>
       )}
 

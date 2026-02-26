@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { uploadFile } from "@/lib/storage";
+import { uploadFile, validateFile } from "@/lib/storage";
 
 /* ── Post Categories for Issuers/Intermediaries ── */
 const POST_CATEGORIES = [
@@ -56,17 +56,6 @@ const AUDIENCES = [
   { value: "private", label: "For Me Only", shortLabel: "Private", icon: Lock },
 ] as const;
 
-const ALLOWED_FILE_TYPES: Record<string, string[]> = {
-  "application/pdf": [".pdf"],
-  "image/jpeg": [".jpg", ".jpeg"],
-  "image/png": [".png"],
-  "image/webp": [".webp"],
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation": [".pptx"],
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
-};
-
-const MAX_FILE_SIZE_MB = 10;
 const MAX_CONTENT_LENGTH = 3000;
 
 function extractHashtags(text: string): string[] {
@@ -76,17 +65,7 @@ function extractHashtags(text: string): string[] {
 }
 
 function getAcceptString() {
-  return Object.keys(ALLOWED_FILE_TYPES).join(",");
-}
-
-function isFileAllowed(file: File): { ok: boolean; reason?: string } {
-  if (!Object.keys(ALLOWED_FILE_TYPES).includes(file.type)) {
-    return { ok: false, reason: `File type "${file.type || "unknown"}" is not allowed. Accepted: PDF, JPG, PNG, WEBP, DOCX, PPTX, XLSX.` };
-  }
-  if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-    return { ok: false, reason: `File size exceeds ${MAX_FILE_SIZE_MB}MB limit.` };
-  }
-  return { ok: true };
+  return "application/pdf,image/jpeg,image/png,image/webp,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 }
 
 /* ── Poll option row ── */
@@ -219,8 +198,8 @@ export function CreatePostComposer() {
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const check = isFileAllowed(file);
-    if (!check.ok) { toast.error(check.reason); e.target.value = ""; return; }
+    const err = validateFile(file, "post-attachments");
+    if (err) { toast.error(err); e.target.value = ""; return; }
     setAttachment(file);
     e.target.value = "";
   }, []);
@@ -734,7 +713,7 @@ export function CreatePostComposer() {
               </label>
             </TooltipTrigger>
             <TooltipContent side="bottom" className="text-xs">
-              Attach file (PDF, Images, DOCX · Max {MAX_FILE_SIZE_MB}MB)
+              Attach file (PDF, Images, DOCX · Max 10MB)
             </TooltipContent>
           </Tooltip>
 
@@ -771,7 +750,7 @@ export function CreatePostComposer() {
           </Tooltip>
 
           <span className="text-[10px] text-muted-foreground hidden sm:inline ml-1">
-            PDF, Images, DOCX · Max {MAX_FILE_SIZE_MB}MB
+            PDF, Images, DOCX · Max 10MB
           </span>
 
           <div className="flex-1" />

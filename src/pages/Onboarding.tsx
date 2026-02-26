@@ -170,13 +170,22 @@ const Onboarding = () => {
       if (profileError) throw profileError;
 
       // Upload verification documents
+      let uploadFailures: string[] = [];
       for (const [role, file] of Object.entries(verificationFiles)) {
         if (file) {
           const result = await uploadFile("verification-docs", file, userId);
           if ("error" in result) {
-            console.error(`Verification upload failed for ${role}:`, result.error);
+            uploadFailures.push(`${role}: ${result.error}`);
           }
         }
+      }
+
+      if (uploadFailures.length > 0) {
+        toast({
+          title: "Verification documents",
+          description: `Some uploads failed: ${uploadFailures.join("; ")}. You can retry from profile settings.`,
+          variant: "destructive",
+        });
       }
 
       await supabase.from("user_roles").delete().eq("user_id", userId);
