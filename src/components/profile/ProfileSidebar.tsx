@@ -1,24 +1,8 @@
 import {
-  ShieldCheck, BadgeCheck, Shield, Clock, Calendar, Landmark,
   Award, Hash, GraduationCap, Languages, Star, Globe, ExternalLink,
-  Users, UserPlus, Link2, MapPin, Briefcase, TrendingUp,
+  Link2, MapPin, Briefcase, TrendingUp,
 } from "lucide-react";
-import { format } from "date-fns";
 import type { ProfileData, RoleData, ProfileStats } from "./ProfileHeader";
-import { VerificationRequestForm } from "@/components/admin/VerificationRequestForm";
-
-const regulatoryLabels: Record<string, string> = {
-  sebi: "SEBI Registration",
-  rbi: "RBI License",
-  irdai: "IRDAI Registration",
-  amfi: "AMFI ARN",
-  pfrda: "PFRDA Registration",
-  nse: "NSE Membership",
-  bse: "BSE Membership",
-  gstin: "GSTIN",
-  cin: "CIN",
-  pan: "PAN",
-};
 
 interface ProfileSidebarProps {
   profile: ProfileData;
@@ -38,90 +22,6 @@ export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigate
 
   return (
     <div className="space-y-4">
-      {/* Network Stats Card */}
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
-        <div className="px-4 py-3 border-b border-border">
-          <h3 className="text-xs font-semibold font-heading text-card-foreground uppercase tracking-wider">Network</h3>
-        </div>
-        <div className="p-4">
-          <div className="grid grid-cols-2 gap-3">
-            <StatItem label="Followers" value={stats.followers} onClick={onNavigateToNetwork} />
-            <StatItem label="Following" value={stats.following} onClick={onNavigateToNetwork} />
-            <StatItem label="Connections" value={stats.connections} onClick={onNavigateToNetwork} />
-            <StatItem label="Posts" value={stats.posts} />
-          </div>
-        </div>
-      </div>
-
-      {/* Trust & Verification */}
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
-        <div className="px-4 py-3 border-b border-border flex items-center gap-2">
-          <ShieldCheck className="h-3.5 w-3.5 text-accent" />
-          <h3 className="text-xs font-semibold font-heading text-card-foreground uppercase tracking-wider">Trust</h3>
-        </div>
-        <div className="p-4 space-y-3">
-          {/* Verification Status */}
-          <div className="flex items-start gap-2.5">
-            <div className={`h-7 w-7 rounded-lg flex items-center justify-center shrink-0 ${
-              profile.verification_status === "verified" ? "bg-accent/10" : "bg-muted"
-            }`}>
-              {profile.verification_status === "verified" ? (
-                <BadgeCheck className="h-3.5 w-3.5 text-accent" />
-              ) : profile.verification_status === "pending" ? (
-                <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-              ) : (
-                <Shield className="h-3.5 w-3.5 text-muted-foreground" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-card-foreground capitalize">
-                {profile.verification_status === "verified" ? "Verified" :
-                 profile.verification_status === "pending" ? "Pending" : "Unverified"}
-              </p>
-              <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
-                {profile.verification_status === "verified"
-                  ? "Identity verified via documents."
-                  : profile.verification_status === "pending"
-                  ? "Under review."
-                  : isOwnProfile ? "Submit docs for verification." : "Not verified."}
-              </p>
-              {isOwnProfile && profile.verification_status !== "verified" && roles.some(r => r.role === "issuer" || r.role === "intermediary") && (
-                <div className="mt-2">
-                  <VerificationRequestForm userId={profile.id} currentStatus={profile.verification_status} />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Regulatory IDs */}
-          {hasRegulatoryIds && (
-            <div className="pt-2 border-t border-border">
-              <p className="text-[10px] font-medium text-muted-foreground mb-2 flex items-center gap-1">
-                <Landmark className="h-3 w-3" /> Registrations
-              </p>
-              <div className="space-y-1.5">
-                {Object.entries(profile.regulatory_ids!).map(([key, value]) => (
-                  <div key={key} className="flex items-center justify-between bg-muted/50 rounded-lg px-2.5 py-1.5">
-                    <span className="text-[10px] font-medium text-card-foreground">
-                      {regulatoryLabels[key] || key.toUpperCase()}
-                    </span>
-                    <span className="text-[10px] font-mono text-muted-foreground">{String(value)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Member since */}
-          <div className="flex items-center gap-2 pt-2 border-t border-border">
-            <Calendar className="h-3 w-3 text-muted-foreground shrink-0" />
-            <p className="text-[10px] text-muted-foreground">
-              Member since {format(new Date(profile.created_at), "MMM yyyy")}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Quick Info */}
       <div className="rounded-xl border border-border bg-card overflow-hidden">
         <div className="px-4 py-3 border-b border-border">
