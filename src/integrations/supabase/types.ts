@@ -157,6 +157,151 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          cancelled_at: string | null
+          event_id: string
+          id: string
+          registered_at: string
+          status: Database["public"]["Enums"]["registration_status"]
+          user_id: string
+        }
+        Insert: {
+          cancelled_at?: string | null
+          event_id: string
+          id?: string
+          registered_at?: string
+          status?: Database["public"]["Enums"]["registration_status"]
+          user_id: string
+        }
+        Update: {
+          cancelled_at?: string | null
+          event_id?: string
+          id?: string
+          registered_at?: string
+          status?: Database["public"]["Enums"]["registration_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_speakers: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          position: number
+          speaker_avatar_url: string | null
+          speaker_name: string
+          speaker_profile_id: string | null
+          speaker_title: string | null
+          topic: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          position?: number
+          speaker_avatar_url?: string | null
+          speaker_name: string
+          speaker_profile_id?: string | null
+          speaker_title?: string | null
+          topic?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          position?: number
+          speaker_avatar_url?: string | null
+          speaker_name?: string
+          speaker_profile_id?: string | null
+          speaker_title?: string | null
+          topic?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_speakers_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          banner_url: string | null
+          capacity: number | null
+          category: Database["public"]["Enums"]["event_category"]
+          created_at: string
+          description: string
+          end_time: string
+          event_mode: Database["public"]["Enums"]["event_mode"]
+          id: string
+          is_free: boolean
+          organizer_id: string
+          registration_count: number
+          start_time: string
+          status: Database["public"]["Enums"]["event_status"]
+          tags: string[] | null
+          title: string
+          updated_at: string
+          venue_address: string | null
+          venue_name: string | null
+          virtual_link: string | null
+        }
+        Insert: {
+          banner_url?: string | null
+          capacity?: number | null
+          category?: Database["public"]["Enums"]["event_category"]
+          created_at?: string
+          description?: string
+          end_time: string
+          event_mode?: Database["public"]["Enums"]["event_mode"]
+          id?: string
+          is_free?: boolean
+          organizer_id: string
+          registration_count?: number
+          start_time: string
+          status?: Database["public"]["Enums"]["event_status"]
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          venue_address?: string | null
+          venue_name?: string | null
+          virtual_link?: string | null
+        }
+        Update: {
+          banner_url?: string | null
+          capacity?: number | null
+          category?: Database["public"]["Enums"]["event_category"]
+          created_at?: string
+          description?: string
+          end_time?: string
+          event_mode?: Database["public"]["Enums"]["event_mode"]
+          id?: string
+          is_free?: boolean
+          organizer_id?: string
+          registration_count?: number
+          start_time?: string
+          status?: Database["public"]["Enums"]["event_status"]
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          venue_address?: string | null
+          venue_name?: string | null
+          virtual_link?: string | null
+        }
+        Relationships: []
+      }
       file_uploads: {
         Row: {
           bucket: string
@@ -1043,6 +1188,18 @@ export type Database = {
         | "withdrawn"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
+      event_category:
+        | "webinar"
+        | "investor_meet"
+        | "agm_egm"
+        | "nfo_ipo_launch"
+        | "earnings_call"
+        | "regulatory_update"
+        | "training_certification"
+        | "industry_conference"
+        | "other"
+      event_mode: "virtual" | "physical" | "hybrid"
+      event_status: "draft" | "published" | "cancelled" | "completed"
       job_category:
         | "fund_management"
         | "research_analysis"
@@ -1091,6 +1248,11 @@ export type Database = {
         | "connections"
         | "private"
       query_category: "expert_find" | "requirement"
+      registration_status:
+        | "registered"
+        | "waitlisted"
+        | "cancelled"
+        | "attended"
       user_type: "individual" | "entity"
       verification_status: "unverified" | "pending" | "verified"
     }
@@ -1233,6 +1395,19 @@ export const Constants = {
       ],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
+      event_category: [
+        "webinar",
+        "investor_meet",
+        "agm_egm",
+        "nfo_ipo_launch",
+        "earnings_call",
+        "regulatory_update",
+        "training_certification",
+        "industry_conference",
+        "other",
+      ],
+      event_mode: ["virtual", "physical", "hybrid"],
+      event_status: ["draft", "published", "cancelled", "completed"],
       job_category: [
         "fund_management",
         "research_analysis",
@@ -1286,6 +1461,12 @@ export const Constants = {
         "private",
       ],
       query_category: ["expert_find", "requirement"],
+      registration_status: [
+        "registered",
+        "waitlisted",
+        "cancelled",
+        "attended",
+      ],
       user_type: ["individual", "entity"],
       verification_status: ["unverified", "pending", "verified"],
     },

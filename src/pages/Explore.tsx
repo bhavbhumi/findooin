@@ -88,7 +88,7 @@ const WhatIsContent = () => (
             { icon: Shield, title: "Verification Engine", desc: "Upload regulatory credentials, earn trust badges visible across the network", status: "live" },
             { icon: Bell, title: "Smart Notifications", desc: "Stay updated on connections, interactions, and verification status changes", status: "live" },
             { icon: FileText, title: "Content Types", desc: "Articles, announcements, expert finds, requirements & query posts", status: "live" },
-            { icon: Calendar, title: "Events & Webinars", desc: "Investor meets, AGMs, industry webinars within the regulated ecosystem", status: "coming" },
+            { icon: Calendar, title: "Events & Webinars", desc: "Investor meets, AGMs, industry webinars within the regulated ecosystem", status: "live" },
             { icon: Award, title: "Premium Features", desc: "Advanced analytics, priority visibility & enhanced tools for professionals", status: "coming" },
             { icon: Settings, title: "API Verification", desc: "Automated SEBI/RBI/IRDAI lookups for instant credential verification", status: "coming" },
           ].map((item, i) => (
