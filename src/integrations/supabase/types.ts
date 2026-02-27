@@ -801,7 +801,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "issuer" | "intermediary" | "investor"
+      app_role: "issuer" | "intermediary" | "investor" | "admin"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
       message_category:
@@ -958,7 +958,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["issuer", "intermediary", "investor"],
+      app_role: ["issuer", "intermediary", "investor", "admin"],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
       message_category: [
