@@ -1121,6 +1121,63 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_files: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id: string
+          is_shared: boolean
+          public_url: string | null
+          share_token: string | null
+          source: string
+          source_ref: string | null
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          file_name: string
+          file_path: string
+          file_size?: number
+          file_type: string
+          id?: string
+          is_shared?: boolean
+          public_url?: string | null
+          share_token?: string | null
+          source?: string
+          source_ref?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          is_shared?: boolean
+          public_url?: string | null
+          share_token?: string | null
+          source?: string
+          source_ref?: string | null
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       verification_requests: {
         Row: {
           admin_notes: string | null
