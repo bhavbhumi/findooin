@@ -754,6 +754,57 @@ export type Database = {
         }
         Relationships: []
       }
+      verification_requests: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          document_name: string
+          document_type: string | null
+          document_url: string
+          id: string
+          notes: string | null
+          registration_number: string | null
+          regulator: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          document_name: string
+          document_type?: string | null
+          document_url: string
+          id?: string
+          notes?: string | null
+          registration_number?: string | null
+          regulator?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          document_name?: string
+          document_type?: string | null
+          document_url?: string
+          id?: string
+          notes?: string | null
+          registration_number?: string | null
+          regulator?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

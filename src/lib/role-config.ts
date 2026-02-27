@@ -1,4 +1,4 @@
-import { BarChart3, UserCheck, Landmark } from "lucide-react";
+import { BarChart3, UserCheck, Landmark, Shield } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface RoleConfig {
@@ -34,6 +34,14 @@ export const ROLE_CONFIG: Record<string, RoleConfig> = {
     bgColor: "bg-issuer/10 text-issuer border-issuer/20",
     bannerGradient: "from-issuer/20 via-issuer/10 to-transparent",
     hslVar: "hsl(var(--issuer))",
+  },
+  admin: {
+    label: "Admin",
+    icon: Shield,
+    color: "text-primary",
+    bgColor: "bg-primary/10 text-primary border-primary/20",
+    bannerGradient: "from-primary/20 via-primary/10 to-transparent",
+    hslVar: "hsl(var(--primary))",
   },
 };
 

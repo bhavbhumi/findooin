@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "investor" | "intermediary" | "issuer";
+export type AppRole = "investor" | "intermediary" | "issuer" | "admin";
 
 interface RoleContextValue {
   /** All roles the current user holds */
