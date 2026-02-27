@@ -51,6 +51,20 @@ Deno.serve(async (req) => {
     await supabaseAdmin.from("reports").delete().in("reporter_id", allUsers);
     await supabaseAdmin.from("notifications").delete().in("user_id", allUsers);
     await supabaseAdmin.from("survey_responses").delete().in("user_id", allUsers);
+
+    // Cleanup jobs data
+    await supabaseAdmin.from("saved_jobs").delete().in("user_id", allUsers);
+    const { data: existingJobs } = await supabaseAdmin.from("jobs").select("id").in("poster_id", allUsers);
+    const existingJobIds = (existingJobs || []).map(j => j.id);
+    if (existingJobIds.length) {
+      await supabaseAdmin.from("job_applications").delete().in("job_id", existingJobIds);
+      await supabaseAdmin.from("jobs").delete().in("id", existingJobIds);
+    }
+
+    // Cleanup profile views
+    await supabaseAdmin.from("profile_views").delete().in("viewer_id", allUsers);
+    await supabaseAdmin.from("profile_views").delete().in("profile_id", allUsers);
+
     // Delete survey_options & survey_questions via posts
     const { data: existingPosts } = await supabaseAdmin.from("posts").select("id").in("author_id", allUsers);
     const existingPostIds = (existingPosts || []).map(p => p.id);
@@ -268,6 +282,179 @@ Deno.serve(async (req) => {
     }));
     await supabaseAdmin.from("user_settings").upsert(settings, { onConflict: "user_id" });
 
+    // ===== SEED JOBS =====
+    const jobsData = [
+      {
+        poster_id: arjun, title: "Senior Fund Manager — Equity", company_name: "Bluechip Capital AMC",
+        description: "Lead equity portfolio management for our flagship multi-cap fund (AUM ₹8,000 Cr). Drive alpha generation through bottom-up stock selection.\n\nResponsibilities:\n• Manage multi-cap equity portfolio\n• Lead a team of 4 analysts\n• Present quarterly reviews to trustees\n• Develop sector allocation framework",
+        location: "Mumbai, Maharashtra", is_remote: false, job_category: "fund_management", job_type: "full_time",
+        experience_min: 8, experience_max: 15, salary_min: 3500000, salary_max: 6000000,
+        skills_required: ["Equity Research", "Portfolio Construction", "Risk Management", "Bloomberg Terminal", "Financial Modeling"],
+        qualifications: ["CFA Charterholder", "MBA Finance"], certifications_preferred: ["CFA", "FRM"],
+        status: "active", application_count: 12, view_count: 156,
+      },
+      {
+        poster_id: arjun, title: "Research Analyst — IT & Technology", company_name: "Bluechip Capital AMC",
+        description: "Cover Indian IT services & technology sector. Publish sector reports, earnings notes, and investment recommendations.\n\nKey skills: Financial modeling, sector expertise, client presentations.",
+        location: "Mumbai, Maharashtra", is_remote: false, job_category: "research_analysis", job_type: "full_time",
+        experience_min: 3, experience_max: 7, salary_min: 1500000, salary_max: 2800000,
+        skills_required: ["Financial Modeling", "Equity Research", "IT Sector Knowledge", "Excel", "Presentation Skills"],
+        qualifications: ["CA", "CFA Level 2+", "MBA Finance"], certifications_preferred: ["CFA"],
+        status: "active", application_count: 24, view_count: 312,
+      },
+      {
+        poster_id: vikram, title: "Chief Financial Officer", company_name: "Singh Infrastructure Ltd",
+        description: "Lead finance function for a ₹12,800 Cr order-book infrastructure company. Oversee treasury, project finance, investor relations, and statutory compliance.\n\nReporting to MD. Board-level interaction.",
+        location: "New Delhi", is_remote: false, job_category: "corporate_finance", job_type: "full_time",
+        experience_min: 15, experience_max: 25, salary_min: 8000000, salary_max: 15000000,
+        skills_required: ["Corporate Finance", "Treasury Management", "Investor Relations", "IFRS/IndAS", "Project Finance"],
+        qualifications: ["CA", "MBA Finance"], certifications_preferred: ["CA", "CFA"],
+        status: "active", application_count: 8, view_count: 198,
+      },
+      {
+        poster_id: anita, title: "Wealth Advisor — HNI Segment", company_name: "Desai Financial Services",
+        description: "Manage a portfolio of 50+ HNI/UHNI clients with combined AUM of ₹200+ Cr. Provide holistic financial planning including MF, PMS, AIF, Insurance.\n\nTarget: Tier-1 city based professionals and business families.",
+        location: "Pune, Maharashtra", is_remote: false, job_category: "wealth_advisory", job_type: "full_time",
+        experience_min: 5, experience_max: 12, salary_min: 1800000, salary_max: 3500000,
+        skills_required: ["Wealth Management", "Financial Planning", "MF Distribution", "Insurance", "Client Relationship"],
+        qualifications: ["CFP", "MBA Finance", "CA"], certifications_preferred: ["CFP", "NISM Series"],
+        status: "active", application_count: 18, view_count: 245,
+      },
+      {
+        poster_id: anita, title: "Compliance Officer — SEBI Registered", company_name: "Desai Financial Services",
+        description: "Ensure regulatory compliance across MF distribution, PMS advisory, and insurance operations. SEBI, AMFI, IRDAI regulatory interface.\n\nMust have NISM certifications and 3+ years compliance experience.",
+        location: "Mumbai, Maharashtra", is_remote: false, job_category: "compliance_legal", job_type: "full_time",
+        experience_min: 3, experience_max: 8, salary_min: 1200000, salary_max: 2200000,
+        skills_required: ["Regulatory Compliance", "SEBI Regulations", "AMFI Guidelines", "AML/KYC", "Risk Assessment"],
+        qualifications: ["CS", "LLB", "MBA"], certifications_preferred: ["NISM Series", "CS"],
+        status: "active", application_count: 6, view_count: 89,
+      },
+      {
+        poster_id: vikram, title: "Risk Manager — Project Finance", company_name: "Singh Infrastructure Ltd",
+        description: "Assess and manage financial & operational risks across infrastructure projects worth ₹500-2,000 Cr each. Develop risk matrices and mitigation frameworks.",
+        location: "New Delhi", is_remote: false, job_category: "risk_management", job_type: "full_time",
+        experience_min: 5, experience_max: 10, salary_min: 2000000, salary_max: 3800000,
+        skills_required: ["Risk Assessment", "Project Finance", "Monte Carlo Simulation", "Financial Modeling", "Due Diligence"],
+        qualifications: ["MBA Finance", "CA"], certifications_preferred: ["FRM", "PMP"],
+        status: "active", application_count: 9, view_count: 134,
+      },
+      {
+        poster_id: arjun, title: "FinTech Product Manager — Digital MF Platform", company_name: "Bluechip Capital AMC",
+        description: "Own the digital mutual fund purchase platform. Drive UX improvements, API integrations with BSE Star/MF Central, and mobile app features.\n\nRemote-friendly role.",
+        location: "Bengaluru, Karnataka", is_remote: true, job_category: "fintech", job_type: "full_time",
+        experience_min: 4, experience_max: 9, salary_min: 2500000, salary_max: 4500000,
+        skills_required: ["Product Management", "Fintech", "API Integration", "Agile/Scrum", "Data Analytics"],
+        qualifications: ["MBA", "B.Tech"], certifications_preferred: [],
+        status: "active", application_count: 32, view_count: 478,
+      },
+      {
+        poster_id: anita, title: "Relationship Manager — Mutual Fund Distribution", company_name: "Desai Financial Services",
+        description: "Build and manage relationships with retail and HNI investors. Drive SIP and lump-sum collections. Territory: Western Maharashtra.\n\nIncentive-heavy compensation structure.",
+        location: "Pune, Maharashtra", is_remote: false, job_category: "distribution_sales", job_type: "full_time",
+        experience_min: 2, experience_max: 6, salary_min: 800000, salary_max: 1500000,
+        skills_required: ["Sales", "Mutual Fund Distribution", "Client Management", "Financial Planning", "AMFI Registered"],
+        qualifications: ["Graduate", "NISM Series V-A"], certifications_preferred: ["NISM Series", "CFP"],
+        status: "active", application_count: 15, view_count: 201,
+      },
+      {
+        poster_id: vikram, title: "Data Analyst — Infrastructure Analytics", company_name: "Singh Infrastructure Ltd",
+        description: "Build dashboards and analytics models for project monitoring, cost tracking, and operational efficiency. Python, SQL, Power BI expertise required.",
+        location: "New Delhi", is_remote: true, job_category: "data_analytics", job_type: "contract",
+        experience_min: 2, experience_max: 5, salary_min: 1000000, salary_max: 1800000,
+        skills_required: ["Python", "SQL", "Power BI", "Data Visualization", "Statistical Analysis"],
+        qualifications: ["B.Tech/B.E.", "M.Sc Statistics"], certifications_preferred: [],
+        status: "active", application_count: 28, view_count: 367,
+      },
+      {
+        poster_id: arjun, title: "Intern — Equity Research (Summer 2026)", company_name: "Bluechip Capital AMC",
+        description: "3-month summer internship in equity research team. Sector assignment based on interest. Stipend + PPO opportunity for top performers.",
+        location: "Mumbai, Maharashtra", is_remote: false, job_category: "research_analysis", job_type: "internship",
+        experience_min: 0, experience_max: 1, salary_min: 50000, salary_max: 75000,
+        skills_required: ["Financial Analysis", "Excel", "Research", "Presentation"],
+        qualifications: ["MBA student", "CA Intermediate"], certifications_preferred: ["CFA Level 1"],
+        status: "active", application_count: 45, view_count: 890,
+      },
+    ];
+
+    const { data: insertedJobs } = await supabaseAdmin.from("jobs").insert(jobsData).select("id, poster_id");
+    const seededJobs = insertedJobs || [];
+
+    // ===== SEED JOB APPLICATIONS =====
+    // Individual users apply to jobs (not entity users like arjun/vikram/anita)
+    const jobApps = [];
+    if (seededJobs.length >= 8) {
+      // Rajesh (investor) applies to wealth advisor & RM roles
+      jobApps.push(
+        { job_id: seededJobs[3].id, applicant_id: rajesh, cover_note: "I have 5+ years in client-facing wealth management and hold CFP certification. Currently managing ₹150 Cr HNI portfolio.", status: "shortlisted" },
+        { job_id: seededJobs[7].id, applicant_id: rajesh, cover_note: "Strong track record in MF distribution with AMFI registration. Deep network in Western Maharashtra.", status: "viewed" },
+      );
+      // Priya (intermediary individual) applies to fund manager & research roles
+      jobApps.push(
+        { job_id: seededJobs[0].id, applicant_id: priya, cover_note: "12 years equity portfolio management experience. Previously managed ₹3,000 Cr AUM at ICICI Prudential. CFA charterholder.", status: "interviewing" },
+        { job_id: seededJobs[1].id, applicant_id: priya, cover_note: "Strong IT sector coverage experience with published research notes.", status: "submitted" },
+      );
+      // Karan (NRI investor) applies to fintech & data roles
+      jobApps.push(
+        { job_id: seededJobs[6].id, applicant_id: karan, cover_note: "Product manager at a Singapore-based fintech. Experience with MF platforms and API-first architectures.", status: "offered" },
+        { job_id: seededJobs[8].id, applicant_id: karan, cover_note: "Data analytics background with Python and Power BI. Infrastructure domain experience from previous role.", status: "viewed" },
+      );
+      // Sneha (CA) applies to compliance & CFO roles
+      jobApps.push(
+        { job_id: seededJobs[4].id, applicant_id: sneha, cover_note: "Chartered Accountant with 6 years in financial services compliance. NISM certified. Strong SEBI regulatory knowledge.", status: "shortlisted" },
+        { job_id: seededJobs[2].id, applicant_id: sneha, cover_note: "CA with corporate finance experience. Currently heading finance at a mid-cap listed company.", status: "submitted" },
+      );
+      // Meera (research analyst) applies to research roles
+      jobApps.push(
+        { job_id: seededJobs[1].id, applicant_id: meera, cover_note: "5 years sell-side research covering IT & pharma. Published 100+ research notes. Strong buy-side relationships.", status: "interviewing" },
+        { job_id: seededJobs[9].id, applicant_id: meera, cover_note: "Currently pursuing MBA with CFA Level 1 cleared. Passionate about equity research.", status: "hired" },
+      );
+    }
+    if (jobApps.length) await supabaseAdmin.from("job_applications").insert(jobApps);
+
+    // ===== SEED SAVED JOBS =====
+    const savedJobs = [];
+    if (seededJobs.length >= 8) {
+      savedJobs.push(
+        { user_id: rajesh, job_id: seededJobs[0].id },
+        { user_id: rajesh, job_id: seededJobs[3].id },
+        { user_id: rajesh, job_id: seededJobs[6].id },
+        { user_id: karan, job_id: seededJobs[6].id },
+        { user_id: karan, job_id: seededJobs[8].id },
+        { user_id: priya, job_id: seededJobs[0].id },
+        { user_id: sneha, job_id: seededJobs[4].id },
+        { user_id: sneha, job_id: seededJobs[2].id },
+        { user_id: meera, job_id: seededJobs[1].id },
+      );
+    }
+    if (savedJobs.length) await supabaseAdmin.from("saved_jobs").insert(savedJobs);
+
+    // ===== SEED PROFILE VIEWS =====
+    const pvNow = Date.now();
+    const pv = (daysAgo: number) => new Date(pvNow - 86400000 * daysAgo).toISOString();
+    const profileViews = [
+      { viewer_id: priya, profile_id: rajesh, created_at: pv(1) },
+      { viewer_id: arjun, profile_id: rajesh, created_at: pv(2) },
+      { viewer_id: meera, profile_id: rajesh, created_at: pv(3) },
+      { viewer_id: anita, profile_id: rajesh, created_at: pv(5) },
+      { viewer_id: rajesh, profile_id: priya, created_at: pv(1) },
+      { viewer_id: arjun, profile_id: priya, created_at: pv(2) },
+      { viewer_id: sneha, profile_id: priya, created_at: pv(4) },
+      { viewer_id: karan, profile_id: priya, created_at: pv(6) },
+      { viewer_id: vikram, profile_id: priya, created_at: pv(7) },
+      { viewer_id: rajesh, profile_id: arjun, created_at: pv(3) },
+      { viewer_id: priya, profile_id: arjun, created_at: pv(4) },
+      { viewer_id: anita, profile_id: arjun, created_at: pv(5) },
+      { viewer_id: priya, profile_id: sneha, created_at: pv(2) },
+      { viewer_id: karan, profile_id: sneha, created_at: pv(3) },
+      { viewer_id: rajesh, profile_id: meera, created_at: pv(1) },
+      { viewer_id: arjun, profile_id: meera, created_at: pv(2) },
+      { viewer_id: priya, profile_id: vikram, created_at: pv(5) },
+      { viewer_id: anita, profile_id: vikram, created_at: pv(6) },
+      { viewer_id: arjun, profile_id: anita, created_at: pv(3) },
+      { viewer_id: vikram, profile_id: anita, created_at: pv(4) },
+    ];
+    await supabaseAdmin.from("profile_views").insert(profileViews);
+
     return new Response(JSON.stringify({
       success: true,
       posts: insertedPosts.length,
@@ -279,6 +466,10 @@ Deno.serve(async (req) => {
       messages: messageData.length,
       notifications: notifs.length,
       settings: settings.length,
+      jobs: seededJobs.length,
+      job_applications: jobApps.length,
+      saved_jobs: savedJobs.length,
+      profile_views: profileViews.length,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

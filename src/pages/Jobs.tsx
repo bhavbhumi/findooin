@@ -4,18 +4,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plus, Briefcase, FileText, Building2 } from "lucide-react";
+import { Search, Plus, Briefcase, FileText, Building2, LayoutDashboard } from "lucide-react";
 import { useJobs, useSavedJobs, useToggleSaveJob, useMyApplications } from "@/hooks/useJobs";
 import { useRole } from "@/contexts/RoleContext";
 import { JobCard, CATEGORY_LABELS } from "@/components/jobs/JobCard";
 import { JobDetailSheet } from "@/components/jobs/JobDetailSheet";
 import { PostJobDialog } from "@/components/jobs/PostJobDialog";
-import { MyApplicationsPanel } from "@/components/jobs/MyApplicationsPanel";
 import { EmployerDashboard } from "@/components/jobs/EmployerDashboard";
+import { CandidateDashboard } from "@/components/jobs/CandidateDashboard";
 import type { Job } from "@/hooks/useJobs";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Jobs = () => {
-  const { activeRole } = useRole();
+  const { activeRole, userId } = useRole();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [jobType, setJobType] = useState("all");
@@ -30,6 +32,18 @@ const Jobs = () => {
   const { data: savedJobIds } = useSavedJobs();
   const { data: myApps } = useMyApplications();
   const toggleSave = useToggleSaveJob();
+
+  // Check if entity
+  const { data: userProfile } = useQuery({
+    queryKey: ["profile-type", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("user_type").eq("id", userId!).single();
+      return data;
+    },
+  });
+  const isEntity = userProfile?.user_type === "entity";
+  const isIndividual = !isEntity;
 
   const appliedJobIds = new Set(myApps?.map((a) => a.job_id) || []);
   const canPostJobs = activeRole === "issuer" || activeRole === "intermediary";
@@ -59,10 +73,12 @@ const Jobs = () => {
               <Briefcase className="h-3.5 w-3.5" />
               Browse Jobs
             </TabsTrigger>
-            <TabsTrigger value="applications" className="gap-1.5">
-              <FileText className="h-3.5 w-3.5" />
-              My Applications
-            </TabsTrigger>
+            {isIndividual && (
+              <TabsTrigger value="dashboard" className="gap-1.5">
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                My Dashboard
+              </TabsTrigger>
+            )}
             {canPostJobs && (
               <TabsTrigger value="employer" className="gap-1.5">
                 <Building2 className="h-3.5 w-3.5" />
@@ -133,9 +149,11 @@ const Jobs = () => {
             )}
           </TabsContent>
 
-          <TabsContent value="applications">
-            <MyApplicationsPanel />
-          </TabsContent>
+          {isIndividual && (
+            <TabsContent value="dashboard">
+              <CandidateDashboard onSelectJob={setSelectedJob} />
+            </TabsContent>
+          )}
 
           {canPostJobs && (
             <TabsContent value="employer">
