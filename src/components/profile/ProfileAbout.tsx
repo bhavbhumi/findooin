@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import type { ProfileData, RoleData } from "./ProfileHeader";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { VerificationRequestForm } from "@/components/admin/VerificationRequestForm";
+import { ManageRolesDialog } from "@/components/profile/ManageRolesDialog";
 
 const regulatoryLabels: Record<string, string> = {
   sebi: "SEBI Registration",
@@ -26,9 +27,10 @@ interface ProfileAboutProps {
   profile: ProfileData;
   roles: RoleData[];
   isOwnProfile: boolean;
+  onRolesChanged?: () => void;
 }
 
-export const ProfileAbout = ({ profile, roles, isOwnProfile }: ProfileAboutProps) => {
+export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: ProfileAboutProps) => {
   const hasRegulatoryIds = profile.regulatory_ids && Object.keys(profile.regulatory_ids).length > 0;
   const hasCertifications = profile.certifications && profile.certifications.length > 0;
   const hasSpecializations = profile.specializations && profile.specializations.length > 0;
@@ -129,7 +131,12 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile }: ProfileAboutProps
           {/* Roles */}
           {roles.length > 0 && (
             <div>
-              <p className="text-xs font-medium text-muted-foreground mb-2">Roles & Capacities</p>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs font-medium text-muted-foreground">Roles & Capacities</p>
+                {isOwnProfile && (
+                  <ManageRolesDialog userId={profile.id} currentRoles={roles} onRolesChanged={onRolesChanged} />
+                )}
+              </div>
               <div className="flex items-center gap-2 flex-wrap">
                 {roles.map((r, i) => {
                   const conf = ROLE_CONFIG[r.role];
@@ -137,7 +144,7 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile }: ProfileAboutProps
                   return (
                     <span key={i} className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border ${conf?.bgColor || ""}`}>
                       {Icon && <Icon className="h-3.5 w-3.5" />}
-                      <span className="capitalize">{r.sub_type || r.role}</span>
+                      <span className="capitalize">{r.sub_type?.replace(/_/g, " ") || r.role}</span>
                     </span>
                   );
                 })}

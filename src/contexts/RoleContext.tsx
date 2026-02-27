@@ -16,6 +16,8 @@ interface RoleContextValue {
   loaded: boolean;
   /** Current user ID */
   userId: string | null;
+  /** Re-fetch roles from the database */
+  refreshRoles: () => Promise<void>;
 }
 
 const ROLE_PRIORITY: AppRole[] = ["issuer", "intermediary", "investor"];
@@ -28,6 +30,7 @@ const RoleContext = createContext<RoleContextValue>({
   hasRole: () => false,
   loaded: false,
   userId: null,
+  refreshRoles: async () => {},
 });
 
 export function RoleProvider({ children }: { children: ReactNode }) {
@@ -35,6 +38,25 @@ export function RoleProvider({ children }: { children: ReactNode }) {
   const [activeRole, setActiveRoleState] = useState<AppRole>("investor");
   const [loaded, setLoaded] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+
+  const fetchRoles = useCallback(async (uid: string) => {
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", uid);
+
+    const userRoles = (roles?.map((r) => r.role) || ["investor"]) as AppRole[];
+    setAvailableRoles(userRoles);
+
+    // Determine default: last used > highest priority > investor
+    const stored = localStorage.getItem(STORAGE_KEY) as AppRole | null;
+    if (stored && userRoles.includes(stored)) {
+      setActiveRoleState(stored);
+    } else {
+      const defaultRole = ROLE_PRIORITY.find((r) => userRoles.includes(r)) || "investor";
+      setActiveRoleState(defaultRole);
+    }
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -44,24 +66,7 @@ export function RoleProvider({ children }: { children: ReactNode }) {
       }
 
       setUserId(session.user.id);
-
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id);
-
-      const userRoles = (roles?.map((r) => r.role) || ["investor"]) as AppRole[];
-      setAvailableRoles(userRoles);
-
-      // Determine default: last used > highest priority > investor
-      const stored = localStorage.getItem(STORAGE_KEY) as AppRole | null;
-      if (stored && userRoles.includes(stored)) {
-        setActiveRoleState(stored);
-      } else {
-        const defaultRole = ROLE_PRIORITY.find((r) => userRoles.includes(r)) || "investor";
-        setActiveRoleState(defaultRole);
-      }
-
+      await fetchRoles(session.user.id);
       setLoaded(true);
     });
 
@@ -76,7 +81,7 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchRoles]);
 
   const setActiveRole = useCallback((role: AppRole) => {
     if (availableRoles.includes(role)) {
@@ -89,8 +94,14 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     return availableRoles.includes(role);
   }, [availableRoles]);
 
+  const refreshRoles = useCallback(async () => {
+    if (userId) {
+      await fetchRoles(userId);
+    }
+  }, [userId, fetchRoles]);
+
   return (
-    <RoleContext.Provider value={{ availableRoles, activeRole, setActiveRole, hasRole, loaded, userId }}>
+    <RoleContext.Provider value={{ availableRoles, activeRole, setActiveRole, hasRole, loaded, userId, refreshRoles }}>
       {children}
     </RoleContext.Provider>
   );
