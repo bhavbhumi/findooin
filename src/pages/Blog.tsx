@@ -234,6 +234,51 @@ const Blog = () => {
         </div>
       </section>
 
+      {/* ── Featured post hero (if on Articles tab) ── */}
+      {activeTab === "articles" && !isLoading && (() => {
+        const featured = (posts || []).find((p) => p.featured);
+        if (!featured) return null;
+        return (
+          <section className="py-6 border-b border-border">
+            <div className="container">
+              <Link to={`/blog/${featured.slug}`} className="group block">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                  <div className="aspect-[16/10] rounded-xl overflow-hidden bg-muted border border-border">
+                    {featured.cover_image_url ? (
+                      <img src={featured.cover_image_url} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
+                        <BookOpen className="h-16 w-16 text-primary/20" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary border-0">Featured</Badge>
+                      <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">{featured.category.replace("-", " ")}</span>
+                    </div>
+                    <h2 className="text-2xl lg:text-3xl font-bold font-heading text-foreground group-hover:text-primary transition-colors leading-tight">
+                      {featured.title}
+                    </h2>
+                    <p className="text-muted-foreground leading-relaxed line-clamp-3">{featured.excerpt}</p>
+                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">{featured.author_name}</span>
+                      {featured.published_at && (
+                        <>
+                          <span>·</span>
+                          <span>{formatDistanceToNow(new Date(featured.published_at), { addSuffix: true })}</span>
+                        </>
+                      )}
+                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{featured.read_time_minutes} min</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </section>
+        );
+      })()}
+
       {/* ── Content grid ── */}
       <section className="py-8 pb-20">
         <div className="container">
