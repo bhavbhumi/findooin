@@ -466,6 +466,27 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_views: {
+        Row: {
+          created_at: string
+          id: string
+          profile_id: string
+          viewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          profile_id: string
+          viewer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          profile_id?: string
+          viewer_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -832,6 +853,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      date_of: { Args: { ts: string }; Returns: string }
       enforce_session_limit: {
         Args: { p_max_sessions?: number; p_user_id: string }
         Returns: {
