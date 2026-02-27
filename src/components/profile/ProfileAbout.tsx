@@ -7,6 +7,7 @@ import {
 import { format } from "date-fns";
 import type { ProfileData, RoleData } from "./ProfileHeader";
 import { ROLE_CONFIG } from "@/lib/role-config";
+import { VerificationRequestForm } from "@/components/admin/VerificationRequestForm";
 
 const regulatoryLabels: Record<string, string> = {
   sebi: "SEBI Registration",
@@ -71,6 +72,12 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile }: ProfileAboutProps
                   ? "Verification documents have been submitted and are under review."
                   : isOwnProfile ? "Submit your regulatory documents to earn a verified badge." : "This profile has not been verified yet."}
               </p>
+              {/* Show verification form for own profile if not verified and has issuer/intermediary role */}
+              {isOwnProfile && profile.verification_status !== "verified" && roles.some(r => r.role === "issuer" || r.role === "intermediary") && (
+                <div className="mt-3">
+                  <VerificationRequestForm userId={profile.id} currentStatus={profile.verification_status} />
+                </div>
+              )}
             </div>
           </div>
 

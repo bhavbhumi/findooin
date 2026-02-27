@@ -41,6 +41,7 @@ const HelpDesk = lazy(() => import("./pages/HelpDesk"));
 const QuickLinks = lazy(() => import("./pages/QuickLinks"));
 const Legal = lazy(() => import("./pages/Legal"));
 const SiteMap = lazy(() => import("./pages/SiteMap"));
+const Admin = lazy(() => import("./pages/Admin"));
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,7 @@ const App = () => (
                   <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
                   <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
                   <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                  <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

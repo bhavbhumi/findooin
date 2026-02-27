@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 import { cn } from "@/lib/utils";
+import { useIsAdmin } from "@/hooks/useAdmin";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +17,7 @@ import {
 
 import { ROLE_CONFIG as SHARED_ROLE_CONFIG } from "@/lib/role-config";
 
-const NAVBAR_ROLE_CONFIG: Record<AppRole, { label: string; icon: typeof Users; color: string; bgColor: string }> = {
+const NAVBAR_ROLE_CONFIG: Partial<Record<AppRole, { label: string; icon: typeof Users; color: string; bgColor: string }>> = {
   investor: { label: SHARED_ROLE_CONFIG.investor.label, icon: SHARED_ROLE_CONFIG.investor.icon, color: SHARED_ROLE_CONFIG.investor.color, bgColor: "bg-investor/10 border-investor/20" },
   intermediary: { label: SHARED_ROLE_CONFIG.intermediary.label, icon: SHARED_ROLE_CONFIG.intermediary.icon, color: SHARED_ROLE_CONFIG.intermediary.color, bgColor: "bg-intermediary/10 border-intermediary/20" },
   issuer: { label: SHARED_ROLE_CONFIG.issuer.label, icon: SHARED_ROLE_CONFIG.issuer.icon, color: SHARED_ROLE_CONFIG.issuer.color, bgColor: "bg-issuer/10 border-issuer/20" },
@@ -26,7 +27,7 @@ const AppNavbar = () => {
   const navigate = useNavigate();
   const { availableRoles, activeRole, setActiveRole, loaded } = useRole();
   const [unreadCount, setUnreadCount] = useState(0);
-
+  const { data: isAdmin } = useIsAdmin();
   useEffect(() => {
     let channel: any;
 
@@ -159,6 +160,14 @@ const AppNavbar = () => {
                     Settings
                   </Link>
                 </DropdownMenuItem>
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="flex items-center gap-2 cursor-pointer text-primary">
+                      <Shield className="h-4 w-4" />
+                      Admin Panel
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator className="lg:hidden" />
                 <div className="lg:hidden px-2 py-1.5">
                   <p className="text-[10px] font-medium text-muted-foreground mb-1.5">My Content</p>
@@ -182,8 +191,9 @@ const AppNavbar = () => {
                     <div className="px-2 py-1.5">
                       <p className="text-[10px] font-medium text-muted-foreground mb-1.5">Active Role</p>
                       <div className="flex flex-col gap-1">
-                        {availableRoles.map((role) => {
+                        {availableRoles.filter(role => role !== 'admin').map((role) => {
                           const config = NAVBAR_ROLE_CONFIG[role];
+                          if (!config) return null;
                           const Icon = config.icon;
                           const isActive = activeRole === role;
                           return (
