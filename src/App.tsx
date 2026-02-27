@@ -36,6 +36,11 @@ const Contact = lazy(() => import("./pages/Contact"));
 const CommunityGuidelines = lazy(() => import("./pages/CommunityGuidelines"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
+const Explore = lazy(() => import("./pages/Explore"));
+const HelpDesk = lazy(() => import("./pages/HelpDesk"));
+const QuickLinks = lazy(() => import("./pages/QuickLinks"));
+const Legal = lazy(() => import("./pages/Legal"));
+const SiteMap = lazy(() => import("./pages/SiteMap"));
 
 const queryClient = new QueryClient();
 
@@ -68,6 +73,11 @@ const App = () => (
                   <Route path="/community-guidelines" element={<CommunityGuidelines />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/explore" element={<Explore />} />
+                  <Route path="/helpdesk" element={<HelpDesk />} />
+                  <Route path="/quick-links" element={<QuickLinks />} />
+                  <Route path="/legal" element={<Legal />} />
+                  <Route path="/sitemap" element={<SiteMap />} />
                   <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

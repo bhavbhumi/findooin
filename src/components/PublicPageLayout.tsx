@@ -38,18 +38,18 @@ const footerLinkSections = [
   {
     title: "Explore",
     links: [
-      { label: "What is FindOO", to: "/about" },
-      { label: "Why does it exist", to: "/about" },
-      { label: "How it works", to: "/community-guidelines" },
-      { label: "Who is it for", to: "/about" },
+      { label: "What is FindOO", to: "/explore" },
+      { label: "Why does it exist", to: "/explore?tab=why" },
+      { label: "How it works", to: "/explore?tab=how" },
+      { label: "Who is it for", to: "/explore?tab=who" },
     ],
   },
   {
     title: "Support",
     links: [
       { label: "Contact Us", to: "/contact" },
-      { label: "Help Desk", to: "/contact" },
-      { label: "Quick Links", to: "/blog" },
+      { label: "Help Desk", to: "/helpdesk" },
+      { label: "Quick Links", to: "/quick-links" },
       { label: "Community Guidelines", to: "/community-guidelines" },
     ],
   },
@@ -300,21 +300,21 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               © {new Date().getFullYear()} FindOO. All rights reserved.
             </p>
             <div className="flex items-center gap-4">
-              <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Terms
               </Link>
-              <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/legal?tab=privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Privacy
               </Link>
-              <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/legal?tab=policies" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Policies
               </Link>
-              <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/legal?tab=disclosures" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Disclosures
               </Link>
-              <a href="/sitemap.xml" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/sitemap" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Sitemap
-              </a>
+              </Link>
             </div>
           </div>
         </div>
