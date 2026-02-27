@@ -131,14 +131,9 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
           {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <img src={findooLogo} alt="FindOO" className="h-9 w-9" />
-            <div className="flex flex-col leading-none">
-              <span className="text-xl font-bold font-heading text-foreground tracking-tight">
-                FindOO
-              </span>
-              <span className="text-[9px] font-medium text-muted-foreground tracking-[0.15em] uppercase">
-                Financially Social
-              </span>
-            </div>
+            <span className="text-xl font-bold font-heading text-foreground tracking-tight">
+              FindOO
+            </span>
           </Link>
 
           {/* Desktop nav — hidden below lg (1024px) */}
