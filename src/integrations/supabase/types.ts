@@ -193,6 +193,134 @@ export type Database = {
         }
         Relationships: []
       }
+      job_applications: {
+        Row: {
+          applicant_id: string
+          cover_note: string | null
+          created_at: string
+          employer_notes: string | null
+          id: string
+          job_id: string
+          resume_name: string | null
+          resume_url: string | null
+          status: Database["public"]["Enums"]["application_status"]
+          updated_at: string
+        }
+        Insert: {
+          applicant_id: string
+          cover_note?: string | null
+          created_at?: string
+          employer_notes?: string | null
+          id?: string
+          job_id: string
+          resume_name?: string | null
+          resume_url?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+        }
+        Update: {
+          applicant_id?: string
+          cover_note?: string | null
+          created_at?: string
+          employer_notes?: string | null
+          id?: string
+          job_id?: string
+          resume_name?: string | null
+          resume_url?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_applications_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jobs: {
+        Row: {
+          application_count: number
+          certifications_preferred: string[] | null
+          company_logo_url: string | null
+          company_name: string
+          created_at: string
+          description: string
+          experience_max: number | null
+          experience_min: number | null
+          expires_at: string | null
+          id: string
+          is_remote: boolean
+          job_category: Database["public"]["Enums"]["job_category"]
+          job_type: Database["public"]["Enums"]["job_type"]
+          location: string
+          poster_id: string
+          qualifications: string[] | null
+          salary_currency: string
+          salary_max: number | null
+          salary_min: number | null
+          skills_required: string[] | null
+          status: Database["public"]["Enums"]["job_status"]
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          application_count?: number
+          certifications_preferred?: string[] | null
+          company_logo_url?: string | null
+          company_name?: string
+          created_at?: string
+          description?: string
+          experience_max?: number | null
+          experience_min?: number | null
+          expires_at?: string | null
+          id?: string
+          is_remote?: boolean
+          job_category?: Database["public"]["Enums"]["job_category"]
+          job_type?: Database["public"]["Enums"]["job_type"]
+          location?: string
+          poster_id: string
+          qualifications?: string[] | null
+          salary_currency?: string
+          salary_max?: number | null
+          salary_min?: number | null
+          skills_required?: string[] | null
+          status?: Database["public"]["Enums"]["job_status"]
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          application_count?: number
+          certifications_preferred?: string[] | null
+          company_logo_url?: string | null
+          company_name?: string
+          created_at?: string
+          description?: string
+          experience_max?: number | null
+          experience_min?: number | null
+          expires_at?: string | null
+          id?: string
+          is_remote?: boolean
+          job_category?: Database["public"]["Enums"]["job_category"]
+          job_type?: Database["public"]["Enums"]["job_type"]
+          location?: string
+          poster_id?: string
+          qualifications?: string[] | null
+          salary_currency?: string
+          salary_max?: number | null
+          salary_min?: number | null
+          skills_required?: string[] | null
+          status?: Database["public"]["Enums"]["job_status"]
+          title?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           category: Database["public"]["Enums"]["message_category"]
@@ -603,6 +731,35 @@ export type Database = {
           },
         ]
       }
+      saved_jobs: {
+        Row: {
+          created_at: string
+          id: string
+          job_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          job_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          job_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_jobs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       survey_options: {
         Row: {
           id: string
@@ -875,8 +1032,40 @@ export type Database = {
     }
     Enums: {
       app_role: "issuer" | "intermediary" | "investor" | "admin"
+      application_status:
+        | "submitted"
+        | "viewed"
+        | "shortlisted"
+        | "interviewing"
+        | "offered"
+        | "hired"
+        | "rejected"
+        | "withdrawn"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
+      job_category:
+        | "fund_management"
+        | "research_analysis"
+        | "compliance_legal"
+        | "risk_management"
+        | "distribution_sales"
+        | "wealth_advisory"
+        | "relationship_management"
+        | "operations"
+        | "fintech"
+        | "data_analytics"
+        | "corporate_finance"
+        | "treasury"
+        | "insurance"
+        | "banking"
+        | "other"
+      job_status: "draft" | "active" | "paused" | "closed" | "expired"
+      job_type:
+        | "full_time"
+        | "part_time"
+        | "contract"
+        | "internship"
+        | "freelance"
       message_category:
         | "general"
         | "sales"
@@ -1032,8 +1221,43 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["issuer", "intermediary", "investor", "admin"],
+      application_status: [
+        "submitted",
+        "viewed",
+        "shortlisted",
+        "interviewing",
+        "offered",
+        "hired",
+        "rejected",
+        "withdrawn",
+      ],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
+      job_category: [
+        "fund_management",
+        "research_analysis",
+        "compliance_legal",
+        "risk_management",
+        "distribution_sales",
+        "wealth_advisory",
+        "relationship_management",
+        "operations",
+        "fintech",
+        "data_analytics",
+        "corporate_finance",
+        "treasury",
+        "insurance",
+        "banking",
+        "other",
+      ],
+      job_status: ["draft", "active", "paused", "closed", "expired"],
+      job_type: [
+        "full_time",
+        "part_time",
+        "contract",
+        "internship",
+        "freelance",
+      ],
       message_category: [
         "general",
         "sales",
