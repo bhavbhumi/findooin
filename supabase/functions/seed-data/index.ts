@@ -627,6 +627,111 @@ Deno.serve(async (req) => {
       }
     }
 
+    // ===== SEED BLOG POSTS =====
+    await supabaseAdmin.from("blog_posts").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+
+    const blogPosts = [
+      {
+        title: "Understanding SEBI's New Mutual Fund Categorisation Norms",
+        slug: "sebi-mutual-fund-categorisation-2026",
+        excerpt: "SEBI's updated categorisation framework impacts how AMCs structure their schemes. Here's what investors and intermediaries need to know.",
+        category: "regulation",
+        cover_image_url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80",
+        tags: ["SEBI", "Mutual Funds", "Regulation", "AMC"],
+        read_time_minutes: 7, published: true, featured: true,
+        author_name: "Priya Sharma", author_avatar_url: "/images/avatars/priya-sharma.jpg",
+        published_at: d(2),
+        content: `<h2>Background</h2><p>The Securities and Exchange Board of India (SEBI) has issued revised guidelines for mutual fund categorisation, effective April 2026. These changes aim to bring greater transparency and reduce overlap between scheme categories.</p><h2>Key Changes</h2><ul><li><strong>Flexi-Cap Redefined:</strong> Minimum 25% allocation each to large-cap, mid-cap, and small-cap segments.</li><li><strong>New Thematic Categories:</strong> ESG, Innovation, and Digital Economy now have standalone classification.</li><li><strong>Debt Fund Simplification:</strong> Duration-based categories reduced from 16 to 10.</li><li><strong>Hybrid Adjustments:</strong> Balanced Advantage Funds must disclose dynamic allocation models quarterly.</li></ul><h2>Impact on Investors</h2><p>Retail investors will benefit from clearer product labels. The overlap between multi-cap and flexi-cap has been a persistent source of confusion — these norms address that directly.</p><blockquote><p>"This is the most significant reclassification since 2018. AMCs will need to realign portfolios within 6 months." — SEBI Circular, Feb 2026</p></blockquote><h2>What Intermediaries Should Do</h2><ol><li>Review existing client portfolios for category overlap</li><li>Update risk profiling documents with new category definitions</li><li>Communicate changes proactively to HNI and retail clients</li><li>Attend AMFI's upcoming training sessions on the new framework</li></ol><h2>Conclusion</h2><p>While the transition period is 6 months, early adopters — both AMCs and distributors — will have a competitive advantage. Stay tuned for our detailed scheme-by-scheme impact analysis next week.</p>`,
+      },
+      {
+        title: "India's IT Services: Q3 FY26 Earnings Analysis",
+        slug: "it-services-q3-fy26-analysis",
+        excerpt: "IT bellwethers reported mixed results. AI/ML revenues now contribute 8-12% of total revenue. Here's our deep dive.",
+        category: "market-insights",
+        cover_image_url: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&q=80",
+        tags: ["IT Sector", "Earnings", "Analysis", "TCS", "Infosys"],
+        read_time_minutes: 10, published: true, featured: false,
+        author_name: "Meera Reddy", author_avatar_url: "/images/avatars/meera-reddy.jpg",
+        published_at: d(4),
+        content: `<h2>Executive Summary</h2><p>India's top-4 IT services companies reported Q3 FY26 earnings with <strong>4-6% QoQ revenue growth</strong> in constant currency terms. The sector showed resilience despite global macro headwinds.</p><h3>TCS</h3><p>Revenue: ₹64,200 Cr (+5.2% QoQ). EBIT margin: 25.8%. Large deal TCV: $12.2B — highest in 8 quarters.</p><h3>Infosys</h3><p>Revenue: ₹41,800 Cr (+4.8% QoQ). Raised guidance to 5-6% for FY26. Topaz AI platform driving cross-sell.</p><h3>Wipro</h3><p>Revenue: ₹23,400 Cr (+3.1% QoQ). Margin improvement of 120bps driven by operational efficiency.</p><h3>HCL Technologies</h3><p>Revenue: ₹29,600 Cr (+6.1% QoQ). Strong performance in engineering services.</p><h2>AI/ML Revenue Contribution</h2><table><thead><tr><th>Company</th><th>AI/ML Revenue %</th><th>QoQ Change</th></tr></thead><tbody><tr><td>TCS</td><td>12%</td><td>+2.1pp</td></tr><tr><td>Infosys</td><td>10%</td><td>+1.8pp</td></tr><tr><td>Wipro</td><td>8%</td><td>+1.2pp</td></tr><tr><td>HCL Tech</td><td>11%</td><td>+2.4pp</td></tr></tbody></table><h2>Sector Outlook</h2><p>We maintain an <strong>Overweight</strong> stance on Indian IT. Key catalysts: US Fed rate cuts, GenAI monetisation inflection, and rupee depreciation tailwinds.</p><blockquote><p>Top Picks: TCS (large-cap stability), LTIMindtree (mid-cap alpha)</p></blockquote>`,
+      },
+      {
+        title: "Budget 2026: Tax Changes Every Investor Must Know",
+        slug: "budget-2026-tax-changes-investors",
+        excerpt: "From revised LTCG slabs to ELSS lock-in changes — a comprehensive guide to Union Budget 2026 implications for your portfolio.",
+        category: "investing",
+        cover_image_url: "https://images.unsplash.com/photo-1554224155-1696413565d3?w=1200&q=80",
+        tags: ["Budget 2026", "Tax", "LTCG", "ELSS"],
+        read_time_minutes: 8, published: true, featured: false,
+        author_name: "Sneha Patel", author_avatar_url: "/images/avatars/sneha-patel.jpg",
+        published_at: d(6),
+        content: `<h2>Overview</h2><p>The Union Budget 2026-27 introduced several changes that directly impact retail investors, HNIs, and financial intermediaries.</p><h2>Capital Gains Tax Changes</h2><h3>Long-Term Capital Gains (LTCG)</h3><ul><li>Exemption limit increased from ₹1.25 lakh to ₹1.5 lakh per annum</li><li>LTCG rate remains at 12.5% for equity and equity-oriented MFs</li><li>Holding period for listed bonds reduced from 12 to 9 months</li></ul><h3>Short-Term Capital Gains (STCG)</h3><ul><li>STCG on equity remains at 20%</li><li>Intraday equity gains now taxed at flat 25%</li></ul><h2>ELSS Changes</h2><p>Lock-in period reduced from 3 years to 2 years, making it more attractive. Section 80C deduction limit remains ₹1.5 lakh.</p><h2>Impact Matrix</h2><table><thead><tr><th>Change</th><th>Benefit To</th><th>Action Required</th></tr></thead><tbody><tr><td>LTCG exemption ↑</td><td>All equity investors</td><td>Harvest gains up to ₹1.5L</td></tr><tr><td>ELSS lock-in ↓</td><td>Tax-saving investors</td><td>Review SIP allocation</td></tr><tr><td>Intraday tax ↑</td><td>None (negative)</td><td>Reconsider frequent trading</td></tr></tbody></table><h2>Recommended Actions</h2><ol><li>Review your tax harvesting strategy with the new ₹1.5L LTCG limit</li><li>Consider increasing NPS allocation if your employer offers enhanced contribution</li><li>If you trade intraday frequently, the 25% flat rate may increase your tax outgo</li></ol>`,
+      },
+      {
+        title: "NFO Alert: Bluechip Capital India Innovation Fund",
+        slug: "bluechip-capital-india-innovation-fund-nfo",
+        excerpt: "Bluechip Capital AMC launches its thematic fund focused on AI, EV, Clean Energy, and Fintech sectors. NFO opens March 1-15.",
+        category: "investing",
+        cover_image_url: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&q=80",
+        tags: ["NFO", "Mutual Funds", "Innovation", "AI"],
+        read_time_minutes: 5, published: true, featured: false,
+        author_name: "Arjun Mehta", author_avatar_url: "/images/avatars/arjun-mehta.jpg",
+        published_at: d(8),
+        content: `<h2>Fund Overview</h2><p>Bluechip Capital AMC announces the <strong>India Innovation Fund</strong>, a thematic equity fund targeting India's fastest-growing innovation sectors.</p><h2>Key Details</h2><ul><li><strong>NFO Period:</strong> March 1-15, 2026</li><li><strong>Minimum Investment:</strong> ₹5,000 (SIP: ₹500/month)</li><li><strong>Benchmark:</strong> Nifty India Digital Index</li><li><strong>Fund Manager:</strong> Arjun Mehta, CFA (15+ years experience)</li><li><strong>Exit Load:</strong> 1% if redeemed within 365 days</li></ul><h2>Sector Allocation Strategy</h2><ul><li><strong>AI & Machine Learning (30%):</strong> Companies building or heavily adopting AI</li><li><strong>Electric Vehicles (25%):</strong> EV OEMs, battery tech, charging infrastructure</li><li><strong>Clean Energy (25%):</strong> Solar, wind, green hydrogen</li><li><strong>Fintech (20%):</strong> Digital payments, neo-banks, insurtech</li></ul><blockquote><p>"We believe innovation-driven companies will deliver 2-3x market returns over the next decade." — Arjun Mehta, CIO</p></blockquote><h2>Who Should Invest?</h2><p>Investors with a <strong>5+ year horizon</strong> and <strong>high risk appetite</strong> looking for satellite allocation to India's structural growth themes.</p>`,
+      },
+      {
+        title: "Pharma Sector: CY2026 Outlook & Top Picks",
+        slug: "pharma-sector-cy2026-outlook",
+        excerpt: "Indian pharma companies are well-positioned with robust generic pipelines and biosimilar opportunities.",
+        category: "market-insights",
+        cover_image_url: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=1200&q=80",
+        tags: ["Pharma", "Healthcare", "Research"],
+        read_time_minutes: 9, published: true, featured: false,
+        author_name: "Meera Reddy", author_avatar_url: "/images/avatars/meera-reddy.jpg",
+        published_at: d(10),
+        content: `<h2>Sector Overview</h2><p>The Indian pharmaceutical sector enters CY2026 with strong tailwinds: a robust ANDA pipeline, biosimilar launches, and domestic formulations growth of 10-12%.</p><h2>Key Growth Drivers</h2><ol><li><strong>US Generics Pipeline:</strong> 800+ ANDAs pending approval</li><li><strong>Biosimilars:</strong> 15+ launches expected targeting $40B worth of biologics</li><li><strong>CDMO Opportunity:</strong> India's global share expected to grow from 5% to 8%</li><li><strong>Domestic Market:</strong> Chronic therapies growing at 14-16% CAGR</li></ol><h2>Valuation Snapshot</h2><table><thead><tr><th>Company</th><th>CMP (₹)</th><th>P/E</th><th>Growth</th><th>Rating</th></tr></thead><tbody><tr><td>Sun Pharma</td><td>1,845</td><td>32x</td><td>+14%</td><td>BUY</td></tr><tr><td>Cipla</td><td>1,520</td><td>28x</td><td>+11%</td><td>BUY</td></tr><tr><td>Divi's Labs</td><td>4,200</td><td>42x</td><td>+18%</td><td>ACCUMULATE</td></tr><tr><td>Lupin</td><td>1,680</td><td>26x</td><td>+16%</td><td>BUY</td></tr></tbody></table><h2>Top Picks</h2><p><strong>Sun Pharma</strong> (specialty diversification), <strong>Cipla</strong> (respiratory strength), and <strong>Divi's Labs</strong> (CDMO tailwinds) are our top conviction ideas.</p>`,
+      },
+      {
+        title: "A Beginner's Guide to Systematic Investment Plans (SIPs)",
+        slug: "beginners-guide-to-sip",
+        excerpt: "Everything you need to know about SIPs — how they work, why they matter, and how to start your first SIP today.",
+        category: "general",
+        cover_image_url: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200&q=80",
+        tags: ["SIP", "Mutual Funds", "Beginners"],
+        read_time_minutes: 6, published: true, featured: false,
+        author_name: "FindOO Team",
+        published_at: d(12),
+        content: `<h2>What is a SIP?</h2><p>A Systematic Investment Plan (SIP) allows you to invest a fixed amount regularly into a mutual fund scheme. Think of it as a recurring deposit — but for equity and debt markets.</p><h2>How Does SIP Work?</h2><p>When you invest via SIP, you buy units at the prevailing NAV. When the market is low, you get more units; when it's high, you get fewer. This is <strong>Rupee Cost Averaging</strong>.</p><h3>Example</h3><table><thead><tr><th>Month</th><th>NAV (₹)</th><th>Investment</th><th>Units</th></tr></thead><tbody><tr><td>January</td><td>100</td><td>₹5,000</td><td>50.00</td></tr><tr><td>February</td><td>90</td><td>₹5,000</td><td>55.56</td></tr><tr><td>March</td><td>110</td><td>₹5,000</td><td>45.45</td></tr><tr><td>April</td><td>95</td><td>₹5,000</td><td>52.63</td></tr></tbody></table><p>Average cost per unit: ₹98.39 — SIP naturally buys more when prices are low!</p><h2>Benefits of SIP</h2><ol><li><strong>Discipline:</strong> Automates your investing habit</li><li><strong>Rupee Cost Averaging:</strong> Reduces impact of volatility</li><li><strong>Power of Compounding:</strong> ₹10,000/month at 12% = ₹1 Cr in ~20 years</li><li><strong>Flexibility:</strong> Start with ₹500/month</li></ol><h2>How to Start</h2><ol><li>Complete KYC (Aadhaar + PAN — 10 minutes online)</li><li>Choose an Index Fund for beginners</li><li>Select Direct plan for lower expense ratio</li><li>Set up auto-debit</li><li>Stay invested for 5-7 years minimum</li></ol><h2>Common Mistakes</h2><ul><li>Stopping SIP during market crashes</li><li>Investing in too many funds (3-4 is sufficient)</li><li>Chasing past returns</li><li>Not increasing SIP amount annually</li></ul><p><strong>Start small, stay consistent, think long-term.</strong></p>`,
+      },
+      {
+        title: "AMFI Quarterly Report: MF Industry Hits ₹65 Lakh Crore AUM",
+        slug: "amfi-quarterly-report-q4-fy26",
+        excerpt: "India's mutual fund industry crossed a historic milestone. Key trends and data inside.",
+        category: "market-insights",
+        cover_image_url: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80",
+        tags: ["AMFI", "AUM", "Industry"],
+        read_time_minutes: 6, published: true, featured: false,
+        author_name: "Anita Desai", author_avatar_url: "/images/avatars/anita-desai.jpg",
+        published_at: d(14),
+        content: `<h2>Industry Milestone</h2><p>AMFI's Q4 FY26 data confirms the Indian mutual fund industry crossed <strong>₹65 lakh crore AUM</strong> — a 22% YoY growth.</p><h2>Key Highlights</h2><ul><li><strong>SIP Flows:</strong> Monthly inflows hit ₹24,500 crore</li><li><strong>SIP Accounts:</strong> 9.8 crore active accounts</li><li><strong>Equity AUM:</strong> ₹32 lakh crore (49% of total)</li><li><strong>Debt AUM:</strong> ₹18 lakh crore (28%)</li></ul><h2>Growth Drivers</h2><ol><li>Digital-first distribution expanding to Tier-3/4 cities</li><li>Investor education campaigns showing results</li><li>New fund categories attracting younger investors</li><li>Equity market performance boosting AUM</li></ol><blockquote><p>"India's MF penetration is still only 18% of GDP vs 120% in the US. The runway is immense." — AMFI Chairman</p></blockquote><h2>What This Means for Distributors</h2><p>The expanding pie means opportunities for MFDs and RIAs, especially in under-penetrated geographies. Digital tools like FindOO are making client acquisition more efficient than ever.</p>`,
+      },
+      {
+        title: "5 Red Flags to Watch Before Investing in Small-Cap Stocks",
+        slug: "red-flags-small-cap-investing",
+        excerpt: "Small-caps can deliver outsized returns, but they carry significant risks. Here are 5 warning signs every investor should know.",
+        category: "general",
+        cover_image_url: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=1200&q=80",
+        tags: ["Small Cap", "Risk", "Awareness"],
+        read_time_minutes: 5, published: true, featured: false,
+        author_name: "Priya Sharma", author_avatar_url: "/images/avatars/priya-sharma.jpg",
+        published_at: d(16),
+        content: `<h2>The Small-Cap Allure</h2><p>Small-cap stocks have delivered 35%+ returns in the last 2 years. But with great returns come great risks.</p><h2>1. Promoter Pledging Above 40%</h2><p>When promoters pledge a significant portion of holdings, it signals financial stress. If the stock falls, lenders can sell pledged shares — creating a vicious spiral.</p><h2>2. Frequent Related-Party Transactions</h2><p>Excessive transactions with promoter-linked entities can signal fund siphoning. Look for loans to group companies at non-market rates.</p><h2>3. Auditor Changes or Qualifications</h2><p>Frequent auditor changes or qualified opinions are often the earliest warning signs of accounting irregularities.</p><h2>4. Revenue Without Cash Flow</h2><p>Revenue growth with deteriorating operating cash flow may indicate aggressive revenue recognition. Always compare:</p><ul><li>Revenue growth vs receivables growth</li><li>PAT vs operating cash flow</li><li>Inventory days trend</li></ul><h2>5. Sudden Bulk/Block Deals</h2><p>Large unexplained block deals before positive announcements can indicate insider activity.</p><h2>The Bottom Line</h2><p>Small-caps can be portfolio multipliers, but <strong>due diligence is non-negotiable</strong>. Use these red flags as a screening checklist.</p>`,
+      },
+    ];
+
+    const { error: blogErr } = await supabaseAdmin.from("blog_posts").insert(blogPosts);
+    if (blogErr) console.error("Blog seed error:", blogErr.message);
+
     // ===== SEED PROFILE VIEWS =====
     const pvNow = Date.now();
     const pv = (daysAgo: number) => new Date(pvNow - 86400000 * daysAgo).toISOString();
@@ -672,6 +777,7 @@ Deno.serve(async (req) => {
       events: seededEvents.length,
       event_speakers: speakerData.length,
       event_registrations: eventRegs.length,
+      blog_posts: blogPosts.length,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
