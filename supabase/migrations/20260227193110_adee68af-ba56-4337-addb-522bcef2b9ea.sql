@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS digital_card_fields jsonb DEFAULT '{"full_name":true,"designation":true,"organization":true,"headline":true,"location":true,"email":false,"phone":false,"website":true,"social_links":true,"certifications":true,"specializations":true}'::jsonb;

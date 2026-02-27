@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, BarChart3, Bookmark } from "lucide-react";
+import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard } from "lucide-react";
 import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
@@ -16,6 +16,7 @@ import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useRole } from "@/contexts/RoleContext";
+import { DigitalCardManager } from "@/components/profile/DigitalCardManager";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -137,6 +138,11 @@ const Profile = () => {
                   {isOwnProfile && (
                     <TabsTrigger value="bookmarks" className={tabTriggerClass}>Bookmarks</TabsTrigger>
                   )}
+                  {isOwnProfile && (
+                    <TabsTrigger value="digital-card" className={tabTriggerClass}>
+                      <CreditCard className="h-3.5 w-3.5 mr-1" /> Digital Card
+                    </TabsTrigger>
+                  )}
                 </TabsList>
               </div>
 
@@ -179,6 +185,16 @@ const Profile = () => {
               {isOwnProfile && (
                 <TabsContent value="bookmarks" className="space-y-4 mt-0">
                   <BookmarkedPosts allPosts={allPosts} currentUserId={currentUserId} />
+                </TabsContent>
+              )}
+
+              {isOwnProfile && profile && (
+                <TabsContent value="digital-card" className="mt-0">
+                  <DigitalCardManager
+                    profileId={profile.id}
+                    digitalCardFields={(profile as any).digital_card_fields ?? null}
+                    onFieldsUpdated={handleProfileSaved}
+                  />
                 </TabsContent>
               )}
             </Tabs>

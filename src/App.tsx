@@ -45,6 +45,7 @@ const QuickLinks = lazy(() => import("./pages/QuickLinks"));
 const Legal = lazy(() => import("./pages/Legal"));
 const SiteMap = lazy(() => import("./pages/SiteMap"));
 const Admin = lazy(() => import("./pages/Admin"));
+const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,7 @@ const App = () => {
                     <Route path="/quick-links" element={<QuickLinks />} />
                     <Route path="/legal" element={<Legal />} />
                     <Route path="/sitemap" element={<SiteMap />} />
+                    <Route path="/card/:userId" element={<DigitalCard />} />
                     <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
