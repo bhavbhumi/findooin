@@ -14,6 +14,7 @@ import { ProfileAbout } from "@/components/profile/ProfileAbout";
 import { ProfileNetwork } from "@/components/profile/ProfileNetwork";
 import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { useRole } from "@/contexts/RoleContext";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +28,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("about");
   const { data: allPosts } = useFeedPosts();
   const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
+  const { refreshRoles } = useRole();
 
   const isOwnProfile = !id || id === currentUserId;
 
@@ -89,6 +91,12 @@ const Profile = () => {
     if (targetId) loadProfile(targetId);
   };
 
+  const handleRolesChanged = () => {
+    const targetId = id || currentUserId;
+    if (targetId) loadProfile(targetId);
+    refreshRoles();
+  };
+
   const userPosts = allPosts?.filter((p) => p.author.id === profile?.id) ?? [];
 
   // Common tab trigger style
@@ -137,7 +145,7 @@ const Profile = () => {
             </div>
 
             <TabsContent value="about" className="mt-0">
-              <ProfileAbout profile={profile} roles={roles} isOwnProfile={isOwnProfile} />
+              <ProfileAbout profile={profile} roles={roles} isOwnProfile={isOwnProfile} onRolesChanged={handleRolesChanged} />
             </TabsContent>
 
             <TabsContent value="network" className="mt-0">
