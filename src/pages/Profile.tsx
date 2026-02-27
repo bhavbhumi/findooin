@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles } from "lucide-react";
+import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles, Store } from "lucide-react";
 import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
@@ -19,6 +19,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useRole } from "@/contexts/RoleContext";
 import { DigitalCardManager } from "@/components/profile/DigitalCardManager";
 import { VaultProfileTab } from "@/components/vault/VaultProfileTab";
+import { ProfileListingsTab } from "@/components/profile/ProfileListingsTab";
 import { ActivityTimeline } from "@/components/profile/ActivityTimeline";
 import { FeaturedContent } from "@/components/profile/FeaturedContent";
 import { ProfileCompletenessRing } from "@/components/profile/ProfileCompletenessRing";
@@ -149,6 +150,9 @@ const Profile = () => {
                   <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
                   <TabsTrigger value="activity" className={tabTriggerClass}>Activity</TabsTrigger>
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
+                  <TabsTrigger value="directory" className={tabTriggerClass}>
+                    <Store className="h-3.5 w-3.5 mr-1" /> Directory
+                  </TabsTrigger>
                   {isOwnProfile && (
                     <TabsTrigger value="bookmarks" className={tabTriggerClass}>Bookmarks</TabsTrigger>
                   )}
@@ -197,6 +201,10 @@ const Profile = () => {
                 ) : (
                   userPosts.map((post) => <PostCard key={post.id} post={post} />)
                 )}
+              </TabsContent>
+
+              <TabsContent value="directory" className="mt-0">
+                <ProfileListingsTab profileId={profile.id} isOwnProfile={isOwnProfile} roles={roles} />
               </TabsContent>
 
               {isOwnProfile && (
