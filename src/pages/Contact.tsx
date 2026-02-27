@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Mail, MapPin, Clock, MessageCircle, Phone, CalendarDays, User2, CheckCircle2 } from "lucide-react";
+import { Mail, MapPin, Clock, MessageCircle, Phone, User2, CheckCircle2, Building2, Globe, Navigation } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,18 @@ const expectations = [
   "Response within 24–48 hours",
   "No obligation, completely free",
   "Personalised recommendations",
+];
+
+const offices = [
+  {
+    city: "Mumbai",
+    label: "Head Office",
+    address: "Mumbai, Maharashtra, India",
+    phone: "+91 999 999 9999",
+    email: "mumbai@findoo.in",
+    hours: "Mon–Sat, 9:00 AM – 6:00 PM IST",
+    mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241317.14571!2d72.7410!3d19.0826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c6306644edc1%3A0x5da4ed8f8d648c69!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1",
+  },
 ];
 
 const Contact = () => {
@@ -193,29 +205,76 @@ const Contact = () => {
       {/* Visit Us Tab */}
       {activeTab === "Visit Us" && (
         <section className="py-12">
-          <div className="container max-w-4xl">
-            <div className="grid md:grid-cols-2 gap-8">
-              <motion.div className="rounded-xl border border-border bg-card p-8" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
-                  <MapPin className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-bold font-heading text-card-foreground mb-2">Office Address</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Mumbai, Maharashtra, India
-                </p>
-              </motion.div>
+          <div className="container">
+            {/* Description bar */}
+            <motion.div
+              className="flex items-center gap-3 mb-10 pb-6 border-b border-border"
+              initial="hidden" animate="visible" variants={fadeUp} custom={0}
+            >
+              <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+                <Building2 className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold font-heading text-foreground">Our Office</h3>
+                <p className="text-sm text-muted-foreground">Visit us at our office or find us on the map.</p>
+              </div>
+            </motion.div>
 
-              <motion.div className="rounded-xl border border-border bg-card p-8" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
-                  <Clock className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-bold font-heading text-card-foreground mb-2">Business Hours</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Monday – Saturday<br />
-                  9:00 AM – 6:00 PM IST
-                </p>
-              </motion.div>
-            </div>
+            {offices.map((office, idx) => (
+              <div key={office.city} className="grid md:grid-cols-5 gap-8 mb-10">
+                {/* Map */}
+                <motion.div className="md:col-span-3 rounded-xl overflow-hidden border border-border bg-muted aspect-[16/10]"
+                  initial="hidden" animate="visible" variants={fadeUp} custom={1}>
+                  <iframe
+                    src={office.mapUrl}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title={`${office.city} office map`}
+                  />
+                </motion.div>
+
+                {/* Office details */}
+                <motion.div className="md:col-span-2 space-y-5" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
+                  <div className="rounded-xl border border-border bg-card p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <MapPin className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <h4 className="text-base font-bold font-heading text-card-foreground">{office.city}</h4>
+                        <span className="text-xs text-primary font-medium">{office.label}</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">{office.address}</p>
+
+                    <div className="space-y-3 text-sm">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Phone className="h-3.5 w-3.5 text-primary" />
+                        <a href={`tel:${office.phone.replace(/\s/g, '')}`} className="hover:text-foreground transition-colors">{office.phone}</a>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Mail className="h-3.5 w-3.5 text-primary" />
+                        <a href={`mailto:${office.email}`} className="hover:text-foreground transition-colors">{office.email}</a>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Clock className="h-3.5 w-3.5 text-primary" />
+                        <span>{office.hours}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button variant="outline" className="w-full" asChild>
+                    <a href={`https://maps.google.com/?q=${encodeURIComponent(office.address)}`} target="_blank" rel="noopener noreferrer">
+                      <Navigation className="h-4 w-4 mr-2" /> Get Directions
+                    </a>
+                  </Button>
+                </motion.div>
+              </div>
+            ))}
           </div>
         </section>
       )}
