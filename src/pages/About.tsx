@@ -33,12 +33,6 @@ const About = () => {
         title="India's Trust-First"
         titleAccent="Financial Network"
         subtitle="Connecting verified Issuers, Intermediaries, and Investors within a regulated, transparent ecosystem."
-        decoration={
-          <svg width="200" height="200" viewBox="0 0 200 200" className="text-primary">
-            <circle cx="150" cy="50" r="80" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.3" />
-            <circle cx="160" cy="40" r="50" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-          </svg>
-        }
       />
 
       {/* Tabs */}
