@@ -118,14 +118,13 @@ const AppNavbar = () => {
 
           {/* Right: Discover search + Icons + Profile dropdown */}
           <div className="flex items-center gap-2">
-            {/* Discover search box */}
-            <Link
-              to="/discover"
-              className="hidden md:flex items-center gap-2 rounded-lg border border-border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground hover:bg-muted transition-colors min-w-[160px]"
-            >
-              <Search className="h-4 w-4 shrink-0" />
-              <span>Discover</span>
-            </Link>
+            {/* Discover */}
+            <Button variant="ghost" size="sm" className="hidden md:inline-flex text-muted-foreground px-2 lg:px-3" asChild>
+              <Link to="/discover">
+                <Search className="h-4 w-4 lg:mr-1.5" />
+                <span className="hidden lg:inline">Discover</span>
+              </Link>
+            </Button>
 
             {/* Messages icon */}
             <Button variant="ghost" size="icon" className="text-muted-foreground" asChild>
