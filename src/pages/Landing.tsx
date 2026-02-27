@@ -157,7 +157,7 @@ const Landing = () => {
           >
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 mb-6 text-sm text-muted-foreground">
               <Landmark className="h-3.5 w-3.5 text-accent" />
-              The world's first financial network
+              Financially Social — The world's first financial network
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.1] mb-6">
               Not social. Not professional.
