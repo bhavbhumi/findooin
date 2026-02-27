@@ -65,8 +65,8 @@ export function useJobs(filters?: { category?: string; type?: string; location?:
     queryFn: async () => {
       let query = supabase
         .from("jobs")
-        .select("*, poster_profile:profiles!poster_id(full_name, display_name, avatar_url, verification_status)")
-        .eq("status", "active")
+        .select("*")
+        .eq("status", "active" as any)
         .order("created_at", { ascending: false });
 
       if (filters?.category && filters.category !== "all") {
@@ -84,7 +84,22 @@ export function useJobs(filters?: { category?: string; type?: string; location?:
 
       const { data, error } = await query;
       if (error) throw error;
-      return (data || []) as unknown as Job[];
+      const jobs = (data || []) as unknown as Job[];
+      
+      // Fetch poster profiles separately
+      const posterIds = [...new Set(jobs.map(j => j.poster_id))];
+      if (posterIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("id, full_name, display_name, avatar_url, verification_status")
+          .in("id", posterIds);
+        const profileMap = new Map((profiles || []).map(p => [p.id, p]));
+        jobs.forEach(j => {
+          const p = profileMap.get(j.poster_id);
+          if (p) j.poster_profile = p as any;
+        });
+      }
+      return jobs;
     },
   });
 }
@@ -96,11 +111,15 @@ export function useJob(id: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("jobs")
-        .select("*, poster_profile:profiles!poster_id(full_name, display_name, avatar_url, verification_status)")
+        .select("*")
         .eq("id", id!)
         .single();
       if (error) throw error;
-      return data as unknown as Job;
+      const job = data as unknown as Job;
+      // Fetch poster profile
+      const { data: profile } = await supabase.from("profiles").select("id, full_name, display_name, avatar_url, verification_status").eq("id", job.poster_id).single();
+      if (profile) job.poster_profile = profile as any;
+      return job;
     },
   });
 }
@@ -146,11 +165,25 @@ export function useJobApplications(jobId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("job_applications")
-        .select("*, applicant_profile:profiles!applicant_id(full_name, display_name, avatar_url, headline, verification_status)")
+        .select("*")
         .eq("job_id", jobId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data || []) as unknown as JobApplication[];
+      const apps = (data || []) as unknown as JobApplication[];
+      // Fetch applicant profiles
+      const applicantIds = [...new Set(apps.map(a => a.applicant_id))];
+      if (applicantIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("id, full_name, display_name, avatar_url, headline, verification_status")
+          .in("id", applicantIds);
+        const profileMap = new Map((profiles || []).map(p => [p.id, p]));
+        apps.forEach(a => {
+          const p = profileMap.get(a.applicant_id);
+          if (p) a.applicant_profile = p as any;
+        });
+      }
+      return apps;
     },
   });
 }
