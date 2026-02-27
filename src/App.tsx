@@ -7,8 +7,9 @@ import { RoleProvider } from "@/contexts/RoleContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useCallback } from "react";
 import { FindooLoader } from "@/components/FindooLoader";
+import { SplashScreen } from "@/components/SplashScreen";
 
 // Eager load critical routes
 import Landing from "./pages/Landing";
@@ -53,55 +54,61 @@ const LazyFallback = () => (
   </div>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <RoleProvider>
-          <ErrorBoundary fallbackTitle="FindOO encountered an error">
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Suspense fallback={<LazyFallback />}>
-                <Routes>
-                  <Route path="/" element={<Landing />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route path="/install" element={<Install />} />
-                  <Route path="/onboarding" element={<Onboarding />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:slug" element={<BlogPost />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/community-guidelines" element={<CommunityGuidelines />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                  <Route path="/explore" element={<Explore />} />
-                  <Route path="/helpdesk" element={<HelpDesk />} />
-                  <Route path="/quick-links" element={<QuickLinks />} />
-                  <Route path="/legal" element={<Legal />} />
-                  <Route path="/sitemap" element={<SiteMap />} />
-                  <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
-                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  <Route path="/network" element={<ProtectedRoute><Network /></ProtectedRoute>} />
-                  <Route path="/discover" element={<ProtectedRoute><Discover /></ProtectedRoute>} />
-                  <Route path="/analytics" element={<ProtectedRoute><PostAnalytics /></ProtectedRoute>} />
-                  <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-                  <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-                  <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-                  <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-                  <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
-                  <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </BrowserRouter>
-          </ErrorBoundary>
-        </RoleProvider>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [splashDone, setSplashDone] = useState(false);
+  const handleSplashComplete = useCallback(() => setSplashDone(true), []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <RoleProvider>
+            <ErrorBoundary fallbackTitle="FindOO encountered an error">
+              {!splashDone && <SplashScreen onComplete={handleSplashComplete} />}
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Suspense fallback={<LazyFallback />}>
+                  <Routes>
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/install" element={<Install />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/blog/:slug" element={<BlogPost />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/community-guidelines" element={<CommunityGuidelines />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/explore" element={<Explore />} />
+                    <Route path="/helpdesk" element={<HelpDesk />} />
+                    <Route path="/quick-links" element={<QuickLinks />} />
+                    <Route path="/legal" element={<Legal />} />
+                    <Route path="/sitemap" element={<SiteMap />} />
+                    <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
+                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="/network" element={<ProtectedRoute><Network /></ProtectedRoute>} />
+                    <Route path="/discover" element={<ProtectedRoute><Discover /></ProtectedRoute>} />
+                    <Route path="/analytics" element={<ProtectedRoute><PostAnalytics /></ProtectedRoute>} />
+                    <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                    <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+                    <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                    <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+                    <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
+                    <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </BrowserRouter>
+            </ErrorBoundary>
+          </RoleProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
