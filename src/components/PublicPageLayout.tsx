@@ -12,7 +12,6 @@ interface PublicPageLayoutProps {
 
 const navLinks = [
   { label: "About", to: "/about" },
-  { label: "How it Works", to: "/community-guidelines" },
   { label: "Blog", to: "/blog" },
   { label: "Contact", to: "/contact" },
 ];
