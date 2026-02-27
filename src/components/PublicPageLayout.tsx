@@ -236,7 +236,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       <main className="flex-1 pt-16">{children}</main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-border bg-muted/30">
+      <footer className="border-t border-border bg-secondary/50">
         <div className="container py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {/* Brand column */}
