@@ -115,12 +115,15 @@ const BlogPostPage = () => {
             )}
 
             {/* Content */}
-            <div className="prose prose-lg max-w-none text-card-foreground leading-relaxed whitespace-pre-line
-              prose-headings:font-heading prose-headings:text-foreground
-              prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-              prose-strong:text-foreground">
-              {post.content}
-            </div>
+            <div
+              className="prose prose-lg max-w-none text-card-foreground leading-relaxed
+                prose-headings:font-heading prose-headings:text-foreground
+                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-foreground prose-img:rounded-xl prose-img:border prose-img:border-border
+                prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground
+                prose-li:marker:text-primary prose-hr:border-border"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
 
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
