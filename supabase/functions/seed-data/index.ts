@@ -52,6 +52,20 @@ Deno.serve(async (req) => {
     await supabaseAdmin.from("notifications").delete().in("user_id", allUsers);
     await supabaseAdmin.from("survey_responses").delete().in("user_id", allUsers);
 
+    // Cleanup listings data
+    const { data: existingListings } = await supabaseAdmin.from("listings").select("id").in("user_id", allUsers);
+    const existingListingIds = (existingListings || []).map(l => l.id);
+    if (existingListingIds.length) {
+      await supabaseAdmin.from("listing_enquiries").delete().in("listing_id", existingListingIds);
+      await supabaseAdmin.from("listing_reviews").delete().in("listing_id", existingListingIds);
+      await supabaseAdmin.from("listings").delete().in("id", existingListingIds);
+    }
+
+    // Cleanup endorsements & featured posts
+    await supabaseAdmin.from("endorsements").delete().in("endorser_id", allUsers);
+    await supabaseAdmin.from("endorsements").delete().in("endorsed_user_id", allUsers);
+    await supabaseAdmin.from("featured_posts").delete().in("user_id", allUsers);
+
     // Cleanup events data
     const { data: existingEvents } = await supabaseAdmin.from("events").select("id").in("organizer_id", allUsers);
     const existingEventIds = (existingEvents || []).map(e => e.id);
@@ -759,6 +773,194 @@ Deno.serve(async (req) => {
     ];
     await supabaseAdmin.from("profile_views").insert(profileViews);
 
+    // ===== SEED ENDORSEMENTS =====
+    const endorsements = [
+      { endorser_id: rajesh, endorsed_user_id: priya, skill: "Portfolio Management" },
+      { endorser_id: rajesh, endorsed_user_id: priya, skill: "Financial Planning" },
+      { endorser_id: karan, endorsed_user_id: priya, skill: "Portfolio Management" },
+      { endorser_id: arjun, endorsed_user_id: priya, skill: "Equity Research" },
+      { endorser_id: meera, endorsed_user_id: priya, skill: "Market Analysis" },
+      { endorser_id: priya, endorsed_user_id: meera, skill: "Equity Research" },
+      { endorser_id: arjun, endorsed_user_id: meera, skill: "Equity Research" },
+      { endorser_id: priya, endorsed_user_id: meera, skill: "Pharma Sector" },
+      { endorser_id: rajesh, endorsed_user_id: sneha, skill: "Tax Planning" },
+      { endorser_id: priya, endorsed_user_id: sneha, skill: "Tax Planning" },
+      { endorser_id: karan, endorsed_user_id: sneha, skill: "DTAA Advisory" },
+      { endorser_id: anita, endorsed_user_id: sneha, skill: "Compliance" },
+      { endorser_id: priya, endorsed_user_id: arjun, skill: "Fund Management" },
+      { endorser_id: anita, endorsed_user_id: arjun, skill: "Fund Management" },
+      { endorser_id: meera, endorsed_user_id: arjun, skill: "Product Innovation" },
+      { endorser_id: arjun, endorsed_user_id: anita, skill: "MF Distribution" },
+      { endorser_id: vikram, endorsed_user_id: anita, skill: "MF Distribution" },
+      { endorser_id: priya, endorsed_user_id: anita, skill: "Client Advisory" },
+      { endorser_id: rajesh, endorsed_user_id: anita, skill: "Wealth Management" },
+      { endorser_id: anita, endorsed_user_id: vikram, skill: "Infrastructure" },
+      { endorser_id: meera, endorsed_user_id: vikram, skill: "Corporate Finance" },
+    ];
+    await supabaseAdmin.from("endorsements").insert(endorsements);
+
+    // ===== SEED FEATURED POSTS =====
+    const featuredPosts = [];
+    if (insertedPosts.length >= 10) {
+      // Priya features her market commentary and portfolio update
+      const priyaPosts = insertedPosts.filter(p => p.author_id === priya);
+      priyaPosts.slice(0, 2).forEach((p, i) => featuredPosts.push({ user_id: priya, post_id: p.id, position: i }));
+      // Arjun features NFO announcement
+      const arjunPosts = insertedPosts.filter(p => p.author_id === arjun);
+      if (arjunPosts[0]) featuredPosts.push({ user_id: arjun, post_id: arjunPosts[0].id, position: 0 });
+      // Vikram features quarterly results
+      const vikramPosts = insertedPosts.filter(p => p.author_id === vikram);
+      if (vikramPosts[0]) featuredPosts.push({ user_id: vikram, post_id: vikramPosts[0].id, position: 0 });
+      // Meera features research note
+      const meeraPosts = insertedPosts.filter(p => p.author_id === meera);
+      if (meeraPosts[0]) featuredPosts.push({ user_id: meera, post_id: meeraPosts[0].id, position: 0 });
+    }
+    if (featuredPosts.length) await supabaseAdmin.from("featured_posts").insert(featuredPosts);
+
+    // ===== SEED DIRECTORY LISTINGS =====
+    const listingsData = [
+      {
+        user_id: arjun, listing_type: "product", product_category: "mutual_fund",
+        title: "Bluechip Capital India Innovation Fund — Direct Growth",
+        description: "A thematic equity fund investing in India's innovation economy. Focus sectors: AI/ML (30%), Electric Vehicles (25%), Clean Energy (25%), Fintech (20%). Managed by CFA-qualified team with 15+ years track record.\n\nSuitable for investors with 5+ year horizon and high risk appetite seeking satellite allocation to structural growth themes.",
+        highlights: ["AI & EV exposure in single fund", "15+ yr experienced fund manager", "Direct plan — lowest TER", "₹500 SIP minimum", "NFO unit price ₹10"],
+        min_investment: 5000, returns_info: "Category avg 18% (3Y)", risk_level: "high", tenure: "5+ years",
+        tags: ["AI", "EV", "Innovation", "Thematic"], location: "Pan India",
+        status: "active", view_count: 342, enquiry_count: 28, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: arjun, listing_type: "product", product_category: "mutual_fund",
+        title: "Bluechip Capital Large Cap Fund — Direct Growth",
+        description: "Core equity allocation to India's top 100 companies by market capitalization. Consistent top-quartile performance across market cycles. CRISIL-ranked #1 in category.\n\nIdeal for long-term wealth creation with moderate risk.",
+        highlights: ["Top-quartile 5Y returns", "CRISIL Rank 1", "Low volatility vs peers", "Monthly SIP from ₹500"],
+        min_investment: 5000, returns_info: "14.2% CAGR (5Y)", risk_level: "moderate", tenure: "3-5 years",
+        tags: ["Large Cap", "Core", "Equity"], location: "Pan India",
+        status: "active", view_count: 567, enquiry_count: 45, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: vikram, listing_type: "product", product_category: "bonds",
+        title: "Singh Infrastructure Ltd — NCD Series IV (Secured)",
+        description: "Non-Convertible Debentures offering 9.5% p.a. (Annual payout) for 3-year tenure. Secured against identified assets of ₹4,200 Cr. CARE AA- rated.\n\nMinimum application: ₹10,000 (10 NCDs × ₹1,000 face value). Listed on BSE for liquidity.",
+        highlights: ["9.5% annual coupon", "CARE AA- rated", "Asset-backed security", "BSE listed for liquidity", "3-year tenure"],
+        min_investment: 10000, returns_info: "9.5% p.a. fixed", risk_level: "moderate", tenure: "3 years",
+        tags: ["NCD", "Fixed Income", "Infrastructure"], location: "Pan India",
+        status: "active", view_count: 234, enquiry_count: 19, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: anita, listing_type: "product", product_category: "insurance",
+        title: "HDFC Life Click 2 Protect Super — Term Plan",
+        description: "Pure term insurance plan with critical illness and accidental death riders. Sum assured up to ₹5 Cr. Monthly premium starting ₹800/month for 30-year-old male.\n\nDistributed by Desai Financial Services — IRDAI licensed.",
+        highlights: ["₹1 Cr cover from ₹800/mo", "Critical illness rider", "Online discount 5%", "Claim settlement 98.5%"],
+        min_investment: 800, returns_info: "Protection product", risk_level: "low", tenure: "Till age 85",
+        tags: ["Term Insurance", "Life Cover", "Protection"], location: "Pan India",
+        status: "active", view_count: 189, enquiry_count: 32, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: anita, listing_type: "product", product_category: "pms",
+        title: "Desai Financial — Multi-Cap PMS Strategy",
+        description: "Portfolio Management Service targeting 15-20% CAGR over 3+ years. Concentrated portfolio of 15-20 high-conviction stocks across market caps.\n\nMinimum investment ₹50 lakhs. Quarterly review with dedicated relationship manager. SEBI PMS registration: INP000XXXXX.",
+        highlights: ["17.4% CAGR since inception", "Concentrated 15-20 stocks", "Dedicated RM", "Quarterly portfolio review", "SEBI registered"],
+        min_investment: 5000000, returns_info: "17.4% CAGR (SI)", risk_level: "high", tenure: "3+ years",
+        tags: ["PMS", "Multi-cap", "HNI"], location: "Mumbai, Pune",
+        status: "active", view_count: 156, enquiry_count: 12, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: priya, listing_type: "service", service_category: "advisory",
+        title: "SEBI RIA — Comprehensive Financial Planning",
+        description: "Fee-only investment advisory for individuals and families. Services include goal-based planning, portfolio construction, tax optimization, and annual review.\n\nSEBI RIA Registration: INA000XXXXX. No commissions — 100% fiduciary. Flat fee structure.",
+        highlights: ["SEBI registered RIA", "Fee-only, no commissions", "Goal-based approach", "Tax-efficient strategies", "Annual review + rebalancing"],
+        tags: ["RIA", "Financial Planning", "Fee-only"], location: "Mumbai, Online",
+        status: "active", view_count: 423, enquiry_count: 56, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: sneha, listing_type: "service", service_category: "tax_planning",
+        title: "CA Sneha Patel — NRI Tax & Compliance Services",
+        description: "Specialized tax advisory for NRIs and returning Indians. Services: DTAA optimization, FEMA compliance, ITR filing, capital gains computation, and TRC procurement.\n\n10+ years experience with NRI taxation. Fluent in English, Hindi, Gujarati.",
+        highlights: ["NRI tax specialist", "DTAA expertise (15+ countries)", "FEMA compliance", "Remote consultations", "Same-day ITR filing"],
+        tags: ["NRI Tax", "DTAA", "FEMA", "CA"], location: "Ahmedabad, Online",
+        status: "active", view_count: 312, enquiry_count: 41, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: anita, listing_type: "service", service_category: "wealth_management",
+        title: "Desai Financial — HNI Wealth Management",
+        description: "End-to-end wealth management for HNI/UHNI families (₹5 Cr+ investable surplus). Covers asset allocation, MF/PMS/AIF selection, insurance planning, estate planning, and succession advisory.\n\nTeam of 15 certified professionals. ₹5,000 Cr+ AUM under advisory.",
+        highlights: ["₹5,000 Cr+ AUM", "CFP-certified advisors", "MF + PMS + AIF + Insurance", "Estate & succession planning", "Dedicated family office desk"],
+        tags: ["Wealth Management", "HNI", "Family Office"], location: "Mumbai, Pune, Delhi",
+        status: "active", view_count: 278, enquiry_count: 23, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: meera, listing_type: "service", service_category: "advisory",
+        title: "SEBI RA — Institutional Equity Research",
+        description: "Sell-side equity research coverage across IT, Pharma, and Healthcare sectors. Deliverables: Initiation reports, earnings notes, sector thematic reports.\n\nSEBI RA Registration: INH000XXXXX. Published 200+ research notes. Clients include domestic MFs and FIIs.",
+        highlights: ["200+ published research notes", "IT + Pharma coverage", "Institutional-grade quality", "SEBI RA registered", "FII & MF client base"],
+        tags: ["Research", "Equity", "Institutional"], location: "Hyderabad, Online",
+        status: "active", view_count: 198, enquiry_count: 15, review_count: 0, average_rating: 0,
+      },
+      {
+        user_id: priya, listing_type: "service", service_category: "financial_planning",
+        title: "Retirement Planning & SWP Strategy Design",
+        description: "Specialized retirement corpus planning for professionals aged 35-55. Includes SWP design for post-retirement income, inflation-adjusted projections, and healthcare contingency planning.\n\nFlat fee: ₹15,000 per engagement. Includes 2 review calls.",
+        highlights: ["SWP income strategy", "Inflation-adjusted projections", "Healthcare contingency", "Flat ₹15K fee", "2 follow-up reviews"],
+        tags: ["Retirement", "SWP", "Financial Planning"], location: "Mumbai, Online",
+        status: "active", view_count: 167, enquiry_count: 22, review_count: 0, average_rating: 0,
+      },
+    ];
+
+    const { data: insertedListings } = await supabaseAdmin.from("listings").insert(listingsData).select("id, user_id");
+    const seededListings = insertedListings || [];
+
+    // ===== SEED LISTING REVIEWS =====
+    const listingReviews = [];
+    if (seededListings.length >= 8) {
+      // Reviews for Priya's RIA service
+      const priyaListing = seededListings.find(l => l.user_id === priya);
+      if (priyaListing) {
+        listingReviews.push(
+          { listing_id: priyaListing.id, reviewer_id: rajesh, rating: 5, review_text: "Priya's fee-only model is refreshing. She restructured my portfolio and saved me ₹2L+ in commissions annually. Highly recommend for serious investors." },
+          { listing_id: priyaListing.id, reviewer_id: karan, rating: 4, review_text: "Excellent NRI-friendly advisory. Understands cross-border tax implications well. Only wish the review frequency was quarterly instead of annual." },
+          { listing_id: priyaListing.id, reviewer_id: meera, rating: 5, review_text: "As a fellow professional, I appreciate Priya's research-driven approach. Her model portfolios are well-constructed." },
+        );
+      }
+      // Reviews for Sneha's tax service
+      const snehaListing = seededListings.find(l => l.user_id === sneha);
+      if (snehaListing) {
+        listingReviews.push(
+          { listing_id: snehaListing.id, reviewer_id: karan, rating: 5, review_text: "Sneha handled my Singapore DTAA filing perfectly. Saved significant tax through proper treaty benefits. Fast turnaround." },
+          { listing_id: snehaListing.id, reviewer_id: rajesh, rating: 4, review_text: "Very thorough tax advisory. Helped me with LTCG harvesting strategy this year." },
+        );
+      }
+      // Reviews for Anita's wealth mgmt
+      const anitaWM = seededListings.filter(l => l.user_id === anita);
+      if (anitaWM.length >= 2) {
+        listingReviews.push(
+          { listing_id: anitaWM[anitaWM.length - 1].id, reviewer_id: rajesh, rating: 5, review_text: "Desai Financial manages our family's portfolio. Professional team, great communication, and solid returns." },
+          { listing_id: anitaWM[anitaWM.length - 1].id, reviewer_id: priya, rating: 4, review_text: "Comprehensive wealth management. Their estate planning advice is particularly valuable for business families." },
+        );
+      }
+      // Reviews for Arjun's large cap fund
+      if (seededListings.length >= 2) {
+        listingReviews.push(
+          { listing_id: seededListings[1].id, reviewer_id: rajesh, rating: 5, review_text: "Consistent performer. Been in this fund for 4 years — returns have beaten Nifty 50 in all rolling 3Y periods." },
+          { listing_id: seededListings[1].id, reviewer_id: priya, rating: 4, review_text: "Solid core holding for clients. Expense ratio is competitive and fund manager track record is strong." },
+          { listing_id: seededListings[1].id, reviewer_id: karan, rating: 4, review_text: "Good large-cap allocation for NRI portfolios. Repatriation-friendly structure." },
+        );
+      }
+    }
+    if (listingReviews.length) await supabaseAdmin.from("listing_reviews").insert(listingReviews);
+
+    // ===== SEED LISTING ENQUIRIES =====
+    const listingEnquiries = [];
+    if (seededListings.length >= 6) {
+      listingEnquiries.push(
+        { listing_id: seededListings[0].id, enquirer_id: rajesh, message: "Interested in the Innovation Fund NFO. Can NRIs invest in this through NRE account?", status: "pending" },
+        { listing_id: seededListings[0].id, enquirer_id: karan, message: "What's the expected expense ratio for direct plan? Also, any lock-in period?", status: "pending" },
+        { listing_id: seededListings[4].id, enquirer_id: rajesh, message: "I have ₹75 lakhs to invest. Can I get a sample portfolio construction from your PMS strategy?", status: "pending" },
+        { listing_id: seededListings[5].id, enquirer_id: karan, message: "Looking for fee-only RIA for NRI portfolio. Do you handle Singapore-based NRI clients?", status: "pending" },
+        { listing_id: seededListings[6].id, enquirer_id: rajesh, message: "Need DTAA advice for my UK property sale proceeds. Can we schedule a call?", status: "pending" },
+      );
+    }
+    if (listingEnquiries.length) await supabaseAdmin.from("listing_enquiries").insert(listingEnquiries);
+
     return new Response(JSON.stringify({
       success: true,
       posts: insertedPosts.length,
@@ -778,6 +980,11 @@ Deno.serve(async (req) => {
       event_speakers: speakerData.length,
       event_registrations: eventRegs.length,
       blog_posts: blogPosts.length,
+      endorsements: endorsements.length,
+      featured_posts: featuredPosts.length,
+      listings: seededListings.length,
+      listing_reviews: listingReviews.length,
+      listing_enquiries: listingEnquiries.length,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
