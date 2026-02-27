@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Shield, Eye, Users, Award, TrendingUp, Target, Briefcase, MapPin, Clock, Send, Newspaper, ExternalLink, Calendar } from "lucide-react";
+import { Shield, Eye, Users, Award, TrendingUp, Target, Briefcase, MapPin, Clock, Send, Newspaper, ExternalLink, Calendar, Landmark, Globe, Zap } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
@@ -32,9 +32,9 @@ const openings = [
 ];
 
 const pressItems = [
-  { title: "FindOO launches India's first trust-verified financial network", source: "Economic Times", date: "Feb 2026", url: "#" },
-  { title: "How FindOO is bridging the trust gap in India's financial ecosystem", source: "Mint", date: "Jan 2026", url: "#" },
-  { title: "FindOO raises seed funding to expand verified professional network", source: "Inc42", date: "Dec 2025", url: "#" },
+  { title: "FindOO launches the world's first trust-verified financial network", source: "Economic Times", date: "Feb 2026", url: "#" },
+  { title: "Why India needs a dedicated financial network — and how FindOO is building it", source: "Mint", date: "Jan 2026", url: "#" },
+  { title: "FindOO raises seed funding to build India's financial professional ecosystem", source: "Inc42", date: "Dec 2025", url: "#" },
   { title: "The future of financial networking: FindOO's regulatory-first approach", source: "Business Standard", date: "Nov 2025", url: "#" },
 ];
 
@@ -45,9 +45,9 @@ const About = () => {
     <PublicPageLayout>
       <PageHero
         breadcrumb="About"
-        title="India's Trust-First"
+        title="Building the World's First"
         titleAccent="Financial Network"
-        subtitle="Connecting verified Issuers, Intermediaries, and Investors within a regulated, transparent ecosystem."
+        subtitle="Connecting verified Issuers, Intermediaries, and Investors within a regulated, transparent ecosystem — because finance deserved its own network."
         variant="hexagons"
       />
 
@@ -85,21 +85,23 @@ const About = () => {
                 <motion.div className="md:col-span-3 space-y-5" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
                   <h2 className="text-2xl font-bold font-heading text-foreground">Our Story</h2>
                   <p className="text-muted-foreground leading-relaxed">
-                    India's financial markets have grown exponentially — yet finding verified, trustworthy
-                    professionals remains a challenge. Retail investors struggle to distinguish genuine advisors
-                    from unregistered operators. Regulated intermediaries lack a professional platform to
-                    showcase their credentials. And issuers need better channels to reach their target audience.
+                    There are social networks for friends. Professional networks for careers.
+                    Micro-blogging platforms for opinions. Media broadcasters for news.
+                    But the world's largest and fastest-growing financial market — India —
+                    had no dedicated network for its financial professionals and investors.
                   </p>
                   <p className="text-muted-foreground leading-relaxed">
-                    <span className="font-semibold text-foreground">FindOO</span> was born to solve this trust gap.
-                    By combining regulatory verification with a professional social network, we've created a space
-                    where credentials speak louder than claims, and every connection is built on a foundation
-                    of verified trust.
+                    <span className="font-semibold text-foreground">FindOO</span> was born to fill this gap.
+                    Not as a better version of something that exists — but as an entirely new category.
+                    A <span className="font-semibold text-primary">financial network</span> where trust is built-in,
+                    credentials are verified against SEBI, RBI, IRDAI, AMFI & PFRDA databases,
+                    and every connection carries the weight of institutional credibility.
                   </p>
                   <p className="text-muted-foreground leading-relaxed">
-                    We named our platform <span className="font-semibold text-primary">FindOO</span>, representing
+                    We named our platform <span className="font-semibold text-primary">FindOO</span> — representing
                     the ability to <em>Find</em> and connect with the right financial professionals through an
-                    <em> Open Online</em> ecosystem.
+                    <em> Open Online</em> ecosystem. Every feature we build serves one purpose: making India's financial
+                    ecosystem more transparent, accessible, and trustworthy.
                   </p>
                 </motion.div>
 
@@ -110,6 +112,7 @@ const About = () => {
                     </div>
                     <h3 className="text-lg font-bold font-heading text-card-foreground">FindOO</h3>
                     <p className="text-sm text-muted-foreground mt-1">Find · Open · Online</p>
+                    <p className="text-xs text-muted-foreground mt-3 italic">"Financially Social"</p>
                   </div>
                 </motion.div>
               </div>
@@ -126,22 +129,48 @@ const About = () => {
                   </div>
                   <h2 className="text-xl font-bold font-heading text-card-foreground mb-3">Our Mission</h2>
                   <p className="text-muted-foreground leading-relaxed">
-                    To democratize access to India's financial ecosystem by creating a verified, trust-first
-                    network where every participant can discover, connect, and share insights with confidence.
+                    To build the world's first financial network — a trust-verified ecosystem where
+                    India's Issuers, Intermediaries, and Investors can discover, connect, share insights,
+                    find talent, and transact with confidence within a regulated framework.
                   </p>
                 </motion.div>
 
                 <motion.div className="rounded-xl border border-border bg-card p-8" initial="hidden" animate="visible" variants={fadeUp} custom={3}>
                   <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
-                    <Eye className="h-5 w-5" />
+                    <Globe className="h-5 w-5" />
                   </div>
                   <h2 className="text-xl font-bold font-heading text-card-foreground mb-3">Our Vision</h2>
                   <p className="text-muted-foreground leading-relaxed">
-                    A financial ecosystem where trust is the default, not the exception. Where every market
-                    participant can verify credentials instantly and build professional relationships.
+                    A financial ecosystem where trust is the default, not the exception. Where credentials
+                    are instantly verifiable, where quality insights replace noise, and where every market
+                    participant — from retail investor to listed company — has equal access to a transparent network.
                   </p>
                 </motion.div>
               </div>
+            </div>
+          </section>
+
+          {/* The Opportunity */}
+          <section className="py-12 border-t border-border">
+            <div className="container max-w-4xl">
+              <motion.div className="rounded-2xl bg-primary/[0.04] border border-primary/10 p-8" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
+                <div className="flex items-center gap-2 mb-4">
+                  <Landmark className="h-5 w-5 text-primary" />
+                  <h3 className="text-base font-bold font-heading text-foreground">The Opportunity</h3>
+                </div>
+                <div className="grid sm:grid-cols-3 gap-6 text-center">
+                  {[
+                    { stat: "10Cr+", label: "Demat accounts in India" },
+                    { stat: "44,000+", label: "AMFI-registered distributors" },
+                    { stat: "0", label: "Financial networks that exist" },
+                  ].map((item) => (
+                    <div key={item.label}>
+                      <p className="text-2xl font-bold font-heading text-primary">{item.stat}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
             </div>
           </section>
 
@@ -177,7 +206,6 @@ const About = () => {
       {activeTab === "Career" && (
         <section className="py-12">
           <div className="container">
-            {/* Description bar */}
             <motion.div
               className="flex items-center gap-3 mb-10 pb-6 border-b border-border"
               initial="hidden" animate="visible" variants={fadeUp} custom={0}
@@ -187,15 +215,14 @@ const About = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold font-heading text-foreground">Join Our Team</h3>
-                <p className="text-sm text-muted-foreground">Help us build India's most trusted financial network. We're always looking for passionate people.</p>
+                <p className="text-sm text-muted-foreground">Help us build a category that doesn't exist yet — the world's first financial network.</p>
               </div>
             </motion.div>
 
-            {/* Why work with us */}
             <div className="grid md:grid-cols-3 gap-5 mb-12">
               {[
-                { icon: TrendingUp, title: "Impact at Scale", desc: "Your work directly influences how millions of Indians interact with financial services." },
-                { icon: Users, title: "Collaborative Culture", desc: "Small, focused teams with the autonomy to ship fast and learn from real users." },
+                { icon: Zap, title: "Category Creation", desc: "You're not iterating on something that exists. You're building an entirely new category of platform." },
+                { icon: Users, title: "Collaborative Culture", desc: "Small, focused teams with the autonomy to ship fast and learn from real financial professionals." },
                 { icon: Award, title: "Growth First", desc: "Learning budgets, mentorship, and clear career progression for every team member." },
               ].map((item, i) => (
                 <motion.div key={item.title} className="rounded-xl border border-border bg-card p-6"
@@ -209,7 +236,6 @@ const About = () => {
               ))}
             </div>
 
-            {/* Open positions */}
             <motion.h3 className="text-xl font-bold font-heading text-foreground mb-6" initial="hidden" animate="visible" variants={fadeUp} custom={4}>
               Open Positions
             </motion.h3>
@@ -234,12 +260,11 @@ const About = () => {
               ))}
             </div>
 
-            {/* CTA */}
             <motion.div className="mt-12 rounded-xl bg-primary/[0.04] border border-primary/10 p-8 text-center"
               initial="hidden" animate="visible" variants={fadeUp} custom={9}>
               <h4 className="text-lg font-bold font-heading text-foreground mb-2">Don't see the right role?</h4>
               <p className="text-sm text-muted-foreground mb-4 max-w-lg mx-auto">
-                We're always interested in hearing from talented people. Send us your resume and we'll keep you in mind.
+                We're always interested in hearing from talented people who want to shape the future of financial networking.
               </p>
               <Button asChild>
                 <a href="mailto:careers@findoo.in">Send Your Resume</a>
@@ -253,7 +278,6 @@ const About = () => {
       {activeTab === "Press" && (
         <section className="py-12">
           <div className="container">
-            {/* Description bar */}
             <motion.div
               className="flex items-center gap-3 mb-10 pb-6 border-b border-border"
               initial="hidden" animate="visible" variants={fadeUp} custom={0}
@@ -263,11 +287,10 @@ const About = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold font-heading text-foreground">Press & Media</h3>
-                <p className="text-sm text-muted-foreground">Latest news, coverage, and media mentions about FindOO.</p>
+                <p className="text-sm text-muted-foreground">Coverage about FindOO — the world's first financial network.</p>
               </div>
             </motion.div>
 
-            {/* Press items */}
             <div className="space-y-4 max-w-3xl">
               {pressItems.map((item, i) => (
                 <motion.a key={item.title} href={item.url}
@@ -290,7 +313,6 @@ const About = () => {
               ))}
             </div>
 
-            {/* Media contact */}
             <motion.div className="mt-12 rounded-xl bg-primary/[0.04] border border-primary/10 p-8 text-center max-w-3xl"
               initial="hidden" animate="visible" variants={fadeUp} custom={6}>
               <h4 className="text-lg font-bold font-heading text-foreground mb-2">Media Inquiries</h4>
