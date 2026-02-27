@@ -98,6 +98,47 @@ export type Database = {
         }
         Relationships: []
       }
+      card_exchanges: {
+        Row: {
+          action: string
+          card_owner_id: string
+          context: string
+          created_at: string
+          event_id: string | null
+          id: string
+          viewer_id: string | null
+          viewer_name: string | null
+        }
+        Insert: {
+          action?: string
+          card_owner_id: string
+          context?: string
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          viewer_id?: string | null
+          viewer_name?: string | null
+        }
+        Update: {
+          action?: string
+          card_owner_id?: string
+          context?: string
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          viewer_id?: string | null
+          viewer_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_exchanges_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comments: {
         Row: {
           author_id: string
