@@ -4,7 +4,7 @@ import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import findooLogo from "@/assets/findoo-logo-icon.png";
-import { useIsMobile } from "@/hooks/use-mobile";
+
 
 interface PublicPageLayoutProps {
   children: React.ReactNode;
@@ -108,7 +108,6 @@ const DropdownMenu = ({
 export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
-  const isMobile = useIsMobile();
   const location = useLocation();
 
   const isActive = (to: string) => location.pathname === to;
@@ -120,72 +119,72 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
         <div className="container flex h-16 items-center justify-between">
           {/* Left: Logo */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <img src={findooLogo} alt="FindOO" className="h-10 w-10" />
-            <span className="text-2xl font-bold font-heading text-foreground tracking-tight">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <img src={findooLogo} alt="FindOO" className="h-9 w-9" />
+            <span className="text-xl font-bold font-heading text-foreground tracking-tight">
               FindOO
             </span>
           </Link>
 
-          {/* Right: all items inline, no gaps */}
-          {!isMobile && (
-            <div className="flex items-center">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`px-3 py-2 text-[15px] font-medium transition-colors hover:text-foreground ${
-                    isActive(link.to)
-                      ? "text-foreground"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-
-              <ThemeToggle />
-
-              <DropdownMenu
-                trigger={
-                  <>
-                    <Globe className="h-4 w-4" />
-                    <span className="text-sm">{currentLangLabel}</span>
-                  </>
-                }
-                items={languages.map((lang) => ({
-                  label: lang.label,
-                  onClick: () => setCurrentLang(lang.code),
-                }))}
-              />
-
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/auth" className="text-[15px]">Sign In</Link>
-              </Button>
-              <Button size="sm" asChild>
-                <Link to="/auth?mode=signup" className="text-[15px]">Get Started</Link>
-              </Button>
-            </div>
-          )}
-
-          {/* Mobile hamburger */}
-          {isMobile && (
-            <div className="flex items-center gap-1.5">
-              <ThemeToggle />
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                aria-label="Toggle menu"
+          {/* Desktop nav — hidden below lg (1024px) */}
+          <div className="hidden lg:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`px-3 py-2 text-sm font-medium transition-colors rounded-md hover:text-foreground hover:bg-muted/50 ${
+                  isActive(link.to)
+                    ? "text-foreground"
+                    : "text-muted-foreground"
+                }`}
               >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
-            </div>
-          )}
+                {link.label}
+              </Link>
+            ))}
+
+            <div className="w-px h-5 bg-border mx-1" />
+
+            <ThemeToggle />
+
+            <DropdownMenu
+              trigger={
+                <>
+                  <Globe className="h-4 w-4" />
+                  <span className="text-sm">{currentLangLabel}</span>
+                </>
+              }
+              items={languages.map((lang) => ({
+                label: lang.label,
+                onClick: () => setCurrentLang(lang.code),
+              }))}
+            />
+
+            <div className="w-px h-5 bg-border mx-1" />
+
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/auth" className="text-sm">Sign In</Link>
+            </Button>
+            <Button size="sm" asChild>
+              <Link to="/auth?mode=signup" className="text-sm">Get Started</Link>
+            </Button>
+          </div>
+
+          {/* Hamburger — visible below lg */}
+          <div className="flex lg:hidden items-center gap-1.5">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile menu dropdown */}
-        {isMobile && mobileMenuOpen && (
-          <div className="border-t border-border bg-background px-4 pb-4 pt-2 space-y-1 animate-in slide-in-from-top-2 duration-200">
+        {/* Mobile/tablet menu dropdown */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-border bg-background px-4 pb-4 pt-2 space-y-1 animate-in slide-in-from-top-2 duration-200">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
@@ -200,7 +199,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                 {link.label}
               </Link>
             ))}
-            {/* Language selector in mobile */}
+            {/* Language selector */}
             <div className="h-px bg-border my-2" />
             <div className="px-3 py-2">
               <p className="text-xs text-muted-foreground mb-2 font-medium">Language</p>
