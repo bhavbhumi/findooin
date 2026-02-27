@@ -273,10 +273,12 @@ const Discover = () => {
 
         {/* Sidebar */}
         <aside className="hidden lg:block">
-          <DiscoverSidebar
-            onHashtagClick={handleHashtagClick}
-            onTopicClick={handleTopicClick}
-          />
+          <div className="sticky top-20">
+            <DiscoverSidebar
+              onHashtagClick={handleHashtagClick}
+              onTopicClick={handleTopicClick}
+            />
+          </div>
         </aside>
       </div>
     </AppLayout>
