@@ -6,14 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { CalendarDays, Users, Eye, MoreHorizontal, Play, Pause, XCircle, CheckCircle } from "lucide-react";
+import { CalendarDays, Users, Eye, MoreHorizontal, Play, Pause, XCircle, CheckCircle, ScanLine } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format, isPast } from "date-fns";
+import { EventCheckinGenerator } from "./EventCheckinGenerator";
 
 export function OrganizerDashboard() {
   const { data: myEvents, isLoading } = useMyEvents();
   const updateEvent = useUpdateEvent();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [checkinId, setCheckinId] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -94,12 +96,22 @@ export function OrganizerDashboard() {
                   <DropdownMenuItem onClick={() => setExpandedId(expandedId === event.id ? null : event.id)}>
                     <Users className="h-3.5 w-3.5 mr-2" /> View Registrations
                   </DropdownMenuItem>
+                  {event.status === "published" && (
+                    <DropdownMenuItem onClick={() => setCheckinId(checkinId === event.id ? null : event.id)}>
+                      <ScanLine className="h-3.5 w-3.5 mr-2" /> Check-in QR/NFC
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
 
             {/* Expandable registrations */}
             {expandedId === event.id && <RegistrationList eventId={event.id} />}
+
+            {/* Expandable check-in generator */}
+            {checkinId === event.id && (
+              <EventCheckinGenerator eventId={event.id} eventTitle={event.title} />
+            )}
           </CardContent>
         </Card>
       ))}

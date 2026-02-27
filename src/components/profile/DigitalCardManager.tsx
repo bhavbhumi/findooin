@@ -5,13 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
 import {
   Nfc, QrCode, Copy, Download, Smartphone, Share2, CheckCircle,
-  AlertTriangle
+  AlertTriangle, BarChart3
 } from "lucide-react";
 import findooLogoIcon from "@/assets/findoo-logo-icon.png";
+import { LeadCaptureDashboard } from "./LeadCaptureDashboard";
 
 interface DigitalCardManagerProps {
   profileId: string;
@@ -130,106 +132,123 @@ export const DigitalCardManager = ({ profileId, digitalCardFields, onFieldsUpdat
 
   return (
     <div className="space-y-5">
-      {/* QR Code + NFC Writer */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <QrCode className="h-5 w-5 text-[hsl(var(--gold))]" />
-            Your Digital Card
-          </CardTitle>
-          <CardDescription>Share your professional identity paperlessly via NFC tap or QR scan.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* QR Code */}
-          <div className="flex justify-center">
-            <div className="p-4 bg-white rounded-xl shadow-sm">
-              <QRCodeSVG
-                id="findoo-qr-code"
-                value={cardUrl}
-                size={180}
-                level="M"
-                imageSettings={{
-                  src: findooLogoIcon,
-                  height: 36,
-                  width: 36,
-                  excavate: true,
-                }}
-              />
-            </div>
-          </div>
+      <Tabs defaultValue="card" className="w-full">
+        <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-10 p-1">
+          <TabsTrigger value="card" className="rounded-lg text-sm px-4 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+            <QrCode className="h-3.5 w-3.5 mr-1.5" /> Card & Share
+          </TabsTrigger>
+          <TabsTrigger value="leads" className="rounded-lg text-sm px-4 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground">
+            <BarChart3 className="h-3.5 w-3.5 mr-1.5" /> Lead Capture
+          </TabsTrigger>
+        </TabsList>
 
-          {/* Actions */}
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" size="sm" onClick={handleCopyLink}>
-              <Copy className="h-4 w-4 mr-1.5" /> Copy Link
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleShare}>
-              <Share2 className="h-4 w-4 mr-1.5" /> Share
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleDownloadQR}>
-              <Download className="h-4 w-4 mr-1.5" /> Save QR
-            </Button>
-            <Button
-              variant={nfcSuccess ? "outline" : "default"}
-              size="sm"
-              onClick={handleWriteNfc}
-              disabled={nfcWriting || !nfcSupported}
-              className={nfcSuccess ? "border-green-500 text-green-600" : ""}
-            >
-              {nfcWriting ? (
-                <><Smartphone className="h-4 w-4 mr-1.5 animate-pulse" /> Hold tag...</>
-              ) : nfcSuccess ? (
-                <><CheckCircle className="h-4 w-4 mr-1.5" /> Written!</>
-              ) : (
-                <><Nfc className="h-4 w-4 mr-1.5" /> Write NFC</>
+        <TabsContent value="card" className="mt-4 space-y-5">
+          {/* QR Code + NFC Writer */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <QrCode className="h-5 w-5 text-[hsl(var(--gold))]" />
+                Your Digital Card
+              </CardTitle>
+              <CardDescription>Share your professional identity paperlessly via NFC tap or QR scan.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* QR Code */}
+              <div className="flex justify-center">
+                <div className="p-4 bg-white rounded-xl shadow-sm">
+                  <QRCodeSVG
+                    id="findoo-qr-code"
+                    value={cardUrl}
+                    size={180}
+                    level="M"
+                    imageSettings={{
+                      src: findooLogoIcon,
+                      height: 36,
+                      width: 36,
+                      excavate: true,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" size="sm" onClick={handleCopyLink}>
+                  <Copy className="h-4 w-4 mr-1.5" /> Copy Link
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleShare}>
+                  <Share2 className="h-4 w-4 mr-1.5" /> Share
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleDownloadQR}>
+                  <Download className="h-4 w-4 mr-1.5" /> Save QR
+                </Button>
+                <Button
+                  variant={nfcSuccess ? "outline" : "default"}
+                  size="sm"
+                  onClick={handleWriteNfc}
+                  disabled={nfcWriting || !nfcSupported}
+                  className={nfcSuccess ? "border-emerald-500 text-emerald-600" : ""}
+                >
+                  {nfcWriting ? (
+                    <><Smartphone className="h-4 w-4 mr-1.5 animate-pulse" /> Hold tag...</>
+                  ) : nfcSuccess ? (
+                    <><CheckCircle className="h-4 w-4 mr-1.5" /> Written!</>
+                  ) : (
+                    <><Nfc className="h-4 w-4 mr-1.5" /> Write NFC</>
+                  )}
+                </Button>
+              </div>
+
+              {!nfcSupported && (
+                <div className="flex items-start gap-2 p-2.5 rounded-lg bg-secondary text-xs text-muted-foreground">
+                  <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>NFC writing is available on Chrome for Android only. Use QR code as a universal alternative.</span>
+                </div>
               )}
-            </Button>
-          </div>
 
-          {!nfcSupported && (
-            <div className="flex items-start gap-2 p-2.5 rounded-lg bg-secondary text-xs text-muted-foreground">
-              <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-              <span>NFC writing is available on Chrome for Android only. Use QR code as a universal alternative.</span>
-            </div>
-          )}
+              <div className="text-center">
+                <a href={cardUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-xs text-accent hover:underline">
+                  Preview your card →
+                </a>
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="text-center">
-            <a href={cardUrl} target="_blank" rel="noopener noreferrer"
-              className="text-xs text-accent hover:underline">
-              Preview your card →
-            </a>
-          </div>
-        </CardContent>
-      </Card>
+          {/* Field Visibility */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Card Fields</CardTitle>
+              <CardDescription>Choose what information appears on your digital card.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {Object.entries(FIELD_LABELS).map(([key, label]) => (
+                <div key={key} className="flex items-center justify-between">
+                  <Label htmlFor={`card-field-${key}`} className="text-sm">
+                    {label}
+                    {key === "full_name" && (
+                      <Badge variant="secondary" className="ml-2 text-xs">Always shown</Badge>
+                    )}
+                  </Label>
+                  <Switch
+                    id={`card-field-${key}`}
+                    checked={fields[key] !== false}
+                    onCheckedChange={() => handleToggle(key)}
+                    disabled={key === "full_name"}
+                  />
+                </div>
+              ))}
+              <Button onClick={handleSave} disabled={saving} className="w-full mt-2" size="sm">
+                {saving ? "Saving..." : "Save Card Settings"}
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-      {/* Field Visibility */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Card Fields</CardTitle>
-          <CardDescription>Choose what information appears on your digital card.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {Object.entries(FIELD_LABELS).map(([key, label]) => (
-            <div key={key} className="flex items-center justify-between">
-              <Label htmlFor={`card-field-${key}`} className="text-sm">
-                {label}
-                {key === "full_name" && (
-                  <Badge variant="secondary" className="ml-2 text-xs">Always shown</Badge>
-                )}
-              </Label>
-              <Switch
-                id={`card-field-${key}`}
-                checked={fields[key] !== false}
-                onCheckedChange={() => handleToggle(key)}
-                disabled={key === "full_name"}
-              />
-            </div>
-          ))}
-          <Button onClick={handleSave} disabled={saving} className="w-full mt-2" size="sm">
-            {saving ? "Saving..." : "Save Card Settings"}
-          </Button>
-        </CardContent>
-      </Card>
+        <TabsContent value="leads" className="mt-4">
+          <LeadCaptureDashboard profileId={profileId} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
