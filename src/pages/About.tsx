@@ -33,6 +33,7 @@ const About = () => {
         title="India's Trust-First"
         titleAccent="Financial Network"
         subtitle="Connecting verified Issuers, Intermediaries, and Investors within a regulated, transparent ecosystem."
+        variant="hexagons"
       />
 
       {/* Tabs */}

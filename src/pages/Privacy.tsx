@@ -30,6 +30,7 @@ const Privacy = () => (
       title="Privacy"
       titleAccent="Policy"
       subtitle="Last updated: February 2026"
+      variant="circles"
     />
 
     <section className="py-14">

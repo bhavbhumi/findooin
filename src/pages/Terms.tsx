@@ -30,6 +30,7 @@ const Terms = () => (
       title="Terms of"
       titleAccent="Service"
       subtitle="Last updated: February 2026"
+      variant="dots"
     />
 
     <section className="py-14">
