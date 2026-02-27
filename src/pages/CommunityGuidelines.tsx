@@ -13,7 +13,7 @@ const fadeUp = {
   }),
 };
 
-const tabs = ["Guidelines", "FAQ"];
+const tabs = ["Guidelines", "FAQs"];
 
 const rules = [
   { letter: "1", icon: Shield, title: "Be Authentic", description: "Use your real identity and credentials. Misrepresenting your qualifications, role, or regulatory status is strictly prohibited." },
@@ -86,7 +86,7 @@ const CommunityGuidelines = () => {
         </section>
       )}
 
-      {activeTab === "FAQ" && (
+      {activeTab === "FAQs" && (
         <section className="py-14">
           <div className="container max-w-3xl">
             <motion.h2 className="text-2xl font-bold font-heading text-foreground text-center mb-8"
