@@ -42,6 +42,7 @@ const CommunityGuidelines = () => {
         title="Professional conduct for a"
         titleAccent="trusted network"
         subtitle="These guidelines ensure every interaction upholds the trust and integrity our community deserves."
+        variant="triangles"
       />
 
       {/* Tabs */}

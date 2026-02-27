@@ -159,6 +159,7 @@ const Blog = () => {
         title="Stay ahead with expert"
         titleAccent="Insights"
         subtitle="Articles, market analysis, research reports, and important bulletins — all in one place."
+        variant="waves"
       />
 
       {/* ── Primary Tabs (sticky) ── */}
