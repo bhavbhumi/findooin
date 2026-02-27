@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock } from "lucide-react";
+import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles } from "lucide-react";
 import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
@@ -19,6 +19,11 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useRole } from "@/contexts/RoleContext";
 import { DigitalCardManager } from "@/components/profile/DigitalCardManager";
 import { VaultProfileTab } from "@/components/vault/VaultProfileTab";
+import { ActivityTimeline } from "@/components/profile/ActivityTimeline";
+import { FeaturedContent } from "@/components/profile/FeaturedContent";
+import { ProfileCompletenessRing } from "@/components/profile/ProfileCompletenessRing";
+import { MutualConnections } from "@/components/profile/MutualConnections";
+import { TrustScoreBadge } from "@/components/profile/TrustScoreBadge";
 
 const Profile = () => {
   usePageMeta({ title: "Profile" });
@@ -31,6 +36,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("about");
+  const [endorsementCount, setEndorsementCount] = useState(0);
   const { data: allPosts } = useFeedPosts();
   const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
   const { refreshRoles } = useRole();
@@ -55,13 +61,14 @@ const Profile = () => {
 
   const loadProfile = async (targetId: string) => {
     setLoading(true);
-    const [profileRes, rolesRes, followersRes, followingRes, connectionsRes, postsRes] = await Promise.all([
+    const [profileRes, rolesRes, followersRes, followingRes, connectionsRes, postsRes, endorseRes] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", targetId).single(),
       supabase.from("user_roles").select("role, sub_type").eq("user_id", targetId),
       supabase.from("connections").select("id", { count: "exact", head: true }).eq("to_user_id", targetId).eq("connection_type", "follow"),
       supabase.from("connections").select("id", { count: "exact", head: true }).eq("from_user_id", targetId).eq("connection_type", "follow"),
       supabase.from("connections").select("id", { count: "exact", head: true }).or(`from_user_id.eq.${targetId},to_user_id.eq.${targetId}`).eq("connection_type", "connect").eq("status", "accepted"),
       supabase.from("posts").select("id", { count: "exact", head: true }).eq("author_id", targetId),
+      supabase.from("endorsements").select("id", { count: "exact", head: true }).eq("endorsed_user_id", targetId),
     ]);
     if (profileRes.data) {
       const d = profileRes.data as any;
@@ -82,6 +89,7 @@ const Profile = () => {
       followers: followersRes.count ?? 0, following: followingRes.count ?? 0,
       connections: connectionsRes.count ?? 0, posts: postsRes.count ?? 0,
     });
+    setEndorsementCount(endorseRes.count ?? 0);
     setLoading(false);
   };
 
@@ -131,7 +139,10 @@ const Profile = () => {
               />
             </ErrorBoundary>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {/* Featured Content — below header, above tabs */}
+            <FeaturedContent profileId={profile.id} isOwnProfile={isOwnProfile} />
+
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
               <div className="overflow-x-auto -mx-1 px-1 mb-4">
                 <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
                   <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
@@ -155,7 +166,13 @@ const Profile = () => {
               </div>
 
               <TabsContent value="about" className="mt-0">
-                <ProfileAbout profile={profile} roles={roles} isOwnProfile={isOwnProfile} onRolesChanged={handleRolesChanged} />
+                <ProfileAbout
+                  profile={profile}
+                  roles={roles}
+                  isOwnProfile={isOwnProfile}
+                  onRolesChanged={handleRolesChanged}
+                  currentUserId={currentUserId}
+                />
               </TabsContent>
 
               <TabsContent value="network" className="mt-0">
@@ -163,15 +180,7 @@ const Profile = () => {
               </TabsContent>
 
               <TabsContent value="activity" className="mt-0">
-                <div className="rounded-xl border border-border bg-card p-10 text-center">
-                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-                    <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground text-sm font-medium">Activity insights coming soon</p>
-                  <p className="text-muted-foreground text-xs mt-1">
-                    Track engagement metrics, post frequency, and network growth over time.
-                  </p>
-                </div>
+                <ActivityTimeline profileId={profile.id} isOwnProfile={isOwnProfile} />
               </TabsContent>
 
               <TabsContent value="posts" className="space-y-4 mt-0">
@@ -214,9 +223,34 @@ const Profile = () => {
             </Tabs>
           </div>
 
-          {/* Right Sidebar - sticky from top */}
+          {/* Right Sidebar */}
           <aside className="hidden lg:block">
-            <div className="sticky top-20">
+            <div className="sticky top-20 space-y-4">
+              {/* Profile Completeness (own profile only) */}
+              {isOwnProfile && (
+                <ProfileCompletenessRing
+                  profile={profile}
+                  roles={roles}
+                  isOwnProfile={isOwnProfile}
+                  onEditProfile={() => setEditOpen(true)}
+                />
+              )}
+
+              {/* Trust Score */}
+              <TrustScoreBadge
+                profile={profile}
+                stats={stats}
+                endorsementCount={endorsementCount}
+              />
+
+              {/* Mutual Connections & People Also Viewed */}
+              <MutualConnections
+                profileId={profile.id}
+                currentUserId={currentUserId}
+                isOwnProfile={isOwnProfile}
+              />
+
+              {/* Existing sidebar */}
               <ProfileSidebar
                 profile={profile}
                 roles={roles}
