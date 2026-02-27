@@ -74,7 +74,7 @@ const platformFeatures = [
     icon: Calendar,
     title: "Events & Webinars",
     desc: "Investor meets, AGM listings, industry webinars — discover and host events within the regulated ecosystem.",
-    status: "coming",
+    status: "live",
   },
   {
     icon: Award,

@@ -28,6 +28,7 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Jobs = lazy(() => import("./pages/Jobs"));
+const Events = lazy(() => import("./pages/Events"));
 
 // Public pages
 import Blog from "./pages/Blog";
@@ -91,6 +92,7 @@ const App = () => (
                   <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                   <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                   <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
+                  <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

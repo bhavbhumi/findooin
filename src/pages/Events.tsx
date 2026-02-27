@@ -1,0 +1,202 @@
+import { useState, useMemo } from "react";
+import AppNavbar from "@/components/AppNavbar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Plus, CalendarDays, LayoutDashboard, List, CalendarRange } from "lucide-react";
+import { useEvents, useRegisterForEvent, useCancelRegistration, EVENT_CATEGORY_LABELS } from "@/hooks/useEvents";
+import { useRole } from "@/contexts/RoleContext";
+import { EventCard } from "@/components/events/EventCard";
+import { EventDetailSheet } from "@/components/events/EventDetailSheet";
+import { CreateEventDialog } from "@/components/events/CreateEventDialog";
+import { OrganizerDashboard } from "@/components/events/OrganizerDashboard";
+import { EventsSidebar } from "@/components/events/EventsSidebar";
+import type { EventData } from "@/hooks/useEvents";
+import { isSameDay } from "date-fns";
+
+const Events = () => {
+  const { activeRole } = useRole();
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
+  const [mode, setMode] = useState("all");
+  const [selectedEvent, setSelectedEvent] = useState<EventData | null>(null);
+  const [showCreate, setShowCreate] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
+
+  const { data: events, isLoading } = useEvents({
+    search: search || undefined,
+    category: category !== "all" ? category : undefined,
+    mode: mode !== "all" ? mode : undefined,
+  });
+
+  const registerMutation = useRegisterForEvent();
+  const cancelMutation = useCancelRegistration();
+
+  const canCreateEvents = activeRole === "issuer" || activeRole === "intermediary" || activeRole === "admin";
+
+  // Filter by selected calendar date
+  const filteredEvents = useMemo(() => {
+    if (!events) return [];
+    if (!selectedDate) return events;
+    return events.filter((e) => isSameDay(new Date(e.start_time), selectedDate));
+  }, [events, selectedDate]);
+
+  // Dates with events for calendar highlighting
+  const eventDates = useMemo(() => {
+    return events?.map((e) => new Date(e.start_time)) || [];
+  }, [events]);
+
+  const handleCategoryClick = (cat: string) => setCategory(cat);
+
+  return (
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <AppNavbar />
+
+      <div className="container max-w-6xl mx-auto py-6 px-4">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-heading font-bold text-foreground">Events</h1>
+            <p className="text-sm text-muted-foreground">Webinars, investor meets & industry events</p>
+          </div>
+          {canCreateEvents && (
+            <Button onClick={() => setShowCreate(true)} className="gap-1.5">
+              <Plus className="h-4 w-4" />
+              Create Event
+            </Button>
+          )}
+        </div>
+
+        {/* 2-Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+          {/* Main Column */}
+          <div className="min-w-0">
+            <Tabs defaultValue="browse" className="space-y-4">
+              <TabsList className="bg-muted/50">
+                <TabsTrigger value="browse" className="gap-1.5">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  Browse Events
+                </TabsTrigger>
+                {canCreateEvents && (
+                  <TabsTrigger value="dashboard" className="gap-1.5">
+                    <LayoutDashboard className="h-3.5 w-3.5" />
+                    Organizer Dashboard
+                  </TabsTrigger>
+                )}
+              </TabsList>
+
+              <TabsContent value="browse" className="space-y-4">
+                {/* Filters */}
+                <div className="flex flex-wrap gap-3">
+                  <div className="relative flex-1 min-w-[200px]">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search events..."
+                      className="pl-9"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </div>
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger className="w-[180px]"><SelectValue placeholder="Category" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {Object.entries(EVENT_CATEGORY_LABELS).map(([k, v]) => (
+                        <SelectItem key={k} value={k}>{v}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={mode} onValueChange={setMode}>
+                    <SelectTrigger className="w-[130px]"><SelectValue placeholder="Mode" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Modes</SelectItem>
+                      <SelectItem value="virtual">Virtual</SelectItem>
+                      <SelectItem value="physical">In-Person</SelectItem>
+                      <SelectItem value="hybrid">Hybrid</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {selectedDate && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      Showing events on {selectedDate.toLocaleDateString()}
+                    </span>
+                    <Button variant="ghost" size="sm" className="text-xs h-6" onClick={() => setSelectedDate(undefined)}>
+                      Clear
+                    </Button>
+                  </div>
+                )}
+
+                {/* Event list */}
+                {isLoading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="h-28 rounded-lg bg-muted/30 animate-pulse" />
+                    ))}
+                  </div>
+                ) : !filteredEvents.length ? (
+                  <div className="text-center py-16 text-muted-foreground">
+                    <CalendarDays className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                    <p className="font-heading font-semibold">No events found</p>
+                    <p className="text-sm mt-1">
+                      {selectedDate ? "No events on this date" : "Check back later for upcoming events"}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {filteredEvents.map((event) => (
+                      <EventCard
+                        key={event.id}
+                        event={event}
+                        onClick={() => setSelectedEvent(event)}
+                        onRegister={() => registerMutation.mutate({ eventId: event.id })}
+                        onCancelRegistration={() => cancelMutation.mutate({ eventId: event.id })}
+                        isRegistering={registerMutation.isPending}
+                      />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+
+              {canCreateEvents && (
+                <TabsContent value="dashboard">
+                  <OrganizerDashboard />
+                </TabsContent>
+              )}
+            </Tabs>
+          </div>
+
+          {/* Sidebar */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-20">
+              <EventsSidebar
+                onCategoryClick={handleCategoryClick}
+                selectedDate={selectedDate}
+                onDateSelect={setSelectedDate}
+                eventDates={eventDates}
+              />
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      {/* Event Detail Sheet */}
+      <EventDetailSheet
+        event={selectedEvent}
+        open={!!selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        onRegister={() => selectedEvent && registerMutation.mutate({ eventId: selectedEvent.id })}
+        onCancelRegistration={() => selectedEvent && cancelMutation.mutate({ eventId: selectedEvent.id })}
+        isRegistering={registerMutation.isPending}
+      />
+
+      {/* Create Event Dialog */}
+      <CreateEventDialog open={showCreate} onClose={() => setShowCreate(false)} />
+    </div>
+  );
+};
+
+export default Events;
