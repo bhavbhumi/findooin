@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
@@ -121,7 +121,7 @@ const AppNavbar = () => {
             {/* Discover */}
             <Button variant="ghost" size="sm" className="hidden md:inline-flex text-muted-foreground px-2 lg:px-3" asChild>
               <Link to="/discover">
-                <Search className="h-4 w-4 lg:mr-1.5" />
+                <Compass className="h-4 w-4 lg:mr-1.5" />
                 <span className="hidden lg:inline">Discover</span>
               </Link>
             </Button>
@@ -249,7 +249,7 @@ const AppNavbar = () => {
             { icon: Users, label: "Network", href: "/network" },
             { icon: Briefcase, label: "Jobs", href: "/jobs" },
             { icon: CalendarDays, label: "Events", href: "/events" },
-            { icon: Search, label: "Discover", href: "/discover" },
+            { icon: Compass, label: "Discover", href: "/discover" },
             { icon: User, label: "Profile", href: "/profile" },
           ].map((item) => (
             <Link
