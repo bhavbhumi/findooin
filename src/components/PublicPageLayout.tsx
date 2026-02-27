@@ -25,20 +25,31 @@ const languages = [
   { code: "ta", label: "தமிழ்" },
 ];
 
-const footerSections = [
+const footerLinkSections = [
   {
-    title: "Company",
+    title: "About",
     links: [
-      { label: "About", to: "/about" },
-      { label: "Contact", to: "/contact" },
+      { label: "Company", to: "/about" },
+      { label: "Career", to: "/about?tab=career" },
+      { label: "Press", to: "/about?tab=press" },
       { label: "Blog", to: "/blog" },
     ],
   },
   {
-    title: "Legal",
+    title: "Explore",
     links: [
-      { label: "Terms of Service", to: "/terms" },
-      { label: "Privacy Policy", to: "/privacy" },
+      { label: "What is FindOO", to: "/about" },
+      { label: "Why does it exist", to: "/about" },
+      { label: "How it works", to: "/community-guidelines" },
+      { label: "Who is it for", to: "/about" },
+    ],
+  },
+  {
+    title: "Support",
+    links: [
+      { label: "Contact Us", to: "/contact" },
+      { label: "Help Desk", to: "/contact" },
+      { label: "Quick Links", to: "/blog" },
       { label: "Community Guidelines", to: "/community-guidelines" },
     ],
   },
@@ -239,27 +250,37 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       <footer className="border-t border-primary/10 bg-primary/[0.04]">
         <div className="container py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {/* Brand column */}
-            <div className="col-span-2 md:col-span-2">
+            {/* Column 1: FindOO brand */}
+            <div>
               <div className="flex items-center gap-2 mb-3">
                 <img src={findooLogo} alt="FindOO" className="h-7 w-7" />
                 <span className="text-base font-bold font-heading text-foreground">FindOO</span>
               </div>
-              <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
-                India's regulated financial network for verified Issuers, Intermediaries, and Investors.
-                Discover, connect, and share insights within a trust-first ecosystem.
+              <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+                CIN : AAA-7870
               </p>
+              <div className="w-full h-20 rounded-lg bg-muted/50 border border-border flex items-center justify-center overflow-hidden">
+                <img
+                  src="https://maps.googleapis.com/maps/api/staticmap?center=Mumbai,India&zoom=12&size=300x120&scale=2&style=feature:all|element:labels|visibility:off&style=feature:road|element:geometry|color:0xe0e0e0&style=feature:water|element:geometry|color:0xc9d1d9&style=feature:landscape|element:geometry|color:0xf0f0f0&key=none"
+                  alt="Location map"
+                  className="w-full h-full object-cover opacity-60"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="text-xs text-muted-foreground">Mumbai, India</div>';
+                  }}
+                />
+              </div>
             </div>
 
-            {/* Link columns */}
-            {footerSections.map((section) => (
+            {/* Columns 2-4: Link sections */}
+            {footerLinkSections.map((section) => (
               <div key={section.title}>
                 <h4 className="text-sm font-semibold font-heading text-foreground mb-3">
                   {section.title}
                 </h4>
                 <ul className="space-y-2">
                   {section.links.map((link) => (
-                    <li key={link.to}>
+                    <li key={link.label}>
                       <Link
                         to={link.to}
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -285,6 +306,15 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Privacy
               </Link>
+              <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                Policies
+              </Link>
+              <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                Disclosures
+              </Link>
+              <a href="/sitemap.xml" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                Sitemap
+              </a>
             </div>
           </div>
         </div>
