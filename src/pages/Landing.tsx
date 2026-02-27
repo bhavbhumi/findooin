@@ -47,6 +47,77 @@ const Landing = () => {
       {/* Hero */}
       <section className="relative pt-16 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent" />
+
+        {/* Decorative elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Large gradient ring — top right */}
+          <motion.div
+            className="absolute -top-16 -right-16 w-[340px] h-[340px] rounded-full border-2 border-primary/[0.06]"
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
+          />
+          <motion.div
+            className="absolute -top-8 -right-8 w-[260px] h-[260px] rounded-full border border-accent/[0.08]"
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.4, delay: 0.15, ease: "easeOut" }}
+          />
+
+          {/* Small floating squares — left */}
+          <motion.div
+            className="absolute top-1/4 left-[8%] w-4 h-4 rotate-45 border border-primary/[0.12]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          />
+          <motion.div
+            className="absolute top-[38%] left-[5%] w-2.5 h-2.5 rotate-12 bg-accent/[0.1] rounded-sm"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          />
+
+          {/* Dotted grid — bottom left */}
+          <motion.div
+            className="absolute bottom-12 left-[6%] grid grid-cols-4 gap-2.5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div key={i} className="w-1 h-1 rounded-full bg-primary/[0.08]" />
+            ))}
+          </motion.div>
+
+          {/* Diagonal line — right */}
+          <motion.div
+            className="absolute top-[55%] right-[7%] w-px h-24 bg-gradient-to-b from-transparent via-primary/[0.1] to-transparent rotate-[25deg]"
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={{ opacity: 1, scaleY: 1 }}
+            transition={{ duration: 1, delay: 0.7 }}
+          />
+
+          {/* Pulsing accent dot — bottom right */}
+          <motion.div
+            className="absolute bottom-20 right-[12%] w-2 h-2 rounded-full bg-accent/20"
+            animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Triangle outline — top left */}
+          <motion.svg
+            className="absolute top-20 left-[10%] w-10 h-10 text-primary/[0.07]"
+            viewBox="0 0 40 40"
+            fill="none"
+            initial={{ opacity: 0, rotate: -10 }}
+            animate={{ opacity: 1, rotate: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+          >
+            <path d="M20 4L36 34H4L20 4Z" stroke="currentColor" strokeWidth="1.5" />
+          </motion.svg>
+        </div>
+
         <div className="container relative">
           <motion.div
             className="max-w-3xl mx-auto text-center"
