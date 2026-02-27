@@ -109,8 +109,8 @@ const DigitalCard = () => {
   // Smart Connect
   const handleConnect = async () => {
     if (!currentUserId || !profile) {
-      // Redirect to auth with return URL
-      window.location.href = `/auth?redirect=${encodeURIComponent(window.location.pathname)}`;
+      // Redirect to auth with ref for referral attribution + return URL
+      window.location.href = `/auth?mode=signup&ref=${profile?.id}&redirect=${encodeURIComponent(window.location.pathname)}`;
       return;
     }
     if (currentUserId === profile.id) return;
