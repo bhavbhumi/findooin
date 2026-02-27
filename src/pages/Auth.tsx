@@ -58,8 +58,8 @@ const Auth = () => {
 
   const isLockedOut = lockedUntil !== null && Date.now() < lockedUntil;
 
-  // Get referrer ID from URL
   const referrerId = searchParams.get("ref");
+  const redirectPath = searchParams.get("redirect");
 
   const createReferralConnections = async (newUserId: string, refId: string) => {
     try {
@@ -95,6 +95,18 @@ const Auth = () => {
       // Handle referral connections if ref param exists
       if (referrerId && referrerId !== session.user.id) {
         await createReferralConnections(session.user.id, referrerId);
+
+        // Log referral attribution in card_exchanges
+        try {
+          await supabase.from("card_exchanges").insert({
+            card_owner_id: referrerId,
+            viewer_id: session.user.id,
+            context: "referral",
+            action: "signup",
+          } as any);
+        } catch (err) {
+          console.warn("Referral attribution log failed:", err);
+        }
       }
 
       try {
@@ -111,7 +123,7 @@ const Auth = () => {
         }
 
         if (profile?.onboarding_completed) {
-          navigate("/feed");
+          navigate(redirectPath || "/feed");
         } else {
           navigate("/onboarding");
         }

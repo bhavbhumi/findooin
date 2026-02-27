@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
 import {
   Users, Eye, Download, UserPlus, TrendingUp, Calendar,
-  ExternalLink
+  ExternalLink, UserCheck
 } from "lucide-react";
 import { format, subDays, isAfter } from "date-fns";
 import { Link } from "react-router-dom";
@@ -38,6 +38,8 @@ const ACTION_LABELS: Record<string, { label: string; icon: typeof Eye; color: st
   view: { label: "Viewed", icon: Eye, color: "text-muted-foreground" },
   save_contact: { label: "Saved Contact", icon: Download, color: "text-[hsl(var(--gold))]" },
   connect: { label: "Connected", icon: UserPlus, color: "text-emerald-500" },
+  signup: { label: "Signed Up", icon: UserCheck, color: "text-accent" },
+  checkin: { label: "Checked In", icon: Calendar, color: "text-accent" },
 };
 
 export function LeadCaptureDashboard({ profileId }: LeadCaptureDashboardProps) {
@@ -91,6 +93,7 @@ export function LeadCaptureDashboard({ profileId }: LeadCaptureDashboardProps) {
     totalViews: filteredExchanges.filter(e => e.action === "view").length,
     totalSaves: filteredExchanges.filter(e => e.action === "save_contact").length,
     totalConnects: filteredExchanges.filter(e => e.action === "connect").length,
+    referrals: filteredExchanges.filter(e => e.action === "signup").length,
     eventLeads: filteredExchanges.filter(e => e.context === "event").length,
     uniqueViewers: new Set(filteredExchanges.filter(e => e.viewer_id).map(e => e.viewer_id)).size,
   };
@@ -100,13 +103,14 @@ export function LeadCaptureDashboard({ profileId }: LeadCaptureDashboardProps) {
   return (
     <div className="space-y-5">
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
           { label: "Card Views", value: stats.totalViews, icon: Eye, color: "text-muted-foreground" },
           { label: "Contact Saves", value: stats.totalSaves, icon: Download, color: "text-[hsl(var(--gold))]" },
           { label: "Connections", value: stats.totalConnects, icon: UserPlus, color: "text-emerald-500" },
+          { label: "Referral Signups", value: stats.referrals, icon: UserCheck, color: "text-accent" },
           { label: "Event Leads", value: stats.eventLeads, icon: Calendar, color: "text-accent" },
-          { label: "Unique Viewers", value: stats.uniqueViewers, icon: Users, color: "text-accent" },
+          { label: "Unique Viewers", value: stats.uniqueViewers, icon: Users, color: "text-muted-foreground" },
         ].map(stat => (
           <Card key={stat.label} className="border-border">
             <CardContent className="p-3 text-center">
