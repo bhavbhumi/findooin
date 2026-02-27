@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
@@ -111,6 +111,12 @@ const AppNavbar = () => {
                 <Link to="/events">
                   <CalendarDays className="h-4 w-4 lg:mr-1.5" />
                   <span className="hidden lg:inline">Events</span>
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
+                <Link to="/directory">
+                  <Store className="h-4 w-4 lg:mr-1.5" />
+                  <span className="hidden lg:inline">Directory</span>
                 </Link>
               </Button>
             </div>

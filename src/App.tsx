@@ -30,6 +30,7 @@ const Messages = lazy(() => import("./pages/Messages"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Jobs = lazy(() => import("./pages/Jobs"));
 const Events = lazy(() => import("./pages/Events"));
+const Directory = lazy(() => import("./pages/Directory"));
 
 // Public pages
 import Blog from "./pages/Blog";
@@ -106,6 +107,7 @@ const App = () => {
                     <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
                     <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
                     <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+                    <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
                     <Route path="/vault" element={<ProtectedRoute><Vault /></ProtectedRoute>} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>

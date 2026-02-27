@@ -563,6 +563,172 @@ export type Database = {
         }
         Relationships: []
       }
+      listing_enquiries: {
+        Row: {
+          contact_preference: string | null
+          created_at: string
+          enquirer_id: string
+          id: string
+          listing_id: string
+          message: string
+          status: string
+        }
+        Insert: {
+          contact_preference?: string | null
+          created_at?: string
+          enquirer_id: string
+          id?: string
+          listing_id: string
+          message?: string
+          status?: string
+        }
+        Update: {
+          contact_preference?: string | null
+          created_at?: string
+          enquirer_id?: string
+          id?: string
+          listing_id?: string
+          message?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_enquiries_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          listing_id: string
+          rating: number
+          review_text: string | null
+          reviewer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_id: string
+          rating: number
+          review_text?: string | null
+          reviewer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_id?: string
+          rating?: number
+          review_text?: string | null
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_reviews_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          average_rating: number
+          certifications: string[] | null
+          created_at: string
+          description: string
+          enquiry_count: number
+          highlights: string[] | null
+          id: string
+          listing_type: Database["public"]["Enums"]["listing_type"]
+          location: string | null
+          media_urls: string[] | null
+          min_investment: number | null
+          pricing_info: Json | null
+          product_category:
+            | Database["public"]["Enums"]["product_category"]
+            | null
+          returns_info: string | null
+          review_count: number
+          risk_level: string | null
+          service_category:
+            | Database["public"]["Enums"]["service_category"]
+            | null
+          status: Database["public"]["Enums"]["listing_status"]
+          tags: string[] | null
+          tenure: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          view_count: number
+        }
+        Insert: {
+          average_rating?: number
+          certifications?: string[] | null
+          created_at?: string
+          description?: string
+          enquiry_count?: number
+          highlights?: string[] | null
+          id?: string
+          listing_type?: Database["public"]["Enums"]["listing_type"]
+          location?: string | null
+          media_urls?: string[] | null
+          min_investment?: number | null
+          pricing_info?: Json | null
+          product_category?:
+            | Database["public"]["Enums"]["product_category"]
+            | null
+          returns_info?: string | null
+          review_count?: number
+          risk_level?: string | null
+          service_category?:
+            | Database["public"]["Enums"]["service_category"]
+            | null
+          status?: Database["public"]["Enums"]["listing_status"]
+          tags?: string[] | null
+          tenure?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          view_count?: number
+        }
+        Update: {
+          average_rating?: number
+          certifications?: string[] | null
+          created_at?: string
+          description?: string
+          enquiry_count?: number
+          highlights?: string[] | null
+          id?: string
+          listing_type?: Database["public"]["Enums"]["listing_type"]
+          location?: string | null
+          media_urls?: string[] | null
+          min_investment?: number | null
+          pricing_info?: Json | null
+          product_category?:
+            | Database["public"]["Enums"]["product_category"]
+            | null
+          returns_info?: string | null
+          review_count?: number
+          risk_level?: string | null
+          service_category?:
+            | Database["public"]["Enums"]["service_category"]
+            | null
+          status?: Database["public"]["Enums"]["listing_status"]
+          tags?: string[] | null
+          tenure?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           category: Database["public"]["Enums"]["message_category"]
@@ -1380,6 +1546,8 @@ export type Database = {
         | "contract"
         | "internship"
         | "freelance"
+      listing_status: "draft" | "active" | "paused" | "archived"
+      listing_type: "product" | "service"
       message_category:
         | "general"
         | "sales"
@@ -1404,12 +1572,32 @@ export type Database = {
         | "followers"
         | "connections"
         | "private"
+      product_category:
+        | "mutual_fund"
+        | "insurance"
+        | "pms"
+        | "aif"
+        | "bonds"
+        | "fixed_deposit"
+        | "nps"
+        | "ipo_nfo"
+        | "other_product"
       query_category: "expert_find" | "requirement"
       registration_status:
         | "registered"
         | "waitlisted"
         | "cancelled"
         | "attended"
+      service_category:
+        | "advisory"
+        | "compliance"
+        | "auditing"
+        | "tax_planning"
+        | "wealth_management"
+        | "portfolio_management"
+        | "financial_planning"
+        | "legal"
+        | "other_service"
       user_type: "individual" | "entity"
       verification_status: "unverified" | "pending" | "verified"
     }
@@ -1590,6 +1778,8 @@ export const Constants = {
         "internship",
         "freelance",
       ],
+      listing_status: ["draft", "active", "paused", "archived"],
+      listing_type: ["product", "service"],
       message_category: [
         "general",
         "sales",
@@ -1617,12 +1807,34 @@ export const Constants = {
         "connections",
         "private",
       ],
+      product_category: [
+        "mutual_fund",
+        "insurance",
+        "pms",
+        "aif",
+        "bonds",
+        "fixed_deposit",
+        "nps",
+        "ipo_nfo",
+        "other_product",
+      ],
       query_category: ["expert_find", "requirement"],
       registration_status: [
         "registered",
         "waitlisted",
         "cancelled",
         "attended",
+      ],
+      service_category: [
+        "advisory",
+        "compliance",
+        "auditing",
+        "tax_planning",
+        "wealth_management",
+        "portfolio_management",
+        "financial_planning",
+        "legal",
+        "other_service",
       ],
       user_type: ["individual", "entity"],
       verification_status: ["unverified", "pending", "verified"],
