@@ -768,6 +768,7 @@ export type Database = {
           certifications: string[] | null
           created_at: string
           designation: string | null
+          digital_card_fields: Json | null
           display_name: string | null
           experience_years: number | null
           full_name: string
@@ -792,6 +793,7 @@ export type Database = {
           certifications?: string[] | null
           created_at?: string
           designation?: string | null
+          digital_card_fields?: Json | null
           display_name?: string | null
           experience_years?: number | null
           full_name?: string
@@ -816,6 +818,7 @@ export type Database = {
           certifications?: string[] | null
           created_at?: string
           designation?: string | null
+          digital_card_fields?: Json | null
           display_name?: string | null
           experience_years?: number | null
           full_name?: string
