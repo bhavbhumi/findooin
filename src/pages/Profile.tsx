@@ -38,6 +38,14 @@ const Profile = () => {
       setCurrentUserId(session.user.id);
       const targetId = id || session.user.id;
       loadProfile(targetId);
+
+      // Record profile view (only for other users' profiles)
+      if (id && id !== session.user.id) {
+        supabase.from("profile_views").upsert(
+          { profile_id: id, viewer_id: session.user.id },
+          { onConflict: "profile_id,viewer_id" }
+        ).then(() => {});
+      }
     });
   }, [id]);
 
