@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Clock, Briefcase, IndianRupee, BadgeCheck, Upload, Send, Bookmark, BookmarkCheck } from "lucide-react";
+import { MapPin, Clock, Briefcase, IndianRupee, BadgeCheck, Upload, Send, Bookmark, BookmarkCheck, Building2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useRole } from "@/contexts/RoleContext";
 import { useApplyToJob } from "@/hooks/useJobs";
 import { supabase } from "@/integrations/supabase/client";
 import { JOB_TYPE_LABELS, CATEGORY_LABELS } from "./JobCard";
 import type { Job } from "@/hooks/useJobs";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
   job: Job | null;
@@ -29,6 +30,17 @@ export function JobDetailSheet({ job, open, onClose, isSaved, onToggleSave, hasA
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showApplyForm, setShowApplyForm] = useState(false);
+
+  // Check if user is an entity (entities cannot apply)
+  const { data: userProfile } = useQuery({
+    queryKey: ["profile-type", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("user_type").eq("id", userId!).single();
+      return data;
+    },
+  });
+  const isEntity = userProfile?.user_type === "entity";
 
   if (!job) return null;
 
@@ -163,7 +175,12 @@ export function JobDetailSheet({ job, open, onClose, isSaved, onToggleSave, hasA
           {/* Apply section */}
           {!isOwnJob && userId && (
             <div>
-              {hasApplied ? (
+              {isEntity ? (
+                <div className="text-center py-3 text-sm text-muted-foreground border border-border rounded-lg bg-muted/30">
+                  <Building2 className="h-4 w-4 mx-auto mb-1.5 opacity-50" />
+                  Entity accounts can browse but not apply for jobs
+                </div>
+              ) : hasApplied ? (
                 <div className="text-center py-3 text-sm text-muted-foreground border border-border rounded-lg bg-muted/30">
                   ✓ You've already applied to this position
                 </div>
