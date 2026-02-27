@@ -9,6 +9,7 @@ import type { ProfileData, RoleData } from "./ProfileHeader";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { VerificationRequestForm } from "@/components/admin/VerificationRequestForm";
 import { ManageRolesDialog } from "@/components/profile/ManageRolesDialog";
+import { EndorsementsBadge } from "@/components/profile/EndorsementsBadge";
 
 const regulatoryLabels: Record<string, string> = {
   sebi: "SEBI Registration",
@@ -28,13 +29,13 @@ interface ProfileAboutProps {
   roles: RoleData[];
   isOwnProfile: boolean;
   onRolesChanged?: () => void;
+  currentUserId?: string | null;
 }
 
-export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: ProfileAboutProps) => {
+export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged, currentUserId }: ProfileAboutProps) => {
   const hasRegulatoryIds = profile.regulatory_ids && Object.keys(profile.regulatory_ids).length > 0;
   const hasCertifications = profile.certifications && profile.certifications.length > 0;
   const hasSpecializations = profile.specializations && profile.specializations.length > 0;
-  // Languages is now jsonb (array of objects) or legacy text[]
   const langArray: any[] = Array.isArray(profile.languages) ? profile.languages : [];
   const hasLanguages = langArray.length > 0;
   const hasSocialLinks = profile.social_links && Object.keys(profile.social_links).length > 0;
@@ -49,7 +50,6 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
           <h3 className="text-sm font-semibold font-heading text-card-foreground">Trust & Verification</h3>
         </div>
         <div className="p-5 space-y-4">
-          {/* Verification Status */}
           <div className="flex items-start gap-3">
             <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
               profile.verification_status === "verified" ? "bg-accent/10" : "bg-muted"
@@ -74,7 +74,6 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
                   ? "Verification documents have been submitted and are under review."
                   : isOwnProfile ? "Submit your regulatory documents to earn a verified badge." : "This profile has not been verified yet."}
               </p>
-              {/* Show verification form for own profile if not verified and has issuer/intermediary role */}
               {isOwnProfile && profile.verification_status !== "verified" && roles.some(r => r.role === "issuer" || r.role === "intermediary") && (
                 <div className="mt-3">
                   <VerificationRequestForm userId={profile.id} currentStatus={profile.verification_status} />
@@ -83,7 +82,6 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
             </div>
           </div>
 
-          {/* Regulatory Registrations */}
           {hasRegulatoryIds && (
             <div className="pt-2 border-t border-border">
               <p className="text-xs font-medium text-muted-foreground mb-3 flex items-center gap-1.5">
@@ -104,7 +102,6 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
             </div>
           )}
 
-          {/* Account Age — trust signal */}
           <div className="flex items-center gap-3 pt-2 border-t border-border">
             <div className="h-8 w-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
               <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -128,7 +125,6 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
           <h3 className="text-sm font-semibold font-heading text-card-foreground">Professional Details</h3>
         </div>
         <div className="p-5 space-y-4">
-          {/* Roles */}
           {roles.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -152,24 +148,14 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
             </div>
           )}
 
-          {/* Info Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {profile.organization && (
-              <InfoItem icon={Building2} label="Organization" value={profile.organization} />
-            )}
-            {profile.designation && (
-              <InfoItem icon={Briefcase} label="Designation" value={profile.designation} />
-            )}
-            {profile.location && (
-              <InfoItem icon={MapPin} label="Location" value={profile.location} />
-            )}
-            {profile.experience_years != null && (
-              <InfoItem icon={TrendingUp} label="Experience" value={`${profile.experience_years} years`} />
-            )}
+            {profile.organization && <InfoItem icon={Building2} label="Organization" value={profile.organization} />}
+            {profile.designation && <InfoItem icon={Briefcase} label="Designation" value={profile.designation} />}
+            {profile.location && <InfoItem icon={MapPin} label="Location" value={profile.location} />}
+            {profile.experience_years != null && <InfoItem icon={TrendingUp} label="Experience" value={`${profile.experience_years} years`} />}
             <InfoItem icon={Users} label="Account Type" value={profile.user_type} capitalize />
           </div>
 
-          {/* Website */}
           {profile.website && (
             <div className="pt-2 border-t border-border">
               <a
@@ -187,7 +173,7 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
         </div>
       </div>
 
-      {/* Expertise & Credentials Card */}
+      {/* Expertise & Credentials Card (with Endorsements) */}
       {(hasSpecializations || hasCertifications || hasLanguages) && (
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           <div className="px-5 py-4 border-b border-border flex items-center gap-2">
@@ -195,21 +181,19 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
             <h3 className="text-sm font-semibold font-heading text-card-foreground">Expertise & Credentials</h3>
           </div>
           <div className="p-5 space-y-4">
-            {/* Specializations */}
+            {/* Specializations with endorsements */}
             {hasSpecializations && (
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-2">Specializations</p>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {profile.specializations!.map((s, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 text-xs font-medium bg-primary/5 text-primary border border-primary/10 px-2.5 py-1 rounded-full">
-                      <Hash className="h-2.5 w-2.5" /> {s}
-                    </span>
-                  ))}
-                </div>
+                <p className="text-xs font-medium text-muted-foreground mb-2">Specializations & Endorsements</p>
+                <EndorsementsBadge
+                  profileId={profile.id}
+                  specializations={profile.specializations}
+                  isOwnProfile={isOwnProfile}
+                  currentUserId={currentUserId ?? null}
+                />
               </div>
             )}
 
-            {/* Certifications */}
             {hasCertifications && (
               <div className={hasSpecializations ? "pt-3 border-t border-border" : ""}>
                 <p className="text-xs font-medium text-muted-foreground mb-2">Certifications & Qualifications</p>
@@ -224,7 +208,6 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged }: P
               </div>
             )}
 
-            {/* Languages */}
             {hasLanguages && (
               <div className={(hasSpecializations || hasCertifications) ? "pt-3 border-t border-border" : ""}>
                 <p className="text-xs font-medium text-muted-foreground mb-2">Languages</p>

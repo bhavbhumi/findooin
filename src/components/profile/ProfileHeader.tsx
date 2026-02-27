@@ -137,16 +137,42 @@ export const ProfileHeader = ({
     <>
       <div className="rounded-xl border border-border bg-card mb-4">
         {/* Banner */}
-        <div className={`h-28 sm:h-36 md:h-44 relative rounded-t-xl overflow-hidden ${!profile.banner_url ? `bg-gradient-to-br ${bannerGradient}` : ''}`}>
+        <div className={`h-28 sm:h-36 md:h-44 relative rounded-t-xl overflow-hidden ${!profile.banner_url ? '' : ''}`}>
           {profile.banner_url ? (
             <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" />
           ) : (
             <>
-              <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent" />
-              <div className="absolute inset-0 opacity-[0.03]" style={{
-                backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
-                backgroundSize: "24px 24px",
+              {/* Animated gradient cover story */}
+              <div className="absolute inset-0" style={{
+                background: `linear-gradient(135deg, ${primaryRoleConf?.hslVar || 'hsl(var(--primary))'} 0%, hsl(var(--primary)) 30%, hsl(var(--gold)) 60%, ${primaryRoleConf?.hslVar || 'hsl(var(--accent))'} 100%)`,
+                backgroundSize: "300% 300%",
+                animation: "gradientShift 8s ease infinite",
+                opacity: 0.25,
               }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+              {/* Mesh pattern overlay */}
+              <div className="absolute inset-0 opacity-[0.04]" style={{
+                backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, currentColor 10px, currentColor 10.5px),
+                  repeating-linear-gradient(-45deg, transparent, transparent 10px, currentColor 10px, currentColor 10.5px)`,
+              }} />
+              {/* Floating dots animation */}
+              <div className="absolute inset-0 overflow-hidden">
+                {[...Array(6)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute rounded-full opacity-20"
+                    style={{
+                      width: `${20 + i * 8}px`,
+                      height: `${20 + i * 8}px`,
+                      background: primaryRoleConf?.hslVar || 'hsl(var(--primary))',
+                      left: `${10 + i * 16}%`,
+                      top: `${20 + (i % 3) * 25}%`,
+                      animation: `float ${3 + i * 0.5}s ease-in-out infinite alternate`,
+                      animationDelay: `${i * 0.3}s`,
+                    }}
+                  />
+                ))}
+              </div>
             </>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-card/40 to-transparent" />

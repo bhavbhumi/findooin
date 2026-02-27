@@ -198,6 +198,30 @@ export type Database = {
         }
         Relationships: []
       }
+      endorsements: {
+        Row: {
+          created_at: string
+          endorsed_user_id: string
+          endorser_id: string
+          id: string
+          skill: string
+        }
+        Insert: {
+          created_at?: string
+          endorsed_user_id: string
+          endorser_id: string
+          id?: string
+          skill: string
+        }
+        Update: {
+          created_at?: string
+          endorsed_user_id?: string
+          endorser_id?: string
+          id?: string
+          skill?: string
+        }
+        Relationships: []
+      }
       event_registrations: {
         Row: {
           cancelled_at: string | null
@@ -342,6 +366,38 @@ export type Database = {
           virtual_link?: string | null
         }
         Relationships: []
+      }
+      featured_posts: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position?: number
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "featured_posts_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       file_uploads: {
         Row: {
