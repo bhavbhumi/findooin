@@ -91,7 +91,7 @@ export function JobsSidebar({ onCategoryClick, onLocationClick }: JobsSidebarPro
     if (!jobs?.length) return [];
     const skillMap: Record<string, number> = {};
     jobs.forEach((j) => {
-      [...j.skills_required, ...j.certifications_preferred].forEach((s) => {
+      [...(j.skills_required || []), ...(j.certifications_preferred || [])].forEach((s) => {
         if (s) skillMap[s] = (skillMap[s] || 0) + 1;
       });
     });
