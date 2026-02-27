@@ -88,29 +88,29 @@ const AppNavbar = () => {
                 FindOO
               </span>
             </Link>
-            <div className="hidden md:flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+          <div className="hidden md:flex items-center gap-0.5">
+              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
                 <Link to="/feed">
-                  <Home className="h-4 w-4 mr-1.5" />
-                  Feed
+                  <Home className="h-4 w-4 lg:mr-1.5" />
+                  <span className="hidden lg:inline">Feed</span>
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
                 <Link to="/network">
-                  <Users className="h-4 w-4 mr-1.5" />
-                  Network
+                  <Users className="h-4 w-4 lg:mr-1.5" />
+                  <span className="hidden lg:inline">Network</span>
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
                 <Link to="/jobs">
-                  <Briefcase className="h-4 w-4 mr-1.5" />
-                  Jobs
+                  <Briefcase className="h-4 w-4 lg:mr-1.5" />
+                  <span className="hidden lg:inline">Jobs</span>
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
                 <Link to="/events">
-                  <CalendarDays className="h-4 w-4 mr-1.5" />
-                  Events
+                  <CalendarDays className="h-4 w-4 lg:mr-1.5" />
+                  <span className="hidden lg:inline">Events</span>
                 </Link>
               </Button>
             </div>
@@ -243,22 +243,23 @@ const AppNavbar = () => {
       </nav>
 
       {/* Mobile bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background md:hidden z-50">
-        <div className="flex items-center justify-around py-2">
+    <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background md:hidden z-50">
+        <div className="flex items-center justify-around py-1.5">
           {[
             { icon: Home, label: "Feed", href: "/feed" },
             { icon: Users, label: "Network", href: "/network" },
+            { icon: Briefcase, label: "Jobs", href: "/jobs" },
+            { icon: CalendarDays, label: "Events", href: "/events" },
             { icon: Search, label: "Discover", href: "/discover" },
-            { icon: Bell, label: "Alerts", href: "/notifications" },
             { icon: User, label: "Profile", href: "/profile" },
           ].map((item) => (
             <Link
               key={item.label}
               to={item.href}
-              className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-foreground transition-colors p-2"
+              className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-foreground transition-colors px-1 py-1"
             >
-              <item.icon className="h-5 w-5" />
-              <span className="text-[10px]">{item.label}</span>
+              <item.icon className="h-4.5 w-4.5" />
+              <span className="text-[9px]">{item.label}</span>
             </Link>
           ))}
         </div>
