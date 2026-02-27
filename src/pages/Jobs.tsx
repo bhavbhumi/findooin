@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 const Jobs = () => {
+  usePageMeta({ title: "BFSI Jobs", description: "India's only BFSI-focused job board — find or post finance, compliance, and advisory roles." });
   const { activeRole, userId } = useRole();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");

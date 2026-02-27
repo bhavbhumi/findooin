@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import { Shield, AlertTriangle, Heart, Scale, MessageSquare, Ban } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
@@ -33,6 +34,7 @@ const faqs = [
 ];
 
 const CommunityGuidelines = () => {
+  usePageMeta({ title: "Community Guidelines", description: "FindOO community guidelines and FAQs for safe, professional engagement." });
   const [activeTab, setActiveTab] = useState("Guidelines");
 
   return (

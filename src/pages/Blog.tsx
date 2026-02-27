@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { Clock, BookOpen, FileText, BarChart3, ScrollText, Bell, Shield, Loader2 } from "lucide-react";
@@ -122,6 +123,7 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
 }
 
 const Blog = () => {
+  usePageMeta({ title: "Blog", description: "Articles, analysis, reports, and insights from the financial ecosystem." });
   const { data: posts, isLoading } = useBlogPosts();
   const [activeTab, setActiveTab] = useState("articles");
   const [activeSubFilter, setActiveSubFilter] = useState("All");

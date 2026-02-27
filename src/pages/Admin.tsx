@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsAdmin } from "@/hooks/useAdmin";
@@ -12,6 +13,7 @@ import { AdminOverview } from "@/components/admin/AdminOverview";
 import { AdminBlogManagement } from "@/components/admin/AdminBlogManagement";
 
 export default function Admin() {
+  usePageMeta({ title: "Admin Panel" });
   const navigate = useNavigate();
   const { data: isAdmin, isLoading } = useIsAdmin();
   const [tab, setTab] = useState("overview");

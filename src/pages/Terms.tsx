@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 
@@ -23,7 +24,9 @@ const sections = [
   { title: "10. Contact", content: "For questions regarding these Terms of Service, please contact us at legal@findoo.in." },
 ];
 
-const Terms = () => (
+const Terms = () => {
+  usePageMeta({ title: "Terms of Service" });
+  return (
   <PublicPageLayout>
     <PageHero
       breadcrumb="Terms of Service"
@@ -46,6 +49,7 @@ const Terms = () => (
       </div>
     </section>
   </PublicPageLayout>
-);
+  );
+};
 
 export default Terms;

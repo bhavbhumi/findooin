@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { supabase } from "@/integrations/supabase/client";
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ const CATEGORY_ICONS: Record<string, typeof FileText> = {
 };
 
 const Vault = () => {
+  usePageMeta({ title: "My Vault", description: "Secure document storage for KYC, tax, and verification files." });
   const [userId, setUserId] = useState<string | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [search, setSearch] = useState("");

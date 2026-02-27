@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock, BookOpen, Calendar, Heart, Share2, User, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ function injectHeadingIds(html: string) {
 }
 
 const BlogPostPage = () => {
+  usePageMeta({ title: "Blog Post" });
   const { slug } = useParams<{ slug: string }>();
   const { data: post, isLoading, error } = useBlogPost(slug || "");
   const [activeHeading, setActiveHeading] = useState<string>("");

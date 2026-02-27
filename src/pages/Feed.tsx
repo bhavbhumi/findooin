@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useFeedPosts } from "@/hooks/useFeedPosts";
 import { useTrendingPosts } from "@/hooks/useTrendingPosts";
 import { useViralPosts } from "@/hooks/useViralPosts";
@@ -20,6 +21,7 @@ import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 const POSTS_PER_PAGE = 10;
 
 const Feed = () => {
+  usePageMeta({ title: "Feed", description: "Your personalized financial feed — market commentary, research notes, and insights from verified professionals." });
   const [filter, setFilter] = useState<FeedFilter>("foryou");
   const [feedUserId, setFeedUserId] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();

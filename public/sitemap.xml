@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Main -->
   <url><loc>https://findoo.in/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
   <url><loc>https://findoo.in/auth</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/install</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+
+  <!-- About & Explore -->
+  <url><loc>https://findoo.in/about</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/explore</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+
+  <!-- Content -->
+  <url><loc>https://findoo.in/blog</loc><priority>0.9</priority><changefreq>daily</changefreq></url>
+
+  <!-- Support -->
+  <url><loc>https://findoo.in/contact</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/helpdesk</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/quick-links</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/community-guidelines</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/sitemap</loc><priority>0.3</priority><changefreq>monthly</changefreq></url>
+
+  <!-- Legal -->
+  <url><loc>https://findoo.in/legal</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/terms</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://findoo.in/privacy</loc><priority>0.4</priority><changefreq>monthly</changefreq></url>
+
+  <!-- Platform (Authenticated) -->
   <url><loc>https://findoo.in/feed</loc><priority>0.9</priority><changefreq>daily</changefreq></url>
   <url><loc>https://findoo.in/discover</loc><priority>0.7</priority><changefreq>daily</changefreq></url>
   <url><loc>https://findoo.in/network</loc><priority>0.7</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://findoo.in/jobs</loc><priority>0.7</priority><changefreq>daily</changefreq></url>
+  <url><loc>https://findoo.in/events</loc><priority>0.7</priority><changefreq>daily</changefreq></url>
 </urlset>

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 import { Link } from "react-router-dom";
@@ -76,6 +77,9 @@ const sitemapData = [
       { label: "Profile", to: "/profile" },
       { label: "Network", to: "/network" },
       { label: "Discover", to: "/discover" },
+      { label: "Jobs", to: "/jobs" },
+      { label: "Events", to: "/events" },
+      { label: "My Vault", to: "/vault" },
       { label: "Messages", to: "/messages" },
       { label: "Notifications", to: "/notifications" },
       { label: "Settings", to: "/settings" },
@@ -84,7 +88,9 @@ const sitemapData = [
   },
 ];
 
-const SiteMap = () => (
+const SiteMap = () => {
+  usePageMeta({ title: "Sitemap", description: "A complete overview of all pages and sections available on FindOO." });
+  return (
   <PublicPageLayout>
     <PageHero
       breadcrumb="Sitemap"
@@ -119,6 +125,7 @@ const SiteMap = () => (
       </div>
     </section>
   </PublicPageLayout>
-);
+  );
+};
 
 export default SiteMap;

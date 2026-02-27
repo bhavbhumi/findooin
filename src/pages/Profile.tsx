@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import { DigitalCardManager } from "@/components/profile/DigitalCardManager";
 import { VaultProfileTab } from "@/components/vault/VaultProfileTab";
 
 const Profile = () => {
+  usePageMeta({ title: "Profile" });
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);

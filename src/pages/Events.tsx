@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import type { EventData } from "@/hooks/useEvents";
 import { isSameDay } from "date-fns";
 
 const Events = () => {
+  usePageMeta({ title: "Events", description: "Discover and host investor meets, webinars, AGMs, and industry events." });
   const { activeRole } = useRole();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");

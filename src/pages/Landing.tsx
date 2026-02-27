@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -92,6 +93,8 @@ const categoryComparisons = [
 ];
 
 const Landing = () => {
+  usePageMeta({ title: "India's First Financial Network", description: "FindOO is India's first financial network — Financially Social. Connecting verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA ecosystems." });
+
   return (
     <PublicPageLayout>
       {/* Hero */}

@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { useQuery } from "@tanstack/react-query";
@@ -303,6 +304,7 @@ const DateRangeSelector = ({ value, onChange }: { value: DateRange; onChange: (v
 );
 
 const PostAnalytics = () => {
+  usePageMeta({ title: "Analytics" });
   const [userId, setUserId] = useState<string | null>(null);
   const [dateRange, setDateRange] = useState<DateRange>("14");
   const { activeRole } = useRole();
