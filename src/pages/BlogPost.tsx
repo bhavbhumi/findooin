@@ -10,7 +10,6 @@ import { format } from "date-fns";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { toast } from "sonner";
 
-/* ── Extract headings from HTML content for TOC ── */
 function extractHeadings(html: string) {
   const regex = /<h([2-3])[^>]*>(.*?)<\/h[2-3]>/gi;
   const headings: { level: number; text: string; id: string }[] = [];
@@ -23,9 +22,8 @@ function extractHeadings(html: string) {
   return headings;
 }
 
-/* ── Inject IDs into heading tags in HTML ── */
 function injectHeadingIds(html: string) {
-  return html.replace(/<h([2-3])([^>]*)>(.*?)<\/h[2-3]>/gi, (full, level, attrs, inner) => {
+  return html.replace(/<h([2-3])([^>]*)>(.*?)<\/h[2-3]>/gi, (_full, level, attrs, inner) => {
     const text = inner.replace(/<[^>]+>/g, "").trim();
     const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     return `<h${level}${attrs} id="${id}">${inner}</h${level}>`;
@@ -41,24 +39,19 @@ const BlogPostPage = () => {
   const headings = useMemo(() => (post ? extractHeadings(post.content) : []), [post]);
   const processedContent = useMemo(() => (post ? injectHeadingIds(post.content) : ""), [post]);
 
-  // Intersection observer for active TOC heading
   useEffect(() => {
     if (!contentRef.current || headings.length === 0) return;
     const observers: IntersectionObserver[] = [];
-
     headings.forEach((h) => {
       const el = document.getElementById(h.id);
       if (!el) return;
       const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveHeading(h.id);
-        },
+        ([entry]) => { if (entry.isIntersecting) setActiveHeading(h.id); },
         { rootMargin: "-80px 0px -60% 0px", threshold: 0.1 }
       );
       obs.observe(el);
       observers.push(obs);
     });
-
     return () => observers.forEach((o) => o.disconnect());
   }, [headings, processedContent]);
 
@@ -77,10 +70,7 @@ const BlogPostPage = () => {
       <div className="border-b border-border bg-background">
         <div className="container py-3">
           <motion.div initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="h-4 w-4" />
               Back to Insights
             </Link>
@@ -90,13 +80,18 @@ const BlogPostPage = () => {
 
       {isLoading ? (
         <div className="container py-10">
-          <div className="max-w-4xl mx-auto space-y-6">
-            <Skeleton className="h-5 w-32" />
-            <Skeleton className="h-12 w-3/4" />
-            <Skeleton className="h-5 w-1/2" />
-            <Skeleton className="h-80 w-full rounded-xl" />
-            <div className="space-y-3">
-              {[...Array(8)].map((_, i) => <Skeleton key={i} className="h-4 w-full" />)}
+          <div className="max-w-5xl mx-auto flex gap-10">
+            <div className="hidden lg:block w-72 space-y-4">
+              <Skeleton className="h-48 w-full rounded-xl" />
+              <Skeleton className="h-40 w-full rounded-xl" />
+            </div>
+            <div className="flex-1 space-y-4">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-5 w-1/2" />
+              <div className="space-y-3 pt-4">
+                {[...Array(10)].map((_, i) => <Skeleton key={i} className="h-4 w-full" />)}
+              </div>
             </div>
           </div>
         </div>
@@ -111,29 +106,30 @@ const BlogPostPage = () => {
         </div>
       ) : (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-          {/* Cover image — full-width banner */}
-          {post.cover_image_url && (
-            <div className="w-full h-48 sm:h-64 lg:h-80 overflow-hidden bg-muted">
-              <img
-                src={post.cover_image_url}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
           <div className="container py-8 lg:py-10">
             <div className="flex gap-10 max-w-6xl mx-auto">
-              {/* ── Left: Sticky Topic Index (desktop only) ── */}
-              {headings.length > 0 && (
-                <aside className="hidden lg:block w-64 shrink-0">
+
+              {/* ── Left column: Cover image + sticky Topic Index (desktop) ── */}
+              <div className="hidden lg:block w-72 shrink-0">
+                {/* Cover image */}
+                {post.cover_image_url && (
+                  <div className="rounded-xl overflow-hidden border border-border mb-6">
+                    <img src={post.cover_image_url} alt={post.title} className="w-full h-auto object-cover" />
+                  </div>
+                )}
+
+                {/* Divider */}
+                <hr className="border-border mb-6" />
+
+                {/* Topic Index — sticky */}
+                {headings.length > 0 && (
                   <div className="sticky top-24">
                     <div className="border border-border rounded-xl p-5 bg-card">
                       <div className="flex items-center gap-2 mb-4">
                         <List className="h-4 w-4 text-primary" />
                         <h3 className="text-sm font-semibold text-foreground">Topic Index</h3>
                       </div>
-                      <nav className="space-y-1">
+                      <nav className="space-y-0.5">
                         {headings.map((h) => (
                           <a
                             key={h.id}
@@ -154,10 +150,10 @@ const BlogPostPage = () => {
                       </nav>
                     </div>
                   </div>
-                </aside>
-              )}
+                )}
+              </div>
 
-              {/* ── Right: Article content ── */}
+              {/* ── Right column: Article content ── */}
               <article className="flex-1 min-w-0">
                 {/* Category badges */}
                 <div className="flex items-center gap-2 mb-4">
@@ -170,7 +166,7 @@ const BlogPostPage = () => {
                 </div>
 
                 {/* Title */}
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-heading text-foreground leading-tight mb-5">
+                <h1 className="text-2xl sm:text-3xl lg:text-[36px] font-bold font-heading text-foreground leading-tight mb-5">
                   {post.title}
                 </h1>
 
@@ -205,14 +201,20 @@ const BlogPostPage = () => {
                   </div>
                 </div>
 
-                {/* Excerpt as styled blockquote */}
+                {/* Excerpt */}
                 {post.excerpt && (
                   <div className="border-l-4 border-primary/30 pl-5 py-3 mb-8 bg-muted/30 rounded-r-lg">
                     <p className="text-base italic text-muted-foreground leading-relaxed">{post.excerpt}</p>
                   </div>
                 )}
 
-                {/* Divider */}
+                {/* Mobile cover image */}
+                {post.cover_image_url && (
+                  <div className="lg:hidden rounded-xl overflow-hidden border border-border mb-8">
+                    <img src={post.cover_image_url} alt={post.title} className="w-full h-auto object-cover" />
+                  </div>
+                )}
+
                 <hr className="border-border mb-8" />
 
                 {/* Content */}
@@ -226,7 +228,7 @@ const BlogPostPage = () => {
                     prose-a:text-primary prose-a:no-underline hover:prose-a:underline
                     prose-strong:text-foreground prose-strong:font-semibold
                     prose-img:rounded-xl prose-img:border prose-img:border-border
-                    prose-blockquote:border-l-primary prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-1 prose-blockquote:text-muted-foreground prose-blockquote:italic prose-blockquote:not-italic
+                    prose-blockquote:border-l-primary prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-1 prose-blockquote:text-muted-foreground prose-blockquote:italic
                     prose-li:marker:text-primary
                     prose-ul:my-4 prose-ol:my-4 prose-li:my-1
                     prose-hr:border-border
@@ -241,10 +243,7 @@ const BlogPostPage = () => {
                 {post.tags && post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-10 pt-6 border-t border-border">
                     {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full border border-border"
-                      >
+                      <span key={tag} className="text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full border border-border">
                         #{tag}
                       </span>
                     ))}
