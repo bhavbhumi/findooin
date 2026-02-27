@@ -97,7 +97,7 @@ const Profile = () => {
   const tabTriggerClass = "rounded-lg text-sm font-medium whitespace-nowrap px-4 sm:px-6 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground";
 
   return (
-    <AppLayout maxWidth="max-w-6xl" className="pt-4">
+    <AppLayout maxWidth="max-w-6xl">
       {!isOwnProfile && !loading && (
         <Button variant="ghost" size="sm" className="text-muted-foreground mb-3" onClick={() => navigate(-1)}>
           <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
