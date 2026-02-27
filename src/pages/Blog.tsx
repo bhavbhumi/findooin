@@ -159,13 +159,6 @@ const Blog = () => {
         title="Stay ahead with expert"
         titleAccent="Insights"
         subtitle="Articles, market analysis, research reports, and important bulletins — all in one place."
-        decoration={
-          <svg width="200" height="200" viewBox="0 0 200 200" className="text-primary">
-            <circle cx="130" cy="70" r="80" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.15" />
-            <circle cx="140" cy="60" r="40" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.1" />
-            <circle cx="150" cy="50" r="8" fill="currentColor" opacity="0.08" />
-          </svg>
-        }
       />
 
       {/* ── Primary Tabs (sticky) ── */}

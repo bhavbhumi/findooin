@@ -49,12 +49,6 @@ const Contact = () => {
         title="Get in touch"
         titleAccent="with us"
         subtitle="Send us a message, or visit our office — we're here to help."
-        decoration={
-          <svg width="180" height="160" viewBox="0 0 180 160" className="text-primary">
-            <rect x="80" y="10" width="90" height="70" rx="8" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.3" />
-            <rect x="90" y="20" width="70" height="50" rx="4" fill="currentColor" opacity="0.06" />
-          </svg>
-        }
       />
 
       {/* Tabs */}
