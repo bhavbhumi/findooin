@@ -52,6 +52,15 @@ Deno.serve(async (req) => {
     await supabaseAdmin.from("notifications").delete().in("user_id", allUsers);
     await supabaseAdmin.from("survey_responses").delete().in("user_id", allUsers);
 
+    // Cleanup events data
+    const { data: existingEvents } = await supabaseAdmin.from("events").select("id").in("organizer_id", allUsers);
+    const existingEventIds = (existingEvents || []).map(e => e.id);
+    if (existingEventIds.length) {
+      await supabaseAdmin.from("event_registrations").delete().in("event_id", existingEventIds);
+      await supabaseAdmin.from("event_speakers").delete().in("event_id", existingEventIds);
+      await supabaseAdmin.from("events").delete().in("id", existingEventIds);
+    }
+
     // Cleanup jobs data
     await supabaseAdmin.from("saved_jobs").delete().in("user_id", allUsers);
     const { data: existingJobs } = await supabaseAdmin.from("jobs").select("id").in("poster_id", allUsers);
@@ -428,6 +437,196 @@ Deno.serve(async (req) => {
     }
     if (savedJobs.length) await supabaseAdmin.from("saved_jobs").insert(savedJobs);
 
+    // ===== SEED EVENTS =====
+    const evNow = Date.now();
+    const evDate = (daysFromNow: number, hours = 10) => {
+      const d = new Date(evNow + 86400000 * daysFromNow);
+      d.setHours(hours, 0, 0, 0);
+      return d.toISOString();
+    };
+    const evEnd = (daysFromNow: number, hours = 11) => {
+      const d = new Date(evNow + 86400000 * daysFromNow);
+      d.setHours(hours, 30, 0, 0);
+      return d.toISOString();
+    };
+
+    const eventsData = [
+      {
+        organizer_id: arjun, title: "India Innovation Fund — NFO Launch Webinar",
+        description: "Join Bluechip Capital AMC's CIO for an exclusive webinar on our newest Innovation Fund. Learn about investment thesis, sector allocation (AI/ML, EV, Clean Energy, Fintech), risk framework, and expected returns.\n\nWho should attend: RIAs, MF Distributors, HNI Investors, and Institutional Buyers.\n\nQ&A session at the end.",
+        category: "nfo_ipo_launch", event_mode: "virtual",
+        virtual_link: "https://meet.google.com/abc-defg-hij",
+        start_time: evDate(3, 11), end_time: evEnd(3, 12), capacity: 500,
+        registration_count: 0, is_free: true, status: "published",
+        tags: ["NFO", "Innovation", "AMC", "MutualFunds"],
+      },
+      {
+        organizer_id: vikram, title: "Singh Infrastructure — Q3 FY26 Earnings Call",
+        description: "Quarterly earnings call for investors and analysts.\n\nAgenda:\n• Q3 FY26 financial results walkthrough\n• Order book & pipeline update\n• Management commentary on infrastructure sector outlook\n• Analyst Q&A\n\nDial-in details shared to registered participants.",
+        category: "earnings_call", event_mode: "virtual",
+        virtual_link: "https://zoom.us/j/1234567890",
+        start_time: evDate(5, 16), end_time: evEnd(5, 17), capacity: 200,
+        registration_count: 0, is_free: true, status: "published",
+        tags: ["Earnings", "Infrastructure", "Q3FY26"],
+      },
+      {
+        organizer_id: anita, title: "Wealth Planning Masterclass for HNIs",
+        description: "Desai Financial Services presents a comprehensive masterclass on holistic wealth planning.\n\nTopics:\n• Asset allocation for ₹5 Cr+ portfolios\n• Tax-efficient structures (HUF, Trust, LLP)\n• Real estate vs financial assets\n• Succession & estate planning\n\nLimited seats. By invitation + registration.",
+        category: "investor_meet", event_mode: "physical",
+        venue_name: "Taj Vivanta, Bandra Kurla Complex",
+        venue_address: "BKC, Mumbai, Maharashtra 400051",
+        start_time: evDate(10, 18), end_time: evEnd(10, 21), capacity: 50,
+        registration_count: 0, is_free: true, status: "published",
+        tags: ["WealthPlanning", "HNI", "TaxPlanning", "EstatePlanning"],
+      },
+      {
+        organizer_id: priya, title: "SEBI RIA Regulatory Update — Feb 2026",
+        description: "Monthly regulatory update session for SEBI-registered Investment Advisers.\n\nCovering:\n• New fee disclosure norms\n• Client agreement template changes\n• SEBI circular on digital advisory platforms\n• Compliance checklist update\n\nOpen to all RIAs and compliance officers.",
+        category: "regulatory_update", event_mode: "virtual",
+        virtual_link: "https://teams.microsoft.com/l/meetup/abc123",
+        start_time: evDate(7, 15), end_time: evEnd(7, 16), capacity: 300,
+        registration_count: 0, is_free: true, status: "published",
+        tags: ["SEBI", "RIA", "Compliance", "Regulatory"],
+      },
+      {
+        organizer_id: anita, title: "NISM Series V-A Exam Prep Workshop",
+        description: "2-day intensive workshop for NISM Mutual Fund Distributors certification.\n\nDay 1: Conceptual framework, regulatory structure, types of schemes\nDay 2: NAV calculation, taxation, ethics, mock tests\n\nStudy material included. 95%+ pass rate from our previous batches.",
+        category: "training_certification", event_mode: "hybrid",
+        venue_name: "Desai Financial Academy, Kothrud",
+        venue_address: "Pune, Maharashtra 411038",
+        virtual_link: "https://meet.google.com/xyz-uvwx-rst",
+        start_time: evDate(14, 9), end_time: evEnd(14, 17), capacity: 40,
+        registration_count: 0, is_free: false, status: "published",
+        tags: ["NISM", "Certification", "MFDistributor", "Training"],
+      },
+      {
+        organizer_id: arjun, title: "Bluechip Capital — Annual General Meeting FY26",
+        description: "Notice is hereby given that the Annual General Meeting of Bluechip Capital AMC will be held.\n\nAgenda:\n1. Adoption of financial statements FY26\n2. Declaration of dividend\n3. Re-appointment of directors\n4. Appointment of auditors\n\nOnly registered unitholders eligible to attend.",
+        category: "agm_egm", event_mode: "hybrid",
+        venue_name: "NSE Convention Centre, BKC",
+        venue_address: "Bandra Kurla Complex, Mumbai 400051",
+        virtual_link: "https://zoom.us/j/agm-bluechip-2026",
+        start_time: evDate(21, 10), end_time: evEnd(21, 13), capacity: 150,
+        registration_count: 0, is_free: true, status: "published",
+        tags: ["AGM", "AMC", "FY26"],
+      },
+      {
+        organizer_id: meera, title: "Pharma Sector Deep Dive — Analyst Roundtable",
+        description: "Exclusive roundtable for research analysts and fund managers covering the Indian pharmaceutical sector.\n\nDiscussion points:\n• Generic pipeline CY2026-27\n• US FDA inspection trends\n• CDMO opportunity sizing\n• Top stock picks with conviction thesis\n\nLimited to 25 participants for quality discussion.",
+        category: "industry_conference", event_mode: "virtual",
+        virtual_link: "https://meet.google.com/pharma-deep-dive",
+        start_time: evDate(12, 14), end_time: evEnd(12, 16), capacity: 25,
+        registration_count: 0, is_free: true, status: "published",
+        tags: ["Pharma", "Research", "Analyst", "DeepDive"],
+      },
+      {
+        organizer_id: priya, title: "Webinar: Why Most Retail Investors Underperform",
+        description: "An educational webinar for retail investors based on behavioral finance research.\n\nTopics:\n• The behavior gap — why investors earn less than their funds\n• SIP vs lump-sum: data-driven analysis\n• Common cognitive biases in investing\n• Building a rules-based investment process\n\nFree for all FindOO members.",
+        category: "webinar", event_mode: "virtual",
+        virtual_link: "https://meet.google.com/retail-investor-webinar",
+        start_time: evDate(2, 19), end_time: evEnd(2, 20), capacity: 1000,
+        registration_count: 0, is_free: true, status: "published",
+        tags: ["InvestorEducation", "BehavioralFinance", "RetailInvestor"],
+      },
+    ];
+
+    const { data: insertedEvents } = await supabaseAdmin.from("events").insert(eventsData).select("id, organizer_id, title");
+    const seededEvents = insertedEvents || [];
+
+    // ===== SEED EVENT SPEAKERS =====
+    const speakerData = [];
+    if (seededEvents.length >= 8) {
+      // NFO Launch speakers
+      speakerData.push(
+        { event_id: seededEvents[0].id, speaker_name: "Arjun Mehta", speaker_title: "CIO, Bluechip Capital AMC", topic: "Innovation Fund Investment Thesis", position: 0 },
+        { event_id: seededEvents[0].id, speaker_name: "Priya Sharma", speaker_title: "SEBI RIA, Independent Advisor", topic: "Portfolio Fit & Asset Allocation", position: 1 },
+      );
+      // Earnings call
+      speakerData.push(
+        { event_id: seededEvents[1].id, speaker_name: "Vikram Singh", speaker_title: "MD, Singh Infrastructure Ltd", topic: "Q3 FY26 Results & Outlook", position: 0 },
+      );
+      // HNI Masterclass
+      speakerData.push(
+        { event_id: seededEvents[2].id, speaker_name: "Anita Desai", speaker_title: "Founder, Desai Financial Services", topic: "Holistic Wealth Framework", position: 0 },
+        { event_id: seededEvents[2].id, speaker_name: "Sneha Patel", speaker_title: "CA, Tax & Estate Planning Specialist", topic: "Tax-Efficient Structures for HNIs", position: 1 },
+      );
+      // Regulatory update
+      speakerData.push(
+        { event_id: seededEvents[3].id, speaker_name: "Priya Sharma", speaker_title: "SEBI RIA", topic: "Monthly Regulatory Roundup", position: 0 },
+      );
+      // NISM workshop
+      speakerData.push(
+        { event_id: seededEvents[4].id, speaker_name: "Anita Desai", speaker_title: "AMFI Registered Distributor", topic: "NISM Series V-A Complete Coverage", position: 0 },
+      );
+      // Pharma roundtable
+      speakerData.push(
+        { event_id: seededEvents[6].id, speaker_name: "Meera Reddy", speaker_title: "SEBI RA, Pharma Sector Specialist", topic: "Generic Pipeline & Top Picks", position: 0 },
+      );
+      // Retail investor webinar
+      speakerData.push(
+        { event_id: seededEvents[7].id, speaker_name: "Priya Sharma", speaker_title: "SEBI RIA", topic: "Behavioral Finance & Investment Process", position: 0 },
+      );
+    }
+    if (speakerData.length) await supabaseAdmin.from("event_speakers").insert(speakerData);
+
+    // ===== SEED EVENT REGISTRATIONS =====
+    const eventRegs = [];
+    if (seededEvents.length >= 8) {
+      // NFO webinar — wide interest
+      eventRegs.push(
+        { event_id: seededEvents[0].id, user_id: rajesh, status: "registered" },
+        { event_id: seededEvents[0].id, user_id: priya, status: "registered" },
+        { event_id: seededEvents[0].id, user_id: karan, status: "registered" },
+        { event_id: seededEvents[0].id, user_id: anita, status: "registered" },
+        { event_id: seededEvents[0].id, user_id: meera, status: "registered" },
+        { event_id: seededEvents[0].id, user_id: sneha, status: "registered" },
+      );
+      // Earnings call
+      eventRegs.push(
+        { event_id: seededEvents[1].id, user_id: rajesh, status: "registered" },
+        { event_id: seededEvents[1].id, user_id: priya, status: "registered" },
+        { event_id: seededEvents[1].id, user_id: meera, status: "registered" },
+        { event_id: seededEvents[1].id, user_id: arjun, status: "registered" },
+      );
+      // HNI Masterclass
+      eventRegs.push(
+        { event_id: seededEvents[2].id, user_id: rajesh, status: "registered" },
+        { event_id: seededEvents[2].id, user_id: karan, status: "registered" },
+        { event_id: seededEvents[2].id, user_id: priya, status: "registered" },
+      );
+      // Regulatory update — intermediaries
+      eventRegs.push(
+        { event_id: seededEvents[3].id, user_id: sneha, status: "registered" },
+        { event_id: seededEvents[3].id, user_id: anita, status: "registered" },
+        { event_id: seededEvents[3].id, user_id: meera, status: "registered" },
+      );
+      // NISM workshop
+      eventRegs.push(
+        { event_id: seededEvents[4].id, user_id: rajesh, status: "registered" },
+      );
+      // Pharma roundtable
+      eventRegs.push(
+        { event_id: seededEvents[6].id, user_id: priya, status: "registered" },
+        { event_id: seededEvents[6].id, user_id: arjun, status: "registered" },
+      );
+      // Retail investor webinar
+      eventRegs.push(
+        { event_id: seededEvents[7].id, user_id: rajesh, status: "registered" },
+        { event_id: seededEvents[7].id, user_id: karan, status: "registered" },
+        { event_id: seededEvents[7].id, user_id: sneha, status: "registered" },
+      );
+    }
+    if (eventRegs.length) await supabaseAdmin.from("event_registrations").insert(eventRegs);
+
+    // Update registration counts on events
+    if (seededEvents.length >= 8) {
+      const regCounts: Record<string, number> = {};
+      eventRegs.forEach(r => { regCounts[r.event_id] = (regCounts[r.event_id] || 0) + 1; });
+      for (const [eventId, count] of Object.entries(regCounts)) {
+        await supabaseAdmin.from("events").update({ registration_count: count }).eq("id", eventId);
+      }
+    }
+
     // ===== SEED PROFILE VIEWS =====
     const pvNow = Date.now();
     const pv = (daysAgo: number) => new Date(pvNow - 86400000 * daysAgo).toISOString();
@@ -470,6 +669,9 @@ Deno.serve(async (req) => {
       job_applications: jobApps.length,
       saved_jobs: savedJobs.length,
       profile_views: profileViews.length,
+      events: seededEvents.length,
+      event_speakers: speakerData.length,
+      event_registrations: eventRegs.length,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
