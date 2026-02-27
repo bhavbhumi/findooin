@@ -817,10 +817,6 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
             <TooltipContent side="bottom" className="text-xs">Add hashtag — type #topic in your post</TooltipContent>
           </Tooltip>
 
-          <span className="text-[10px] text-muted-foreground hidden sm:inline ml-1">
-            PDF, Images, DOCX · Max 10MB
-          </span>
-
           <div className="flex-1" />
 
           {/* Schedule icon */}
