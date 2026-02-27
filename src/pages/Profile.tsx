@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,7 +36,8 @@ const Profile = () => {
   const [stats, setStats] = useState<ProfileStats>({ followers: 0, following: 0, connections: 0, posts: 0 });
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("about");
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "about");
   const [endorsementCount, setEndorsementCount] = useState(0);
   const { data: allPosts } = useFeedPosts();
   const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
@@ -153,9 +154,6 @@ const Profile = () => {
                   <TabsTrigger value="directory" className={tabTriggerClass}>
                     <Store className="h-3.5 w-3.5 mr-1" /> Directory
                   </TabsTrigger>
-                  {isOwnProfile && (
-                    <TabsTrigger value="bookmarks" className={tabTriggerClass}>Bookmarks</TabsTrigger>
-                  )}
                   {isOwnProfile && (
                     <TabsTrigger value="vault" className={tabTriggerClass}>
                       <FolderLock className="h-3.5 w-3.5 mr-1" /> Vault
