@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 import { Link } from "react-router-dom";
@@ -64,7 +65,9 @@ const linkGroups = [
   },
 ];
 
-const QuickLinks = () => (
+const QuickLinks = () => {
+  usePageMeta({ title: "Quick Links", description: "Quick access to all FindOO pages and resources." });
+  return (
   <PublicPageLayout>
     <PageHero
       breadcrumb="Quick Links"
@@ -106,6 +109,7 @@ const QuickLinks = () => (
       </div>
     </section>
   </PublicPageLayout>
-);
+  );
+};
 
 export default QuickLinks;

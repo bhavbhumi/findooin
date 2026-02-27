@@ -48,6 +48,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
+const SharedVaultFile = lazy(() => import("./pages/SharedVaultFile"));
 
 const queryClient = new QueryClient();
 
@@ -92,6 +93,7 @@ const App = () => {
                     <Route path="/sitemap" element={<SiteMap />} />
                     <Route path="/card/:userId" element={<DigitalCard />} />
                     <Route path="/event-checkin/:eventId" element={<EventCheckin />} />
+                    <Route path="/vault/shared/:shareToken" element={<SharedVaultFile />} />
                     <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

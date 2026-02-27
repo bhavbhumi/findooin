@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNotifications, Notification } from "@/hooks/useNotifications";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
@@ -109,6 +110,7 @@ function getDateLabel(dateStr: string): string {
 }
 
 const Notifications = () => {
+  usePageMeta({ title: "Notifications" });
   const navigate = useNavigate();
   const { notifications, unreadCount, loading, markAsRead, markAllAsRead } = useNotifications();
   const [filter, setFilter] = useState<FilterTab>("all");

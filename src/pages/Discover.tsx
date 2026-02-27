@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ function getInitials(name: string) {
 
 /* ── Discover Page ── */
 const Discover = () => {
+  usePageMeta({ title: "Discover", description: "Browse and discover verified financial professionals across India." });
   const [searchParams] = useSearchParams();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [users, setUsers] = useState<DiscoverUser[]>([]);

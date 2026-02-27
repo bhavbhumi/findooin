@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import { Mail, MapPin, Clock, MessageCircle, Phone, User2, CheckCircle2, Building2, Globe, Navigation } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
@@ -40,6 +41,7 @@ const offices = [
 ];
 
 const Contact = () => {
+  usePageMeta({ title: "Contact Us", description: "Get in touch with FindOO — reach us via form or visit our office." });
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("Ask Us");
   const [submitting, setSubmitting] = useState(false);

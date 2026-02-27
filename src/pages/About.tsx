@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import { Shield, Eye, Users, Award, TrendingUp, Target, Briefcase, MapPin, Clock, Send, Newspaper, ExternalLink, Calendar, Landmark, Globe, Zap } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
@@ -39,6 +40,7 @@ const pressItems = [
 ];
 
 const About = () => {
+  usePageMeta({ title: "About", description: "Learn about FindOO — India's first financial network. Company, careers, and press." });
   const [activeTab, setActiveTab] = useState("Company");
 
   return (

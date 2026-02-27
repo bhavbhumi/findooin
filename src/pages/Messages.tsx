@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
@@ -57,6 +58,7 @@ function getDateLabel(dateStr: string): string {
 type ConvFilter = "all" | "unread";
 
 const Messages = () => {
+  usePageMeta({ title: "Messages" });
   const navigate = useNavigate();
   const { activeRole } = useRole();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
@@ -66,6 +67,7 @@ const contentMap: Record<string, { sections: typeof termsSections; lastUpdated: 
 };
 
 const Legal = () => {
+  usePageMeta({ title: "Legal", description: "FindOO terms of service, privacy policy, and regulatory disclosures." });
   const [activeTab, setActiveTab] = useState("Terms");
   const { sections, lastUpdated } = contentMap[activeTab];
 

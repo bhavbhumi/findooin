@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import {
   Search, Shield, Users, Lightbulb, Target, TrendingUp, CheckCircle,
@@ -329,6 +330,7 @@ const tabContentMap: Record<string, React.FC> = {
 };
 
 const Explore = () => {
+  usePageMeta({ title: "Explore", description: "Discover what FindOO is, why it exists, how it works, and who it's for." });
   const [activeTab, setActiveTab] = useState("What is FindOO");
   const Content = tabContentMap[activeTab];
 

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
@@ -34,6 +35,7 @@ const popularArticles = [
 ];
 
 const HelpDesk = () => {
+  usePageMeta({ title: "Help Desk", description: "Find answers and support for using FindOO." });
   const [searchQuery, setSearchQuery] = useState("");
 
   return (

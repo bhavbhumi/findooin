@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 
@@ -23,7 +24,9 @@ const sections = [
   { title: "10. Contact", content: "For privacy-related inquiries, data requests, or concerns, contact our Data Protection Officer at privacy@findoo.in." },
 ];
 
-const Privacy = () => (
+const Privacy = () => {
+  usePageMeta({ title: "Privacy Policy" });
+  return (
   <PublicPageLayout>
     <PageHero
       breadcrumb="Privacy Policy"
@@ -46,6 +49,7 @@ const Privacy = () => (
       </div>
     </section>
   </PublicPageLayout>
-);
+  );
+};
 
 export default Privacy;

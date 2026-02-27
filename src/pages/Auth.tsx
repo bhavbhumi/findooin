@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { registerSession } from "@/lib/session-manager";
@@ -22,6 +23,7 @@ const LOCKOUT_DURATION_MS = 60_000; // 1 minute
 const REQUEST_TIMEOUT_MS = 30_000;
 
 const Auth = () => {
+  usePageMeta({ title: "Sign In", description: "Sign in or create your FindOO account." });
   const [searchParams] = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(searchParams.get("mode") === "signup");
   const [email, setEmail] = useState("");
