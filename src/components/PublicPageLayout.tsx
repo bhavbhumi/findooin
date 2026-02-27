@@ -131,9 +131,14 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
           {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <img src={findooLogo} alt="FindOO" className="h-9 w-9" />
-            <span className="text-xl font-bold font-heading text-foreground tracking-tight">
-              FindOO
-            </span>
+            <div className="flex flex-col leading-none">
+              <span className="text-xl font-bold font-heading text-foreground tracking-tight">
+                FindOO
+              </span>
+              <span className="text-[9px] font-medium text-muted-foreground tracking-[0.15em] uppercase">
+                Financially Social
+              </span>
+            </div>
           </Link>
 
           {/* Desktop nav — hidden below lg (1024px) */}
@@ -251,10 +256,13 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {/* Column 1: FindOO brand */}
             <div>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-1">
                 <img src={findooLogo} alt="FindOO" className="h-7 w-7" />
                 <span className="text-base font-bold font-heading text-foreground">FindOO</span>
               </div>
+              <p className="text-[10px] font-medium text-muted-foreground tracking-[0.15em] uppercase mb-3">
+                Financially Social
+              </p>
               <p className="text-xs text-muted-foreground leading-relaxed mb-3">
                 CIN : AAA-7870
               </p>
