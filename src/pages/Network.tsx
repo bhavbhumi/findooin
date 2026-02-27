@@ -304,16 +304,18 @@ const Network = () => {
 
           {/* Sidebar */}
           <aside className="hidden lg:block">
-            <NetworkSidebar
-              connectionsCount={myConnections.length}
-              followersCount={myFollowers.length}
-              followingCount={myFollowing.length}
-              pendingCount={pendingIncoming.length + pendingOutgoing.length}
-              suggestions={suggestions}
-              allUsers={[...myConnections, ...myFollowing, ...myFollowers, ...suggestions]}
-              getInitials={getInitials}
-              onStatClick={(tab) => setActiveTab(tab)}
-            />
+            <div className="sticky top-20">
+              <NetworkSidebar
+                connectionsCount={myConnections.length}
+                followersCount={myFollowers.length}
+                followingCount={myFollowing.length}
+                pendingCount={pendingIncoming.length + pendingOutgoing.length}
+                suggestions={suggestions}
+                allUsers={[...myConnections, ...myFollowing, ...myFollowers, ...suggestions]}
+                getInitials={getInitials}
+                onStatClick={(tab) => setActiveTab(tab)}
+              />
+            </div>
           </aside>
         </div>
 

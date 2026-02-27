@@ -135,11 +135,13 @@ const Feed = () => {
         </div>
 
         <aside className="hidden lg:block">
-          <FeedSidebar
-            userId={feedUserId}
-            onLoadDraft={handleLoadDraft}
-            initialTab={initialSidebarTab}
-          />
+          <div className="sticky top-20">
+            <FeedSidebar
+              userId={feedUserId}
+              onLoadDraft={handleLoadDraft}
+              initialTab={initialSidebarTab}
+            />
+          </div>
         </aside>
       </div>
 
