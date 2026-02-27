@@ -27,6 +27,7 @@ const PostAnalytics = lazy(() => import("./pages/PostAnalytics"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const Messages = lazy(() => import("./pages/Messages"));
 const Settings = lazy(() => import("./pages/Settings"));
+const Jobs = lazy(() => import("./pages/Jobs"));
 
 // Public pages
 import Blog from "./pages/Blog";
@@ -89,6 +90,7 @@ const App = () => (
                   <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
                   <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                   <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+                  <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
