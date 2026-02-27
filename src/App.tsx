@@ -46,6 +46,7 @@ const Legal = lazy(() => import("./pages/Legal"));
 const SiteMap = lazy(() => import("./pages/SiteMap"));
 const Admin = lazy(() => import("./pages/Admin"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
+const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,7 @@ const App = () => {
                     <Route path="/legal" element={<Legal />} />
                     <Route path="/sitemap" element={<SiteMap />} />
                     <Route path="/card/:userId" element={<DigitalCard />} />
+                    <Route path="/event-checkin/:eventId" element={<EventCheckin />} />
                     <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
