@@ -107,113 +107,109 @@ const Profile = () => {
       {loading ? (
         <FindooLoader text="Loading profile..." />
       ) : profile ? (
-        <>
-          {/* Full-width ProfileHeader */}
-          <ErrorBoundary fallbackTitle="Error loading profile header">
-            <ProfileHeader
-              profile={profile}
-              roles={roles}
-              stats={stats}
-              isOwnProfile={isOwnProfile}
-              connectionStatus={connectionStatus}
-              follow={follow}
-              unfollow={unfollow}
-              connect={connect}
-              disconnect={disconnect}
-              connLoading={connLoading}
-              onEditProfile={() => setEditOpen(true)}
-              onNavigateToNetwork={() => setActiveTab("network")}
-            />
-          </ErrorBoundary>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+          {/* Main Content */}
+          <div className="min-w-0">
+            <ErrorBoundary fallbackTitle="Error loading profile header">
+              <ProfileHeader
+                profile={profile}
+                roles={roles}
+                stats={stats}
+                isOwnProfile={isOwnProfile}
+                connectionStatus={connectionStatus}
+                follow={follow}
+                unfollow={unfollow}
+                connect={connect}
+                disconnect={disconnect}
+                connLoading={connLoading}
+                onEditProfile={() => setEditOpen(true)}
+                onNavigateToNetwork={() => setActiveTab("network")}
+              />
+            </ErrorBoundary>
 
-          {/* 2-Column Grid: Main + Sidebar */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 mt-4">
-            {/* Main Content */}
-            <div className="min-w-0">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <div className="overflow-x-auto -mx-1 px-1 mb-4">
-                  <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
-                    <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
-                    <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
-                    <TabsTrigger value="activity" className={tabTriggerClass}>Activity</TabsTrigger>
-                    <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
-                    {isOwnProfile && (
-                      <TabsTrigger value="bookmarks" className={tabTriggerClass}>Bookmarks</TabsTrigger>
-                    )}
-                  </TabsList>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="overflow-x-auto -mx-1 px-1 mb-4">
+                <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
+                  <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
+                  <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
+                  <TabsTrigger value="activity" className={tabTriggerClass}>Activity</TabsTrigger>
+                  <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
+                  {isOwnProfile && (
+                    <TabsTrigger value="bookmarks" className={tabTriggerClass}>Bookmarks</TabsTrigger>
+                  )}
+                </TabsList>
+              </div>
+
+              <TabsContent value="about" className="mt-0">
+                <ProfileAbout profile={profile} roles={roles} isOwnProfile={isOwnProfile} onRolesChanged={handleRolesChanged} />
+              </TabsContent>
+
+              <TabsContent value="network" className="mt-0">
+                <ProfileNetwork profileId={profile.id} isOwnProfile={isOwnProfile} currentUserId={currentUserId} />
+              </TabsContent>
+
+              <TabsContent value="activity" className="mt-0">
+                <div className="rounded-xl border border-border bg-card p-10 text-center">
+                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                    <BarChart3 className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <p className="text-muted-foreground text-sm font-medium">Activity insights coming soon</p>
+                  <p className="text-muted-foreground text-xs mt-1">
+                    Track engagement metrics, post frequency, and network growth over time.
+                  </p>
                 </div>
+              </TabsContent>
 
-                <TabsContent value="about" className="mt-0">
-                  <ProfileAbout profile={profile} roles={roles} isOwnProfile={isOwnProfile} onRolesChanged={handleRolesChanged} />
-                </TabsContent>
-
-                <TabsContent value="network" className="mt-0">
-                  <ProfileNetwork profileId={profile.id} isOwnProfile={isOwnProfile} currentUserId={currentUserId} />
-                </TabsContent>
-
-                <TabsContent value="activity" className="mt-0">
+              <TabsContent value="posts" className="space-y-4 mt-0">
+                {userPosts.length === 0 ? (
                   <div className="rounded-xl border border-border bg-card p-10 text-center">
                     <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-                      <BarChart3 className="h-5 w-5 text-muted-foreground" />
+                      <Edit3 className="h-5 w-5 text-muted-foreground" />
                     </div>
-                    <p className="text-muted-foreground text-sm font-medium">Activity insights coming soon</p>
+                    <p className="text-muted-foreground text-sm font-medium">No posts yet</p>
                     <p className="text-muted-foreground text-xs mt-1">
-                      Track engagement metrics, post frequency, and network growth over time.
+                      {isOwnProfile ? "Share your first insight with the community." : "This user hasn't posted yet."}
                     </p>
                   </div>
-                </TabsContent>
-
-                <TabsContent value="posts" className="space-y-4 mt-0">
-                  {userPosts.length === 0 ? (
-                    <div className="rounded-xl border border-border bg-card p-10 text-center">
-                      <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-                        <Edit3 className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                      <p className="text-muted-foreground text-sm font-medium">No posts yet</p>
-                      <p className="text-muted-foreground text-xs mt-1">
-                        {isOwnProfile ? "Share your first insight with the community." : "This user hasn't posted yet."}
-                      </p>
-                    </div>
-                  ) : (
-                    userPosts.map((post) => <PostCard key={post.id} post={post} />)
-                  )}
-                </TabsContent>
-
-                {isOwnProfile && (
-                  <TabsContent value="bookmarks" className="space-y-4 mt-0">
-                    <BookmarkedPosts allPosts={allPosts} currentUserId={currentUserId} />
-                  </TabsContent>
+                ) : (
+                  userPosts.map((post) => <PostCard key={post.id} post={post} />)
                 )}
-              </Tabs>
-            </div>
+              </TabsContent>
 
-            {/* Right Sidebar - hidden on mobile */}
-            <aside className="hidden lg:block">
-              <div className="sticky top-20">
-                <ProfileSidebar
-                  profile={profile}
-                  roles={roles}
-                  stats={stats}
-                  isOwnProfile={isOwnProfile}
-                  onNavigateToNetwork={() => setActiveTab("network")}
-                />
-              </div>
-            </aside>
+              {isOwnProfile && (
+                <TabsContent value="bookmarks" className="space-y-4 mt-0">
+                  <BookmarkedPosts allPosts={allPosts} currentUserId={currentUserId} />
+                </TabsContent>
+              )}
+            </Tabs>
           </div>
 
-          {isOwnProfile && profile && (
-            <EditProfileDialog
-              open={editOpen}
-              onOpenChange={setEditOpen}
-              profile={profile}
-              onSaved={handleProfileSaved}
-            />
-          )}
-        </>
+          {/* Right Sidebar - sticky from top */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-20">
+              <ProfileSidebar
+                profile={profile}
+                roles={roles}
+                stats={stats}
+                isOwnProfile={isOwnProfile}
+                onNavigateToNetwork={() => setActiveTab("network")}
+              />
+            </div>
+          </aside>
+        </div>
       ) : (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <p className="text-muted-foreground">Profile not found.</p>
         </div>
+      )}
+
+      {profile && isOwnProfile && (
+        <EditProfileDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          profile={profile}
+          onSaved={handleProfileSaved}
+        />
       )}
     </AppLayout>
   );
