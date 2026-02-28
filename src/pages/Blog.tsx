@@ -66,7 +66,10 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
           <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">
-                {post.category.replace("-", " ")}
+                {post.post_type}
+              </span>
+              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                {post.category}
               </span>
               {post.featured && (
                 <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary border-0 px-2 py-0">
