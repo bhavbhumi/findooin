@@ -15,6 +15,7 @@ import { EmployerDashboard } from "@/components/jobs/EmployerDashboard";
 import { CandidateDashboard } from "@/components/jobs/CandidateDashboard";
 import { JobsSidebar } from "@/components/jobs/JobsSidebar";
 import AppLayout from "@/components/AppLayout";
+import { EmptyState } from "@/components/ui/empty-state";
 import type { Job } from "@/hooks/useJobs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -128,11 +129,13 @@ const Jobs = () => {
                   {[1, 2, 3, 4].map((i) => <JobCardSkeleton key={i} />)}
                 </div>
               ) : !jobs?.length ? (
-                <div className="text-center py-16 text-muted-foreground">
-                  <Briefcase className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p className="font-heading font-semibold">No jobs found</p>
-                  <p className="text-sm mt-1">Try adjusting your filters or check back later</p>
-                </div>
+                <EmptyState
+                  icon={Briefcase}
+                  title="No jobs match your search"
+                  description="Try adjusting your filters or check back later. New BFSI roles are posted daily by verified employers."
+                  actionLabel={canPostJobs ? "Post a Job" : undefined}
+                  onAction={canPostJobs ? () => setShowPostJob(true) : undefined}
+                />
               ) : (
                 <div className="space-y-3">
                   {jobs.map((job) => (

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import {
@@ -80,7 +81,7 @@ export function PostCard({ post }: { post: FeedPost }) {
   };
 
   return (
-    <article className="rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow">
+    <article className="rounded-xl border border-border bg-card p-5 hover:shadow-lg hover:border-primary/15 hover:-translate-y-0.5 transition-all duration-200">
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
         <Link to={`/profile/${post.author.id}`} className="shrink-0 hover:opacity-90 transition-opacity">
@@ -221,7 +222,7 @@ export function PostCard({ post }: { post: FeedPost }) {
       {/* Actions */}
       <div className="flex items-center gap-1 pt-2 border-t border-border">
         {/* Like */}
-        <button
+        <motion.button
           className={cn(
             "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors",
             liked
@@ -229,12 +230,18 @@ export function PostCard({ post }: { post: FeedPost }) {
               : "text-muted-foreground hover:text-primary hover:bg-primary/5"
           )}
           onClick={toggleLike}
+          whileTap={{ scale: 0.9 }}
           aria-label={liked ? "Unlike post" : "Like post"}
           aria-pressed={liked}
         >
-          <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
+          <motion.div
+            animate={liked ? { scale: [1, 1.4, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
+          </motion.div>
           <span>{post.like_count > 0 ? post.like_count : ""}</span>
-        </button>
+        </motion.button>
 
         {/* Comment */}
         <button

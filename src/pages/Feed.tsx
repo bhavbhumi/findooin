@@ -11,12 +11,15 @@ import AppLayout from "@/components/AppLayout";
 import { useState, useCallback, useRef, useEffect, memo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { PageTransition } from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { PostDraft } from "@/hooks/useDrafts";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DraftsPanel } from "@/components/feed/DraftsPanel";
 import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
+import { EmptyState } from "@/components/ui/empty-state";
+import { MessageSquare, TrendingUp, Zap } from "lucide-react";
 
 
 const MemoizedPostCard = memo(PostCard);
@@ -93,6 +96,7 @@ const Feed = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      <PageTransition>
       <div className="grid lg:grid-cols-[1fr_300px] gap-6">
         <div className="space-y-4">
           <ErrorBoundary fallbackTitle="Error loading composer">
@@ -119,15 +123,17 @@ const Feed = () => {
           )}
 
           {visiblePosts && visiblePosts.length === 0 && !isLoading && (
-            <div className="rounded-xl border border-border bg-card p-12 text-center">
-              <p className="text-muted-foreground">
-                {filter === "foryou"
-                  ? "No posts yet. Start following accounts to see their posts here."
-                  : filter === "trending"
-                  ? "No trending posts right now. Check back later."
-                  : "No viral posts right now. Check back later."}
-              </p>
-            </div>
+            <EmptyState
+              icon={filter === "foryou" ? MessageSquare : filter === "trending" ? TrendingUp : Zap}
+              title={filter === "foryou" ? "Your feed is waiting" : filter === "trending" ? "Nothing trending yet" : "No viral posts yet"}
+              description={
+                filter === "foryou"
+                  ? "Start following verified professionals to see their market insights, research notes, and commentary here."
+                  : "Check back later — when the community buzzes, you'll see it here."
+              }
+              actionLabel={filter === "foryou" ? "Discover People" : undefined}
+              actionLink={filter === "foryou" ? "/discover" : undefined}
+            />
           )}
 
           {visiblePosts?.map((post) => (
@@ -171,6 +177,7 @@ const Feed = () => {
           </div>
         </aside>
       </div>
+      </PageTransition>
 
       {/* Mobile sheet for Drafts/Scheduled */}
       <Sheet open={!!mobileSheet} onOpenChange={(open) => !open && setMobileSheet(null)}>

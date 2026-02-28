@@ -10,6 +10,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { lazy, Suspense, useState, useCallback } from "react";
 import { FindooLoader } from "@/components/FindooLoader";
 import { SplashScreen } from "@/components/SplashScreen";
+import { CommandPalette } from "@/components/CommandPalette";
 
 // Eager load critical routes
 import Landing from "./pages/Landing";
@@ -73,6 +74,7 @@ const App = () => {
               <Toaster />
               <Sonner />
               <BrowserRouter>
+                <CommandPalette />
                 <Suspense fallback={<LazyFallback />}>
                   <Routes>
                     <Route path="/" element={<Landing />} />
