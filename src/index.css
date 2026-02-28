@@ -181,6 +181,23 @@
   }
 }
 
+/* ── Focus visible ring for keyboard navigation (WCAG 2.1 AA) ── */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Dark mode enhanced shadows (plain CSS) ── */
 .dark .shadow-lg {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 10px -6px rgba(0, 0, 0, 0.3);

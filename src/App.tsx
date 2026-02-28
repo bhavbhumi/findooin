@@ -6,11 +6,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RoleProvider } from "@/contexts/RoleContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { lazy, Suspense, useState, useCallback } from "react";
 import { FindooLoader } from "@/components/FindooLoader";
 import { SplashScreen } from "@/components/SplashScreen";
 import { CommandPalette } from "@/components/CommandPalette";
+import { SkipNav } from "@/components/SkipNav";
 
 // Eager load critical routes
 import Landing from "./pages/Landing";
@@ -75,46 +77,49 @@ const App = () => {
               <Toaster />
               <Sonner />
               <BrowserRouter>
+                <SkipNav />
                 <CommandPalette />
                 <Suspense fallback={<LazyFallback />}>
-                  <Routes>
-                    <Route path="/" element={<Landing />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/reset-password" element={<ResetPassword />} />
-                    <Route path="/install" element={<Install />} />
-                    <Route path="/onboarding" element={<Onboarding />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/blog/:slug" element={<BlogPost />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/community-guidelines" element={<CommunityGuidelines />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/explore" element={<Explore />} />
-                    <Route path="/helpdesk" element={<HelpDesk />} />
-                    <Route path="/quick-links" element={<QuickLinks />} />
-                    <Route path="/legal" element={<Legal />} />
-                    <Route path="/sitemap" element={<SiteMap />} />
-                    <Route path="/card/:userId" element={<DigitalCard />} />
-                    <Route path="/event-checkin/:eventId" element={<EventCheckin />} />
-                    <Route path="/vault/shared/:shareToken" element={<SharedVaultFile />} />
-                    <Route path="/developer" element={<DeveloperDocs />} />
-                    <Route path="/feed" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
-                    <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                    <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                    <Route path="/network" element={<ProtectedRoute><Network /></ProtectedRoute>} />
-                    <Route path="/discover" element={<ProtectedRoute><Discover /></ProtectedRoute>} />
-                    <Route path="/analytics" element={<ProtectedRoute><PostAnalytics /></ProtectedRoute>} />
-                    <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-                    <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-                    <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-                    <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-                    <Route path="/jobs" element={<ProtectedRoute><Jobs /></ProtectedRoute>} />
-                    <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
-                    <Route path="/directory" element={<ProtectedRoute><Directory /></ProtectedRoute>} />
-                    <Route path="/vault" element={<ProtectedRoute><Vault /></ProtectedRoute>} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
+                  <div id="main-content">
+                    <Routes>
+                      <Route path="/" element={<Landing />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="/reset-password" element={<ResetPassword />} />
+                      <Route path="/install" element={<Install />} />
+                      <Route path="/onboarding" element={<Onboarding />} />
+                      <Route path="/blog" element={<Blog />} />
+                      <Route path="/blog/:slug" element={<RouteErrorBoundary routeName="Blog Post"><BlogPost /></RouteErrorBoundary>} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/community-guidelines" element={<CommunityGuidelines />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/explore" element={<Explore />} />
+                      <Route path="/helpdesk" element={<HelpDesk />} />
+                      <Route path="/quick-links" element={<QuickLinks />} />
+                      <Route path="/legal" element={<Legal />} />
+                      <Route path="/sitemap" element={<SiteMap />} />
+                      <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
+                      <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
+                      <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
+                      <Route path="/developer" element={<RouteErrorBoundary routeName="Developer Docs"><DeveloperDocs /></RouteErrorBoundary>} />
+                      <Route path="/feed" element={<ProtectedRoute><RouteErrorBoundary routeName="Feed"><Feed /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/profile" element={<ProtectedRoute><RouteErrorBoundary routeName="Profile"><Profile /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/profile/:id" element={<ProtectedRoute><RouteErrorBoundary routeName="Profile"><Profile /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/network" element={<ProtectedRoute><RouteErrorBoundary routeName="Network"><Network /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/discover" element={<ProtectedRoute><RouteErrorBoundary routeName="Discover"><Discover /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/analytics" element={<ProtectedRoute><RouteErrorBoundary routeName="Analytics"><PostAnalytics /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/notifications" element={<ProtectedRoute><RouteErrorBoundary routeName="Notifications"><Notifications /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/messages" element={<ProtectedRoute><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/settings" element={<ProtectedRoute><RouteErrorBoundary routeName="Settings"><Settings /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/admin" element={<ProtectedRoute><RouteErrorBoundary routeName="Admin"><Admin /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/jobs" element={<ProtectedRoute><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/directory" element={<ProtectedRoute><RouteErrorBoundary routeName="Directory"><Directory /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/vault" element={<ProtectedRoute><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </div>
                 </Suspense>
               </BrowserRouter>
             </ErrorBoundary>
