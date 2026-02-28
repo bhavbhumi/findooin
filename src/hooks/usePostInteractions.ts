@@ -16,6 +16,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient, InfiniteData } from "@tanstack/react-query";
+import { toast } from "sonner";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 
 // ── Batch loader: coalesces per-post interaction checks into a single DB call ──
@@ -142,13 +143,14 @@ export function usePostInteractions(postId: string) {
           interaction_type: "like",
         });
       }
-    } catch {
+    } catch (err: any) {
       // Rollback on failure
       setLiked(wasLiked);
       optimisticUpdateFeedCache(queryClient, postId, (post) => ({
         ...post,
         like_count: post.like_count + (wasLiked ? 1 : -1),
       }));
+      toast.error("Failed to update like", { description: err?.message });
     }
   }, [currentUserId, postId, loading, liked, queryClient]);
 
@@ -178,13 +180,14 @@ export function usePostInteractions(postId: string) {
           interaction_type: "bookmark",
         });
       }
-    } catch {
+    } catch (err: any) {
       // Rollback on failure
       setBookmarked(wasBookmarked);
       optimisticUpdateFeedCache(queryClient, postId, (post) => ({
         ...post,
         bookmark_count: post.bookmark_count + (wasBookmarked ? 1 : -1),
       }));
+      toast.error("Failed to update bookmark", { description: err?.message });
     }
   }, [currentUserId, postId, loading, bookmarked, queryClient]);
 

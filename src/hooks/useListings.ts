@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export type ListingType = "product" | "service";
 export type ListingStatus = "draft" | "active" | "paused" | "archived";
@@ -190,7 +191,9 @@ export function useCreateListing() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["listings"] });
       qc.invalidateQueries({ queryKey: ["my-listings"] });
+      toast.success("Listing created successfully!");
     },
+    onError: (e: any) => toast.error(e.message || "Failed to create listing"),
   });
 }
 
@@ -210,7 +213,9 @@ export function useUpdateListing() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["listings"] });
       qc.invalidateQueries({ queryKey: ["my-listings"] });
+      toast.success("Listing updated");
     },
+    onError: (e: any) => toast.error(e.message || "Failed to update listing"),
   });
 }
 
@@ -231,7 +236,9 @@ export function useSubmitReview() {
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["listing-reviews", vars.listing_id] });
       qc.invalidateQueries({ queryKey: ["listings"] });
+      toast.success("Review submitted!");
     },
+    onError: (e: any) => toast.error(e.message || "Failed to submit review"),
   });
 }
 
@@ -251,6 +258,8 @@ export function useSubmitEnquiry() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["listings"] });
+      toast.success("Enquiry sent!");
     },
+    onError: (e: any) => toast.error(e.message || "Failed to send enquiry"),
   });
 }

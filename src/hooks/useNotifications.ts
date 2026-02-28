@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface Notification {
   id: string;
@@ -65,13 +66,18 @@ export function useNotifications() {
 
   const loadNotifications = async (uid: string) => {
     setLoading(true);
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("notifications")
       .select("*")
       .eq("user_id", uid)
       .order("created_at", { ascending: false })
       .limit(50);
 
+    if (error) {
+      toast.error("Failed to load notifications");
+      setLoading(false);
+      return;
+    }
     if (data) {
       // Fetch actor profiles
       const actorIds = [...new Set(data.map((n: any) => n.actor_id).filter(Boolean))];

@@ -27,6 +27,10 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
         isComparing ? "border-primary ring-2 ring-primary/20" : "border-border"
       }`}
       onClick={() => onSelect(listing)}
+      role="button"
+      tabIndex={0}
+      aria-label={`Listing: ${listing.title}`}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(listing); } }}
     >
       {/* Header stripe */}
       <div className={`h-1.5 ${listing.listing_type === "product" ? "bg-primary" : "bg-accent"}`} />

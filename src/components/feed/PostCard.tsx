@@ -124,7 +124,10 @@ export function PostCard({ post }: { post: FeedPost }) {
         {/* Post menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="inline-flex items-center justify-center h-8 w-8 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors shrink-0">
+            <button
+              className="inline-flex items-center justify-center h-8 w-8 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors shrink-0"
+              aria-label="Post options"
+            >
               <MoreVertical className="h-4 w-4" />
             </button>
           </DropdownMenuTrigger>
@@ -226,6 +229,8 @@ export function PostCard({ post }: { post: FeedPost }) {
               : "text-muted-foreground hover:text-primary hover:bg-primary/5"
           )}
           onClick={toggleLike}
+          aria-label={liked ? "Unlike post" : "Like post"}
+          aria-pressed={liked}
         >
           <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
           <span>{post.like_count > 0 ? post.like_count : ""}</span>
@@ -240,6 +245,8 @@ export function PostCard({ post }: { post: FeedPost }) {
               : "text-muted-foreground hover:text-primary hover:bg-primary/5"
           )}
           onClick={() => setCommentsOpen(!commentsOpen)}
+          aria-label={commentsOpen ? "Hide comments" : "Show comments"}
+          aria-expanded={commentsOpen}
         >
           <MessageSquare className={`h-3.5 w-3.5 ${commentsOpen ? "fill-current" : ""}`} />
           <span>{post.comment_count > 0 ? post.comment_count : ""}</span>
@@ -254,6 +261,7 @@ export function PostCard({ post }: { post: FeedPost }) {
         <button
           className="inline-flex items-center px-2.5 py-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
           onClick={handleShare}
+          aria-label="Share post"
         >
           <Share2 className="h-3.5 w-3.5" />
         </button>
