@@ -54,6 +54,7 @@ const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
 const SharedVaultFile = lazy(() => import("./pages/SharedVaultFile"));
 const DeveloperDocs = lazy(() => import("./pages/DeveloperDocs"));
+const CostReport = lazy(() => import("./pages/CostReport"));
 
 const queryClient = new QueryClient();
 
@@ -103,6 +104,7 @@ const App = () => {
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
                       <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
                       <Route path="/developer" element={<RouteErrorBoundary routeName="Developer Docs"><DeveloperDocs /></RouteErrorBoundary>} />
+                      <Route path="/cost-report" element={<CostReport />} />
                       <Route path="/feed" element={<ProtectedRoute><RouteErrorBoundary routeName="Feed"><Feed /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/profile" element={<ProtectedRoute><RouteErrorBoundary routeName="Profile"><Profile /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/profile/:id" element={<ProtectedRoute><RouteErrorBoundary routeName="Profile"><Profile /></RouteErrorBoundary></ProtectedRoute>} />
