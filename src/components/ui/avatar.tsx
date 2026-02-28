@@ -29,12 +29,13 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
->(({ className, delayMs = 0, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & { gradient?: string }
+>(({ className, delayMs = 0, gradient, style, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
     delayMs={delayMs}
-    className={cn("flex h-full w-full items-center justify-center rounded-full bg-muted", className)}
+    className={cn("flex h-full w-full items-center justify-center rounded-full font-bold text-xs", gradient ? "text-white drop-shadow-sm" : "bg-muted text-muted-foreground", className)}
+    style={gradient ? { background: gradient, ...style } : style}
     {...props}
   />
 ));
