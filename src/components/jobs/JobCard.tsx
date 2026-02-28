@@ -58,6 +58,10 @@ export const JobCard = memo(function JobCard({ job, isSaved, onToggleSave, onCli
     <Card
       className="group cursor-pointer hover:shadow-md transition-all border-border hover:border-primary/20"
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`${job.title} at ${job.company_name}`}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(); } }}
     >
       <CardContent className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
@@ -119,6 +123,7 @@ export const JobCard = memo(function JobCard({ job, isSaved, onToggleSave, onCli
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
+                aria-label={isSaved ? "Unsave job" : "Save job"}
                 onClick={(e) => {
                   e.stopPropagation();
                   onToggleSave();

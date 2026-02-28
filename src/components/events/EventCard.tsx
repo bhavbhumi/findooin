@@ -37,6 +37,10 @@ export const EventCard = memo(function EventCard({ event, onClick, onRegister, o
     <Card
       className="group cursor-pointer hover:shadow-md transition-all border-border hover:border-primary/20"
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`Event: ${event.title}`}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(); } }}
     >
       <CardContent className="p-4 sm:p-5">
         <div className="flex items-start gap-4">

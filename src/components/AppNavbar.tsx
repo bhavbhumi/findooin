@@ -78,7 +78,7 @@ const AppNavbar = () => {
   return (
     <>
       {/* Top nav */}
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
+      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg" aria-label="Main navigation">
         <div className="container flex h-14 items-center justify-between gap-4">
           {/* Left: Logo + Feed + Network */}
           <div className="flex items-center gap-4">
@@ -133,14 +133,14 @@ const AppNavbar = () => {
             </Button>
 
             {/* Messages icon */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild>
+            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Messages">
               <Link to="/messages">
                 <MessageSquare className="h-5 w-5" />
               </Link>
             </Button>
 
             {/* Notifications icon */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground relative" asChild>
+            <Button variant="ghost" size="icon" className="text-muted-foreground relative" asChild aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}>
               <Link to="/notifications">
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
@@ -154,7 +154,7 @@ const AppNavbar = () => {
             {/* Profile dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-md h-9 w-9 border-border">
+                <Button variant="outline" size="icon" className="rounded-md h-9 w-9 border-border" aria-label="User menu">
                   <User className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -260,7 +260,7 @@ const AppNavbar = () => {
       </nav>
 
       {/* Mobile bottom nav */}
-    <div className="fixed bottom-0 left-0 right-0 border-t border-border bg-background md:hidden z-50">
+    <nav className="fixed bottom-0 left-0 right-0 border-t border-border bg-background md:hidden z-50" aria-label="Mobile navigation">
         <div className="flex items-center justify-around py-1.5">
           {[
             { icon: Home, label: "Feed", href: "/feed" },
@@ -274,13 +274,14 @@ const AppNavbar = () => {
               key={item.label}
               to={item.href}
               className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-foreground transition-colors px-1 py-1"
+              aria-label={item.label}
             >
               <item.icon className="h-4.5 w-4.5" />
               <span className="text-[9px]">{item.label}</span>
             </Link>
           ))}
         </div>
-      </div>
+      </nav>
     </>
   );
 };
