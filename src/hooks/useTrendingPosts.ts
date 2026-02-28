@@ -1,3 +1,12 @@
+/**
+ * useTrendingPosts — Posts containing the top 5 hashtags from the last 7 days.
+ *
+ * Algorithm: Count hashtag frequency across recent posts → find top 5 →
+ * return posts that contain at least one trending tag. Enriches with
+ * author profiles, roles, and interaction counts via parallel queries.
+ *
+ * `staleTime: 60s` to avoid excessive recalculation.
+ */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { FeedPost } from "./useFeedPosts";

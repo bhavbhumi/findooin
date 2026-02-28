@@ -1,3 +1,13 @@
+/**
+ * useBlogPosts — Public blog content hooks.
+ *
+ * Two exports:
+ * - `useBlogPosts(limit?)` — paginated list of published posts
+ * - `useBlogPost(slug)` — single post by URL slug
+ *
+ * Blog posts are managed by admins via the Admin CMS panel.
+ * Only published posts are returned (RLS enforced).
+ */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 

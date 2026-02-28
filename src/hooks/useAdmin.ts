@@ -1,3 +1,17 @@
+/**
+ * useAdmin — Admin panel hooks (verification, moderation, user management).
+ *
+ * Provides 8 exports:
+ * - `useIsAdmin()` — role check via `has_role` RPC (cached 60s)
+ * - `useVerificationQueue()` — pending/reviewed verification requests
+ * - `useReviewVerification()` — approve/reject with profile status update
+ * - `useAdminReports()` — content reports with user profiles
+ * - `useUpdateReportStatus()` — update report status
+ * - `useAdminUsers()` — all users (max 200) with roles
+ * - `useDeletePost()` — admin-delete any post
+ *
+ * All admin queries require the `admin` role via RLS policies.
+ */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";

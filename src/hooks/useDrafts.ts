@@ -1,3 +1,12 @@
+/**
+ * useDrafts — Post draft persistence hook.
+ *
+ * CRUD for drafts stored in the `post_drafts` table.
+ * Supports all post metadata: kind, type, visibility, attachments,
+ * poll options, survey questions, mentions, and hashtags.
+ *
+ * `updated_at` is auto-set by a DB trigger on each update.
+ */
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";

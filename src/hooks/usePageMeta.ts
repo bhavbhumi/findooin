@@ -1,3 +1,11 @@
+/**
+ * usePageMeta — Dynamic page title and meta tag management.
+ *
+ * Sets `document.title` with the FindOO base suffix, and updates
+ * Open Graph and Twitter Card meta tags. Resets to base title on unmount.
+ *
+ * Usage: `usePageMeta({ title: "Feed", description: "Your professional feed" })`
+ */
 import { useEffect } from "react";
 
 interface PageMeta {

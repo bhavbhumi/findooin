@@ -1,3 +1,13 @@
+/**
+ * useEvents — Event module hooks (CRUD, registration, speakers).
+ *
+ * Provides 9 exports covering event browsing, organizer management,
+ * registration flows, and speaker data. Filters support category,
+ * mode, search, and upcoming-only toggles.
+ *
+ * RLS: Only issuer/intermediary/admin can create events.
+ * Registration detects duplicates and shows user-friendly errors.
+ */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";

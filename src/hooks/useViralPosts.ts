@@ -1,3 +1,11 @@
+/**
+ * useViralPosts — Posts from the last 7 days ranked by engagement.
+ *
+ * Engagement score = likes + (comments × 2). Enriches with author
+ * profiles, roles, and interaction counts via parallel queries.
+ *
+ * `staleTime: 60s`.
+ */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { FeedPost } from "./useFeedPosts";
