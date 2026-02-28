@@ -6,7 +6,7 @@ interface NetworkAvatarProps {
   initials: string;
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
-  roleColor?: string; // HSL CSS variable name like "var(--issuer)"
+  roleColor?: string; // HSL CSS value like "hsl(var(--issuer))"
 }
 
 const sizeMap = {
@@ -29,6 +29,11 @@ export const NetworkAvatar = ({
 
   const showImage = !!src && !imgError;
 
+  // Build gradient for initials background using role color
+  const initialsGradient = roleColor
+    ? `linear-gradient(135deg, ${roleColor}, hsl(var(--primary)))`
+    : "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gold)))";
+
   return (
     <div className={cn("relative shrink-0", s.box, className)}>
       {/* Main avatar */}
@@ -36,8 +41,10 @@ export const NetworkAvatar = ({
         className={cn(
           s.box,
           s.radius,
-          "overflow-hidden bg-muted flex items-center justify-center font-bold font-heading text-muted-foreground border-[3px] border-card shadow-lg ring-2 ring-border"
+          "overflow-hidden flex items-center justify-center font-bold font-heading border-[3px] border-card shadow-lg ring-2 ring-border",
+          showImage ? "bg-muted text-muted-foreground" : "text-white"
         )}
+        style={!showImage ? { background: initialsGradient } : undefined}
       >
         {showImage ? (
           <img
@@ -47,7 +54,7 @@ export const NetworkAvatar = ({
             onError={() => setImgError(true)}
           />
         ) : (
-          <span className={s.text}>{initials}</span>
+          <span className={cn(s.text, "drop-shadow-sm")}>{initials}</span>
         )}
       </div>
 

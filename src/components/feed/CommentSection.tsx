@@ -3,13 +3,20 @@ import { formatDistanceToNow } from "date-fns";
 import { Send, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 
 function CommentAvatar({ src, name }: { src: string | null; name: string }) {
   const [err, setErr] = useState(false);
   const show = !!src && !err;
   return (
-    <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground shrink-0 overflow-hidden">
+    <div
+      className={cn(
+        "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-semibold shrink-0 overflow-hidden",
+        show ? "bg-muted text-muted-foreground" : "text-white drop-shadow-sm"
+      )}
+      style={!show ? { background: "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--gold)))" } : undefined}
+    >
       {show ? (
         <img src={src} alt={name} className="h-full w-full object-cover" onError={() => setErr(true)} />
       ) : (

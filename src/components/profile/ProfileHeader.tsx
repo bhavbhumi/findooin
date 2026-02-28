@@ -220,8 +220,9 @@ export const ProfileHeader = ({
               <AvatarWithFallback
                 src={profile.avatar_url}
                 initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
-                className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted"
-                textClassName="text-xl sm:text-2xl md:text-3xl font-bold font-heading text-muted-foreground"
+                className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg"
+                textClassName="text-xl sm:text-2xl md:text-3xl"
+                roleColor={primaryRoleConf?.hslVar}
               />
               {isOwnProfile && (
                 <button
