@@ -13,11 +13,12 @@
  * 3. **Cache updater**: `optimisticUpdateFeedCache` patches infinite query
  *    pages in-place so counts update without refetching.
  */
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient, InfiniteData } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { FeedPost } from "@/hooks/useFeedPosts";
+import { createActionGuard } from "@/lib/throttle";
 
 // ── Batch loader: coalesces per-post interaction checks into a single DB call ──
 let batchQueue: { postId: string; userId: string; resolve: (result: { liked: boolean; bookmarked: boolean }) => void }[] = [];
@@ -97,6 +98,7 @@ export function usePostInteractions(postId: string) {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
   const mountedRef = useRef(true);
+  const guard = useMemo(() => createActionGuard(500), []);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -118,7 +120,7 @@ export function usePostInteractions(postId: string) {
   }, [postId]);
 
   const toggleLike = useCallback(async () => {
-    if (!currentUserId || loading) return;
+    if (!currentUserId || loading || !guard(`like-${postId}`)) return;
     const wasLiked = liked;
     
     // Optimistic update
@@ -155,7 +157,7 @@ export function usePostInteractions(postId: string) {
   }, [currentUserId, postId, loading, liked, queryClient]);
 
   const toggleBookmark = useCallback(async () => {
-    if (!currentUserId || loading) return;
+    if (!currentUserId || loading || !guard(`bookmark-${postId}`)) return;
     const wasBookmarked = bookmarked;
     
     // Optimistic update

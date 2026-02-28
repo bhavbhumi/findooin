@@ -1,9 +1,10 @@
 /**
  * useConnectionActions — Follow/Connect/Disconnect hook with error feedback.
  */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { createActionGuard } from "@/lib/throttle";
 
 interface ConnectionStatus {
   following: boolean;
@@ -16,6 +17,7 @@ export function useConnectionActions(currentUserId: string | null, targetUserId:
     connected: "none",
   });
   const [loading, setLoading] = useState(false);
+  const guard = useMemo(() => createActionGuard(1000), []);
 
   useEffect(() => {
     if (!currentUserId || !targetUserId || currentUserId === targetUserId) return;
@@ -51,7 +53,7 @@ export function useConnectionActions(currentUserId: string | null, targetUserId:
   };
 
   const follow = useCallback(async () => {
-    if (!currentUserId || !targetUserId) return;
+    if (!currentUserId || !targetUserId || !guard("follow")) return;
     setLoading(true);
     try {
       const { error } = await supabase.from("connections").insert({
@@ -71,7 +73,7 @@ export function useConnectionActions(currentUserId: string | null, targetUserId:
   }, [currentUserId, targetUserId]);
 
   const unfollow = useCallback(async () => {
-    if (!currentUserId || !targetUserId) return;
+    if (!currentUserId || !targetUserId || !guard("unfollow")) return;
     setLoading(true);
     try {
       const { error } = await supabase
@@ -91,7 +93,7 @@ export function useConnectionActions(currentUserId: string | null, targetUserId:
   }, [currentUserId, targetUserId]);
 
   const connect = useCallback(async () => {
-    if (!currentUserId || !targetUserId) return;
+    if (!currentUserId || !targetUserId || !guard("connect")) return;
     setLoading(true);
     try {
       const { error } = await supabase.from("connections").insert({
