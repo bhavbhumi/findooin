@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useCreateListing, PRODUCT_CATEGORIES, SERVICE_CATEGORIES, type ListingType } from "@/hooks/useListings";
 import { Package, Wrench, Plus, X } from "lucide-react";
 import { z } from "zod";
+import { useRole } from "@/contexts/RoleContext";
 
 const listingSchema = z.object({
   title: z.string().trim().min(3, "Title must be at least 3 characters").max(150),
@@ -22,7 +23,12 @@ interface CreateListingDialogProps {
 }
 
 export const CreateListingDialog = ({ open, onOpenChange }: CreateListingDialogProps) => {
-  const [listingType, setListingType] = useState<ListingType>("product");
+  const { activeRole } = useRole();
+  const canCreateProduct = activeRole !== "intermediary"; // Intermediary can't create Product
+  const canCreateService = activeRole !== "issuer"; // Issuer can't create Service
+  const defaultType: ListingType = canCreateProduct ? "product" : "service";
+
+  const [listingType, setListingType] = useState<ListingType>(defaultType);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -108,21 +114,29 @@ export const CreateListingDialog = ({ open, onOpenChange }: CreateListingDialogP
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => { setListingType("product"); setCategory(""); }}
+              disabled={!canCreateProduct}
               className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
-                listingType === "product"
-                  ? "border-primary bg-primary/5 text-primary"
-                  : "border-border text-muted-foreground hover:bg-muted/50"
+                !canCreateProduct
+                  ? "border-border text-muted-foreground/40 cursor-not-allowed opacity-50"
+                  : listingType === "product"
+                    ? "border-primary bg-primary/5 text-primary"
+                    : "border-border text-muted-foreground hover:bg-muted/50"
               }`}
+              title={!canCreateProduct ? "Intermediaries cannot create products" : undefined}
             >
               <Package className="h-4 w-4" /> Product
             </button>
             <button
               onClick={() => { setListingType("service"); setCategory(""); }}
+              disabled={!canCreateService}
               className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all ${
-                listingType === "service"
-                  ? "border-primary bg-primary/5 text-primary"
-                  : "border-border text-muted-foreground hover:bg-muted/50"
+                !canCreateService
+                  ? "border-border text-muted-foreground/40 cursor-not-allowed opacity-50"
+                  : listingType === "service"
+                    ? "border-primary bg-primary/5 text-primary"
+                    : "border-border text-muted-foreground hover:bg-muted/50"
               }`}
+              title={!canCreateService ? "Issuers cannot create services" : undefined}
             >
               <Wrench className="h-4 w-4" /> Service
             </button>
