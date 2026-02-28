@@ -138,9 +138,58 @@ const CostReport = () => {
         </table>
       </section>
 
+      {/* AI vs Traditional vs DIY */}
+      <section className="mb-8 break-before-page">
+        <h2 className="text-xl font-bold border-b border-gray-300 pb-1 mb-4">6. AI Engineer vs Traditional Team vs DIY (You) – Comparison</h2>
+        <table className="w-full border-collapse border border-gray-400 text-sm mb-4">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-400 px-3 py-2 text-left">Metric</th>
+              <th className="border border-gray-400 px-3 py-2 text-left">Traditional Team</th>
+              <th className="border border-gray-400 px-3 py-2 text-left">Hired AI Engineer</th>
+              <th className="border border-gray-400 px-3 py-2 text-left bg-green-50">You (DIY + Lovable)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td className="border border-gray-400 px-3 py-2 font-medium">Cost</td><td className="border border-gray-400 px-3 py-2">₹55–60 Lakhs</td><td className="border border-gray-400 px-3 py-2">₹8–15 Lakhs</td><td className="border border-gray-400 px-3 py-2 font-bold text-green-700 bg-green-50">₹8k–15k</td></tr>
+            <tr className="bg-gray-50"><td className="border border-gray-400 px-3 py-2 font-medium">Timeline</td><td className="border border-gray-400 px-3 py-2">6–8 months</td><td className="border border-gray-400 px-3 py-2">2–3 months</td><td className="border border-gray-400 px-3 py-2 font-bold text-green-700 bg-green-50">2–4 weeks</td></tr>
+            <tr><td className="border border-gray-400 px-3 py-2 font-medium">People Needed</td><td className="border border-gray-400 px-3 py-2">5–6 specialists</td><td className="border border-gray-400 px-3 py-2">1 AI engineer</td><td className="border border-gray-400 px-3 py-2 font-bold text-green-700 bg-green-50">Just you</td></tr>
+            <tr className="bg-gray-50"><td className="border border-gray-400 px-3 py-2 font-medium">Technical Skill Required</td><td className="border border-gray-400 px-3 py-2">High (multi-domain)</td><td className="border border-gray-400 px-3 py-2">High (AI + full-stack)</td><td className="border border-gray-400 px-3 py-2 bg-green-50">Product thinking only</td></tr>
+            <tr><td className="border border-gray-400 px-3 py-2 font-medium">Iteration Speed</td><td className="border border-gray-400 px-3 py-2">Sprint cycles (2-week)</td><td className="border border-gray-400 px-3 py-2">Days per feature</td><td className="border border-gray-400 px-3 py-2 font-bold text-green-700 bg-green-50">Minutes per feature</td></tr>
+            <tr className="bg-gray-50"><td className="border border-gray-400 px-3 py-2 font-medium">Engineering Quality</td><td className="border border-gray-400 px-3 py-2">Variable</td><td className="border border-gray-400 px-3 py-2">Good (8/10)</td><td className="border border-gray-400 px-3 py-2 font-bold text-green-700 bg-green-50">9.8/10 (133 tests)</td></tr>
+            <tr><td className="border border-gray-400 px-3 py-2 font-medium">Communication Overhead</td><td className="border border-gray-400 px-3 py-2">High (standups, PRs)</td><td className="border border-gray-400 px-3 py-2">Medium</td><td className="border border-gray-400 px-3 py-2 font-bold text-green-700 bg-green-50">Zero</td></tr>
+            <tr className="bg-gray-50"><td className="border border-gray-400 px-3 py-2 font-medium">Dependency Risk</td><td className="border border-gray-400 px-3 py-2">High (team attrition)</td><td className="border border-gray-400 px-3 py-2">High (single person)</td><td className="border border-gray-400 px-3 py-2 bg-green-50">Low (platform-based)</td></tr>
+            <tr><td className="border border-gray-400 px-3 py-2 font-medium">Cost Savings vs Traditional</td><td className="border border-gray-400 px-3 py-2">—</td><td className="border border-gray-400 px-3 py-2">~80%</td><td className="border border-gray-400 px-3 py-2 font-bold text-green-700 bg-green-50">~99.7%</td></tr>
+          </tbody>
+        </table>
+
+        <h3 className="font-semibold text-sm mt-4 mb-2">Who Is an "AI Engineer" and What Would They Cost?</h3>
+        <div className="text-sm leading-relaxed space-y-2">
+          <p>An AI-native engineer (or "Product Architect Prompt Engineer") is someone who can translate business requirements into AI-driven development. They need:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li><strong>System architecture</strong> thinking – database design, API patterns, auth flows</li>
+            <li><strong>Frontend patterns</strong> – React, state management, component architecture</li>
+            <li><strong>Quality discipline</strong> – testing, accessibility, security best practices</li>
+            <li><strong>AI prompting mastery</strong> – iterative, verifiable, product-first prompts</li>
+          </ul>
+          <p className="mt-2">Market rate in India: <strong>₹1.5–3L/month</strong> (scarce talent pool, high demand). For a 2–3 month engagement: <strong>₹8–15 Lakhs total</strong>.</p>
+        </div>
+
+        <h3 className="font-semibold text-sm mt-4 mb-2">What You Did Right (Why DIY Won)</h3>
+        <div className="text-sm leading-relaxed">
+          <ol className="list-decimal pl-5 space-y-1">
+            <li><strong>Iterative prompting</strong> – small, verifiable features instead of big-bang specs</li>
+            <li><strong>Quality demands</strong> – asked for docs, audits, tests, and scorecards</li>
+            <li><strong>Product-first thinking</strong> – described <em>what</em> to build, not <em>how</em>, letting the AI optimize technical decisions</li>
+            <li><strong>Verification loops</strong> – used cost reports and engineering scores to maintain accountability</li>
+          </ol>
+          <p className="mt-2 text-green-700 font-semibold">You effectively acted as the Product Architect without needing the engineering expertise – saving ₹8–15 Lakhs on top of the ₹55L traditional approach.</p>
+        </div>
+      </section>
+
       {/* Competitive Advantage */}
       <section className="mb-8">
-        <h2 className="text-xl font-bold border-b border-gray-300 pb-1 mb-4">6. Key Takeaway for the Team</h2>
+        <h2 className="text-xl font-bold border-b border-gray-300 pb-1 mb-4">7. Key Takeaway for the Team</h2>
         <div className="bg-blue-50 border-l-4 border-blue-600 p-4 text-sm leading-relaxed">
           <p className="mb-2"><strong>Our biggest competitive advantage is iteration speed.</strong></p>
           <p className="mb-2">What would take a 6-person team 7+ months, we achieved in weeks. This means:</p>
