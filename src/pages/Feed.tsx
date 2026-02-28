@@ -17,7 +17,7 @@ import { PostDraft } from "@/hooks/useDrafts";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DraftsPanel } from "@/components/feed/DraftsPanel";
 import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
-import { FindooLoader } from "@/components/FindooLoader";
+
 
 const MemoizedPostCard = memo(PostCard);
 
