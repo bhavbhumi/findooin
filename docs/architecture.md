@@ -70,6 +70,272 @@ FindOO is organized into 10 feature modules, each with its own page, hook(s), an
 
 ---
 
+## Entity-Relationship Diagram
+
+The database contains 30+ tables organized into 6 domains. Foreign keys are shown as arrows.
+
+### Core User Domain
+
+```mermaid
+erDiagram
+    profiles ||--o{ user_roles : "has roles"
+    profiles ||--o{ active_sessions : "has sessions"
+    profiles ||--o{ user_settings : "has settings"
+    profiles ||--o{ verification_requests : "submits"
+    profiles ||--o{ profile_views : "viewed by"
+    profiles ||--o{ endorsements : "receives"
+    profiles ||--o{ card_exchanges : "card owner"
+
+    profiles {
+        uuid id PK
+        text full_name
+        text display_name
+        text avatar_url
+        text headline
+        text organization
+        enum user_type
+        enum verification_status
+        boolean onboarding_completed
+        jsonb languages
+        jsonb social_links
+        jsonb digital_card_fields
+        jsonb regulatory_ids
+    }
+
+    user_roles {
+        uuid id PK
+        uuid user_id FK
+        enum role
+        text sub_type
+    }
+
+    active_sessions {
+        uuid id PK
+        uuid user_id FK
+        text session_token
+        text device_info
+    }
+
+    verification_requests {
+        uuid id PK
+        uuid user_id FK
+        text document_url
+        text status
+        uuid reviewed_by
+    }
+```
+
+### Content Domain (Feed)
+
+```mermaid
+erDiagram
+    posts ||--o{ comments : "has"
+    posts ||--o{ post_interactions : "receives"
+    posts ||--o{ poll_options : "has options"
+    posts ||--o{ survey_questions : "has questions"
+    posts ||--o{ featured_posts : "pinned as"
+    posts ||--o{ reports : "reported via"
+    poll_options ||--o{ poll_votes : "receives"
+    survey_questions ||--o{ survey_options : "has options"
+    survey_questions ||--o{ survey_responses : "receives"
+    survey_options ||--o{ survey_responses : "selected in"
+
+    posts {
+        uuid id PK
+        uuid author_id FK
+        text content
+        enum post_type
+        enum post_kind
+        enum post_visibility
+        timestamp scheduled_at
+    }
+
+    comments {
+        uuid id PK
+        uuid post_id FK
+        uuid author_id FK
+        text content
+    }
+
+    post_interactions {
+        uuid id PK
+        uuid post_id FK
+        uuid user_id FK
+        text interaction_type
+    }
+
+    poll_options {
+        uuid id PK
+        uuid post_id FK
+        text option_text
+        integer position
+    }
+
+    poll_votes {
+        uuid id PK
+        uuid poll_option_id FK
+        uuid user_id FK
+    }
+
+    survey_questions {
+        uuid id PK
+        uuid post_id FK
+        text question_text
+        text question_type
+    }
+```
+
+### Jobs Domain
+
+```mermaid
+erDiagram
+    jobs ||--o{ job_applications : "receives"
+    jobs ||--o{ saved_jobs : "saved by"
+
+    jobs {
+        uuid id PK
+        uuid poster_id FK
+        text title
+        text company_name
+        enum job_category
+        enum job_type
+        enum job_status
+        text location
+        boolean is_remote
+    }
+
+    job_applications {
+        uuid id PK
+        uuid job_id FK
+        uuid applicant_id FK
+        enum status
+        text resume_url
+        text cover_note
+    }
+
+    saved_jobs {
+        uuid id PK
+        uuid job_id FK
+        uuid user_id FK
+    }
+```
+
+### Events Domain
+
+```mermaid
+erDiagram
+    events ||--o{ event_registrations : "has"
+    events ||--o{ event_speakers : "features"
+
+    events {
+        uuid id PK
+        uuid organizer_id FK
+        text title
+        enum category
+        enum event_mode
+        enum status
+        timestamp start_time
+        timestamp end_time
+        integer capacity
+        integer registration_count
+    }
+
+    event_registrations {
+        uuid id PK
+        uuid event_id FK
+        uuid user_id FK
+        enum status
+    }
+
+    event_speakers {
+        uuid id PK
+        uuid event_id FK
+        text speaker_name
+        uuid speaker_profile_id FK
+    }
+```
+
+### Directory Domain
+
+```mermaid
+erDiagram
+    listings ||--o{ listing_reviews : "reviewed via"
+    listings ||--o{ listing_enquiries : "enquired via"
+
+    listings {
+        uuid id PK
+        uuid user_id FK
+        text title
+        enum listing_type
+        enum product_category
+        enum service_category
+        enum status
+        numeric average_rating
+        integer review_count
+    }
+
+    listing_reviews {
+        uuid id PK
+        uuid listing_id FK
+        uuid reviewer_id FK
+        integer rating
+        text review_text
+    }
+
+    listing_enquiries {
+        uuid id PK
+        uuid listing_id FK
+        uuid enquirer_id FK
+        text message
+        text status
+    }
+```
+
+### Messaging and Notifications
+
+```mermaid
+erDiagram
+    messages {
+        uuid id PK
+        uuid sender_id FK
+        uuid receiver_id FK
+        text content
+        enum category
+        boolean read
+    }
+
+    notifications {
+        uuid id PK
+        uuid user_id FK
+        uuid actor_id FK
+        text type
+        text reference_id
+        text reference_type
+        text message
+        boolean read
+    }
+
+    connections {
+        uuid id PK
+        uuid from_user_id FK
+        uuid to_user_id FK
+        enum connection_type
+        enum status
+    }
+```
+
+### Supporting Tables
+
+| Table | Domain | Purpose |
+| --- | --- | --- |
+| `post_drafts` | Feed | Unsaved post drafts per user |
+| `blog_posts` | CMS | Public blog articles (admin-managed) |
+| `file_uploads` | Storage | Upload records for all storage buckets |
+| `vault_files` | Vault | Private document storage with share tokens |
+| `reports` | Moderation | User-submitted content/user reports |
+
+---
+
 ## Context Dependency Graph
 
 ```
