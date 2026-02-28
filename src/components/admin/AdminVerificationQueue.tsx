@@ -11,7 +11,7 @@ import { FindooLoader } from "@/components/FindooLoader";
 import { ROLE_CONFIG } from "@/lib/role-config";
 
 const statusColors: Record<string, string> = {
-  pending: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
+  pending: "bg-status-warning/10 text-status-warning border-status-warning/20",
   approved: "bg-accent/10 text-accent border-accent/20",
   rejected: "bg-destructive/10 text-destructive border-destructive/20",
 };
@@ -50,7 +50,7 @@ export function AdminVerificationQueue() {
     <div className="space-y-6">
       <div>
         <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-          <Clock className="h-4 w-4 text-yellow-600" />
+          <Clock className="h-4 w-4 text-status-warning" />
           Pending ({pending.length})
         </h2>
         {pending.length === 0 ? (

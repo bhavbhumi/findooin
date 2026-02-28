@@ -10,7 +10,7 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 
 const verificationBadge: Record<string, { label: string; className: string }> = {
   verified: { label: "Verified", className: "bg-accent/10 text-accent border-accent/20" },
-  pending: { label: "Pending", className: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20" },
+  pending: { label: "Pending", className: "bg-status-warning/10 text-status-warning border-status-warning/20" },
   unverified: { label: "Unverified", className: "bg-muted text-muted-foreground border-border" },
 };
 

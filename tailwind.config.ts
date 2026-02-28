@@ -67,6 +67,22 @@ export default {
           DEFAULT: "hsl(var(--gold))",
           foreground: "hsl(var(--gold-foreground))",
         },
+        "status-success": {
+          DEFAULT: "hsl(var(--status-success))",
+          foreground: "hsl(var(--status-success-foreground))",
+        },
+        "status-warning": {
+          DEFAULT: "hsl(var(--status-warning))",
+          foreground: "hsl(var(--status-warning-foreground))",
+        },
+        "status-info": {
+          DEFAULT: "hsl(var(--status-info))",
+          foreground: "hsl(var(--status-info-foreground))",
+        },
+        "status-highlight": {
+          DEFAULT: "hsl(var(--status-highlight))",
+          foreground: "hsl(var(--status-highlight-foreground))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

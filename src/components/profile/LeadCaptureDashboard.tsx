@@ -37,7 +37,7 @@ interface LeadCaptureDashboardProps {
 const ACTION_LABELS: Record<string, { label: string; icon: typeof Eye; color: string }> = {
   view: { label: "Viewed", icon: Eye, color: "text-muted-foreground" },
   save_contact: { label: "Saved Contact", icon: Download, color: "text-[hsl(var(--gold))]" },
-  connect: { label: "Connected", icon: UserPlus, color: "text-emerald-500" },
+  connect: { label: "Connected", icon: UserPlus, color: "text-status-success" },
   signup: { label: "Signed Up", icon: UserCheck, color: "text-accent" },
   checkin: { label: "Checked In", icon: Calendar, color: "text-accent" },
 };
@@ -107,7 +107,7 @@ export function LeadCaptureDashboard({ profileId }: LeadCaptureDashboardProps) {
         {[
           { label: "Card Views", value: stats.totalViews, icon: Eye, color: "text-muted-foreground" },
           { label: "Contact Saves", value: stats.totalSaves, icon: Download, color: "text-[hsl(var(--gold))]" },
-          { label: "Connections", value: stats.totalConnects, icon: UserPlus, color: "text-emerald-500" },
+          { label: "Connections", value: stats.totalConnects, icon: UserPlus, color: "text-status-success" },
           { label: "Referral Signups", value: stats.referrals, icon: UserCheck, color: "text-accent" },
           { label: "Event Leads", value: stats.eventLeads, icon: Calendar, color: "text-accent" },
           { label: "Unique Viewers", value: stats.uniqueViewers, icon: Users, color: "text-muted-foreground" },

@@ -88,7 +88,7 @@ export function VaultFileCard({ file, onDelete, onToggleShare, onDownload }: Pro
                 <Badge variant="secondary" className="text-[10px] py-0 bg-accent/10 text-accent">Auto-synced</Badge>
               )}
               {file.is_shared && (
-                <Badge variant="secondary" className="text-[10px] py-0 bg-emerald-500/10 text-emerald-600">
+                <Badge variant="secondary" className="text-[10px] py-0 bg-status-success/10 text-status-success">
                   <Link2 className="h-2.5 w-2.5 mr-0.5" /> Shared
                 </Badge>
               )}
