@@ -93,17 +93,20 @@
     --secondary-foreground: 220 20% 95%;
 
     --muted: 224 35% 18%;
-    --muted-foreground: 220 15% 60%;
+    --muted-foreground: 220 15% 65%;
 
-    --accent: 240 80% 45%;
+    --accent: 240 80% 55%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62% 40%;
+    --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 224 35% 18%;
-    --input: 224 35% 18%;
+    --border: 224 30% 22%;
+    --input: 224 30% 22%;
     --ring: 220 20% 80%;
+
+    /* Brand color that doesn't swap in dark mode */
+    --brand: 240 100% 27%;
 
     --issuer: 165 45% 48%;
     --issuer-foreground: 0 0% 100%;
@@ -172,6 +175,9 @@
   }
   .card-hover-glow:hover::after {
     @apply opacity-100;
+  }
+  .bg-brand {
+    background-color: hsl(240 100% 27%);
   }
 }
 

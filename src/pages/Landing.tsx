@@ -105,13 +105,13 @@ const Landing = () => {
         {/* Decorative elements */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <motion.div
-            className="absolute -top-16 -right-16 w-[340px] h-[340px] rounded-full border-2 border-primary/[0.06]"
+            className="absolute -top-16 -right-16 w-[340px] h-[340px] rounded-full border-2 border-primary/[0.1] dark:border-accent/[0.15]"
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
           />
           <motion.div
-            className="absolute -top-8 -right-8 w-[260px] h-[260px] rounded-full border border-accent/[0.08]"
+            className="absolute -top-8 -right-8 w-[260px] h-[260px] rounded-full border border-accent/[0.12] dark:border-accent/[0.2]"
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4, delay: 0.15, ease: "easeOut" }}
@@ -225,7 +225,7 @@ const Landing = () => {
               { icon: Lock, label: "End-to-End Encrypted" },
               { icon: Activity, label: "99.9% Uptime" },
             ].map((badge, i) => (
-              <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-xs text-muted-foreground">
+              <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-xs text-muted-foreground">
                 <badge.icon className="h-3 w-3 text-primary" />
                 {badge.label}
               </div>
@@ -280,7 +280,7 @@ const Landing = () => {
             variants={fadeUp}
             custom={5}
           >
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary text-sm font-semibold">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent/15 text-accent text-sm font-semibold">
               <Zap className="h-4 w-4" />
               FindOO fills this gap — purpose-built for finance.
             </div>
@@ -362,7 +362,7 @@ const Landing = () => {
                     Coming Soon
                   </span>
                 )}
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent mb-4">
                   <feat.icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-base font-bold font-heading text-card-foreground mb-2">{feat.title}</h3>
@@ -374,7 +374,7 @@ const Landing = () => {
       </section>
 
       {/* Trust */}
-      <section className="py-20 bg-primary text-primary-foreground">
+      <section className="py-20 bg-brand text-white">
         <div className="container">
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -387,7 +387,7 @@ const Landing = () => {
               <h2 className="text-3xl sm:text-4xl font-bold font-heading mb-4">
                 Trust is not optional
               </h2>
-              <p className="text-primary-foreground/70 text-lg leading-relaxed">
+              <p className="text-white/70 text-lg leading-relaxed">
                 Every Issuer and Intermediary goes through verification.
                 Upload your SEBI, RBI, or IRDAI registration — earn a verified badge
                 that signals credibility to the entire network.
@@ -407,7 +407,7 @@ const Landing = () => {
                   custom={i + 1}
                 >
                   <CheckCircle2 className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                  <span className="text-primary-foreground/90">{point}</span>
+                  <span className="text-white/90">{point}</span>
                 </motion.div>
               ))}
             </motion.div>
