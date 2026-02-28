@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useCreateInvitation } from "@/hooks/useInvitations";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 
@@ -16,6 +18,22 @@ export default function AdminRegistryPage() {
   const [search, setSearch] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
   const [syncing, setSyncing] = useState(false);
+  const createInvite = useCreateInvitation();
+
+  const handleCreateInvite = (entity: any, role: string) => {
+    if (!entity.contact_email) {
+      toast.error("This entity has no email — cannot create invitation");
+      return;
+    }
+    createInvite.mutate({
+      target_name: entity.entity_name,
+      target_email: entity.contact_email.toLowerCase(),
+      target_phone: entity.contact_phone || null,
+      target_role: role,
+      registry_entity_id: entity.id,
+      notes: `From registry: ${entity.source.toUpperCase()} ${entity.registration_number || ""}`.trim(),
+    });
+  };
 
   const { data: entities = [], isLoading, refetch } = useQuery({
     queryKey: ["admin-registry", search, sourceFilter],
@@ -169,9 +187,10 @@ export default function AdminRegistryPage() {
                     <TableHead className="text-xs">Location</TableHead>
                     <TableHead className="text-xs">Contact</TableHead>
                     <TableHead className="text-xs">Synced</TableHead>
-                    <TableHead className="text-xs">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
+                     <TableHead className="text-xs">Status</TableHead>
+                     <TableHead className="text-xs w-[50px]"></TableHead>
+                   </TableRow>
+                 </TableHeader>
                 <TableBody>
                   {entities.map((entity) => (
                     <TableRow key={entity.id}>
@@ -221,6 +240,31 @@ export default function AdminRegistryPage() {
                         >
                           {entity.matched_user_id ? "Matched" : entity.status}
                         </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {!entity.matched_user_id && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <MoreHorizontal className="h-3.5 w-3.5" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleCreateInvite(entity, "intermediary")}
+                                disabled={!entity.contact_email || createInvite.isPending}
+                              >
+                                <Send className="h-3.5 w-3.5 mr-2" /> Invite as Intermediary
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleCreateInvite(entity, "issuer")}
+                                disabled={!entity.contact_email || createInvite.isPending}
+                              >
+                                <Mail className="h-3.5 w-3.5 mr-2" /> Invite as Issuer
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
