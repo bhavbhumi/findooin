@@ -81,7 +81,7 @@ export function PostCard({ post }: { post: FeedPost }) {
   };
 
   return (
-    <article className="rounded-xl border border-border bg-card p-5 hover:shadow-lg hover:border-primary/15 hover:-translate-y-0.5 transition-all duration-200">
+    <article className="rounded-xl border border-border bg-card p-5 hover:shadow-lg hover:border-primary/15 hover:-translate-y-0.5 hover:bg-card/80 hover:backdrop-blur-sm transition-all duration-200">
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
         <Link to={`/profile/${post.author.id}`} className="shrink-0 hover:opacity-90 transition-opacity">
