@@ -39,12 +39,12 @@
 
     --radius: 0.625rem;
 
-    /* Role tints */
-    --issuer: 224 60% 55%;
+    /* Role tints — distinct & identifiable */
+    --issuer: 220 65% 50%;
     --issuer-foreground: 0 0% 100%;
-    --intermediary: 262 50% 55%;
+    --intermediary: 165 50% 40%;
     --intermediary-foreground: 0 0% 100%;
-    --investor: 240 100% 35%;
+    --investor: 32 75% 48%;
     --investor-foreground: 0 0% 100%;
 
     /* Brand Gold */
@@ -95,11 +95,11 @@
     --input: 224 35% 18%;
     --ring: 220 20% 80%;
 
-    --issuer: 224 60% 60%;
+    --issuer: 220 65% 58%;
     --issuer-foreground: 0 0% 100%;
-    --intermediary: 262 50% 60%;
+    --intermediary: 165 45% 48%;
     --intermediary-foreground: 0 0% 100%;
-    --investor: 240 80% 50%;
+    --investor: 32 70% 55%;
     --investor-foreground: 0 0% 100%;
 
     --gold: 46 65% 45%;
