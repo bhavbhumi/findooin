@@ -60,6 +60,10 @@ const AdminBillingPage = lazy(() => import("./pages/admin/AdminBillingPage"));
 const AdminNotificationsPage = lazy(() => import("./pages/admin/AdminNotificationsPage"));
 const AdminFeaturesPage = lazy(() => import("./pages/admin/AdminFeaturesPage"));
 const AdminSupportPage = lazy(() => import("./pages/admin/AdminSupportPage"));
+const AdminInvitationsPage = lazy(() => import("./pages/admin/AdminInvitationsPage"));
+const AdminRegistryPage = lazy(() => import("./pages/admin/AdminRegistryPage"));
+const AdminSalesPage = lazy(() => import("./pages/admin/AdminSalesPage"));
+const AdminCampaignsPage = lazy(() => import("./pages/admin/AdminCampaignsPage"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
@@ -144,6 +148,10 @@ const App = () => {
                         <Route path="notifications" element={<Suspense fallback={<LazyFallback />}><AdminNotificationsPage /></Suspense>} />
                         <Route path="features" element={<Suspense fallback={<LazyFallback />}><AdminFeaturesPage /></Suspense>} />
                         <Route path="support" element={<Suspense fallback={<LazyFallback />}><AdminSupportPage /></Suspense>} />
+                        <Route path="invitations" element={<Suspense fallback={<LazyFallback />}><AdminInvitationsPage /></Suspense>} />
+                        <Route path="registry" element={<Suspense fallback={<LazyFallback />}><AdminRegistryPage /></Suspense>} />
+                        <Route path="sales" element={<Suspense fallback={<LazyFallback />}><AdminSalesPage /></Suspense>} />
+                        <Route path="campaigns" element={<Suspense fallback={<LazyFallback />}><AdminCampaignsPage /></Suspense>} />
                       </Route>
                       <Route path="/jobs" element={<ProtectedRoute><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />

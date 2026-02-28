@@ -131,6 +131,63 @@ export type Database = {
         }
         Relationships: []
       }
+      campaigns: {
+        Row: {
+          campaign_type: string
+          click_count: number | null
+          completed_at: string | null
+          content: Json | null
+          conversion_count: number | null
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+          open_count: number | null
+          scheduled_at: string | null
+          sent_count: number | null
+          status: string
+          target_audience: string | null
+          target_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          campaign_type?: string
+          click_count?: number | null
+          completed_at?: string | null
+          content?: Json | null
+          conversion_count?: number | null
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+          open_count?: number | null
+          scheduled_at?: string | null
+          sent_count?: number | null
+          status?: string
+          target_audience?: string | null
+          target_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          campaign_type?: string
+          click_count?: number | null
+          completed_at?: string | null
+          content?: Json | null
+          conversion_count?: number | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+          open_count?: number | null
+          scheduled_at?: string | null
+          sent_count?: number | null
+          status?: string
+          target_audience?: string | null
+          target_count?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       card_exchanges: {
         Row: {
           action: string
@@ -467,6 +524,77 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      invitations: {
+        Row: {
+          archived_at: string | null
+          converted_user_id: string | null
+          created_at: string
+          created_by: string
+          id: string
+          last_reminder_at: string | null
+          max_reminders: number
+          next_reminder_at: string | null
+          notes: string | null
+          reactivate_after: string | null
+          registry_entity_id: string | null
+          reminder_count: number
+          status: string
+          target_email: string
+          target_name: string | null
+          target_phone: string | null
+          target_role: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          converted_user_id?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          last_reminder_at?: string | null
+          max_reminders?: number
+          next_reminder_at?: string | null
+          notes?: string | null
+          reactivate_after?: string | null
+          registry_entity_id?: string | null
+          reminder_count?: number
+          status?: string
+          target_email: string
+          target_name?: string | null
+          target_phone?: string | null
+          target_role?: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          converted_user_id?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          last_reminder_at?: string | null
+          max_reminders?: number
+          next_reminder_at?: string | null
+          notes?: string | null
+          reactivate_after?: string | null
+          registry_entity_id?: string | null
+          reminder_count?: number
+          status?: string
+          target_email?: string
+          target_name?: string | null
+          target_phone?: string | null
+          target_role?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invitations_registry_entity_id_fkey"
+            columns: ["registry_entity_id"]
+            isOneToOne: false
+            referencedRelation: "registry_entities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       job_applications: {
         Row: {
@@ -1134,6 +1262,72 @@ export type Database = {
         }
         Relationships: []
       }
+      registry_entities: {
+        Row: {
+          address: string | null
+          city: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string
+          entity_name: string
+          entity_type: string | null
+          id: string
+          last_synced_at: string | null
+          matched_user_id: string | null
+          pincode: string | null
+          raw_data: Json | null
+          registration_category: string | null
+          registration_number: string | null
+          source: string
+          source_id: string | null
+          state: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          entity_name: string
+          entity_type?: string | null
+          id?: string
+          last_synced_at?: string | null
+          matched_user_id?: string | null
+          pincode?: string | null
+          raw_data?: Json | null
+          registration_category?: string | null
+          registration_number?: string | null
+          source?: string
+          source_id?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          entity_name?: string
+          entity_type?: string | null
+          id?: string
+          last_synced_at?: string | null
+          matched_user_id?: string | null
+          pincode?: string | null
+          raw_data?: Json | null
+          registration_category?: string | null
+          registration_number?: string | null
+          source?: string
+          source_id?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           created_at: string
@@ -1175,6 +1369,78 @@ export type Database = {
           },
         ]
       }
+      sales_leads: {
+        Row: {
+          assigned_to: string | null
+          company_name: string | null
+          created_at: string
+          id: string
+          invitation_id: string | null
+          last_contacted_at: string | null
+          lead_email: string | null
+          lead_name: string
+          lead_phone: string | null
+          lead_priority: string
+          lead_source: string
+          lead_stage: string
+          metadata: Json | null
+          notes: string | null
+          registry_entity_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          invitation_id?: string | null
+          last_contacted_at?: string | null
+          lead_email?: string | null
+          lead_name: string
+          lead_phone?: string | null
+          lead_priority?: string
+          lead_source?: string
+          lead_stage?: string
+          metadata?: Json | null
+          notes?: string | null
+          registry_entity_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          company_name?: string | null
+          created_at?: string
+          id?: string
+          invitation_id?: string | null
+          last_contacted_at?: string | null
+          lead_email?: string | null
+          lead_name?: string
+          lead_phone?: string | null
+          lead_priority?: string
+          lead_source?: string
+          lead_stage?: string
+          metadata?: Json | null
+          notes?: string | null
+          registry_entity_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_leads_invitation_id_fkey"
+            columns: ["invitation_id"]
+            isOneToOne: false
+            referencedRelation: "invitations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_leads_registry_entity_id_fkey"
+            columns: ["registry_entity_id"]
+            isOneToOne: false
+            referencedRelation: "registry_entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saved_jobs: {
         Row: {
           created_at: string
@@ -1203,6 +1469,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      support_tickets: {
+        Row: {
+          assigned_to: string | null
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          priority: string
+          resolved_at: string | null
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          priority?: string
+          resolved_at?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       survey_options: {
         Row: {
