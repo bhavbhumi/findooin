@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Users, ShieldCheck, Flag, Clock, CheckCircle2, TrendingUp, TrendingDown,
-  ArrowRight, FileText, BarChart3, CalendarDays, Download
+  ArrowRight, FileText, BarChart3, CalendarDays, Download, Printer
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useMemo, useState, useCallback } from "react";
@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { toast } from "sonner";
+import { generatePrintSummary } from "./AdminPrintSummary";
 
 type RangeDays = 7 | 14 | 30;
 
@@ -191,6 +192,16 @@ export function AdminOverview() {
     toast.success(`Exported ${rows.length} reports`);
   }, [reports]);
 
+  const handlePrint = useCallback(() => {
+    const html = generatePrintSummary(users || [], requests || [], reports || []);
+    const win = window.open("", "_blank");
+    if (!win) return toast.error("Popup blocked — please allow popups for this site");
+    win.document.write(html);
+    win.document.close();
+    // Auto-trigger print after content renders
+    win.onload = () => win.print();
+  }, [users, requests, reports]);
+
   const stats = [
     {
       label: "Total Users",
@@ -254,6 +265,9 @@ export function AdminOverview() {
           </Button>
           <Button variant="outline" size="sm" onClick={exportReports} className="text-xs gap-1.5">
             <Download className="h-3.5 w-3.5" /> Reports CSV
+          </Button>
+          <Button variant="default" size="sm" onClick={handlePrint} className="text-xs gap-1.5">
+            <Printer className="h-3.5 w-3.5" /> Print / PDF
           </Button>
         </div>
       </div>
