@@ -85,17 +85,37 @@ export function CommentSection({ postId }: { postId: string }) {
   const handleSubmit = async () => {
     if (!text.trim() || !currentUserId || submitting) return;
     setSubmitting(true);
+    const commentText = text.trim();
+
+    // Optimistic: add comment immediately
+    const optimisticComment: Comment = {
+      id: `temp-${Date.now()}`,
+      content: commentText,
+      created_at: new Date().toISOString(),
+      author: {
+        id: currentUserId,
+        full_name: "You",
+        display_name: null,
+        avatar_url: null,
+      },
+    };
+    setComments((prev) => [optimisticComment, ...prev]);
+    setText("");
 
     const { error } = await supabase.from("comments").insert({
       post_id: postId,
       author_id: currentUserId,
-      content: text.trim(),
+      content: commentText,
     });
 
     if (!error) {
-      setText("");
+      // Refresh with real data
       await loadComments();
       queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
+    } else {
+      // Rollback optimistic comment
+      setComments((prev) => prev.filter((c) => c.id !== optimisticComment.id));
+      setText(commentText);
     }
     setSubmitting(false);
   };

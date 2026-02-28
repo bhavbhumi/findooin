@@ -3,12 +3,12 @@ import { useFeedPosts } from "@/hooks/useFeedPosts";
 import { useTrendingPosts } from "@/hooks/useTrendingPosts";
 import { useViralPosts } from "@/hooks/useViralPosts";
 import { PostCard } from "@/components/feed/PostCard";
+import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { CreatePostComposer } from "@/components/feed/CreatePostComposer";
 import { FeedTabs, type FeedFilter } from "@/components/feed/FeedTabs";
 import { FeedSidebar } from "@/components/feed/FeedSidebar";
 import AppLayout from "@/components/AppLayout";
-import { FindooLoader } from "@/components/FindooLoader";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect, memo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,8 +17,9 @@ import { PostDraft } from "@/hooks/useDrafts";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DraftsPanel } from "@/components/feed/DraftsPanel";
 import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
+import { FindooLoader } from "@/components/FindooLoader";
 
-const POSTS_PER_PAGE = 10;
+const MemoizedPostCard = memo(PostCard);
 
 const Feed = () => {
   usePageMeta({ title: "Feed", description: "Your personalized financial feed — market commentary, research notes, and insights from verified professionals." });
@@ -38,56 +39,51 @@ const Feed = () => {
   // Handle ?panel= URL param for mobile access
   useEffect(() => {
     if (panelParam === "drafts" || panelParam === "scheduled") {
-      // On mobile/tablet (no sidebar), open a sheet
       const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
       if (!isDesktop) {
         setMobileSheet(panelParam);
       }
-      // Clear the param so it doesn't persist
       setSearchParams({}, { replace: true });
     }
   }, [panelParam, setSearchParams]);
 
-  const { data: forYouPosts, isLoading: forYouLoading, error: forYouError } = useFeedPosts();
+  const {
+    flatPosts: forYouPosts,
+    isLoading: forYouLoading,
+    error: forYouError,
+    fetchNextPage: fetchNextForYou,
+    hasNextPage: hasNextForYou,
+    isFetchingNextPage: fetchingNextForYou,
+  } = useFeedPosts();
   const { data: trendingPosts, isLoading: trendingLoading, error: trendingError } = useTrendingPosts();
   const { data: viralPosts, isLoading: viralLoading, error: viralError } = useViralPosts();
 
-  const allPosts = filter === "foryou" ? forYouPosts : filter === "trending" ? trendingPosts : viralPosts;
+  const visiblePosts = filter === "foryou" ? forYouPosts : filter === "trending" ? trendingPosts : viralPosts;
   const isLoading = filter === "foryou" ? forYouLoading : filter === "trending" ? trendingLoading : viralLoading;
   const error = filter === "foryou" ? forYouError : filter === "trending" ? trendingError : viralError;
-
-  // Pagination
-  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
-  // Reset pagination on filter change
-  useEffect(() => {
-    setVisibleCount(POSTS_PER_PAGE);
-  }, [filter]);
-
-  const visiblePosts = allPosts?.slice(0, visibleCount);
-  const hasMore = (allPosts?.length ?? 0) > visibleCount;
+  const hasMore = filter === "foryou" ? hasNextForYou : false;
+  const isFetchingMore = filter === "foryou" ? fetchingNextForYou : false;
 
   // Infinite scroll observer
+  const observerRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    if (!hasMore || isLoading) return;
+    if (!hasMore || isLoading || isFetchingMore) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisibleCount((prev) => prev + POSTS_PER_PAGE);
+        if (entry.isIntersecting && filter === "foryou") {
+          fetchNextForYou();
         }
       },
-      { rootMargin: "200px" }
+      { rootMargin: "300px" }
     );
     const el = observerRef.current;
     if (el) observer.observe(el);
     return () => { if (el) observer.unobserve(el); };
-  }, [hasMore, isLoading, visibleCount]);
+  }, [hasMore, isLoading, isFetchingMore, filter, fetchNextForYou]);
 
   const handleLoadDraft = useCallback((draft: PostDraft) => {
     setDraftToLoad(draft);
     setMobileSheet(null);
-    // Scroll to top where composer is
     window.scrollTo({ top: 0, behavior: "smooth" });
     toast.info("Draft loaded — resume editing in composer above");
   }, []);
@@ -107,7 +103,14 @@ const Feed = () => {
           </ErrorBoundary>
           <FeedTabs value={filter} onChange={setFilter} />
 
-          {isLoading && <FindooLoader text="Loading your feed..." />}
+          {/* Initial loading skeletons */}
+          {isLoading && (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <PostCardSkeleton key={i} />
+              ))}
+            </div>
+          )}
 
           {error && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center">
@@ -128,12 +131,17 @@ const Feed = () => {
           )}
 
           {visiblePosts?.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <MemoizedPostCard key={post.id} post={post} />
           ))}
 
           {/* Infinite scroll trigger */}
           {hasMore && <div ref={observerRef} className="h-1" />}
-          {hasMore && <FindooLoader size="sm" />}
+          {isFetchingMore && (
+            <div className="space-y-4">
+              <PostCardSkeleton />
+              <PostCardSkeleton />
+            </div>
+          )}
         </div>
 
         <aside className="hidden lg:block">

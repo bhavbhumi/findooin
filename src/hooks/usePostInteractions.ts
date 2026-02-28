@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, InfiniteData } from "@tanstack/react-query";
+import type { FeedPost } from "@/hooks/useFeedPosts";
 
 // ── Batch loader: coalesces per-post interaction checks into a single DB call ──
 let batchQueue: { postId: string; userId: string; resolve: (result: { liked: boolean; bookmarked: boolean }) => void }[] = [];
@@ -33,7 +34,7 @@ function scheduleBatch() {
     });
 
     batch.forEach((b) => b.resolve(resultMap.get(b.postId) || { liked: false, bookmarked: false }));
-  }, 50); // 50ms debounce window to collect all PostCards
+  }, 50);
 }
 
 function batchLoadInteraction(postId: string, userId: string): Promise<{ liked: boolean; bookmarked: boolean }> {
@@ -41,6 +42,35 @@ function batchLoadInteraction(postId: string, userId: string): Promise<{ liked: 
     batchQueue.push({ postId, userId, resolve });
     scheduleBatch();
   });
+}
+
+// ── Optimistic cache updater ──
+function optimisticUpdateFeedCache(
+  queryClient: ReturnType<typeof useQueryClient>,
+  postId: string,
+  updater: (post: FeedPost) => FeedPost
+) {
+  // Update infinite query cache (feed-posts)
+  queryClient.setQueriesData<InfiniteData<FeedPost[]>>(
+    { queryKey: ["feed-posts"] },
+    (old) => {
+      if (!old) return old;
+      return {
+        ...old,
+        pages: old.pages.map((page) =>
+          page.map((post) => (post.id === postId ? updater(post) : post))
+        ),
+      };
+    }
+  );
+
+  // Also update trending/viral caches which use flat arrays
+  for (const key of ["trending-posts", "viral-posts"]) {
+    queryClient.setQueriesData<FeedPost[]>(
+      { queryKey: [key] },
+      (old) => old?.map((post) => (post.id === postId ? updater(post) : post))
+    );
+  }
 }
 
 // ── Hook ──
@@ -71,31 +101,77 @@ export function usePostInteractions(postId: string) {
     });
   }, [postId]);
 
-  const toggleInteraction = useCallback(async (type: string, current: boolean, setter: (v: boolean) => void) => {
+  const toggleLike = useCallback(async () => {
     if (!currentUserId || loading) return;
-    setLoading(true);
-    if (current) {
-      await supabase
-        .from("post_interactions")
-        .delete()
-        .eq("post_id", postId)
-        .eq("user_id", currentUserId)
-        .eq("interaction_type", type);
-      setter(false);
-    } else {
-      await supabase.from("post_interactions").insert({
-        post_id: postId,
-        user_id: currentUserId,
-        interaction_type: type,
-      });
-      setter(true);
-    }
-    queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
-    setLoading(false);
-  }, [currentUserId, postId, loading, queryClient]);
+    const wasLiked = liked;
+    
+    // Optimistic update
+    setLiked(!wasLiked);
+    optimisticUpdateFeedCache(queryClient, postId, (post) => ({
+      ...post,
+      like_count: post.like_count + (wasLiked ? -1 : 1),
+    }));
 
-  const toggleLike = useCallback(() => toggleInteraction("like", liked, setLiked), [toggleInteraction, liked]);
-  const toggleBookmark = useCallback(() => toggleInteraction("bookmark", bookmarked, setBookmarked), [toggleInteraction, bookmarked]);
+    try {
+      if (wasLiked) {
+        await supabase
+          .from("post_interactions")
+          .delete()
+          .eq("post_id", postId)
+          .eq("user_id", currentUserId)
+          .eq("interaction_type", "like");
+      } else {
+        await supabase.from("post_interactions").insert({
+          post_id: postId,
+          user_id: currentUserId,
+          interaction_type: "like",
+        });
+      }
+    } catch {
+      // Rollback on failure
+      setLiked(wasLiked);
+      optimisticUpdateFeedCache(queryClient, postId, (post) => ({
+        ...post,
+        like_count: post.like_count + (wasLiked ? 1 : -1),
+      }));
+    }
+  }, [currentUserId, postId, loading, liked, queryClient]);
+
+  const toggleBookmark = useCallback(async () => {
+    if (!currentUserId || loading) return;
+    const wasBookmarked = bookmarked;
+    
+    // Optimistic update
+    setBookmarked(!wasBookmarked);
+    optimisticUpdateFeedCache(queryClient, postId, (post) => ({
+      ...post,
+      bookmark_count: post.bookmark_count + (wasBookmarked ? -1 : 1),
+    }));
+
+    try {
+      if (wasBookmarked) {
+        await supabase
+          .from("post_interactions")
+          .delete()
+          .eq("post_id", postId)
+          .eq("user_id", currentUserId)
+          .eq("interaction_type", "bookmark");
+      } else {
+        await supabase.from("post_interactions").insert({
+          post_id: postId,
+          user_id: currentUserId,
+          interaction_type: "bookmark",
+        });
+      }
+    } catch {
+      // Rollback on failure
+      setBookmarked(wasBookmarked);
+      optimisticUpdateFeedCache(queryClient, postId, (post) => ({
+        ...post,
+        bookmark_count: post.bookmark_count + (wasBookmarked ? 1 : -1),
+      }));
+    }
+  }, [currentUserId, postId, loading, bookmarked, queryClient]);
 
   return { liked, bookmarked, currentUserId, toggleLike, toggleBookmark, loading };
 }

@@ -51,7 +51,7 @@ const Discover = () => {
   const [locationFilter, setLocationFilter] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"people" | "posts">((searchParams.get("tab") as "people" | "posts") || "people");
 
-  const { data: allPosts = [], isLoading: loadingPosts } = useFeedPosts();
+  const { flatPosts: allPosts, isLoading: loadingPosts } = useFeedPosts();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
