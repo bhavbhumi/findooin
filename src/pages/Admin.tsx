@@ -5,13 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { FindooLoader } from "@/components/FindooLoader";
 import AppNavbar from "@/components/AppNavbar";
-import { Shield, ShieldCheck, Users, Flag, LayoutDashboard, BookOpen, Activity } from "lucide-react";
+import { Shield, ShieldCheck, Users, Flag, LayoutDashboard, BookOpen, Activity, Monitor } from "lucide-react";
 import { AdminVerificationQueue } from "@/components/admin/AdminVerificationQueue";
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 import { AdminContentModeration } from "@/components/admin/AdminContentModeration";
 import { AdminOverview } from "@/components/admin/AdminOverview";
 import { AdminBlogManagement } from "@/components/admin/AdminBlogManagement";
 import { AdminAuditLog } from "@/components/admin/AdminAuditLog";
+import { AdminMonitoring } from "@/components/admin/AdminMonitoring";
 
 export default function Admin() {
   usePageMeta({ title: "Admin Panel" });
@@ -50,7 +51,7 @@ export default function Admin() {
         </div>
 
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="w-full grid grid-cols-6 h-10 mb-6">
+          <TabsList className="w-full grid grid-cols-7 h-10 mb-6">
             <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm">
               <LayoutDashboard className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Overview</span>
@@ -75,6 +76,10 @@ export default function Admin() {
               <Activity className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Audit</span>
             </TabsTrigger>
+            <TabsTrigger value="monitoring" className="gap-1.5 text-xs sm:text-sm">
+              <Monitor className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Monitor</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview"><AdminOverview /></TabsContent>
@@ -83,6 +88,7 @@ export default function Admin() {
           <TabsContent value="moderation"><AdminContentModeration /></TabsContent>
           <TabsContent value="blog"><AdminBlogManagement /></TabsContent>
           <TabsContent value="audit"><AdminAuditLog /></TabsContent>
+          <TabsContent value="monitoring"><AdminMonitoring /></TabsContent>
         </Tabs>
       </div>
     </div>
