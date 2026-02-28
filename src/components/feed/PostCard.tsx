@@ -26,17 +26,17 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 import { UserCheck } from "lucide-react";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
-  market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-accent/10 text-accent" },
-  research_note: { label: "Research Note", icon: BookOpen, className: "bg-issuer/10 text-issuer" },
+  market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-status-info/10 text-status-info" },
+  research_note: { label: "Research Note", icon: BookOpen, className: "bg-status-highlight/10 text-status-highlight" },
   announcement: { label: "Announcement", icon: Megaphone, className: "bg-destructive/10 text-destructive" },
-  article: { label: "Article", icon: Newspaper, className: "bg-intermediary/10 text-intermediary" },
+  article: { label: "Article", icon: Newspaper, className: "bg-accent/10 text-accent" },
   text: { label: "Insight", icon: FileText, className: "bg-muted text-muted-foreground" },
-  query: { label: "Query", icon: FileText, className: "bg-investor/10 text-investor" },
+  query: { label: "Query", icon: FileText, className: "bg-gold/10 text-gold" },
 };
 
 const queryCategoryConfig: Record<string, { label: string; icon: typeof FileText; className: string }> = {
-  requirement: { label: "Requirement", icon: FileText, className: "bg-investor/10 text-investor" },
-  expert_find: { label: "Expert Find", icon: UserCheck, className: "bg-primary/10 text-primary" },
+  requirement: { label: "Requirement", icon: FileText, className: "bg-gold/10 text-gold" },
+  expert_find: { label: "Expert Find", icon: UserCheck, className: "bg-status-info/10 text-status-info" },
 };
 
 function getAttachmentIcon(type: string | null) {

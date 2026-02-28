@@ -37,7 +37,7 @@ export function OrganizerDashboard() {
 
   const STATUS_COLORS: Record<string, string> = {
     draft: "bg-muted text-muted-foreground",
-    published: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+    published: "bg-status-success/10 text-status-success",
     cancelled: "bg-destructive/10 text-destructive",
     completed: "bg-primary/10 text-primary",
   };

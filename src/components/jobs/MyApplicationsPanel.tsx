@@ -7,11 +7,11 @@ import { Briefcase, FileText } from "lucide-react";
 
 const STATUS_COLORS: Record<string, string> = {
   submitted: "bg-muted text-muted-foreground",
-  viewed: "bg-blue-500/10 text-blue-600 border-blue-500/20",
-  shortlisted: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-  interviewing: "bg-purple-500/10 text-purple-600 border-purple-500/20",
-  offered: "bg-green-500/10 text-green-600 border-green-500/20",
-  hired: "bg-green-600/10 text-green-700 border-green-600/20",
+  viewed: "bg-status-info/10 text-status-info border-status-info/20",
+  shortlisted: "bg-status-warning/10 text-status-warning border-status-warning/20",
+  interviewing: "bg-status-highlight/10 text-status-highlight border-status-highlight/20",
+  offered: "bg-status-success/10 text-status-success border-status-success/20",
+  hired: "bg-status-success/15 text-status-success border-status-success/30",
   rejected: "bg-destructive/10 text-destructive border-destructive/20",
   withdrawn: "bg-muted text-muted-foreground",
 };

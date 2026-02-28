@@ -18,11 +18,11 @@ import type { JobApplication } from "@/hooks/useJobs";
 // ─── Pipeline Tracker ───────────────────────────────────────────
 const PIPELINE_STAGES = [
   { key: "submitted", label: "Applied", icon: Send, color: "bg-muted" },
-  { key: "viewed", label: "Viewed", icon: Eye, color: "bg-blue-500/20" },
-  { key: "shortlisted", label: "Shortlisted", icon: Star, color: "bg-amber-500/20" },
-  { key: "interviewing", label: "Interviewing", icon: Users, color: "bg-purple-500/20" },
-  { key: "offered", label: "Offered", icon: Award, color: "bg-green-500/20" },
-  { key: "hired", label: "Hired", icon: CheckCircle2, color: "bg-green-600/20" },
+  { key: "viewed", label: "Viewed", icon: Eye, color: "bg-status-info/20" },
+  { key: "shortlisted", label: "Shortlisted", icon: Star, color: "bg-status-warning/20" },
+  { key: "interviewing", label: "Interviewing", icon: Users, color: "bg-status-highlight/20" },
+  { key: "offered", label: "Offered", icon: Award, color: "bg-status-success/20" },
+  { key: "hired", label: "Hired", icon: CheckCircle2, color: "bg-status-success/30" },
 ];
 
 function ApplicationPipeline({ applications }: { applications: JobApplication[] }) {

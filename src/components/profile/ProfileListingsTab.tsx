@@ -95,9 +95,9 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-3">
-          <StatCard label="Active" value={active.length} icon={Package} color="text-green-600 dark:text-green-400" />
+          <StatCard label="Active" value={active.length} icon={Package} color="text-status-success" />
           <StatCard label="Draft" value={draft.length} icon={Store} color="text-muted-foreground" />
-          <StatCard label="Paused" value={paused.length} icon={Store} color="text-yellow-600 dark:text-yellow-400" />
+          <StatCard label="Paused" value={paused.length} icon={Store} color="text-status-warning" />
         </div>
 
         {listings.length === 0 ? (
@@ -207,9 +207,9 @@ function StatCard({ label, value, icon: Icon, color }: { label: string; value: n
 
 function ListingRow({ listing }: { listing: Listing }) {
   const statusColor: Record<string, string> = {
-    active: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    active: "bg-status-success/10 text-status-success",
     draft: "bg-muted text-muted-foreground",
-    paused: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+    paused: "bg-status-warning/10 text-status-warning",
     archived: "bg-muted text-muted-foreground",
   };
 

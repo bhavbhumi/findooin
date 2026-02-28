@@ -51,6 +51,16 @@
     --gold: 46 65% 52%;
     --gold-foreground: 0 0% 100%;
 
+    /* Status tokens */
+    --status-success: 160 55% 42%;
+    --status-success-foreground: 0 0% 100%;
+    --status-warning: 40 80% 50%;
+    --status-warning-foreground: 30 80% 20%;
+    --status-info: 210 70% 52%;
+    --status-info-foreground: 0 0% 100%;
+    --status-highlight: 270 50% 55%;
+    --status-highlight-foreground: 0 0% 100%;
+
     /* Sidebar */
     --sidebar-background: 224 55% 12%;
     --sidebar-foreground: 220 20% 90%;
@@ -104,6 +114,16 @@
 
     --gold: 46 65% 45%;
     --gold-foreground: 0 0% 100%;
+
+    /* Status tokens */
+    --status-success: 160 50% 48%;
+    --status-success-foreground: 0 0% 100%;
+    --status-warning: 40 75% 55%;
+    --status-warning-foreground: 40 80% 15%;
+    --status-info: 210 65% 58%;
+    --status-info-foreground: 0 0% 100%;
+    --status-highlight: 270 45% 60%;
+    --status-highlight-foreground: 0 0% 100%;
 
     --sidebar-background: 224 50% 6%;
     --sidebar-foreground: 220 20% 90%;
