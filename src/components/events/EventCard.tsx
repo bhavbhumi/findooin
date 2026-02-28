@@ -35,7 +35,7 @@ export const EventCard = memo(function EventCard({ event, onClick, onRegister, o
 
   return (
     <Card
-      className="group cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-border hover:border-primary/20"
+      className="group cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-border hover:border-primary/20 hover:bg-card/80 hover:backdrop-blur-sm"
       onClick={onClick}
       role="button"
       tabIndex={0}
