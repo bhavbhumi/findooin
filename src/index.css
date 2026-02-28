@@ -40,9 +40,9 @@
     --radius: 0.625rem;
 
     /* Role tints — distinct & identifiable */
-    --issuer: 220 65% 50%;
+    --issuer: 165 50% 40%;
     --issuer-foreground: 0 0% 100%;
-    --intermediary: 165 50% 40%;
+    --intermediary: 220 65% 50%;
     --intermediary-foreground: 0 0% 100%;
     --investor: 32 75% 48%;
     --investor-foreground: 0 0% 100%;
@@ -95,9 +95,9 @@
     --input: 224 35% 18%;
     --ring: 220 20% 80%;
 
-    --issuer: 220 65% 58%;
+    --issuer: 165 45% 48%;
     --issuer-foreground: 0 0% 100%;
-    --intermediary: 165 45% 48%;
+    --intermediary: 220 65% 58%;
     --intermediary-foreground: 0 0% 100%;
     --investor: 32 70% 55%;
     --investor-foreground: 0 0% 100%;
