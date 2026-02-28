@@ -81,7 +81,7 @@ export function AdminSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border/50">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="p-3">
         {!collapsed && (
           <div className="flex items-center gap-2 px-1">
@@ -104,7 +104,7 @@ export function AdminSidebar() {
       <SidebarContent>
         {NAV_SECTIONS.map((section) => (
           <SidebarGroup key={section.label}>
-            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50">
               {!collapsed && section.label}
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -120,10 +120,10 @@ export function AdminSidebar() {
                         <NavLink
                           to={item.url}
                           end={item.end}
-                          className={`hover:bg-muted/50 transition-colors relative ${
+                          className={`hover:bg-sidebar-accent transition-colors relative text-sidebar-foreground ${
                             item.soon ? "opacity-60" : ""
                           }`}
-                          activeClassName="bg-primary/10 text-primary font-medium"
+                          activeClassName="bg-sidebar-accent text-sidebar-primary-foreground font-medium"
                         >
                           <div className="relative mr-2 shrink-0">
                             <item.icon className="h-4 w-4" />
@@ -137,7 +137,7 @@ export function AdminSidebar() {
                             <span className="flex-1 flex items-center justify-between">
                               <span className="text-sm">{item.title}</span>
                               {item.soon && (
-                                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0">
+                                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0 border-sidebar-foreground/30 text-sidebar-foreground/60">
                                   Soon
                                 </Badge>
                               )}
@@ -161,7 +161,7 @@ export function AdminSidebar() {
 
       <SidebarFooter className="p-3">
         {!collapsed && (
-          <p className="text-[10px] text-muted-foreground text-center">
+          <p className="text-[10px] text-sidebar-foreground/40 text-center">
             FindOO Admin v2.0
           </p>
         )}
