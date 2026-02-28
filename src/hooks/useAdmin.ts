@@ -16,6 +16,19 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+/** Fire-and-forget audit log insert */
+async function logAdminAction(action: string, resourceType: string, resourceId?: string, metadata?: Record<string, any>) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return;
+  supabase.from("audit_logs").insert({
+    user_id: session.user.id,
+    action,
+    resource_type: resourceType,
+    resource_id: resourceId || null,
+    metadata: metadata || {},
+  }).then(() => {});
+}
+
 export function useIsAdmin() {
   return useQuery({
     queryKey: ["is-admin"],
@@ -132,6 +145,10 @@ export function useReviewVerification() {
     onSuccess: (_, vars) => {
       toast.success(`Verification ${vars.status}`);
       qc.invalidateQueries({ queryKey: ["admin-verification-queue"] });
+      logAdminAction("verification_review", "verification_request", vars.requestId, {
+        status: vars.status,
+        user_id: vars.userId,
+      });
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -192,9 +209,10 @@ export function useUpdateReportStatus() {
         .eq("id", reportId);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, vars) => {
       toast.success("Report updated");
       qc.invalidateQueries({ queryKey: ["admin-reports"] });
+      logAdminAction("report_status_change", "report", vars.reportId, { new_status: vars.status });
     },
     onError: (err: any) => toast.error(err.message),
   });
@@ -239,10 +257,11 @@ export function useDeletePost() {
       const { error } = await supabase.from("posts").delete().eq("id", postId);
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, postId) => {
       toast.success("Post deleted");
       qc.invalidateQueries({ queryKey: ["admin-reports"] });
       qc.invalidateQueries({ queryKey: ["feed-posts"] });
+      logAdminAction("post_deletion", "post", postId);
     },
     onError: (err: any) => toast.error(err.message),
   });
