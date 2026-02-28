@@ -181,7 +181,7 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
     });
   }, []);
 
-  // Reset post kind when switching to investor mode (no polls/surveys)
+  // Reset post kind when switching to investor mode (no polls/surveys for investors)
   useEffect(() => {
     if (isInvestorMode) {
       setPostKind("normal");

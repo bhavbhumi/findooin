@@ -2,7 +2,8 @@ import { useState } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Plus, Package, LayoutGrid, GitCompare } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Search, Plus, Package, LayoutGrid, GitCompare, Info } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { FindooLoader } from "@/components/FindooLoader";
 import { useListings, type Listing, type ListingType } from "@/hooks/useListings";
@@ -80,6 +81,16 @@ const Directory = () => {
               )}
             </div>
           </div>
+
+          {/* Investor info banner */}
+          {activeRole === "investor" && (
+            <Alert className="border-primary/20 bg-primary/5">
+              <Info className="h-4 w-4 text-primary" />
+              <AlertDescription className="text-xs text-muted-foreground">
+                As an Investor, you can browse, compare, and enquire about listings. To create listings, switch to an Issuer or Intermediary role from your profile.
+              </AlertDescription>
+            </Alert>
+          )}
 
           {/* Search bar */}
           <div className="relative">
