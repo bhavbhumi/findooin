@@ -23,6 +23,8 @@ import {
   SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useVerificationQueue, useAdminReports } from "@/hooks/useAdmin";
 
@@ -42,7 +44,9 @@ export function AdminSidebar() {
     "/admin/moderation": pendingReports,
   };
 
-  const NAV_SECTIONS = [
+  type NavItem = { title: string; url: string; icon: React.ComponentType<{ className?: string }>; end?: boolean; soon?: boolean };
+
+  const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
     {
       label: "Overview",
       items: [
@@ -90,6 +94,45 @@ export function AdminSidebar() {
     },
   ];
 
+  const renderMenuItem = (item: NavItem, isActive: boolean, badgeCount: number, isCollapsed: boolean) => (
+    <SidebarMenuItem key={item.title}>
+      <SidebarMenuButton asChild>
+        <NavLink
+          to={item.url}
+          end={item.end}
+          className={`hover:bg-sidebar-accent transition-colors relative text-sidebar-foreground ${
+            item.soon ? "opacity-60" : ""
+          }`}
+          activeClassName="bg-sidebar-accent text-sidebar-primary-foreground font-medium"
+        >
+          <div className="relative mr-2 shrink-0">
+            <item.icon className="h-4 w-4" />
+            {isCollapsed && badgeCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 h-3.5 min-w-3.5 rounded-full bg-destructive text-destructive-foreground text-[8px] flex items-center justify-center px-0.5">
+                {badgeCount}
+              </span>
+            )}
+          </div>
+          {!isCollapsed && (
+            <span className="flex-1 flex items-center justify-between">
+              <span className="text-sm">{item.title}</span>
+              {item.soon && (
+                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0 border-sidebar-foreground/30 text-sidebar-foreground/60">
+                  Soon
+                </Badge>
+              )}
+              {!item.soon && badgeCount > 0 && (
+                <Badge variant="destructive" className="text-[9px] h-4.5 min-w-5 px-1.5 ml-1 shrink-0">
+                  {badgeCount}
+                </Badge>
+              )}
+            </span>
+          )}
+        </NavLink>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="p-3">
@@ -112,61 +155,59 @@ export function AdminSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {NAV_SECTIONS.map((section) => (
-          <SidebarGroup key={section.label}>
-            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50">
-              {!collapsed && section.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) => {
-                  const isActive = item.end
-                    ? location.pathname === item.url
-                    : location.pathname.startsWith(item.url);
-                  const badgeCount = badgeMap[item.url] || 0;
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <NavLink
-                          to={item.url}
-                          end={item.end}
-                          className={`hover:bg-sidebar-accent transition-colors relative text-sidebar-foreground ${
-                            item.soon ? "opacity-60" : ""
-                          }`}
-                          activeClassName="bg-sidebar-accent text-sidebar-primary-foreground font-medium"
-                        >
-                          <div className="relative mr-2 shrink-0">
-                            <item.icon className="h-4 w-4" />
-                            {collapsed && badgeCount > 0 && (
-                              <span className="absolute -top-1.5 -right-1.5 h-3.5 min-w-3.5 rounded-full bg-destructive text-destructive-foreground text-[8px] flex items-center justify-center px-0.5">
-                                {badgeCount}
-                              </span>
-                            )}
-                          </div>
-                          {!collapsed && (
-                            <span className="flex-1 flex items-center justify-between">
-                              <span className="text-sm">{item.title}</span>
-                              {item.soon && (
-                                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0 border-sidebar-foreground/30 text-sidebar-foreground/60">
-                                  Soon
-                                </Badge>
-                              )}
-                              {!item.soon && badgeCount > 0 && (
-                                <Badge variant="destructive" className="text-[9px] h-4.5 min-w-5 px-1.5 ml-1 shrink-0">
-                                  {badgeCount}
-                                </Badge>
-                              )}
-                            </span>
-                          )}
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        {NAV_SECTIONS.map((section) => {
+          const sectionHasActive = section.items.some((item) =>
+            item.end ? location.pathname === item.url : location.pathname.startsWith(item.url)
+          );
+          const isOverview = section.label === "Overview";
+
+          if (isOverview || collapsed) {
+            return (
+              <SidebarGroup key={section.label}>
+                <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50">
+                  {!collapsed && section.label}
+                </SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {section.items.map((item) => {
+                      const isActive = item.end
+                        ? location.pathname === item.url
+                        : location.pathname.startsWith(item.url);
+                      const badgeCount = badgeMap[item.url] || 0;
+                      return renderMenuItem(item, isActive, badgeCount, collapsed);
+                    })}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            );
+          }
+
+          return (
+            <Collapsible key={section.label} defaultOpen={sectionHasActive} className="group/collapsible">
+              <SidebarGroup>
+                <SidebarGroupLabel asChild className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50 hover:bg-sidebar-accent/50 rounded-md cursor-pointer">
+                  <CollapsibleTrigger className="flex w-full items-center justify-between">
+                    <span>{section.label}</span>
+                    <ChevronRight className="h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  </CollapsibleTrigger>
+                </SidebarGroupLabel>
+                <CollapsibleContent>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      {section.items.map((item) => {
+                        const isActive = item.end
+                          ? location.pathname === item.url
+                          : location.pathname.startsWith(item.url);
+                        const badgeCount = badgeMap[item.url] || 0;
+                        return renderMenuItem(item, isActive, badgeCount, collapsed);
+                      })}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </CollapsibleContent>
+              </SidebarGroup>
+            </Collapsible>
+          );
+        })}
       </SidebarContent>
 
       <SidebarFooter className="p-3">
