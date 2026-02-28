@@ -131,7 +131,7 @@ function RegistrationList({ eventId }: { eventId: string }) {
       {registrations.map((reg) => (
         <div key={reg.id} className="flex items-center gap-2.5">
           <Avatar className="h-7 w-7">
-            <AvatarImage src={reg.user_profile?.avatar_url || ""} />
+            <AvatarImage src={reg.user_profile?.avatar_url || undefined} />
             <AvatarFallback className="text-[10px]">
               {(reg.user_profile?.full_name || "U")[0]}
             </AvatarFallback>
