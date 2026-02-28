@@ -109,21 +109,15 @@ export function PostCard({ post }: { post: FeedPost }) {
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
             <span>{formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}</span>
-            <span>·</span>
-            <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${typeConfig.className}`}>
-              <TypeIcon className="h-2.5 w-2.5" />
-              {typeConfig.label}
-            </span>
-            {post.post_type === "query" && post.query_category && queryCategoryConfig[post.query_category] && (() => {
-              const qc = queryCategoryConfig[post.query_category!];
-              const QcIcon = qc.icon;
-              return (
-                <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${qc.className}`}>
-                  <QcIcon className="h-2.5 w-2.5" />
-                  {qc.label}
+            {post.post_type !== "text" && (
+              <>
+                <span>·</span>
+                <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${typeConfig.className}`}>
+                  <TypeIcon className="h-2.5 w-2.5" />
+                  {typeConfig.label}
                 </span>
-              );
-            })()}
+              </>
+            )}
           </div>
         </div>
 
