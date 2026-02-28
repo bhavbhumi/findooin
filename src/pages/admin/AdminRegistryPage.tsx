@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail } from "lucide-react";
+import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateInvitation } from "@/hooks/useInvitations";
@@ -18,6 +18,8 @@ export default function AdminRegistryPage() {
   const [search, setSearch] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
   const [syncing, setSyncing] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const createInvite = useCreateInvitation();
 
   const handleCreateInvite = (entity: any, role: string) => {
@@ -70,7 +72,7 @@ export default function AdminRegistryPage() {
       if (data?.success) {
         if (data.api_accessible === false && data.summary.total_found === 0) {
           toast.warning(
-            "AMFI's website API is not accessible from server. Use 'Bulk Import' on the Invitations page with a CSV downloaded from AMFI's 'Locate Distributor' page instead.",
+            "AMFI's new website doesn't expose a public API. Please use the 'Import CSV' button with data downloaded from AMFI's Locate Distributor page.",
             { duration: 8000 }
           );
         } else {
@@ -86,6 +88,73 @@ export default function AdminRegistryPage() {
       toast.error(err.message || "Failed to sync AMFI data");
     } finally {
       setSyncing(false);
+    }
+  };
+
+  const parseCSV = (text: string): Array<Record<string, string>> => {
+    const lines = text.split(/\r?\n/).filter((l) => l.trim());
+    if (lines.length < 2) return [];
+    
+    // Parse header - handle quoted values
+    const parseRow = (line: string): string[] => {
+      const result: string[] = [];
+      let current = "";
+      let inQuotes = false;
+      for (const char of line) {
+        if (char === '"') { inQuotes = !inQuotes; continue; }
+        if (char === "," && !inQuotes) { result.push(current.trim()); current = ""; continue; }
+        current += char;
+      }
+      result.push(current.trim());
+      return result;
+    };
+
+    const headers = parseRow(lines[0]).map((h) =>
+      h.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")
+    );
+
+    return lines.slice(1).map((line) => {
+      const values = parseRow(line);
+      const record: Record<string, string> = {};
+      headers.forEach((h, i) => { record[h] = values[i] || ""; });
+      return record;
+    }).filter((r) => Object.values(r).some((v) => v));
+  };
+
+  const handleCSVImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setImporting(true);
+    try {
+      const text = await file.text();
+      const records = parseCSV(text);
+
+      if (records.length === 0) {
+        toast.error("No valid rows found in CSV");
+        return;
+      }
+
+      toast.info(`Importing ${records.length} records...`);
+
+      const { data, error } = await supabase.functions.invoke("scrape-amfi", {
+        body: { seed_data: records },
+      });
+
+      if (error) throw error;
+      if (data?.success) {
+        toast.success(
+          `Import complete: ${data.summary.inserted} new, ${data.summary.updated} updated, ${data.summary.skipped} skipped`
+        );
+        refetch();
+      } else {
+        toast.error(data?.error || "Import failed");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to import CSV");
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -125,19 +194,44 @@ export default function AdminRegistryPage() {
       {/* Sync Card */}
       <Card>
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <CardTitle className="text-base flex items-center gap-2">
                 <Download className="h-4 w-4" /> Registry Sync
               </CardTitle>
               <CardDescription className="text-xs mt-1">
-                Scrape distributor data from AMFI and regulatory sources into the registry
+                Import distributor data from AMFI's{" "}
+                <a
+                  href="https://www.amfiindia.com/locate-distributor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline inline-flex items-center gap-0.5"
+                >
+                  Locate Distributor <ExternalLink className="h-3 w-3" />
+                </a>{" "}
+                page. Download the data as CSV from AMFI, then import it here.
               </CardDescription>
             </div>
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleAmfiSync} disabled={syncing}>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,.txt"
+                className="hidden"
+                onChange={handleCSVImport}
+              />
+              <Button
+                size="sm"
+                variant="default"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={importing}
+              >
+                <Upload className={`h-3.5 w-3.5 mr-1.5 ${importing ? "animate-spin" : ""}`} />
+                {importing ? "Importing..." : "Import CSV"}
+              </Button>
+              <Button size="sm" variant="outline" onClick={handleAmfiSync} disabled={syncing}>
                 <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${syncing ? "animate-spin" : ""}`} />
-                {syncing ? "Syncing AMFI..." : "Sync AMFI (5 cities)"}
+                {syncing ? "Trying API..." : "Try API Sync"}
               </Button>
             </div>
           </div>
