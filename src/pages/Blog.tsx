@@ -6,6 +6,7 @@ import { Clock, BookOpen, FileText, BarChart3, ScrollText, Bell, Loader2, Messag
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBlogPosts, BlogPost, BlogPostType } from "@/hooks/useBlogPosts";
+import { useBlogPollStats, useBlogSurveyStats } from "@/hooks/useBlogInteractions";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 import { formatDistanceToNow } from "date-fns";
@@ -53,7 +54,7 @@ const postTypeColor: Record<string, string> = {
 };
 
 /* ── Blog card ── */
-function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+function BlogCard({ post, index, statCount }: { post: BlogPost; index: number; statCount?: number }) {
   const Icon = postTypeIcon[post.post_type] || FileText;
   const colorClass = postTypeColor[post.post_type] || "bg-primary/10 text-primary";
 
@@ -135,7 +136,14 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
                     </>
                   )}
                 </div>
-                <Badge variant="outline" className="text-[10px] capitalize">{post.post_type}</Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-[10px] capitalize">{post.post_type}</Badge>
+                  {statCount !== undefined && statCount > 0 && (
+                    <span className="text-[10px] text-muted-foreground">
+                      {statCount} {post.post_type === "poll" ? "vote" : "response"}{statCount !== 1 ? "s" : ""}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -197,6 +205,8 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
 const Blog = () => {
   usePageMeta({ title: "Blog", description: "Articles, analysis, reports, and insights from the financial ecosystem." });
   const { data: posts, isLoading } = useBlogPosts();
+  const { data: pollStats } = useBlogPollStats();
+  const { data: surveyStats } = useBlogSurveyStats();
   const [activeTab, setActiveTab] = useState<string>("article");
   const [activeSubFilter, setActiveSubFilter] = useState("All");
 
@@ -370,9 +380,10 @@ const Blog = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {filteredPosts.map((post, i) => (
-                  <BlogCard key={post.id} post={post} index={i} />
-                ))}
+                {filteredPosts.map((post, i) => {
+                  const sc = post.post_type === "poll" ? pollStats?.[post.id] : post.post_type === "survey" ? surveyStats?.[post.id] : undefined;
+                  return <BlogCard key={post.id} post={post} index={i} statCount={sc} />;
+                })}
               </motion.div>
             ) : (
               <motion.div

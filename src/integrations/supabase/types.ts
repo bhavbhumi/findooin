@@ -74,6 +74,80 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_poll_options: {
+        Row: {
+          blog_post_id: string
+          created_at: string
+          id: string
+          is_multi_select: boolean
+          option_text: string
+          position: number
+        }
+        Insert: {
+          blog_post_id: string
+          created_at?: string
+          id?: string
+          is_multi_select?: boolean
+          option_text: string
+          position?: number
+        }
+        Update: {
+          blog_post_id?: string
+          created_at?: string
+          id?: string
+          is_multi_select?: boolean
+          option_text?: string
+          position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_poll_options_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_poll_votes: {
+        Row: {
+          blog_post_id: string
+          created_at: string
+          id: string
+          option_id: string
+          user_id: string
+        }
+        Insert: {
+          blog_post_id: string
+          created_at?: string
+          id?: string
+          option_id: string
+          user_id: string
+        }
+        Update: {
+          blog_post_id?: string
+          created_at?: string
+          id?: string
+          option_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_poll_votes_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_poll_votes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "blog_poll_options"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_avatar_url: string | null
@@ -133,6 +207,125 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      blog_survey_options: {
+        Row: {
+          id: string
+          option_text: string
+          position: number
+          question_id: string
+        }
+        Insert: {
+          id?: string
+          option_text: string
+          position?: number
+          question_id: string
+        }
+        Update: {
+          id?: string
+          option_text?: string
+          position?: number
+          question_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_survey_options_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "blog_survey_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_survey_questions: {
+        Row: {
+          blog_post_id: string
+          created_at: string
+          id: string
+          position: number
+          question_text: string
+          question_type: string
+          required: boolean
+        }
+        Insert: {
+          blog_post_id: string
+          created_at?: string
+          id?: string
+          position?: number
+          question_text: string
+          question_type?: string
+          required?: boolean
+        }
+        Update: {
+          blog_post_id?: string
+          created_at?: string
+          id?: string
+          position?: number
+          question_text?: string
+          question_type?: string
+          required?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_survey_questions_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_survey_responses: {
+        Row: {
+          blog_post_id: string
+          created_at: string
+          id: string
+          option_id: string | null
+          question_id: string
+          text_response: string | null
+          user_id: string
+        }
+        Insert: {
+          blog_post_id: string
+          created_at?: string
+          id?: string
+          option_id?: string | null
+          question_id: string
+          text_response?: string | null
+          user_id: string
+        }
+        Update: {
+          blog_post_id?: string
+          created_at?: string
+          id?: string
+          option_id?: string | null
+          question_id?: string
+          text_response?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_survey_responses_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_survey_responses_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "blog_survey_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_survey_responses_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "blog_survey_questions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       campaigns: {
         Row: {

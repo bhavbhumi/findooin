@@ -2,6 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion } from "framer-motion";
 import { ArrowLeft, Clock, BookOpen, Calendar, Heart, Share2, User, List } from "lucide-react";
+import { BlogPollWidget } from "@/components/blog/BlogPollWidget";
+import { BlogSurveyWidget } from "@/components/blog/BlogSurveyWidget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -243,6 +245,16 @@ const BlogPostPage = () => {
                     prose-td:px-4 prose-td:py-2.5 prose-td:border-b prose-td:border-border prose-td:text-sm"
                   dangerouslySetInnerHTML={{ __html: processedContent }}
                 />
+
+                {/* Interactive Poll Widget */}
+                {post.post_type === "poll" && (
+                  <BlogPollWidget blogPostId={post.id} />
+                )}
+
+                {/* Interactive Survey Widget */}
+                {post.post_type === "survey" && (
+                  <BlogSurveyWidget blogPostId={post.id} />
+                )}
 
                 {/* Tags */}
                 {post.tags && post.tags.length > 0 && (
