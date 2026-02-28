@@ -1,3 +1,15 @@
+/**
+ * useJobs — Job board hooks (CRUD, applications, saved jobs).
+ *
+ * Provides 11 exports covering job browsing with filters, employer
+ * dashboards, candidate application tracking, and save/unsave.
+ * Poster profiles are batch-fetched to avoid N+1 queries.
+ *
+ * Key patterns:
+ * - Duplicate application detection via Supabase unique constraint
+ * - Employer can update application status with notes
+ * - Saved jobs stored as user_id + job_id pairs
+ */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";

@@ -1,3 +1,10 @@
+/**
+ * useTrendingHashtags — Top 10 hashtags by frequency over a time window.
+ *
+ * Scans all posts with hashtags from the last N days (default 7),
+ * normalizes tags to lowercase with # prefix, and returns sorted
+ * by frequency. `staleTime: 60s`.
+ */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 

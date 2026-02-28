@@ -1,3 +1,11 @@
+/**
+ * useScheduledPosts — Manage future-dated posts.
+ *
+ * Fetches posts where `scheduled_at > now()` for the current user.
+ * Provides `cancelPost` (delete) and `publishNow` (clear scheduled_at)
+ * mutations. The `publish-scheduled-posts` edge function handles
+ * automatic publishing when the scheduled time arrives.
+ */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";

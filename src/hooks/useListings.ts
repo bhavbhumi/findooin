@@ -1,3 +1,13 @@
+/**
+ * useListings — Directory module hooks (products, services, reviews, enquiries).
+ *
+ * Provides 8 exports for browsing/creating listings, submitting reviews,
+ * and sending enquiries. Owner profiles are batch-fetched. Review stats
+ * (count, average_rating) are auto-updated by a DB trigger.
+ *
+ * RLS: Only issuer/intermediary/admin can create listings.
+ * Self-reviews are prevented at the DB level.
+ */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";

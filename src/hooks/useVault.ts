@@ -1,3 +1,13 @@
+/**
+ * useVault — Secure document vault hook.
+ *
+ * Manages file uploads/downloads to the private `vault` storage bucket.
+ * Supports categorization (KYC, tax, certificates, etc.), share-link
+ * generation via random tokens, and auto-sync from verification docs.
+ *
+ * Files are uploaded directly to Supabase Storage, with metadata
+ * tracked in the `vault_files` table.
+ */
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";

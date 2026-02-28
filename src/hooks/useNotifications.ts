@@ -1,3 +1,12 @@
+/**
+ * useNotifications — Realtime notification hook.
+ *
+ * Loads the 50 most recent notifications on mount, then subscribes
+ * to Supabase Realtime (postgres_changes INSERT) for live updates.
+ * Actor profiles are batch-fetched for display names/avatars.
+ *
+ * Provides mark-as-read (single + bulk) and unread count tracking.
+ */
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
