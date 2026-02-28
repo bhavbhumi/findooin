@@ -48,7 +48,7 @@ const Jobs = () => {
   const isIndividual = !isEntity;
 
   const appliedJobIds = new Set(myApps?.map((a) => a.job_id) || []);
-  const canPostJobs = activeRole === "issuer" || activeRole === "intermediary";
+  const canPostJobs = activeRole === "issuer" || activeRole === "intermediary" || activeRole === "admin";
 
   const handleCategoryClick = (cat: string) => setCategory(cat);
   const handleLocationClick = (loc: string) => setSearch(loc);
@@ -78,7 +78,7 @@ const Jobs = () => {
                 <Briefcase className="h-3.5 w-3.5" />
                 Browse Jobs
               </TabsTrigger>
-              {isIndividual && (
+              {(isIndividual || activeRole === "investor") && (
                 <TabsTrigger value="dashboard" className="gap-1.5">
                   <LayoutDashboard className="h-3.5 w-3.5" />
                   My Dashboard
@@ -145,7 +145,7 @@ const Jobs = () => {
               )}
             </TabsContent>
 
-            {isIndividual && (
+            {(isIndividual || activeRole === "investor") && (
               <TabsContent value="dashboard">
                 <CandidateDashboard onSelectJob={setSelectedJob} />
               </TabsContent>
