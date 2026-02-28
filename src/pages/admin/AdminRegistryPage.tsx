@@ -68,9 +68,16 @@ export default function AdminRegistryPage() {
 
       if (error) throw error;
       if (data?.success) {
-        toast.success(
-          `Synced ${data.summary.cities_processed} cities: ${data.summary.total_inserted} new, ${data.summary.total_updated} updated`
-        );
+        if (data.api_accessible === false && data.summary.total_found === 0) {
+          toast.warning(
+            "AMFI's website API is not accessible from server. Use 'Bulk Import' on the Invitations page with a CSV downloaded from AMFI's 'Locate Distributor' page instead.",
+            { duration: 8000 }
+          );
+        } else {
+          toast.success(
+            `Synced ${data.summary.cities_processed} cities: ${data.summary.total_inserted} new, ${data.summary.total_updated} updated`
+          );
+        }
         refetch();
       } else {
         toast.error(data?.error || "Sync failed");
