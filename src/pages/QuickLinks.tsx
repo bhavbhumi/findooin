@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import {
   Building2, Users, Newspaper, Briefcase, MessageCircle, Shield,
   FileText, Lock, BookOpen, HelpCircle, Phone, MapPin, ExternalLink,
-  TrendingUp, Globe, UserCheck, Settings, Bell
+  TrendingUp, Globe, UserCheck, Settings, Bell, Code2
 } from "lucide-react";
 
 const fadeUp = {
@@ -43,6 +43,15 @@ const linkGroups = [
       { icon: HelpCircle, label: "Help Desk", to: "/helpdesk", desc: "FAQs and help articles" },
       { icon: MessageCircle, label: "Community Guidelines", to: "/community-guidelines", desc: "Rules of engagement" },
       { icon: MapPin, label: "Visit Us", to: "/contact?tab=visit", desc: "Our office locations" },
+    ],
+  },
+  {
+    title: "Developers",
+    links: [
+      { icon: Code2, label: "Developer Docs", to: "/developer", desc: "Architecture & API reference" },
+      { icon: Code2, label: "API Reference", to: "/developer?tab=api-reference", desc: "Hook documentation (authenticated)" },
+      { icon: Code2, label: "Edge Functions", to: "/developer?tab=edge-functions", desc: "Backend function schemas" },
+      { icon: Code2, label: "Getting Started", to: "/developer?tab=getting-started", desc: "Setup & conventions guide" },
     ],
   },
   {

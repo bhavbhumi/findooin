@@ -1,0 +1,682 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { usePageMeta } from "@/hooks/usePageMeta";
+import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { PageHero } from "@/components/PageHero";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Lock, BookOpen, Code2, Server, Rocket, ChevronRight, Database, Shield, Zap, Layers } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useSearchParams } from "react-router-dom";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
+};
+
+/* ── Architecture Content (Public) ── */
+const ArchitectureTab = () => (
+  <div className="space-y-8">
+    {/* System Overview */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Layers className="h-5 w-5 text-primary" />
+          System Overview
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <pre className="bg-muted/50 border border-border rounded-lg p-4 text-xs font-mono overflow-x-auto leading-relaxed">
+{`┌──────────────────────────────────────────────┐
+│              React SPA (Vite)                │
+│                                              │
+│  Pages ──▶ Contexts ──▶ UI Components        │
+│              │                               │
+│         Custom Hooks (20+)                   │
+│              │                               │
+│        TanStack React Query                  │
+│              │                               │
+│         Supabase SDK                         │
+└──────────────┼───────────────────────────────┘
+               │
+   ┌───────────┴───────────┐
+   │    Lovable Cloud       │
+   │  ├── PostgreSQL (30+)  │
+   │  ├── Auth              │
+   │  ├── Storage (5)       │
+   │  ├── Edge Functions (4)│
+   │  ├── Realtime          │
+   │  └── RLS Policies      │
+   └────────────────────────┘`}
+        </pre>
+      </CardContent>
+    </Card>
+
+    {/* Module Map */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Database className="h-5 w-5 text-primary" />
+          Module Map
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-2 px-3 font-semibold text-foreground">Module</th>
+                <th className="text-left py-2 px-3 font-semibold text-foreground">Route</th>
+                <th className="text-left py-2 px-3 font-semibold text-foreground">Hook(s)</th>
+                <th className="text-left py-2 px-3 font-semibold text-foreground">Components</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                { module: "Feed", route: "/feed", hooks: "useFeedPosts, usePostInteractions, useDrafts, useScheduledPosts", folder: "components/feed/" },
+                { module: "Profile", route: "/profile", hooks: "useConnectionActions, usePostInteractions", folder: "components/profile/" },
+                { module: "Network", route: "/network", hooks: "useConnectionActions", folder: "components/network/" },
+                { module: "Jobs", route: "/jobs", hooks: "useJobs (11 exports)", folder: "components/jobs/" },
+                { module: "Events", route: "/events", hooks: "useEvents (9 exports)", folder: "components/events/" },
+                { module: "Directory", route: "/directory", hooks: "useListings (8 exports)", folder: "components/directory/" },
+                { module: "Vault", route: "/vault", hooks: "useVault", folder: "components/vault/" },
+                { module: "Admin", route: "/admin", hooks: "useAdmin (8 exports)", folder: "components/admin/" },
+              ].map((row) => (
+                <tr key={row.module} className="hover:bg-muted/30 transition-colors">
+                  <td className="py-2.5 px-3 font-medium text-foreground">{row.module}</td>
+                  <td className="py-2.5 px-3"><code className="text-xs bg-muted px-1.5 py-0.5 rounded">{row.route}</code></td>
+                  <td className="py-2.5 px-3 text-muted-foreground text-xs">{row.hooks}</td>
+                  <td className="py-2.5 px-3"><code className="text-xs bg-muted px-1.5 py-0.5 rounded">{row.folder}</code></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
+
+    {/* Data Flow Patterns */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Zap className="h-5 w-5 text-primary" />
+          Data Flow Patterns
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {[
+          {
+            title: "Standard CRUD",
+            desc: "Jobs, Events, Listings",
+            flow: "Page → useQuery → supabase.from().select() → batch profiles → useMutation → invalidateQueries → toast",
+          },
+          {
+            title: "Optimistic Updates",
+            desc: "Feed Interactions (Like, Bookmark)",
+            flow: "Click → setLiked(true) → patch TanStack cache → insert to DB → on error: rollback + toast.error()",
+          },
+          {
+            title: "Batch Loading",
+            desc: "Post Interactions (50ms debounce)",
+            flow: "10 PostCards mount → queue requests for 50ms → single DB query WHERE post_id IN (...) → dispatch results",
+          },
+          {
+            title: "Infinite Scroll",
+            desc: "Feed pagination",
+            flow: "useInfiniteQuery → get_feed_posts RPC → PAGE_SIZE=15 → IntersectionObserver → fetchNextPage",
+          },
+          {
+            title: "Realtime",
+            desc: "Messages, Notifications",
+            flow: "Initial load → supabase.channel() → postgres_changes INSERT → prepend to state + increment count",
+          },
+        ].map((pattern) => (
+          <div key={pattern.title} className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <h4 className="text-sm font-semibold text-foreground">{pattern.title}</h4>
+              <Badge variant="secondary" className="text-[10px]">{pattern.desc}</Badge>
+            </div>
+            <p className="text-xs text-muted-foreground font-mono bg-muted/40 rounded-md px-3 py-2">{pattern.flow}</p>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+
+    {/* Database Tables & Functions */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Database className="h-5 w-5 text-primary" />
+          Database Overview
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground">30+ tables organized across 6 domains with RLS policies on every table.</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {[
+            { domain: "User", tables: "profiles, user_roles, active_sessions, user_settings, verification_requests, profile_views, endorsements, card_exchanges" },
+            { domain: "Content", tables: "posts, comments, post_interactions, poll_options, poll_votes, survey_questions, survey_options, survey_responses, featured_posts, post_drafts" },
+            { domain: "Jobs", tables: "jobs, job_applications, saved_jobs" },
+            { domain: "Events", tables: "events, event_registrations, event_speakers" },
+            { domain: "Directory", tables: "listings, listing_reviews, listing_enquiries" },
+            { domain: "Platform", tables: "messages, notifications, connections, reports, blog_posts, file_uploads, vault_files" },
+          ].map((d) => (
+            <div key={d.domain} className="border border-border rounded-lg p-3">
+              <h4 className="text-sm font-semibold text-foreground mb-1">{d.domain}</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">{d.tables}</p>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+/* ── Getting Started Content (Public) ── */
+const GettingStartedTab = () => (
+  <div className="space-y-8">
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Rocket className="h-5 w-5 text-primary" />
+          Quick Start
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <pre className="bg-muted/50 border border-border rounded-lg p-4 text-xs font-mono overflow-x-auto">
+{`# Clone the repo
+git clone <YOUR_GIT_URL>
+cd findoo
+
+# Install dependencies
+npm install   # or: bun install
+
+# Start dev server
+npm run dev   # or: bun dev`}
+        </pre>
+        <p className="text-sm text-muted-foreground">
+          The app opens at <code className="bg-muted px-1.5 py-0.5 rounded text-xs">http://localhost:5173</code>. 
+          Backend is automatically connected via Lovable Cloud.
+        </p>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Tech Stack</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid sm:grid-cols-2 gap-3">
+          {[
+            { layer: "Framework", tech: "React 18 + TypeScript" },
+            { layer: "Build", tech: "Vite" },
+            { layer: "Styling", tech: "Tailwind CSS + shadcn/ui" },
+            { layer: "State", tech: "TanStack React Query" },
+            { layer: "Routing", tech: "React Router v6" },
+            { layer: "Animation", tech: "Framer Motion" },
+            { layer: "Backend", tech: "Lovable Cloud (Supabase)" },
+            { layer: "Auth", tech: "Email + Password" },
+          ].map((item) => (
+            <div key={item.layer} className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30">
+              <span className="text-xs font-semibold text-foreground w-20 shrink-0">{item.layer}</span>
+              <span className="text-xs text-muted-foreground">{item.tech}</span>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Key Conventions</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {[
+          { title: "Components", rule: "PascalCase (PostCard.tsx). Each module has its own folder under src/components/." },
+          { title: "Hooks", rule: "camelCase with 'use' prefix (useJobs.ts). One hook file per module. TanStack useQuery for reads, useMutation for writes." },
+          { title: "State", rule: "Server state via React Query. Auth/role via RoleContext. Local state only for UI-specific concerns. No Redux/Zustand." },
+          { title: "Design System", rule: "Never use raw color values. All colors via HSL CSS custom properties. Both light and dark modes supported." },
+          { title: "Error Handling", rule: "Always include toast.error() in onError callbacks. Optimistic updates must implement rollback." },
+        ].map((conv) => (
+          <div key={conv.title} className="space-y-1">
+            <h4 className="text-sm font-semibold text-foreground">{conv.title}</h4>
+            <p className="text-xs text-muted-foreground">{conv.rule}</p>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Testing</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <pre className="bg-muted/50 border border-border rounded-lg p-4 text-xs font-mono overflow-x-auto">
+{`# Run all tests
+npm test
+
+# Run specific test file
+npx vitest run src/test/useFeedPosts.test.ts`}
+        </pre>
+        <p className="text-sm text-muted-foreground">
+          20+ unit tests using Vitest covering feed normalization, optimistic updates, connection state transitions, and session management.
+        </p>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+/* ── Protected Content Wrapper ── */
+const ProtectedSection = ({ children, label }: { children: React.ReactNode; label: string }) => {
+  const [authed, setAuthed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setAuthed(!!session);
+    });
+  }, []);
+
+  if (authed === null) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="animate-pulse text-muted-foreground text-sm">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!authed) {
+    return (
+      <Card className="border-dashed">
+        <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
+          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <Lock className="h-6 w-6 text-primary" />
+          </div>
+          <div className="text-center space-y-1.5">
+            <h3 className="text-lg font-semibold text-foreground">Authentication Required</h3>
+            <p className="text-sm text-muted-foreground max-w-md">
+              The {label} section is available to authenticated developers. Please sign in to access the full documentation.
+            </p>
+          </div>
+          <a href="/auth" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+            Sign In <ChevronRight className="h-3.5 w-3.5" />
+          </a>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return <>{children}</>;
+};
+
+/* ── API Reference Content (Protected) ── */
+const ApiReferenceTab = () => (
+  <ProtectedSection label="API Reference">
+    <div className="space-y-8">
+      {/* Feed Hooks */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Feed Hooks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <HookDoc
+            name="useFeedPosts()"
+            file="src/hooks/useFeedPosts.ts"
+            desc="Infinite-scroll feed data using get_feed_posts RPC."
+            returns={[
+              { name: "flatPosts", type: "FeedPost[]", desc: "Flattened array of all loaded pages" },
+              { name: "fetchNextPage", type: "() => void", desc: "Load next 15 posts" },
+              { name: "hasNextPage", type: "boolean", desc: "Whether more pages are available" },
+              { name: "isLoading", type: "boolean", desc: "Initial load state" },
+            ]}
+          />
+          <HookDoc
+            name="usePostInteractions(postId)"
+            file="src/hooks/usePostInteractions.ts"
+            desc="Like/bookmark state with optimistic updates and 50ms batch loading."
+            returns={[
+              { name: "liked", type: "boolean", desc: "Whether current user liked the post" },
+              { name: "bookmarked", type: "boolean", desc: "Whether current user bookmarked the post" },
+              { name: "toggleLike", type: "() => void", desc: "Toggle like with optimistic update" },
+              { name: "toggleBookmark", type: "() => void", desc: "Toggle bookmark with optimistic update" },
+            ]}
+          />
+          <HookDoc
+            name="useTrendingPosts()"
+            file="src/hooks/useTrendingPosts.ts"
+            desc="Posts from the last 7 days containing top 5 most-used hashtags. staleTime: 60s."
+            returns={[{ name: "data", type: "FeedPost[]", desc: "Sorted by trending hashtag frequency" }]}
+          />
+          <HookDoc
+            name="useDrafts(userId)"
+            file="src/hooks/useDrafts.ts"
+            desc="CRUD for post drafts stored in post_drafts table."
+            returns={[
+              { name: "drafts", type: "PostDraft[]", desc: "List of user drafts" },
+              { name: "saveDraft", type: "(data) => string | null", desc: "Save/update a draft" },
+              { name: "deleteDraft", type: "(id) => void", desc: "Delete a draft" },
+            ]}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Job Hooks */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Job Hooks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <HookDoc
+            name="useJobs(filters?)"
+            file="src/hooks/useJobs.ts"
+            desc="Filterable job listings with poster profiles. 11 exports total."
+            returns={[
+              { name: "data", type: "Job[]", desc: "Filtered job listings" },
+              { name: "isLoading", type: "boolean", desc: "Loading state" },
+            ]}
+          />
+          <div className="text-xs text-muted-foreground space-y-1">
+            <p className="font-semibold text-foreground">Additional exports:</p>
+            {["useJob(id)", "useMyPostedJobs()", "useMyApplications()", "useJobApplications(jobId)", "useSavedJobs()", "useCreateJob()", "useUpdateJob()", "useApplyToJob()", "useToggleSaveJob()", "useUpdateApplicationStatus()"].map(h => (
+              <p key={h} className="font-mono">• {h}</p>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Event Hooks */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Event Hooks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <HookDoc
+            name="useEvents(filters?)"
+            file="src/hooks/useEvents.ts"
+            desc="Event listings with organizer profiles and user registration status. 9 exports."
+            returns={[
+              { name: "data", type: "EventData[]", desc: "Filtered events with organizer info" },
+            ]}
+          />
+          <div className="text-xs text-muted-foreground space-y-1">
+            <p className="font-semibold text-foreground">Additional exports:</p>
+            {["useMyEvents()", "useMyRegistrations()", "useEventSpeakers(eventId)", "useEventRegistrations(eventId)", "useCreateEvent()", "useUpdateEvent()", "useRegisterForEvent()", "useCancelRegistration()"].map(h => (
+              <p key={h} className="font-mono">• {h}</p>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Directory, Vault, Network, Notification, Admin, Utility */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Other Hooks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <HookDoc
+            name="useListings(filters?)"
+            file="src/hooks/useListings.ts"
+            desc="Directory listings with owner profiles. 8 exports including reviews and enquiries."
+            returns={[{ name: "data", type: "Listing[]", desc: "Filtered listings" }]}
+          />
+          <HookDoc
+            name="useVault(userId)"
+            file="src/hooks/useVault.ts"
+            desc="Secure document storage with share links and verification sync."
+            returns={[
+              { name: "files", type: "VaultFile[]", desc: "User's vault files" },
+              { name: "uploadFile", type: "(file, category, desc?, tags?) => VaultFile | null", desc: "Upload to vault" },
+              { name: "toggleShare", type: "(fileId, shared) => void", desc: "Toggle share link" },
+            ]}
+          />
+          <HookDoc
+            name="useConnectionActions(myId, theirId)"
+            file="src/hooks/useConnectionActions.ts"
+            desc="Follow/connect/disconnect with optimistic status tracking."
+            returns={[
+              { name: "connectionStatus", type: "{ following, connected }", desc: "Current relationship state" },
+              { name: "follow/unfollow/connect/disconnect", type: "() => Promise<void>", desc: "Mutation actions" },
+            ]}
+          />
+          <HookDoc
+            name="useNotifications()"
+            file="src/hooks/useNotifications.ts"
+            desc="Realtime notifications with auto-subscription to postgres_changes INSERT."
+            returns={[
+              { name: "notifications", type: "Notification[]", desc: "50 most recent" },
+              { name: "unreadCount", type: "number", desc: "Unread count" },
+              { name: "markAsRead/markAllAsRead", type: "() => void", desc: "Mark operations" },
+            ]}
+          />
+          <HookDoc
+            name="useIsAdmin()"
+            file="src/hooks/useAdmin.ts"
+            desc="Admin role check + verification queue, reports, user management. 8 exports."
+            returns={[{ name: "isAdmin", type: "boolean", desc: "Whether current user has admin role" }]}
+          />
+          <HookDoc
+            name="usePageMeta({ title, description })"
+            file="src/hooks/usePageMeta.ts"
+            desc="Sets document.title and OG/Twitter meta tags. Resets on unmount."
+            returns={[]}
+          />
+        </CardContent>
+      </Card>
+
+      {/* Library Modules */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Library Modules</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {[
+            { name: "src/lib/storage.ts", exports: "validateFile(), uploadFile(), deleteFile()", desc: "File upload via upload-file edge function with client-side validation." },
+            { name: "src/lib/session-manager.ts", exports: "registerSession(), removeSession(), touchSession()", desc: "Multi-device session management (max 3 concurrent). Heartbeat every 5min." },
+            { name: "src/lib/role-config.ts", exports: "ROLE_CONFIG, getRoleIcon(), getRoleBadgeClasses()", desc: "Role metadata: labels, icons, colors, CSS variables." },
+            { name: "src/lib/vcard.ts", exports: "generateVCard(), downloadVCard()", desc: "vCard (.vcf) generation for digital business cards." },
+          ].map((mod) => (
+            <div key={mod.name} className="space-y-1 p-3 rounded-lg bg-muted/30">
+              <code className="text-xs font-semibold text-foreground">{mod.name}</code>
+              <p className="text-xs text-muted-foreground">{mod.desc}</p>
+              <p className="text-[11px] font-mono text-primary/80">{mod.exports}</p>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  </ProtectedSection>
+);
+
+/* ── Edge Functions Content (Protected) ── */
+const EdgeFunctionsTab = () => (
+  <ProtectedSection label="Edge Functions">
+    <div className="space-y-6">
+      {[
+        {
+          name: "upload-file",
+          auth: true,
+          trigger: "HTTP POST",
+          purpose: "Secure file upload with MIME validation and size limits (10MB max).",
+          request: "POST /functions/v1/upload-file\nAuthorization: Bearer <token>\nContent-Type: multipart/form-data\n\nFields: file (required), bucket (required)",
+          response: '{ "url": "...", "path": "userId/timestamp_file.ext", "file_name": "doc.pdf", "file_type": "application/pdf", "file_size": 1048576 }',
+          buckets: "avatars (JPEG/PNG/WebP), banners (JPEG/PNG/WebP), verification-docs (PDF/JPEG/PNG/WebP), resumes (PDF/DOCX)",
+        },
+        {
+          name: "publish-scheduled-posts",
+          auth: false,
+          trigger: "Cron / Manual",
+          purpose: "Finds posts where scheduled_at <= now() and clears the timestamp to publish them.",
+          request: "POST /functions/v1/publish-scheduled-posts\n(No auth header — uses service key internally)",
+          response: '{ "message": "Published scheduled posts", "count": 3, "ids": ["uuid-1", ...] }',
+          buckets: null,
+        },
+        {
+          name: "seed-users",
+          auth: false,
+          trigger: "Manual (dev only)",
+          purpose: "Creates 8 sample BFSI users with realistic profiles and roles. Password: Test@1234",
+          request: "POST /functions/v1/seed-users",
+          response: '{ "success": true, "results": [{ "email": "...", "status": "created", "roles": [...] }] }',
+          buckets: null,
+        },
+        {
+          name: "seed-data",
+          auth: false,
+          trigger: "Manual (dev only)",
+          purpose: "Seeds posts, jobs, events, listings, connections, messages. Run seed-users first.",
+          request: "POST /functions/v1/seed-data",
+          response: '{ "success": true, "seeded": { "posts": 19, "jobs": 8, "events": 7, "listings": 8, ... } }',
+          buckets: null,
+        },
+      ].map((fn) => (
+        <Card key={fn.name}>
+          <CardHeader>
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <CardTitle className="text-lg font-mono">{fn.name}</CardTitle>
+              <div className="flex items-center gap-2">
+                <Badge variant={fn.auth ? "default" : "secondary"} className="text-[10px]">
+                  {fn.auth ? "Auth Required" : "Service Key"}
+                </Badge>
+                <Badge variant="outline" className="text-[10px]">{fn.trigger}</Badge>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">{fn.purpose}</p>
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-foreground">Request</p>
+              <pre className="bg-muted/50 border border-border rounded-lg p-3 text-[11px] font-mono overflow-x-auto whitespace-pre-wrap">{fn.request}</pre>
+            </div>
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-foreground">Response (200)</p>
+              <pre className="bg-muted/50 border border-border rounded-lg p-3 text-[11px] font-mono overflow-x-auto whitespace-pre-wrap">{fn.response}</pre>
+            </div>
+            {fn.buckets && (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-foreground">Allowed Buckets</p>
+                <p className="text-xs text-muted-foreground">{fn.buckets}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </ProtectedSection>
+);
+
+/* ── Hook Documentation Component ── */
+const HookDoc = ({
+  name,
+  file,
+  desc,
+  returns,
+}: {
+  name: string;
+  file: string;
+  desc: string;
+  returns: { name: string; type: string; desc: string }[];
+}) => (
+  <div className="space-y-2 pb-4 border-b border-border last:border-0 last:pb-0">
+    <div className="flex flex-wrap items-center gap-2">
+      <code className="text-sm font-bold text-foreground">{name}</code>
+      <Badge variant="outline" className="text-[10px] font-mono">{file}</Badge>
+    </div>
+    <p className="text-xs text-muted-foreground">{desc}</p>
+    {returns.length > 0 && (
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs mt-1">
+          <thead>
+            <tr className="border-b border-border">
+              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Return</th>
+              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Type</th>
+              <th className="text-left py-1.5 px-2 font-medium text-muted-foreground">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {returns.map((r) => (
+              <tr key={r.name} className="border-b border-border/50">
+                <td className="py-1.5 px-2 font-mono text-foreground">{r.name}</td>
+                <td className="py-1.5 px-2 font-mono text-primary/80">{r.type}</td>
+                <td className="py-1.5 px-2 text-muted-foreground">{r.desc}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+);
+
+/* ── Tab config ── */
+const tabs = [
+  { id: "architecture", label: "Architecture", icon: Layers, isPublic: true },
+  { id: "getting-started", label: "Getting Started", icon: Rocket, isPublic: true },
+  { id: "api-reference", label: "API Reference", icon: Code2, isPublic: false },
+  { id: "edge-functions", label: "Edge Functions", icon: Server, isPublic: false },
+];
+
+/* ── Main Page ── */
+const DeveloperDocs = () => {
+  usePageMeta({
+    title: "Developer Documentation",
+    description: "FindOO developer documentation — architecture, API reference, edge functions, and getting started guide.",
+  });
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "architecture";
+
+  return (
+    <PublicPageLayout>
+      <PageHero
+        breadcrumb="Developer Docs"
+        title="Developer"
+        titleAccent="Documentation"
+        subtitle="Architecture guides, API references, and everything you need to build on FindOO."
+        variant="dots"
+      />
+
+      <section className="py-10">
+        <div className="container max-w-5xl">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp}>
+            <Tabs
+              value={activeTab}
+              onValueChange={(v) => setSearchParams({ tab: v })}
+              className="space-y-8"
+            >
+              <TabsList className="flex flex-wrap gap-1 bg-muted/50 p-1 rounded-xl h-auto">
+                {tabs.map((tab) => (
+                  <TabsTrigger
+                    key={tab.id}
+                    value={tab.id}
+                    className="flex items-center gap-1.5 text-xs sm:text-sm px-3 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg"
+                  >
+                    <tab.icon className="h-3.5 w-3.5" />
+                    {tab.label}
+                    {!tab.isPublic && (
+                      <Lock className="h-3 w-3 text-muted-foreground ml-0.5" />
+                    )}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              <TabsContent value="architecture">
+                <ArchitectureTab />
+              </TabsContent>
+              <TabsContent value="getting-started">
+                <GettingStartedTab />
+              </TabsContent>
+              <TabsContent value="api-reference">
+                <ApiReferenceTab />
+              </TabsContent>
+              <TabsContent value="edge-functions">
+                <EdgeFunctionsTab />
+              </TabsContent>
+            </Tabs>
+          </motion.div>
+        </div>
+      </section>
+    </PublicPageLayout>
+  );
+};
+
+export default DeveloperDocs;
