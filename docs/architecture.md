@@ -12,16 +12,17 @@
 │                                                              │
 │  ┌────────────┐   ┌──────────────┐   ┌───────────────────┐  │
 │  │  Pages      │   │  Contexts     │   │  UI Components    │  │
-│  │  (Routes)   │──▶│  RoleContext   │──▶│  shadcn/ui base   │  │
+│  │  (36 Routes)│──▶│  RoleContext   │──▶│  shadcn/ui (53)   │  │
 │  │  /feed      │   │  ThemeProvider │   │  Module-specific  │  │
 │  │  /jobs      │   └──────┬───────┘   │  Skeletons         │  │
 │  │  /events    │          │           └───────────────────┘  │
 │  │  /directory │   ┌──────┴───────┐                          │
 │  │  /profile   │   │  Custom Hooks │                          │
-│  │  /messages  │   │  useFeedPosts │                          │
-│  │  /admin     │   │  useJobs      │                          │
-│  └─────┬──────┘   │  useEvents    │                          │
-│        │          │  useListings  │                          │
+│  │  /messages  │   │  (18 hooks)   │                          │
+│  │  /admin     │   │  useFeedPosts │                          │
+│  │  /vault     │   │  useJobs      │                          │
+│  │  /discover  │   │  useEvents    │                          │
+│  └─────┬──────┘   │  useListings  │                          │
 │        │          │  useVault     │                          │
 │        │          └──────┬───────┘                          │
 │        │                 │                                   │
@@ -39,13 +40,13 @@
               │    Lovable Cloud        │
               │    (Supabase Backend)   │
               │                         │
-              │  ├── PostgreSQL (30+ tables)
+              │  ├── PostgreSQL (34 tables)
               │  ├── Auth (email+password)
               │  ├── Storage (5 buckets)
               │  ├── Edge Functions (4)
               │  ├── Realtime (messages, notifications)
               │  ├── RLS Policies (all tables)
-              │  └── DB Functions (17)
+              │  └── DB Functions (19)
               └─────────────────────────┘
 ```
 
@@ -53,7 +54,7 @@
 
 ## Module Map
 
-FindOO is organized into 10 feature modules, each with its own page, hook(s), and component folder:
+FindOO is organized into 11 feature modules, each with its own page, hook(s), and component folder:
 
 | Module       | Route(s)                  | Hook(s)                                      | Component Folder         |
 | ------------ | ------------------------- | -------------------------------------------- | ------------------------ |
@@ -66,13 +67,14 @@ FindOO is organized into 10 feature modules, each with its own page, hook(s), an
 | **Messages** | `/messages`               | (inline in page — Supabase Realtime)          | —                        |
 | **Vault**    | `/vault`                  | `useVault`                                    | `components/vault/`      |
 | **Analytics**| `/analytics`              | `useFeedPosts`, `usePostInteractions`         | —                        |
+| **Discover** | `/discover`               | `useConnectionActions`                        | `components/discover/`   |
 | **Admin**    | `/admin`                  | `useAdmin` (8 exports)                        | `components/admin/`      |
 
 ---
 
 ## Entity-Relationship Diagram
 
-The database contains 30+ tables organized into 6 domains. Foreign keys are shown as arrows.
+The database contains 34 tables organized into 6 domains. Foreign keys are shown as arrows.
 
 ### Core User Domain
 
@@ -135,6 +137,7 @@ erDiagram
     posts ||--o{ survey_questions : "has questions"
     posts ||--o{ featured_posts : "pinned as"
     posts ||--o{ reports : "reported via"
+    posts ||--o{ post_drafts : "drafted as"
     poll_options ||--o{ poll_votes : "receives"
     survey_questions ||--o{ survey_options : "has options"
     survey_questions ||--o{ survey_responses : "receives"
@@ -333,6 +336,11 @@ erDiagram
 | `file_uploads` | Storage | Upload records for all storage buckets |
 | `vault_files` | Vault | Private document storage with share tokens |
 | `reports` | Moderation | User-submitted content/user reports |
+| `audit_logs` | Admin | Administrative action audit trail |
+| `endorsements` | Profile | Skill endorsements between users |
+| `card_exchanges` | Profile | Digital card view/save tracking |
+| `profile_views` | Profile | Profile view analytics |
+| `user_settings` | Settings | Privacy and notification preferences |
 
 ---
 
@@ -426,6 +434,25 @@ useNotifications()
     → Prepend to local state + increment unreadCount
 ```
 
+### 6. Input Sanitization
+
+```
+User submits content (post, comment, message)
+  → sanitizeContent(rawText) via lib/sanitize.ts
+    → DOMPurify.sanitize(input, { ALLOWED_TAGS: [...] })
+  → Sanitized content sent to Supabase
+```
+
+### 7. Action Throttling
+
+```
+User rapidly clicks "Like"
+  → throttle(toggleLike, 500ms) via lib/throttle.ts
+  → First click executes immediately
+  → Subsequent clicks within 500ms are silently dropped
+  → Prevents API flooding and duplicate interactions
+```
+
 ---
 
 ## Database Function Map
@@ -438,6 +465,7 @@ useNotifications()
 | `check_rate_limit`             | RPC      | Generic rate limiter (posts, messages, connections) |
 | `enforce_session_limit`        | RPC      | Evict oldest sessions beyond max                 |
 | `cleanup_stale_sessions`       | RPC      | Remove sessions inactive > 7 days                |
+| `date_of`                      | RPC      | Extract date from timestamp (immutable)          |
 | `create_notification`          | Internal | Insert notification (skips self-notifications)   |
 | `handle_new_user`              | Trigger  | Auto-create profile on auth.users INSERT         |
 | `enforce_post_rate_limit`      | Trigger  | Max 10 posts/hour                                |
@@ -452,6 +480,7 @@ useNotifications()
 | `notify_on_role_added`         | Trigger  | Notify user when a new role is assigned          |
 | `update_listing_review_stats`  | Trigger  | Auto-update review_count/average_rating          |
 | `update_updated_at`            | Trigger  | Auto-set updated_at on row update                |
+| `update_post_drafts_updated_at`| Trigger  | Auto-set updated_at on draft update              |
 
 ---
 
@@ -472,11 +501,66 @@ All uploads flow through the `upload-file` edge function for server-side validat
 ## Route Architecture
 
 ### Public Routes (no auth required)
-`/`, `/auth`, `/reset-password`, `/install`, `/blog`, `/blog/:slug`, `/about`, `/contact`, `/community-guidelines`, `/terms`, `/privacy`, `/explore`, `/helpdesk`, `/quick-links`, `/legal`, `/sitemap`, `/card/:userId`, `/event-checkin/:eventId`, `/vault/shared/:shareToken`
+
+| Route | Page | Purpose |
+| --- | --- | --- |
+| `/` | Landing | Hero, features, social proof |
+| `/auth` | Auth | Sign in / Sign up |
+| `/reset-password` | ResetPassword | Password reset flow |
+| `/install` | Install | PWA installation guide |
+| `/blog` | Blog | Public blog listing |
+| `/blog/:slug` | BlogPost | Individual blog article |
+| `/about` | About | Company, Career, Press |
+| `/contact` | Contact | Ask Us, Visit Us |
+| `/explore` | Explore | Platform overview |
+| `/community-guidelines` | CommunityGuidelines | Guidelines + FAQs |
+| `/terms` | Terms | Terms of service |
+| `/privacy` | Privacy | Privacy policy |
+| `/legal` | Legal | Combined legal pages |
+| `/helpdesk` | HelpDesk | Support articles |
+| `/quick-links` | QuickLinks | Navigation grid |
+| `/sitemap` | SiteMap | Full page index |
+| `/card/:userId` | DigitalCard | Public digital business card |
+| `/event-checkin/:eventId` | EventCheckin | Event QR check-in |
+| `/vault/shared/:shareToken` | SharedVaultFile | Public shared file view |
+| `/cost-report` | CostReport | Development cost analysis |
+| `/developer` | DeveloperDocs | In-app developer documentation |
 
 ### Protected Routes (auth + onboarding required)
-`/feed`, `/profile`, `/profile/:id`, `/network`, `/discover`, `/analytics`, `/notifications`, `/messages`, `/settings`, `/admin`, `/jobs`, `/events`, `/directory`, `/vault`
+
+| Route | Page | Purpose |
+| --- | --- | --- |
+| `/feed` | Feed | Social content feed |
+| `/profile` | Profile | Own profile |
+| `/profile/:id` | Profile | Other user's profile |
+| `/network` | Network | Connections & followers |
+| `/discover` | Discover | People discovery |
+| `/analytics` | PostAnalytics | Post engagement analytics |
+| `/notifications` | Notifications | In-app notifications |
+| `/messages` | Messages | Direct messaging |
+| `/settings` | Settings | Account settings |
+| `/admin` | Admin | Admin panel (admin role only) |
+| `/jobs` | Jobs | Job board |
+| `/events` | Events | Events listing |
+| `/directory` | Directory | Business directory |
+| `/vault` | Vault | Document vault |
+| `/onboarding` | Onboarding | First-time setup |
 
 ### Loading Strategy
 - **Eager**: Landing, Auth, ResetPassword, Onboarding, NotFound, Install, Blog
 - **Lazy** (`React.lazy`): All other routes — reduces initial bundle by ~60%
+
+---
+
+## Security Architecture
+
+| Layer | Mechanism | Details |
+| --- | --- | --- |
+| **Database** | RLS Policies | All 34 tables have row-level security |
+| **Database** | Rate Limiting | Trigger-based limits on posts (10/hr), messages (60/5min), connections (30/hr) |
+| **Server** | Edge Functions | File upload validation (type, size, bucket) |
+| **Client** | DOMPurify | XSS prevention on all user-generated content |
+| **Client** | Action Throttling | 500ms-1s guards on rapid interactions |
+| **Client** | Session Management | Max 3 concurrent sessions, 7-day stale cleanup |
+| **Admin** | Audit Logging | Fire-and-forget logs for sensitive actions |
+| **Admin** | RBAC | Admin-only routes and components |

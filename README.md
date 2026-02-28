@@ -11,7 +11,7 @@
 | Guide | Description |
 | ----- | ----------- |
 | [Architecture](docs/architecture.md) | System overview, module map, context graph, data flow patterns, DB function map |
-| [API Reference](docs/api-reference.md) | All 20+ hooks documented with params, return types, and usage examples |
+| [API Reference](docs/api-reference.md) | All 18+ hooks documented with params, return types, and usage examples |
 | [Edge Functions](docs/edge-functions.md) | 4 backend functions with request/response schemas and auth requirements |
 | [Getting Started](docs/getting-started.md) | Setup, folder conventions, design system, testing, and PR checklist |
 
@@ -50,6 +50,7 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 - **Real-time messaging** — Categorized DMs with typing indicators and read receipts
 - **Digital Business Cards** — Shareable vCard with QR code and lead tracking
 - **Analytics Dashboard** — Personal & platform-wide engagement metrics
+- **Developer Documentation** — In-app developer portal with architecture docs
 
 ---
 
@@ -59,8 +60,8 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 ┌─────────────────────────────────────────────────┐
 │                    React SPA                     │
 │  ┌───────────┐  ┌──────────┐  ┌──────────────┐  │
-│  │  Pages    │  │ Hooks    │  │  Components  │  │
-│  │ (Routes)  │  │ (Data)   │  │  (UI)        │  │
+│  │  36 Pages │  │ 18 Hooks │  │ 120+ Comps   │  │
+│  │ (Routes)  │  │ (Data)   │  │ (53 UI base) │  │
 │  └─────┬─────┘  └────┬─────┘  └──────┬───────┘  │
 │        │             │               │           │
 │        └─────────────┼───────────────┘           │
@@ -116,6 +117,8 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 | Storage      | Supabase Storage (via edge function)            |
 | Realtime     | Supabase Realtime (messages, typing indicators) |
 | QR Codes     | qrcode.react                                   |
+| Testing      | Vitest + React Testing Library (16 test files)  |
+| Sanitization | DOMPurify (XSS protection)                     |
 
 ---
 
@@ -125,8 +128,9 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 src/
 ├── assets/              # Logo images (imported as ES6 modules)
 ├── components/
-│   ├── ui/              # shadcn/ui primitives (Button, Card, Dialog, etc.)
+│   ├── ui/              # shadcn/ui primitives (53 components)
 │   ├── skeletons/       # Content-aware loading skeletons per module
+│   ├── selectors/       # Location, Certification, Language pickers
 │   ├── feed/            # PostCard, CommentSection, CreatePostComposer, etc.
 │   ├── jobs/            # JobCard, JobDetailSheet, EmployerDashboard, etc.
 │   ├── events/          # EventCard, EventDetailSheet, OrganizerDashboard
@@ -135,42 +139,52 @@ src/
 │   ├── profile/         # ProfileHeader, EditProfileDialog, DigitalCardManager
 │   ├── vault/           # VaultFileCard, VaultUploadDialog
 │   ├── admin/           # AdminOverview, VerificationQueue, ContentModeration
-│   ├── selectors/       # LocationSelector, CertificationSelector, LanguageSelector
 │   ├── discover/        # DiscoverSidebar
 │   ├── AppLayout.tsx    # Shared layout wrapper with navbar + session heartbeat
 │   ├── AppNavbar.tsx    # Main navigation bar (desktop + mobile bottom nav)
+│   ├── CommandPalette.tsx # Ctrl+K command palette for quick navigation
 │   ├── ProtectedRoute.tsx # Auth guard with onboarding check + splash screen
+│   ├── PublicPageLayout.tsx # Shared layout for public pages
+│   ├── RouteErrorBoundary.tsx # Per-route error handling with retry
 │   └── ErrorBoundary.tsx  # Graceful error handling per section
 ├── contexts/
 │   └── RoleContext.tsx  # Global role state (investor/intermediary/issuer/admin)
-├── hooks/
+├── hooks/               # 18 custom hooks — one per module
 │   ├── useFeedPosts.ts  # Infinite-scroll feed with pagination via RPC
 │   ├── usePostInteractions.ts # Batched like/bookmark with optimistic updates
 │   ├── useJobs.ts       # Job CRUD, applications, saved jobs
 │   ├── useEvents.ts     # Event CRUD, registration, cancellation
 │   ├── useListings.ts   # Directory listings with enquiries
-│   ├── useNotifications.ts # Notification fetch + mark-read
+│   ├── useNotifications.ts # Notification fetch + mark-read + realtime
 │   ├── useConnectionActions.ts # Follow/connect/disconnect logic
 │   ├── useVault.ts      # Secure file management
 │   ├── useDrafts.ts     # Post draft persistence
 │   ├── useScheduledPosts.ts # Scheduled post management
-│   ├── useTrendingPosts.ts / useViralPosts.ts / useTrendingHashtags.ts
+│   ├── useTrendingPosts.ts  # Trending posts by hashtag frequency
+│   ├── useViralPosts.ts     # Viral posts by engagement score
+│   ├── useTrendingHashtags.ts # Top hashtags by frequency
 │   ├── useBlogPosts.ts  # Public blog content
-│   ├── useAdmin.ts      # Admin role check
-│   └── usePageMeta.ts   # Dynamic <title> and meta tags
-├── lib/
+│   ├── useAdmin.ts      # Admin role check + management hooks
+│   ├── usePageMeta.ts   # Dynamic <title> and meta tags
+│   ├── use-mobile.tsx   # Mobile viewport detection
+│   └── use-toast.ts     # Toast notification hook
+├── lib/                 # 8 utility modules
 │   ├── utils.ts         # cn() utility (clsx + tailwind-merge)
 │   ├── role-config.ts   # Role labels, icons, colors, CSS vars
 │   ├── session-manager.ts # Multi-device session management (max 3)
 │   ├── storage.ts       # File upload via edge function with validation
-│   └── vcard.ts         # vCard (.vcf) generation and download
+│   ├── sanitize.ts      # DOMPurify wrapper for XSS prevention
+│   ├── throttle.ts      # Generic throttle utility for action guards
+│   ├── vcard.ts         # vCard (.vcf) generation and download
+│   └── web-vitals.ts    # Core Web Vitals (LCP, CLS, FID) monitoring
 ├── data/
 │   ├── certifications.ts # BFSI certification options
 │   ├── languages.ts     # Indian language options
 │   └── locations.ts     # Indian city/state options
-├── pages/               # Route-level page components (lazy-loaded)
+├── pages/               # 36 route-level page components (lazy-loaded)
 ├── integrations/
 │   └── supabase/        # Auto-generated client + types (DO NOT EDIT)
+├── test/                # 16 test files (unit + integration)
 └── index.css            # Design system tokens (HSL custom properties)
 ```
 
@@ -238,6 +252,21 @@ src/
 - Content moderation (reports)
 - Blog CMS
 
+### 11. Public Pages
+- **Landing** (`/`) — Hero, features overview, social proof
+- **About** (`/about`) — Company, Career, Press tabs
+- **Explore** (`/explore`) — What, Why, How, Who tabs
+- **Blog** (`/blog`, `/blog/:slug`) — Articles, Analysis, Reports
+- **Contact** (`/contact`) — Ask Us + Visit Us (Google Maps)
+- **Legal** (`/legal`) — Terms, Privacy, Policies, Disclosures
+- **HelpDesk** (`/helpdesk`) — Searchable support articles
+- **Community Guidelines** (`/community-guidelines`) — Guidelines + FAQs
+- **QuickLinks** (`/quick-links`) — Navigation grid
+- **SiteMap** (`/sitemap`) — Full page index
+- **Install** (`/install`) — PWA installation guide
+- **Developer Docs** (`/developer`) — In-app architecture & API reference portal
+- **Cost Report** (`/cost-report`) — Development cost & efficiency analysis (printable)
+
 ---
 
 ## Design System
@@ -270,6 +299,8 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 | Lazy sidebar tabs        | Feed sidebar (Drafts, Scheduled)        |
 | Content-aware skeletons  | Per-module skeleton components           |
 | `useCallback` / `useMemo`| Filters, search, event handlers         |
+| Client-side throttling   | Action guards (500ms-1s) via `throttle.ts` |
+| Web Vitals monitoring    | LCP, CLS, FID tracking via `web-vitals.ts` |
 
 ---
 
@@ -281,6 +312,7 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 4. **Role-based UI** — `RoleContext` determines available features per role
 5. **Admin guard** — `useIsAdmin()` hook checks `user_roles` table for `admin` role
 6. **RLS policies** — Row-level security on all tables in the database
+7. **Input sanitization** — DOMPurify via `sanitize.ts` on all user-generated content
 
 ---
 
@@ -294,19 +326,37 @@ Key tables (30+ total — see `src/integrations/supabase/types.ts` for full sche
 | `user_roles`           | Role assignments (investor/intermediary/issuer/admin) |
 | `posts`                | Feed content (text, polls, surveys)        |
 | `post_interactions`    | Likes and bookmarks                        |
+| `post_drafts`          | Unsaved post drafts per user               |
 | `comments`             | Post comments                              |
 | `connections`          | Follow/connect relationships               |
 | `messages`             | Direct messages with categories            |
 | `jobs`                 | Job listings                               |
 | `job_applications`     | Application tracking                       |
+| `saved_jobs`           | Saved/bookmarked jobs                      |
 | `events`               | Event listings                             |
 | `event_registrations`  | Event sign-ups                             |
+| `event_speakers`       | Event speaker profiles                     |
 | `listings`             | Directory products/services                |
+| `listing_reviews`      | Directory listing reviews                  |
+| `listing_enquiries`    | Directory listing enquiries                |
 | `vault_files`          | Secure document storage                    |
 | `notifications`        | In-app notifications                       |
 | `verification_requests`| KYC verification queue                     |
 | `active_sessions`      | Multi-device session tracking              |
 | `blog_posts`           | CMS blog content                           |
+| `audit_logs`           | Admin audit trail                          |
+| `reports`              | Content/user reports                       |
+| `endorsements`         | Skill endorsements                         |
+| `card_exchanges`       | Digital card view/save tracking            |
+| `file_uploads`         | Upload records for all storage buckets     |
+| `poll_options`         | Poll answer choices                        |
+| `poll_votes`           | Poll votes                                 |
+| `survey_questions`     | Survey question definitions                |
+| `survey_options`       | Survey answer choices                      |
+| `survey_responses`     | Survey responses                           |
+| `featured_posts`       | User-pinned featured posts                 |
+| `profile_views`        | Profile view tracking                      |
+| `user_settings`        | Privacy and notification preferences       |
 
 ---
 
@@ -353,32 +403,37 @@ Managed automatically by Lovable Cloud. **Do not edit `.env` directly.**
 
 ## Changelog
 
+### v2.8 — Feb 2026 (Documentation & Reporting)
+- **Cost Report** (`/cost-report`) — Printable AI vs Traditional vs DIY cost comparison for stakeholders
+- **Comprehensive documentation refresh** — All docs updated to reflect current 36-page, 120+ component, 16-test-file state
+- **Complete database schema listing** — All 34 tables documented in README
+- **Library modules documented** — Added `sanitize.ts`, `throttle.ts`, `web-vitals.ts` to API reference
+- **Route architecture updated** — All public and protected routes catalogued
+
+### v2.7 — Feb 2026 (Integration Tests & Hardening)
+- **Integration test suite** — 8 integration tests added:
+  - `Auth.integration.test.tsx` — Sign-up, sign-in, sign-out flows
+  - `ConnectionFlow.integration.test.tsx` — Follow/connect/disconnect journeys
+  - `CreatePostComposer.integration.test.tsx` — Post creation with all types
+  - `PostJobDialog.integration.test.tsx` — Job posting validation
+  - `Infrastructure.integration.test.tsx` — Rate limiting, session management
+- **Component tests** — `EventCard`, `JobCard`, `ListingCard`, `PostCard` render tests
+- **Sanitization tests** — DOMPurify XSS prevention validation
+- **Throttle tests** — Action guard timing verification
+- **Total test files**: 16 (up from 5)
+
 ### v2.6 — Feb 2026 (Quality & Accessibility)
-- **Error toast coverage** — consistent `toast.error()` on all hook failures:
-  - `usePostInteractions` (like/bookmark rollback toasts)
-  - `useConnectionActions` (follow/connect/disconnect feedback)
-  - `useListings` mutations (create, update, review, enquiry)
-  - `useNotifications` (load failure feedback)
-- **Accessibility audit** — WCAG improvements across all interactive components:
-  - `aria-label` on all icon buttons (like, comment, share, save, menu)
-  - `aria-pressed` / `aria-expanded` on toggle buttons
-  - `role="button"` + `tabIndex={0}` + keyboard Enter/Space on JobCard, EventCard, ListingCard
-  - Semantic `<nav aria-label>` on top nav and mobile bottom nav
-- **Unit test suite** — 20 tests across 5 files using Vitest:
-  - `useFeedPosts.test.ts` — normalization logic (counts, null handling, defaults)
-  - `usePostInteractions.test.ts` — optimistic update/rollback arithmetic
-  - `useConnectionActions.test.ts` — state transition coverage
-  - `session-manager.test.ts` — register, touch, remove flows
+- **Error toast coverage** — consistent `toast.error()` on all hook failures
+- **Accessibility audit** — WCAG 2.1 AA improvements across all interactive components
+- **Unit test suite** — Core hook tests (useFeedPosts, usePostInteractions, useConnectionActions, session-manager)
 
 ### v2.5 — Feb 2026 (Performance & Cleanup)
 - **Infinite scroll** on feed with `useInfiniteQuery` + manual fallback button
 - **Optimistic updates** for likes, bookmarks, comments, connection accept/reject
 - **Batch interaction loader** reducing N+1 queries on post cards
-- **Content-aware skeletons** for all modules (Jobs, Events, Directory, Network, Profile)
+- **Content-aware skeletons** for all modules
 - **Component memoization** across all cards and sidebars
-- **Profile posts optimization** — direct DB query instead of filtering global feed
-- **Lazy sidebar tabs** (Drafts, Scheduled) in feed
-- **Dead code cleanup** — removed 19 unused files (images, components, CSS)
+- **Dead code cleanup** — removed 19 unused files
 - **Code documentation** — JSDoc comments on all key hooks and utilities
 
 ### v2.0 — Feb 2026 (Full Platform)
@@ -408,14 +463,15 @@ Managed automatically by Lovable Cloud. **Do not edit `.env` directly.**
 
 ## Contributing
 
-This project uses Lovable for development. Changes pushed to the connected GitHub repo will auto-sync with the Lovable editor and vice versa.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines including branching strategy, commit conventions, PR workflow, and coding standards.
 
-### Code Standards
+### Quick Rules
 - **No raw colors** — use Tailwind semantic tokens
 - **No spaghetti** — each module has its own hook, page, and component folder
 - **Hooks for data** — all Supabase queries live in `/hooks`
 - **Memo for performance** — memoize cards and sidebars that render in lists
 - **Error boundaries** — wrap major sections for graceful degradation
+- **Tests required** — add/update tests for logic changes
 
 ---
 
