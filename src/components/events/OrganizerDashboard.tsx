@@ -1,3 +1,19 @@
+/**
+ * OrganizerDashboard — Event management panel for event organizers.
+ *
+ * Displays all events created by the current user with status controls
+ * (publish, pause, cancel, complete), registration viewer with attendee
+ * profiles, and QR check-in code generator.
+ *
+ * Uses `useMyEvents()` for event list, `useEventRegistrations()` for
+ * attendee details, and `useUpdateEvent()` for status mutations.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <OrganizerDashboard />
+ * ```
+ */
 import { useState } from "react";
 import { useMyEvents, useEventRegistrations, useUpdateEvent, EVENT_CATEGORY_LABELS, EVENT_MODE_LABELS } from "@/hooks/useEvents";
 import type { EventData } from "@/hooks/useEvents";

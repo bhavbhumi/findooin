@@ -1,3 +1,23 @@
+/**
+ * EditProfileDialog — Multi-tab profile editor dialog.
+ *
+ * Provides a tabbed editing interface for user profiles:
+ * - **Basic**: Name, display name, headline, bio, user type
+ * - **Professional**: Organization, designation, experience, specializations
+ * - **Credentials**: Certifications, regulatory IDs, languages
+ * - **Links**: Website, social links (LinkedIn, Twitter/X, GitHub)
+ * - **Media**: Avatar and banner image upload
+ *
+ * Supports both Individual and Entity user types with conditional fields.
+ * Avatar/banner uploads use the `upload-file` edge function.
+ *
+ * @component
+ * @param {EditProfileDialogProps} props
+ * @param {boolean} props.open - Whether the dialog is open
+ * @param {(open: boolean) => void} props.onOpenChange - Dialog open state handler
+ * @param {ProfileData} props.profile - Current profile data to pre-fill
+ * @param {() => void} props.onSaved - Callback after successful save
+ */
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
