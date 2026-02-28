@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Calendar, Clock, MapPin, Monitor, Users, BadgeCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +28,7 @@ function getDateLabel(dateStr: string) {
   return format(d, "MMM d, yyyy");
 }
 
-export function EventCard({ event, onClick, onRegister, onCancelRegistration, isRegistering }: EventCardProps) {
+export const EventCard = memo(function EventCard({ event, onClick, onRegister, onCancelRegistration, isRegistering }: EventCardProps) {
   const isVerified = event.organizer_profile?.verification_status === "verified";
   const eventEnded = isPast(new Date(event.end_time));
   const isFull = event.capacity != null && event.registration_count >= event.capacity;
@@ -138,4 +139,4 @@ export function EventCard({ event, onClick, onRegister, onCancelRegistration, is
       </CardContent>
     </Card>
   );
-}
+});

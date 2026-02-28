@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, memo } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,12 +12,15 @@ import {
   CheckCircle2, Search, Users, FileText, TrendingUp, MapPin, Building2, X,
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
-import { FindooLoader } from "@/components/FindooLoader";
+import { PersonCardSkeleton } from "@/components/skeletons/PersonCardSkeleton";
+import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { PostCard } from "@/components/feed/PostCard";
 import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { DiscoverSidebar, saveRecentSearch } from "@/components/discover/DiscoverSidebar";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { cn } from "@/lib/utils";
+
+const MemoizedDiscoverSidebar = memo(DiscoverSidebar);
 
 /* ── Types ── */
 interface DiscoverUser {
@@ -237,7 +240,9 @@ const Discover = () => {
               </div>
 
               {loadingUsers ? (
-                <FindooLoader text="Finding people..." />
+                <div className="space-y-3">
+                  {[1, 2, 3, 4, 5].map((i) => <PersonCardSkeleton key={i} />)}
+                </div>
               ) : filteredPeople.length === 0 ? (
                 <EmptyState icon={Users} text="No people found" />
               ) : (
@@ -254,7 +259,9 @@ const Discover = () => {
           {activeTab === "posts" && (
             <>
               {loadingPosts ? (
-                <FindooLoader text="Searching posts..." />
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => <PostCardSkeleton key={i} />)}
+                </div>
               ) : filteredPosts.length === 0 ? (
                 <EmptyState icon={FileText} text="No posts found" />
               ) : (
@@ -276,7 +283,7 @@ const Discover = () => {
         {/* Sidebar */}
         <aside className="hidden lg:block">
           <div className="sticky top-20">
-            <DiscoverSidebar
+            <MemoizedDiscoverSidebar
               onHashtagClick={handleHashtagClick}
               onTopicClick={handleTopicClick}
             />

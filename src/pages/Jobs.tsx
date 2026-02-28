@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Search, Plus, Briefcase, Building2, LayoutDashboard } from "lucide-reac
 import { useJobs, useSavedJobs, useToggleSaveJob, useMyApplications } from "@/hooks/useJobs";
 import { useRole } from "@/contexts/RoleContext";
 import { JobCard, CATEGORY_LABELS } from "@/components/jobs/JobCard";
+import { JobCardSkeleton } from "@/components/skeletons/JobCardSkeleton";
 import { JobDetailSheet } from "@/components/jobs/JobDetailSheet";
 import { PostJobDialog } from "@/components/jobs/PostJobDialog";
 import { EmployerDashboard } from "@/components/jobs/EmployerDashboard";
@@ -17,6 +18,8 @@ import AppLayout from "@/components/AppLayout";
 import type { Job } from "@/hooks/useJobs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+const MemoizedJobsSidebar = memo(JobsSidebar);
 
 const Jobs = () => {
   usePageMeta({ title: "BFSI Jobs", description: "India's only BFSI-focused job board — find or post finance, compliance, and advisory roles." });
@@ -122,7 +125,7 @@ const Jobs = () => {
 
               {isLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4].map((i) => <div key={i} className="h-28 rounded-lg bg-muted/30 animate-pulse" />)}
+                  {[1, 2, 3, 4].map((i) => <JobCardSkeleton key={i} />)}
                 </div>
               ) : !jobs?.length ? (
                 <div className="text-center py-16 text-muted-foreground">
@@ -162,7 +165,7 @@ const Jobs = () => {
         {/* Sidebar */}
         <aside className="hidden lg:block">
           <div className="sticky top-20">
-            <JobsSidebar
+            <MemoizedJobsSidebar
               onCategoryClick={handleCategoryClick}
               onLocationClick={handleLocationClick}
             />

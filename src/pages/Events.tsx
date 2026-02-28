@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Search, Plus, CalendarDays, LayoutDashboard } from "lucide-react";
 import { useEvents, useRegisterForEvent, useCancelRegistration, EVENT_CATEGORY_LABELS } from "@/hooks/useEvents";
 import { useRole } from "@/contexts/RoleContext";
 import { EventCard } from "@/components/events/EventCard";
+import { EventCardSkeleton } from "@/components/skeletons/EventCardSkeleton";
 import { EventDetailSheet } from "@/components/events/EventDetailSheet";
 import { CreateEventDialog } from "@/components/events/CreateEventDialog";
 import { OrganizerDashboard } from "@/components/events/OrganizerDashboard";
@@ -15,6 +16,8 @@ import { EventsSidebar } from "@/components/events/EventsSidebar";
 import AppLayout from "@/components/AppLayout";
 import type { EventData } from "@/hooks/useEvents";
 import { isSameDay } from "date-fns";
+
+const MemoizedEventsSidebar = memo(EventsSidebar);
 
 const Events = () => {
   usePageMeta({ title: "Events", description: "Discover and host investor meets, webinars, AGMs, and industry events." });
@@ -117,7 +120,7 @@ const Events = () => {
 
               {isLoading ? (
                 <div className="space-y-3">
-                  {[1, 2, 3].map((i) => <div key={i} className="h-28 rounded-lg bg-muted/30 animate-pulse" />)}
+                  {[1, 2, 3].map((i) => <EventCardSkeleton key={i} />)}
                 </div>
               ) : !filteredEvents.length ? (
                 <div className="text-center py-16 text-muted-foreground">
@@ -152,7 +155,7 @@ const Events = () => {
         {/* Sidebar */}
         <aside className="hidden lg:block">
           <div className="sticky top-20">
-            <EventsSidebar
+            <MemoizedEventsSidebar
               onCategoryClick={handleCategoryClick}
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate}

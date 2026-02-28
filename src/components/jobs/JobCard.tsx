@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { MapPin, Clock, Briefcase, IndianRupee, Bookmark, BookmarkCheck, BadgeCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +39,7 @@ interface JobCardProps {
   onClick?: () => void;
 }
 
-export function JobCard({ job, isSaved, onToggleSave, onClick }: JobCardProps) {
+export const JobCard = memo(function JobCard({ job, isSaved, onToggleSave, onClick }: JobCardProps) {
   const isVerified = job.poster_profile?.verification_status === "verified";
 
   const formatSalary = () => {
@@ -138,6 +139,6 @@ export function JobCard({ job, isSaved, onToggleSave, onClick }: JobCardProps) {
       </CardContent>
     </Card>
   );
-}
+});
 
 export { JOB_TYPE_LABELS, CATEGORY_LABELS };

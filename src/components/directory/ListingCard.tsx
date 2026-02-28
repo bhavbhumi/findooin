@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Star, Eye, MessageCircle, MapPin, BadgeCheck, TrendingUp, Shield, Package, Wrench } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ interface ListingCardProps {
   isComparing?: boolean;
 }
 
-export const ListingCard = ({ listing, onSelect, onCompare, isComparing }: ListingCardProps) => {
+export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: ListingCardProps) => {
   const categoryLabel =
     listing.listing_type === "product"
       ? PRODUCT_CATEGORIES.find((c) => c.value === listing.product_category)?.label
@@ -124,4 +125,4 @@ export const ListingCard = ({ listing, onSelect, onCompare, isComparing }: Listi
       </div>
     </div>
   );
-};
+});
