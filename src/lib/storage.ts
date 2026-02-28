@@ -1,3 +1,19 @@
+/**
+ * Storage utilities — File upload and validation.
+ *
+ * Files are uploaded via the `upload-file` edge function (not direct Supabase storage).
+ * This provides server-side validation, virus scanning hooks, and consistent file records.
+ *
+ * Supported buckets: post-attachments, verification-docs, avatars, banners
+ * Max file size: 10MB
+ *
+ * Usage:
+ * ```ts
+ * const result = await uploadFile("avatars", file, userId);
+ * if ("error" in result) { /* handle error * / }
+ * else { /* result.url, result.path * / }
+ * ```
+ */
 import { supabase } from "@/integrations/supabase/client";
 
 const MAX_FILE_SIZE_MB = 10;

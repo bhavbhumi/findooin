@@ -1,3 +1,15 @@
+/**
+ * ProtectedRoute — Auth guard for authenticated pages.
+ *
+ * Flow:
+ * 1. Checks for active Supabase session → redirects to /auth if none
+ * 2. Checks `profiles.onboarding_completed` → redirects to /onboarding if false
+ * 3. Shows splash screen once per browser session (post-login branding)
+ * 4. Listens for SIGNED_OUT events to redirect immediately
+ *
+ * The `requireOnboarding` prop can be set to false for pages that
+ * should be accessible before onboarding (e.g., the onboarding page itself).
+ */
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";

@@ -1,3 +1,18 @@
+/**
+ * usePostInteractions — Like/Bookmark hook with optimistic updates.
+ *
+ * Key patterns:
+ * 1. **Batch loader**: When multiple PostCards mount simultaneously, their
+ *    interaction checks are coalesced into a single DB query (50ms debounce).
+ *    This prevents N+1 queries when rendering a feed page.
+ *
+ * 2. **Optimistic updates**: `toggleLike` / `toggleBookmark` immediately
+ *    update local state AND the React Query cache (feed-posts, trending-posts,
+ *    viral-posts). On server failure, both are rolled back.
+ *
+ * 3. **Cache updater**: `optimisticUpdateFeedCache` patches infinite query
+ *    pages in-place so counts update without refetching.
+ */
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient, InfiniteData } from "@tanstack/react-query";

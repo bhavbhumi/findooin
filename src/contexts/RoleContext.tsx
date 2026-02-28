@@ -1,3 +1,15 @@
+/**
+ * RoleContext — Global role management for multi-role users.
+ *
+ * BFSI users can hold multiple roles (investor, intermediary, issuer, admin).
+ * This context:
+ * 1. Fetches the user's roles from `user_roles` table on auth
+ * 2. Persists the active role choice in localStorage
+ * 3. Provides `hasRole()` for feature gating and `setActiveRole()` for switching
+ * 4. Auto-selects the highest-priority role on first load (issuer > intermediary > investor)
+ *
+ * Usage: `const { activeRole, hasRole, userId } = useRole();`
+ */
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 

@@ -1,3 +1,13 @@
+/**
+ * AppLayout — Shared layout wrapper for all authenticated pages.
+ *
+ * Provides:
+ * - Consistent navbar rendering (opt-out via `showNavbar={false}`)
+ * - Container with configurable max-width (default: max-w-4xl)
+ * - Full-bleed mode for edge-to-edge layouts (e.g., Messages)
+ * - Session heartbeat every 5 minutes to keep active_sessions fresh
+ * - ErrorBoundary around page content for graceful error handling
+ */
 import { type ReactNode, useEffect } from "react";
 import { touchSession } from "@/lib/session-manager";
 import AppNavbar from "@/components/AppNavbar";
