@@ -6,7 +6,7 @@ import { PageHero } from "@/components/PageHero";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Lock, BookOpen, Code2, Server, Rocket, ChevronRight, Database, Shield, Zap, Layers } from "lucide-react";
+import { Lock, BookOpen, Code2, Server, Rocket, ChevronRight, Database, Shield, Zap, Layers, AlertTriangle, Bug } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSearchParams } from "react-router-dom";
 
@@ -607,12 +607,180 @@ const HookDoc = ({
   </div>
 );
 
+/* ── Troubleshooting Content (Public) ── */
+const TroubleshootingTab = () => (
+  <div className="space-y-6">
+    {[
+      {
+        title: "RLS Policy Error: \"new row violates row-level security policy\"",
+        severity: "error",
+        symptoms: ["Insert/update fails silently or throws RLS error", "Data appears in DB but can't be read back"],
+        causes: [
+          "Missing or incorrect user_id in the insert statement",
+          "User is not authenticated when performing the operation",
+          "RLS policy uses a column that's nullable — ensure user_id is NOT NULL",
+        ],
+        fixes: [
+          "Verify auth.uid() matches the user_id column in your insert: .insert({ user_id: session.user.id, ... })",
+          "Check that the user is logged in before performing mutations",
+          "Review the RLS policy in Lovable Cloud → Database → RLS Policies",
+        ],
+      },
+      {
+        title: "Realtime Subscription Not Receiving Events",
+        severity: "warning",
+        symptoms: ["Channel subscribes successfully but no events fire", "Works in one table but not another"],
+        causes: [
+          "Table not added to the supabase_realtime publication",
+          "RLS policy blocks SELECT for the subscribing user",
+          "Channel name collision (two subscriptions with same name)",
+        ],
+        fixes: [
+          "Add table to publication: ALTER PUBLICATION supabase_realtime ADD TABLE public.your_table;",
+          "Verify RLS allows SELECT for the authenticated user",
+          "Use unique channel names: supabase.channel('my-unique-channel-name')",
+          "Clean up channels on unmount: return () => supabase.removeChannel(channel);",
+        ],
+      },
+      {
+        title: "Infinite Re-renders / Performance Issues",
+        severity: "warning",
+        symptoms: ["Component keeps re-rendering", "Browser becomes unresponsive", "React DevTools shows excessive renders"],
+        causes: [
+          "Creating new objects/arrays in render (breaks reference equality)",
+          "Missing useCallback/useMemo on expensive computations",
+          "Passing inline functions as props to memoized components",
+        ],
+        fixes: [
+          "Wrap callbacks in useCallback: const handleClick = useCallback(() => {...}, [deps]);",
+          "Memoize derived data: const filtered = useMemo(() => items.filter(...), [items]);",
+          "Use React.memo on card components (PostCard, JobCard, EventCard, ListingCard)",
+          "Move static arrays/objects outside the component body",
+        ],
+      },
+      {
+        title: "Stale Data After Mutation",
+        severity: "info",
+        symptoms: ["UI doesn't update after creating/updating/deleting", "Data appears after page refresh but not immediately"],
+        causes: [
+          "Missing query invalidation in mutation onSuccess",
+          "Query key mismatch between invalidation and the query",
+          "Using broad invalidation that misses nested query keys",
+        ],
+        fixes: [
+          "Invalidate specific query keys: queryClient.invalidateQueries({ queryKey: ['jobs'] });",
+          "For optimistic updates, use queryClient.setQueryData to patch cache directly",
+          "Check that query keys match exactly — ['jobs', filters] won't match ['jobs'] invalidation unless using exact: false",
+        ],
+      },
+      {
+        title: "Auth Session Lost / Redirect to Login",
+        severity: "error",
+        symptoms: ["User gets logged out unexpectedly", "API calls return 401", "Redirect to /auth on page refresh"],
+        causes: [
+          "Calling supabase.auth.getSession() during render (should be in useEffect)",
+          "Multiple Supabase client instances (should import from @/integrations/supabase/client)",
+          "localStorage cleared or session cookie expired",
+        ],
+        fixes: [
+          "Use supabase.auth.getSession() only in useEffect or event handlers",
+          "Always import { supabase } from '@/integrations/supabase/client' — never create new clients",
+          "The client auto-refreshes tokens; don't manually manage refresh tokens",
+          "Check ProtectedRoute.tsx for the auth guard flow",
+        ],
+      },
+      {
+        title: "TypeScript Errors with Database Types",
+        severity: "info",
+        symptoms: ["Type 'X' is not assignable to type 'Y'", "Property does not exist on type 'Database'"],
+        causes: [
+          "Database schema changed but types.ts hasn't regenerated",
+          "Manually editing types.ts (it's auto-generated)",
+          "Using wrong table/column names",
+        ],
+        fixes: [
+          "Never edit src/integrations/supabase/types.ts — it regenerates automatically",
+          "Use the Tables, TablesInsert, TablesUpdate helper types from types.ts",
+          "After schema changes, the types file will update automatically on next sync",
+        ],
+      },
+      {
+        title: "File Upload Fails",
+        severity: "warning",
+        symptoms: ["Upload returns 400 or 500", "File appears to upload but URL is broken"],
+        causes: [
+          "File exceeds 10MB size limit",
+          "MIME type not allowed for the target bucket",
+          "User not authenticated (upload-file edge function requires Bearer token)",
+        ],
+        fixes: [
+          "Use validateFile() from src/lib/storage.ts before uploading",
+          "Check allowed types: avatars/banners (JPEG/PNG/WebP), verification-docs (PDF/JPEG/PNG/WebP)",
+          "Ensure user is logged in — the edge function extracts user ID from the auth token",
+          "Check edge function logs in Lovable Cloud for detailed error messages",
+        ],
+      },
+    ].map((issue) => (
+      <Card key={issue.title}>
+        <CardHeader>
+          <div className="flex items-start gap-3">
+            <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
+              issue.severity === "error" ? "bg-destructive/10 text-destructive" :
+              issue.severity === "warning" ? "bg-gold/10 text-gold" :
+              "bg-primary/10 text-primary"
+            }`}>
+              {issue.severity === "error" ? <Bug className="h-4 w-4" /> :
+               issue.severity === "warning" ? <AlertTriangle className="h-4 w-4" /> :
+               <Code2 className="h-4 w-4" />}
+            </div>
+            <CardTitle className="text-base leading-snug">{issue.title}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <p className="text-xs font-semibold text-foreground mb-1.5">Symptoms</p>
+            <ul className="space-y-1">
+              {issue.symptoms.map((s, i) => (
+                <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                  <span className="text-destructive/60 mt-0.5">•</span> {s}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-foreground mb-1.5">Common Causes</p>
+            <ul className="space-y-1">
+              {issue.causes.map((c, i) => (
+                <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                  <span className="text-gold/60 mt-0.5">•</span> {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-foreground mb-1.5">How to Fix</p>
+            <ul className="space-y-1.5">
+              {issue.fixes.map((f, i) => (
+                <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                  <span className="text-primary/60 mt-0.5">✓</span>
+                  <code className="bg-muted/50 px-1 py-0.5 rounded text-[11px] break-all">{f}</code>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+);
+
 /* ── Tab config ── */
 const tabs = [
   { id: "architecture", label: "Architecture", icon: Layers, isPublic: true },
   { id: "getting-started", label: "Getting Started", icon: Rocket, isPublic: true },
   { id: "api-reference", label: "API Reference", icon: Code2, isPublic: false },
   { id: "edge-functions", label: "Edge Functions", icon: Server, isPublic: false },
+  { id: "troubleshooting", label: "Troubleshooting", icon: Bug, isPublic: true },
 ];
 
 /* ── Main Page ── */
@@ -670,6 +838,9 @@ const DeveloperDocs = () => {
               </TabsContent>
               <TabsContent value="edge-functions">
                 <EdgeFunctionsTab />
+              </TabsContent>
+              <TabsContent value="troubleshooting">
+                <TroubleshootingTab />
               </TabsContent>
             </Tabs>
           </motion.div>

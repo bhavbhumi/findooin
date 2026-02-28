@@ -1,3 +1,16 @@
+/**
+ * ListingComparison — Side-by-side comparison table for directory listings.
+ *
+ * Renders a responsive comparison grid showing type, provider, rating,
+ * location, risk level, tenure, and highlights for 2+ selected listings.
+ * Allows removing individual listings from the comparison.
+ *
+ * @component
+ * @param {ListingComparisonProps} props
+ * @param {Listing[]} props.listings - Array of listings to compare (minimum 2)
+ * @param {(id: string) => void} props.onRemove - Callback to remove a listing from comparison
+ * @param {() => void} props.onClose - Callback to close the comparison panel
+ */
 import { X, Star, MapPin, BadgeCheck, Package, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
