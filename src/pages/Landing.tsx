@@ -100,54 +100,82 @@ const Landing = () => {
     <PublicPageLayout>
       {/* Hero */}
       <section className="relative pt-16 pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.06] to-transparent" />
 
-        {/* Decorative elements */}
+        {/* Decorative elements — VISIBLE */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Large gradient blob top-right */}
+          <div className="absolute -top-32 -right-32 w-[500px] h-[400px] bg-gradient-to-bl from-primary/[0.1] via-accent/[0.05] to-transparent rounded-full blur-3xl" />
+          {/* Concentric rings */}
           <motion.div
-            className="absolute -top-16 -right-16 w-[340px] h-[340px] rounded-full border-2 border-primary/[0.1] dark:border-accent/[0.15]"
+            className="absolute -top-16 -right-16 w-[340px] h-[340px] rounded-full border-2 border-primary/20 dark:border-accent/25"
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4, ease: "easeOut" }}
           />
           <motion.div
-            className="absolute -top-8 -right-8 w-[260px] h-[260px] rounded-full border border-accent/[0.12] dark:border-accent/[0.2]"
+            className="absolute -top-8 -right-8 w-[260px] h-[260px] rounded-full border border-primary/15 dark:border-accent/20"
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.4, delay: 0.15, ease: "easeOut" }}
           />
           <motion.div
-            className="absolute top-1/4 left-[8%] w-4 h-4 rotate-45 border border-primary/[0.12]"
+            className="absolute top-[30px] right-[30px] w-[180px] h-[180px] rounded-full border border-primary/10"
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+          />
+          {/* Diamond shapes left */}
+          <motion.div
+            className="absolute top-1/4 left-[8%] w-6 h-6 rotate-45 border-2 border-primary/20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           />
           <motion.div
-            className="absolute top-[38%] left-[5%] w-2.5 h-2.5 rotate-12 bg-accent/[0.1] rounded-sm"
+            className="absolute top-[38%] left-[5%] w-4 h-4 rotate-12 bg-accent/15 rounded-sm"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           />
+          {/* Dot grid — left */}
           <motion.div
-            className="absolute bottom-12 left-[6%] grid grid-cols-4 gap-2.5"
+            className="absolute bottom-12 left-[6%] grid grid-cols-5 gap-2.5"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            {Array.from({ length: 16 }).map((_, i) => (
-              <div key={i} className="w-1 h-1 rounded-full bg-primary/[0.08]" />
+            {Array.from({ length: 25 }).map((_, i) => (
+              <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/15" />
             ))}
           </motion.div>
+          {/* Gradient line */}
           <motion.div
-            className="absolute top-[55%] right-[7%] w-px h-24 bg-gradient-to-b from-transparent via-primary/[0.1] to-transparent rotate-[25deg]"
+            className="absolute top-[55%] right-[7%] w-px h-32 bg-gradient-to-b from-transparent via-primary/25 to-transparent rotate-[25deg]"
             initial={{ opacity: 0, scaleY: 0 }}
             animate={{ opacity: 1, scaleY: 1 }}
             transition={{ duration: 1, delay: 0.7 }}
           />
+          {/* Pulsing accent dot */}
           <motion.div
-            className="absolute bottom-20 right-[12%] w-2 h-2 rounded-full bg-accent/20"
-            animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0.6, 0.3] }}
+            className="absolute bottom-20 right-[12%] w-3 h-3 rounded-full bg-accent/30"
+            animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0.8, 0.4] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Bottom-left gradient blob */}
+          <div className="absolute bottom-0 left-0 w-[350px] h-[200px] bg-gradient-to-tr from-primary/[0.06] to-transparent rounded-full blur-3xl" />
+          {/* Cross accent right */}
+          <motion.div
+            className="absolute top-[20%] right-[15%] w-8 h-px bg-primary/20"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+          />
+          <motion.div
+            className="absolute top-[20%] right-[15%] w-px h-8 bg-primary/20 -translate-x-[15px]"
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 0.6, delay: 1 }}
           />
         </div>
 
@@ -235,8 +263,37 @@ const Landing = () => {
       </section>
 
       {/* The Gap Section */}
-      <section className="py-20 border-t border-border">
-        <div className="container max-w-5xl">
+      <section className="py-20 border-t border-border relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-0 w-[400px] h-[300px] bg-gradient-to-br from-destructive/[0.04] to-transparent rounded-full blur-3xl" />
+          <motion.div
+            className="absolute top-16 right-[8%] w-16 h-16 rounded-full border-2 border-primary/15"
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          />
+          <motion.div
+            className="absolute bottom-12 left-[5%] w-5 h-5 rotate-45 bg-primary/10"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          />
+          <motion.div
+            className="absolute top-1/2 right-[4%] grid grid-cols-4 gap-2"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/12" />
+            ))}
+          </motion.div>
+        </div>
+        <div className="container max-w-5xl relative">
           <motion.div
             className="text-center mb-14"
             initial="hidden"
@@ -289,7 +346,24 @@ const Landing = () => {
       </section>
 
       {/* Roles */}
-      <section className="py-20 border-t border-border">
+      <section className="py-20 border-t border-border relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -bottom-20 right-0 w-[400px] h-[300px] bg-gradient-to-tl from-primary/[0.06] to-transparent rounded-full blur-3xl" />
+          <motion.div
+            className="absolute top-20 left-[4%] w-20 h-20 rounded-full border border-accent/15"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          />
+          <motion.div
+            className="absolute bottom-16 right-[6%] w-4 h-4 rotate-45 border-2 border-primary/15"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          />
+        </div>
         <div className="container">
           <motion.div
             className="text-center mb-14"
@@ -329,7 +403,28 @@ const Landing = () => {
       </section>
 
       {/* Platform Features */}
-      <section className="py-20 border-t border-border bg-muted/30">
+      <section className="py-20 border-t border-border bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-gradient-to-bl from-primary/[0.05] to-transparent rounded-full blur-3xl" />
+          <motion.div
+            className="absolute bottom-8 left-[3%] grid grid-cols-6 gap-2"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
+            {Array.from({ length: 24 }).map((_, i) => (
+              <div key={i} className="w-1 h-1 rounded-full bg-primary/12" />
+            ))}
+          </motion.div>
+          <motion.div
+            className="absolute top-24 right-[5%] w-8 h-8 rotate-12 border border-accent/15 rounded-sm"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          />
+        </div>
         <div className="container max-w-5xl">
           <motion.div
             className="text-center mb-14"
@@ -374,8 +469,19 @@ const Landing = () => {
       </section>
 
       {/* Trust */}
-      <section className="py-20 bg-brand text-white">
-        <div className="container">
+      <section className="py-20 bg-brand text-white relative overflow-hidden">
+        {/* Trust section decorations */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-20 -left-20 w-[300px] h-[300px] rounded-full border border-white/10" />
+          <div className="absolute -bottom-16 -right-16 w-[250px] h-[250px] rounded-full border border-white/[0.07]" />
+          <div className="absolute top-1/3 right-[8%] w-4 h-4 rotate-45 bg-white/10" />
+          <div className="absolute bottom-12 left-[10%] grid grid-cols-4 gap-2">
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div key={i} className="w-1 h-1 rounded-full bg-white/15" />
+            ))}
+          </div>
+        </div>
+        <div className="container relative">
           <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <motion.div
               initial="hidden"
@@ -416,7 +522,24 @@ const Landing = () => {
       </section>
 
       {/* Pitch Decks Section */}
-      <section className="py-20 border-t border-border">
+      <section className="py-20 border-t border-border relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-0 w-[400px] h-[250px] bg-gradient-to-tr from-primary/[0.05] to-transparent rounded-full blur-3xl" />
+          <motion.div
+            className="absolute top-12 right-[6%] w-12 h-12 rounded-full border border-accent/15"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          />
+          <motion.div
+            className="absolute bottom-20 left-[4%] w-3 h-3 rotate-45 bg-primary/15"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          />
+        </div>
         <div className="container max-w-5xl">
           <motion.div
             className="text-center mb-14"
@@ -475,15 +598,17 @@ const Landing = () => {
       <section className="py-20 border-t border-border relative overflow-hidden">
         {/* Decorative geometric bg */}
         <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-20 left-0 w-[450px] h-[350px] bg-gradient-to-br from-primary/[0.07] to-transparent rounded-full blur-3xl" />
+          <div className="absolute -bottom-16 right-0 w-[350px] h-[250px] bg-gradient-to-tl from-accent/[0.05] to-transparent rounded-full blur-3xl" />
           <motion.div
-            className="absolute top-12 left-[8%] w-48 h-48 rounded-full border border-primary/[0.05]"
+            className="absolute top-12 left-[8%] w-48 h-48 rounded-full border-2 border-primary/15"
             initial={{ opacity: 0, scale: 0.5 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1.2 }}
           />
           <motion.div
-            className="absolute bottom-16 right-[10%] w-32 h-32 rounded-full border border-accent/[0.06]"
+            className="absolute bottom-16 right-[10%] w-32 h-32 rounded-full border border-accent/15"
             initial={{ opacity: 0, scale: 0.5 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -497,15 +622,20 @@ const Landing = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             {Array.from({ length: 25 }).map((_, i) => (
-              <div key={i} className="w-1 h-1 rounded-full bg-primary/[0.06]" />
+              <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/15" />
             ))}
           </motion.div>
           <motion.div
-            className="absolute bottom-1/4 left-[15%] w-6 h-6 rotate-45 border border-primary/[0.07]"
+            className="absolute bottom-1/4 left-[15%] w-8 h-8 rotate-45 border-2 border-primary/15"
             initial={{ opacity: 0, rotate: 0 }}
             whileInView={{ opacity: 1, rotate: 45 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
+          />
+          <motion.div
+            className="absolute top-[60%] left-[5%] w-3 h-3 rounded-full bg-accent/25"
+            animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.7, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity }}
           />
         </div>
 
@@ -590,12 +720,20 @@ const Landing = () => {
       {/* Testimonial / Social Proof */}
       <section className="py-16 border-t border-border bg-muted/30 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-[350px] h-[300px] bg-gradient-to-bl from-primary/[0.06] to-transparent rounded-full blur-3xl" />
           <motion.div
-            className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-primary/[0.02]"
+            className="absolute bottom-8 left-[6%] w-10 h-10 rounded-full border border-primary/15"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.8 }}
+          />
+          <motion.div
+            className="absolute top-12 left-[50%] w-3 h-3 rotate-45 bg-accent/15"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           />
         </div>
         <div className="container max-w-4xl relative">
