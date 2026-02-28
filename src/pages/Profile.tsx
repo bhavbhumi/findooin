@@ -39,7 +39,7 @@ const Profile = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "about");
   const [endorsementCount, setEndorsementCount] = useState(0);
-  const { data: allPosts } = useFeedPosts();
+  const { flatPosts: allPosts } = useFeedPosts();
   const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
   const { refreshRoles } = useRole();
 

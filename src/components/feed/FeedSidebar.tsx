@@ -1,10 +1,32 @@
-import { useState } from "react";
+import { useState, memo, lazy, Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingSidebar } from "@/components/feed/TrendingSidebar";
-import { DraftsPanel } from "@/components/feed/DraftsPanel";
-import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 import { PostDraft } from "@/hooks/useDrafts";
 import { TrendingUp, FileEdit, Clock } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Lazy load non-default tabs
+const DraftsPanel = lazy(() =>
+  import("@/components/feed/DraftsPanel").then((m) => ({ default: m.DraftsPanel }))
+);
+const ScheduledPostsManager = lazy(() =>
+  import("@/components/feed/ScheduledPostsManager").then((m) => ({ default: m.ScheduledPostsManager }))
+);
+
+const MemoizedTrendingSidebar = memo(TrendingSidebar);
+
+function SidebarFallback() {
+  return (
+    <div className="space-y-3 p-2">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="space-y-1.5">
+          <Skeleton className="h-3.5 w-full" />
+          <Skeleton className="h-3 w-20" />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 interface FeedSidebarProps {
   userId: string | null;
@@ -12,12 +34,19 @@ interface FeedSidebarProps {
   initialTab?: string;
 }
 
-export function FeedSidebar({ userId, onLoadDraft, initialTab }: FeedSidebarProps) {
+export const FeedSidebar = memo(function FeedSidebar({ userId, onLoadDraft, initialTab }: FeedSidebarProps) {
   const [tab, setTab] = useState(initialTab || "trending");
+  // Track which tabs have been visited to keep them mounted after first visit
+  const [visited, setVisited] = useState<Set<string>>(new Set([initialTab || "trending"]));
+
+  const handleTabChange = (value: string) => {
+    setTab(value);
+    setVisited((prev) => new Set(prev).add(value));
+  };
 
   return (
     <div className="space-y-0">
-      <Tabs value={tab} onValueChange={setTab}>
+      <Tabs value={tab} onValueChange={handleTabChange}>
         <TabsList className="w-full grid grid-cols-3 h-9 mb-3">
           <TabsTrigger value="trending" className="text-xs gap-1">
             <TrendingUp className="h-3.5 w-3.5" />
@@ -34,15 +63,25 @@ export function FeedSidebar({ userId, onLoadDraft, initialTab }: FeedSidebarProp
         </TabsList>
 
         <TabsContent value="trending" className="mt-0">
-          <TrendingSidebar />
+          <MemoizedTrendingSidebar />
         </TabsContent>
+
         <TabsContent value="drafts" className="mt-0">
-          <DraftsPanel userId={userId} onLoadDraft={onLoadDraft} />
+          {visited.has("drafts") && (
+            <Suspense fallback={<SidebarFallback />}>
+              <DraftsPanel userId={userId} onLoadDraft={onLoadDraft} />
+            </Suspense>
+          )}
         </TabsContent>
+
         <TabsContent value="scheduled" className="mt-0">
-          <ScheduledPostsManager />
+          {visited.has("scheduled") && (
+            <Suspense fallback={<SidebarFallback />}>
+              <ScheduledPostsManager />
+            </Suspense>
+          )}
         </TabsContent>
       </Tabs>
     </div>
   );
-}
+});

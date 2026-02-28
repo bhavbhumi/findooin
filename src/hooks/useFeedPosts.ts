@@ -1,5 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+const PAGE_SIZE = 15;
 
 export interface FeedPost {
   id: string;
@@ -25,44 +27,58 @@ export interface FeedPost {
   bookmark_count: number;
 }
 
+function normalizePosts(data: any[]): FeedPost[] {
+  return data.map((p: any) => ({
+    id: p.id,
+    content: p.content,
+    post_type: p.post_type,
+    post_kind: p.post_kind,
+    query_category: p.query_category || null,
+    hashtags: p.hashtags,
+    attachment_url: p.attachment_url,
+    attachment_name: p.attachment_name,
+    attachment_type: p.attachment_type,
+    created_at: p.created_at,
+    author: {
+      id: p.author?.id || "",
+      full_name: p.author?.full_name || "Unknown",
+      display_name: p.author?.display_name || null,
+      avatar_url: p.author?.avatar_url || null,
+      verification_status: p.author?.verification_status || "unverified",
+    },
+    roles: p.roles || [],
+    like_count: Number(p.like_count) || 0,
+    comment_count: Number(p.comment_count) || 0,
+    bookmark_count: Number(p.bookmark_count) || 0,
+  }));
+}
+
 export function useFeedPosts() {
-  return useQuery({
+  const query = useInfiniteQuery({
     queryKey: ["feed-posts"],
-    queryFn: async (): Promise<FeedPost[]> => {
+    queryFn: async ({ pageParam = 0 }): Promise<FeedPost[]> => {
       const { data, error } = await supabase.rpc("get_feed_posts", {
-        p_limit: 50,
-        p_offset: 0,
+        p_limit: PAGE_SIZE,
+        p_offset: pageParam,
       });
 
       if (error) throw error;
-
-      // RPC returns JSON — parse and normalize
-      const posts = (data as any[]) || [];
-      return posts.map((p: any) => ({
-        id: p.id,
-        content: p.content,
-        post_type: p.post_type,
-        post_kind: p.post_kind,
-        query_category: p.query_category || null,
-        hashtags: p.hashtags,
-        attachment_url: p.attachment_url,
-        attachment_name: p.attachment_name,
-        attachment_type: p.attachment_type,
-        created_at: p.created_at,
-        author: {
-          id: p.author?.id || "",
-          full_name: p.author?.full_name || "Unknown",
-          display_name: p.author?.display_name || null,
-          avatar_url: p.author?.avatar_url || null,
-          verification_status: p.author?.verification_status || "unverified",
-        },
-        roles: p.roles || [],
-        like_count: Number(p.like_count) || 0,
-        comment_count: Number(p.comment_count) || 0,
-        bookmark_count: Number(p.bookmark_count) || 0,
-      }));
+      return normalizePosts((data as any[]) || []);
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < PAGE_SIZE) return undefined;
+      return allPages.reduce((sum, page) => sum + page.length, 0);
     },
     staleTime: 30_000,
     refetchOnWindowFocus: false,
   });
+
+  // Flat array of all loaded posts for consumers that need it
+  const flatPosts = query.data?.pages.flat() ?? [];
+
+  return {
+    ...query,
+    flatPosts,
+  };
 }
