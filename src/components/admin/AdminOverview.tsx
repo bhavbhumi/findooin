@@ -179,6 +179,18 @@ export function AdminOverview() {
     toast.success(`Exported ${rows.length} verification records`);
   }, [requests]);
 
+  const exportReports = useCallback(() => {
+    if (!reports?.length) return toast.error("No report data to export");
+    const headers = ["Reason", "Description", "Reporter", "Reported User", "Post ID", "Status", "Date"];
+    const rows = reports.map(r => [
+      r.reason, r.description || "", r.reporter?.full_name || r.reporter_id,
+      r.reported_user?.full_name || r.reported_user_id || "", r.post_id || "",
+      r.status, new Date(r.created_at).toLocaleDateString(),
+    ]);
+    downloadCsv(`findoo-reports-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
+    toast.success(`Exported ${rows.length} reports`);
+  }, [reports]);
+
   const stats = [
     {
       label: "Total Users",
@@ -239,6 +251,9 @@ export function AdminOverview() {
           </Button>
           <Button variant="outline" size="sm" onClick={exportVerifications} className="text-xs gap-1.5">
             <Download className="h-3.5 w-3.5" /> Verifications CSV
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportReports} className="text-xs gap-1.5">
+            <Download className="h-3.5 w-3.5" /> Reports CSV
           </Button>
         </div>
       </div>
