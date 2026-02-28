@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import {
   Shield, Users, TrendingUp, Building2, UserCheck, BarChart3,
   ArrowRight, CheckCircle2, Briefcase, Calendar, MessageSquare,
-  Globe, Zap, Lock, Search, Landmark, Award, Activity
+  Globe, Zap, Lock, Search, Landmark, Award, Activity, Presentation
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
@@ -412,6 +412,219 @@ const Landing = () => {
               ))}
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Pitch Decks Section */}
+      <section className="py-20 border-t border-border">
+        <div className="container max-w-5xl">
+          <motion.div
+            className="text-center mb-14"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+          >
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 mb-4 text-sm text-muted-foreground">
+              <Presentation className="h-3.5 w-3.5 text-accent" />
+              Explore our pitch decks
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
+              Four perspectives. One platform.
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              See how FindOO serves every participant in India's financial ecosystem — from regulators to retail investors.
+            </p>
+          </motion.div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { icon: Landmark, title: "Regulators", desc: "Compliance by design", color: "bg-primary/10 text-primary", to: "/pitch/regulator" },
+              { icon: Building2, title: "Issuers", desc: "Verified distribution", color: "bg-issuer/10 text-issuer", to: "/pitch/issuer" },
+              { icon: UserCheck, title: "Intermediaries", desc: "Professional network", color: "bg-intermediary/10 text-intermediary", to: "/pitch/intermediary" },
+              { icon: BarChart3, title: "Investors", desc: "Trust-first discovery", color: "bg-investor/10 text-investor", to: "/pitch/investor" },
+            ].map((deck, i) => (
+              <motion.div
+                key={deck.title}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                custom={i + 1}
+              >
+                <Link
+                  to={deck.to}
+                  className="group block rounded-xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+                >
+                  <div className={`inline-flex h-11 w-11 items-center justify-center rounded-lg ${deck.color} mb-4 group-hover:scale-110 transition-transform`}>
+                    <deck.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-base font-bold font-heading text-card-foreground mb-1">{deck.title}</h3>
+                  <p className="text-sm text-muted-foreground mb-3">{deck.desc}</p>
+                  <span className="inline-flex items-center gap-1 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    View Deck <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ecosystem Visual Section */}
+      <section className="py-20 border-t border-border relative overflow-hidden">
+        {/* Decorative geometric bg */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            className="absolute top-12 left-[8%] w-48 h-48 rounded-full border border-primary/[0.05]"
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2 }}
+          />
+          <motion.div
+            className="absolute bottom-16 right-[10%] w-32 h-32 rounded-full border border-accent/[0.06]"
+            initial={{ opacity: 0, scale: 0.5 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2 }}
+          />
+          <motion.div
+            className="absolute top-1/3 right-[5%] grid grid-cols-5 gap-3"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            {Array.from({ length: 25 }).map((_, i) => (
+              <div key={i} className="w-1 h-1 rounded-full bg-primary/[0.06]" />
+            ))}
+          </motion.div>
+          <motion.div
+            className="absolute bottom-1/4 left-[15%] w-6 h-6 rotate-45 border border-primary/[0.07]"
+            initial={{ opacity: 0, rotate: 0 }}
+            whileInView={{ opacity: 1, rotate: 45 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          />
+        </div>
+
+        <div className="container max-w-5xl relative">
+          <motion.div
+            className="text-center mb-14"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
+              How the ecosystem connects
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              FindOO is the connective tissue between India's financial participants — enabling verified discovery, trusted communication, and compliant collaboration.
+            </p>
+          </motion.div>
+
+          {/* Ecosystem visual — interconnected nodes */}
+          <motion.div
+            className="relative max-w-3xl mx-auto"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={1}
+          >
+            <div className="grid grid-cols-3 gap-4 sm:gap-6">
+              {[
+                { icon: Shield, label: "Regulators", sub: "SEBI · RBI · IRDAI", color: "border-primary/30 bg-primary/[0.06]" },
+                { icon: Building2, label: "Issuers", sub: "AMCs · NBFCs · Banks", color: "border-issuer/30 bg-issuer/[0.06]" },
+                { icon: UserCheck, label: "Intermediaries", sub: "MFDs · RIAs · Agents", color: "border-intermediary/30 bg-intermediary/[0.06]" },
+              ].map((node, i) => (
+                <motion.div
+                  key={node.label}
+                  className={`rounded-2xl border-2 ${node.color} p-5 sm:p-6 text-center`}
+                  variants={fadeUp}
+                  custom={i + 2}
+                >
+                  <node.icon className="h-7 w-7 mx-auto mb-3 text-foreground/70" />
+                  <p className="text-sm font-bold font-heading text-foreground">{node.label}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{node.sub}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Center node */}
+            <motion.div
+              className="mx-auto -mt-4 mb-4 w-fit"
+              variants={fadeUp}
+              custom={5}
+            >
+              <div className="relative z-10 rounded-full bg-brand px-6 py-3 text-center shadow-lg">
+                <p className="text-sm font-bold text-white tracking-wide">FindOO</p>
+                <p className="text-[10px] text-white/70 uppercase tracking-widest">Financially Social</p>
+              </div>
+            </motion.div>
+
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 max-w-md mx-auto">
+              {[
+                { icon: BarChart3, label: "Investors", sub: "Retail · HNI · NRI", color: "border-investor/30 bg-investor/[0.06]" },
+                { icon: Globe, label: "Ecosystem", sub: "Events · Jobs · Directory", color: "border-accent/20 bg-accent/[0.04]" },
+              ].map((node, i) => (
+                <motion.div
+                  key={node.label}
+                  className={`rounded-2xl border-2 ${node.color} p-5 sm:p-6 text-center`}
+                  variants={fadeUp}
+                  custom={i + 6}
+                >
+                  <node.icon className="h-7 w-7 mx-auto mb-3 text-foreground/70" />
+                  <p className="text-sm font-bold font-heading text-foreground">{node.label}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{node.sub}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonial / Social Proof */}
+      <section className="py-16 border-t border-border bg-muted/30 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-primary/[0.02]"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          />
+        </div>
+        <div className="container max-w-4xl relative">
+          <motion.div
+            className="text-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+          >
+            <div className="grid sm:grid-cols-3 gap-6">
+              {[
+                { quote: "Finally, a network where I can verify who I'm talking to before sharing market views.", persona: "— SEBI-registered RIA, Mumbai" },
+                { quote: "Our NFO reach increased 3x after listing on FindOO's verified directory.", persona: "— Product Head, mid-size AMC" },
+                { quote: "As a retail investor, I feel safer knowing every advisor has verified credentials.", persona: "— HNI Investor, Bengaluru" },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  className="rounded-xl border border-border bg-card p-6 text-left"
+                  variants={fadeUp}
+                  custom={i + 1}
+                >
+                  <p className="text-sm text-muted-foreground leading-relaxed italic mb-4">"{item.quote}"</p>
+                  <p className="text-xs font-medium text-foreground/70">{item.persona}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 

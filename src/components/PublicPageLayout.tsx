@@ -41,6 +41,10 @@ const footerLinkSections = [
       { label: "Why does it exist", to: "/explore?tab=why" },
       { label: "How it works", to: "/explore?tab=how" },
       { label: "Who is it for", to: "/explore?tab=who" },
+      { label: "Pitch: Regulators", to: "/pitch/regulator" },
+      { label: "Pitch: Issuers", to: "/pitch/issuer" },
+      { label: "Pitch: Intermediaries", to: "/pitch/intermediary" },
+      { label: "Pitch: Investors", to: "/pitch/investor" },
     ],
   },
   {
