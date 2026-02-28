@@ -7,7 +7,8 @@ import { useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
-  Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield
+  Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
+  Mail, Database, TrendingUp, Megaphone, Send
 } from "lucide-react";
 import {
   Sidebar,
@@ -58,6 +59,15 @@ export function AdminSidebar() {
       ],
     },
     {
+      label: "Growth",
+      items: [
+        { title: "Invitations", url: "/admin/invitations", icon: Send },
+        { title: "Registry", url: "/admin/registry", icon: Database },
+        { title: "Sales", url: "/admin/sales", icon: TrendingUp },
+        { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone },
+      ],
+    },
+    {
       label: "Content",
       items: [
         { title: "Blog", url: "/admin/blog", icon: BookOpen },
@@ -67,6 +77,7 @@ export function AdminSidebar() {
       label: "Infrastructure",
       items: [
         { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
+        { title: "Support", url: "/admin/support", icon: LifeBuoy },
       ],
     },
     {
@@ -75,7 +86,6 @@ export function AdminSidebar() {
         { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true },
         { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true },
         { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true },
-        { title: "Support", url: "/admin/support", icon: LifeBuoy, soon: true },
       ],
     },
   ];
