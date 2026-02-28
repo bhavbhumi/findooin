@@ -341,6 +341,23 @@ Managed automatically by Lovable Cloud. **Do not edit `.env` directly.**
 
 ## Changelog
 
+### v2.6 — Feb 2026 (Quality & Accessibility)
+- **Error toast coverage** — consistent `toast.error()` on all hook failures:
+  - `usePostInteractions` (like/bookmark rollback toasts)
+  - `useConnectionActions` (follow/connect/disconnect feedback)
+  - `useListings` mutations (create, update, review, enquiry)
+  - `useNotifications` (load failure feedback)
+- **Accessibility audit** — WCAG improvements across all interactive components:
+  - `aria-label` on all icon buttons (like, comment, share, save, menu)
+  - `aria-pressed` / `aria-expanded` on toggle buttons
+  - `role="button"` + `tabIndex={0}` + keyboard Enter/Space on JobCard, EventCard, ListingCard
+  - Semantic `<nav aria-label>` on top nav and mobile bottom nav
+- **Unit test suite** — 20 tests across 5 files using Vitest:
+  - `useFeedPosts.test.ts` — normalization logic (counts, null handling, defaults)
+  - `usePostInteractions.test.ts` — optimistic update/rollback arithmetic
+  - `useConnectionActions.test.ts` — state transition coverage
+  - `session-manager.test.ts` — register, touch, remove flows
+
 ### v2.5 — Feb 2026 (Performance & Cleanup)
 - **Infinite scroll** on feed with `useInfiniteQuery` + manual fallback button
 - **Optimistic updates** for likes, bookmarks, comments, connection accept/reject
