@@ -90,6 +90,7 @@ export function AdminBlogManagement() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<BlogPostForm>(emptyForm);
   const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
 
   const upsert = useMutation({
     mutationFn: async (f: BlogPostForm & { id?: string }) => {
@@ -208,9 +209,12 @@ export function AdminBlogManagement() {
   }
 
   const filtered = (posts || []).filter(
-    (p: any) =>
-      p.title.toLowerCase().includes(search.toLowerCase()) ||
-      p.category.toLowerCase().includes(search.toLowerCase())
+    (p: any) => {
+      const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase()) ||
+        p.category.toLowerCase().includes(search.toLowerCase());
+      const matchesType = typeFilter === "all" || p.post_type === typeFilter;
+      return matchesSearch && matchesType;
+    }
   );
 
   if (isLoading) return <FindooLoader text="Loading blog posts..." />;
@@ -227,6 +231,19 @@ export function AdminBlogManagement() {
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
           />
+        </div>
+        <div className="flex items-center gap-1">
+          {[{ value: "all", label: "All" }, ...POST_TYPES].map((t) => (
+            <Button
+              key={t.value}
+              variant={typeFilter === t.value ? "default" : "outline"}
+              size="sm"
+              className="h-7 text-xs"
+              onClick={() => setTypeFilter(t.value)}
+            >
+              {t.label}
+            </Button>
+          ))}
         </div>
         <Dialog open={dialogOpen} onOpenChange={(o) => { setDialogOpen(o); if (!o) resetForm(); }}>
           <DialogTrigger asChild>
