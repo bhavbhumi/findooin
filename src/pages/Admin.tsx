@@ -5,12 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { FindooLoader } from "@/components/FindooLoader";
 import AppNavbar from "@/components/AppNavbar";
-import { Shield, ShieldCheck, Users, Flag, LayoutDashboard, BookOpen } from "lucide-react";
+import { Shield, ShieldCheck, Users, Flag, LayoutDashboard, BookOpen, Activity } from "lucide-react";
 import { AdminVerificationQueue } from "@/components/admin/AdminVerificationQueue";
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 import { AdminContentModeration } from "@/components/admin/AdminContentModeration";
 import { AdminOverview } from "@/components/admin/AdminOverview";
 import { AdminBlogManagement } from "@/components/admin/AdminBlogManagement";
+import { AdminAuditLog } from "@/components/admin/AdminAuditLog";
 
 export default function Admin() {
   usePageMeta({ title: "Admin Panel" });
@@ -49,7 +50,7 @@ export default function Admin() {
         </div>
 
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="w-full grid grid-cols-5 h-10 mb-6">
+          <TabsList className="w-full grid grid-cols-6 h-10 mb-6">
             <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm">
               <LayoutDashboard className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Overview</span>
@@ -70,6 +71,10 @@ export default function Admin() {
               <BookOpen className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Blog</span>
             </TabsTrigger>
+            <TabsTrigger value="audit" className="gap-1.5 text-xs sm:text-sm">
+              <Activity className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Audit</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview"><AdminOverview /></TabsContent>
@@ -77,6 +82,7 @@ export default function Admin() {
           <TabsContent value="users"><AdminUserManagement /></TabsContent>
           <TabsContent value="moderation"><AdminContentModeration /></TabsContent>
           <TabsContent value="blog"><AdminBlogManagement /></TabsContent>
+          <TabsContent value="audit"><AdminAuditLog /></TabsContent>
         </Tabs>
       </div>
     </div>
