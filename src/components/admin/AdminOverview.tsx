@@ -12,7 +12,10 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
-import { ResponsiveContainer, AreaChart, Area } from "recharts";
+import {
+  ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis,
+  Tooltip, PieChart, Pie, Cell, Legend
+} from "recharts";
 
 /* Mini sparkline component using recharts */
 function Sparkline({ data, color }: { data: number[]; color: string }) {
@@ -45,6 +48,73 @@ function fakeTrend(current: number): number[] {
   const base = Math.max(1, current - 5);
   return Array.from({ length: 7 }, (_, i) =>
     Math.max(0, base + Math.round(Math.sin(i * 1.2) * 3 + i * (current / 14)))
+  );
+}
+
+const DONUT_COLORS = [
+  "hsl(var(--primary))",
+  "hsl(var(--status-warning, 45 93% 47%))",
+  "hsl(var(--muted-foreground))",
+];
+
+function NewUsersBarChart({ users }: { users: any[] }) {
+  const chartData = useMemo(() => {
+    const days: { label: string; count: number }[] = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0, 10);
+      const label = d.toLocaleDateString("en-IN", { weekday: "short" });
+      const count = users.filter((u: any) => u.created_at?.slice(0, 10) === dateStr).length;
+      days.push({ label, count });
+    }
+    return days;
+  }, [users]);
+
+  return (
+    <ResponsiveContainer width="100%" height={200}>
+      <BarChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
+        <XAxis dataKey="label" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+        <YAxis allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+        <Tooltip
+          contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }}
+          labelStyle={{ fontWeight: 600 }}
+        />
+        <Bar dataKey="count" name="New Users" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+function VerificationDonut({ users, pendingRequests }: { users: any[]; pendingRequests: number }) {
+  const data = useMemo(() => {
+    const verified = users.filter((u: any) => u.verification_status === "verified").length;
+    const unverified = users.length - verified - pendingRequests;
+    return [
+      { name: "Verified", value: verified },
+      { name: "Pending", value: pendingRequests },
+      { name: "Unverified", value: Math.max(0, unverified) },
+    ].filter(d => d.value > 0);
+  }, [users, pendingRequests]);
+
+  if (data.length === 0) {
+    return <p className="text-sm text-muted-foreground text-center py-8">No user data yet</p>;
+  }
+
+  return (
+    <ResponsiveContainer width="100%" height={200}>
+      <PieChart>
+        <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3}>
+          {data.map((_, i) => (
+            <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} />
+          ))}
+        </Pie>
+        <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 12 }} />
+        <Tooltip
+          contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }}
+        />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }
 
@@ -174,6 +244,31 @@ export function AdminOverview() {
             </Button>
           ))}
         </div>
+      </div>
+
+      {/* Analytics Charts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* New Users This Week Bar Chart */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">New Users This Week</CardTitle>
+            <CardDescription>Daily signups over the last 7 days</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <NewUsersBarChart users={users || []} />
+          </CardContent>
+        </Card>
+
+        {/* Verification Funnel Donut Chart */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Verification Funnel</CardTitle>
+            <CardDescription>User verification status breakdown</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <VerificationDonut users={users || []} pendingRequests={pendingVerifications} />
+          </CardContent>
+        </Card>
       </div>
 
       {/* Recent activity summary cards */}
