@@ -18,6 +18,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 
 interface ProfileHeaderProps {
   profile: ProfileData;
@@ -84,6 +85,7 @@ export const ProfileHeader = ({
   const [reportOpen, setReportOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [bannerError, setBannerError] = useState(false);
 
   const isEntity = profile.user_type === "entity";
   // For entities: show organization as primary name, full_name as secondary
@@ -137,9 +139,9 @@ export const ProfileHeader = ({
     <>
       <div className="rounded-xl border border-border bg-card mb-4">
         {/* Banner */}
-        <div className={`h-28 sm:h-36 md:h-44 relative rounded-t-xl overflow-hidden ${!profile.banner_url ? '' : ''}`}>
-          {profile.banner_url ? (
-            <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" />
+        <div className={`h-28 sm:h-36 md:h-44 relative rounded-t-xl overflow-hidden`}>
+          {profile.banner_url && !bannerError ? (
+            <img src={profile.banner_url} alt="Profile banner" className="absolute inset-0 w-full h-full object-cover" onError={() => setBannerError(true)} />
           ) : (
             <>
               {/* Animated gradient cover story */}
@@ -215,15 +217,12 @@ export const ProfileHeader = ({
           <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
             {/* Round avatar overlapping banner */}
             <div className="shrink-0 relative z-10 group">
-              <div className={`h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted flex items-center justify-center`}>
-                {profile.avatar_url ? (
-                  <img src={profile.avatar_url} alt="avatar" className="h-full w-full object-cover" />
-                ) : (
-                  <span className="text-xl sm:text-2xl md:text-3xl font-bold font-heading text-muted-foreground">
-                    {getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
-                  </span>
-                )}
-              </div>
+              <AvatarWithFallback
+                src={profile.avatar_url}
+                initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
+                className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg bg-muted"
+                textClassName="text-xl sm:text-2xl md:text-3xl font-bold font-heading text-muted-foreground"
+              />
               {isOwnProfile && (
                 <button
                   onClick={onEditProfile}
