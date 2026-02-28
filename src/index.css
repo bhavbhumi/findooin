@@ -160,6 +160,41 @@
   }
 }
 
+/* ── Card hover glow effect ── */
+@layer utilities {
+  .card-hover-glow {
+    @apply relative;
+  }
+  .card-hover-glow::after {
+    content: '';
+    @apply absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 pointer-events-none;
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.15);
+  }
+  .card-hover-glow:hover::after {
+    @apply opacity-100;
+  }
+}
+
+/* ── Dark mode enhanced shadows (plain CSS) ── */
+.dark .shadow-lg {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 4px 10px -6px rgba(0, 0, 0, 0.3);
+}
+.dark .shadow-md {
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.35), 0 2px 6px -3px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Sonner toast enhancements (plain CSS) ── */
+[data-sonner-toaster] [data-sonner-toast] {
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+}
+[data-sonner-toaster] [data-sonner-toast][data-type="success"] {
+  border-color: hsl(var(--status-success) / 0.3);
+}
+[data-sonner-toaster] [data-sonner-toast][data-type="error"] {
+  border-color: hsl(var(--destructive) / 0.3);
+}
+
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }

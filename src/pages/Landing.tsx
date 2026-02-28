@@ -3,11 +3,12 @@ import { motion } from "framer-motion";
 import {
   Shield, Users, TrendingUp, Building2, UserCheck, BarChart3,
   ArrowRight, CheckCircle2, Briefcase, Calendar, MessageSquare,
-  Globe, Zap, Lock, Search, Landmark, Award
+  Globe, Zap, Lock, Search, Landmark, Award, Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { AnimatedCounter } from "@/components/ui/animated-counter";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -186,6 +187,49 @@ const Landing = () => {
                 <Link to="/explore">Explore the Platform</Link>
               </Button>
             </div>
+          </motion.div>
+
+          {/* Social Proof Stats */}
+          <motion.div
+            className="max-w-3xl mx-auto mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4"
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            custom={2}
+          >
+            {[
+              { value: 10, suffix: "Cr+", label: "Demat Accounts", icon: BarChart3 },
+              { value: 44000, suffix: "+", label: "AMFI Distributors", icon: UserCheck },
+              { value: 5000, suffix: "+", label: "SEBI Entities", icon: Shield },
+              { value: 100, suffix: "%", label: "Verified Network", icon: CheckCircle2 },
+            ].map((stat, i) => (
+              <div key={i} className="text-center rounded-xl border border-border bg-card/50 backdrop-blur-sm p-4">
+                <stat.icon className="h-4 w-4 mx-auto mb-2 text-accent" />
+                <div className="text-2xl sm:text-3xl font-bold font-heading text-foreground">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Trust Badges */}
+          <motion.div
+            className="flex flex-wrap items-center justify-center gap-3 mt-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.5 }}
+          >
+            {[
+              { icon: Shield, label: "SEBI Ready" },
+              { icon: Lock, label: "End-to-End Encrypted" },
+              { icon: Activity, label: "99.9% Uptime" },
+            ].map((badge, i) => (
+              <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-xs text-muted-foreground">
+                <badge.icon className="h-3 w-3 text-primary" />
+                {badge.label}
+              </div>
+            ))}
           </motion.div>
         </div>
       </section>

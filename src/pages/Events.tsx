@@ -14,6 +14,7 @@ import { CreateEventDialog } from "@/components/events/CreateEventDialog";
 import { OrganizerDashboard } from "@/components/events/OrganizerDashboard";
 import { EventsSidebar } from "@/components/events/EventsSidebar";
 import AppLayout from "@/components/AppLayout";
+import { EmptyState } from "@/components/ui/empty-state";
 import type { EventData } from "@/hooks/useEvents";
 import { isSameDay } from "date-fns";
 
@@ -123,11 +124,13 @@ const Events = () => {
                   {[1, 2, 3].map((i) => <EventCardSkeleton key={i} />)}
                 </div>
               ) : !filteredEvents.length ? (
-                <div className="text-center py-16 text-muted-foreground">
-                  <CalendarDays className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p className="font-heading font-semibold">No events found</p>
-                  <p className="text-sm mt-1">{selectedDate ? "No events on this date" : "Check back later for upcoming events"}</p>
-                </div>
+                <EmptyState
+                  icon={CalendarDays}
+                  title={selectedDate ? "No events on this date" : "No upcoming events"}
+                  description={selectedDate ? "Try selecting a different date or clear the filter." : "Check back later — webinars, investor meets, and conferences are added regularly."}
+                  actionLabel={canCreateEvents ? "Create Event" : undefined}
+                  onAction={canCreateEvents ? () => setShowCreate(true) : undefined}
+                />
               ) : (
                 <div className="space-y-3">
                   {filteredEvents.map((event) => (

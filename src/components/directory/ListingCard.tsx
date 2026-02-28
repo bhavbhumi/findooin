@@ -23,8 +23,8 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
 
   return (
     <div
-      className={`rounded-xl border bg-card overflow-hidden hover:shadow-md transition-all cursor-pointer group ${
-        isComparing ? "border-primary ring-2 ring-primary/20" : "border-border"
+      className={`rounded-xl border bg-card overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group ${
+        isComparing ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/15"
       }`}
       onClick={() => onSelect(listing)}
       role="button"
