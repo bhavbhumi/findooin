@@ -36,7 +36,7 @@ export const NetworkAvatar = ({
         )}
       >
         {src ? (
-          <img src={src} alt="avatar" className="h-full w-full object-cover" />
+          <img src={src} alt="avatar" className="h-full w-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
         ) : (
           <span className={s.text}>{initials}</span>
         )}

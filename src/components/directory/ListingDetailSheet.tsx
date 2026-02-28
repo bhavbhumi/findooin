@@ -76,7 +76,7 @@ export const ListingDetailSheet = ({ listing, open, onOpenChange }: ListingDetai
           {/* Owner */}
           <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 border border-border">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={listing.owner?.avatar_url || ""} />
+              <AvatarImage src={listing.owner?.avatar_url || undefined} />
               <AvatarFallback className="text-xs">{ownerName[0]}</AvatarFallback>
             </Avatar>
             <div>
@@ -206,7 +206,7 @@ export const ListingDetailSheet = ({ listing, open, onOpenChange }: ListingDetai
                   <div key={r.id} className="p-3 rounded-lg border border-border bg-card">
                     <div className="flex items-center gap-2 mb-1.5">
                       <Avatar className="h-6 w-6">
-                        <AvatarImage src={r.reviewer?.avatar_url || ""} />
+                        <AvatarImage src={r.reviewer?.avatar_url || undefined} />
                         <AvatarFallback className="text-[10px]">{(r.reviewer?.display_name || r.reviewer?.full_name || "?")[0]}</AvatarFallback>
                       </Avatar>
                       <p className="text-xs font-medium text-card-foreground">{r.reviewer?.display_name || r.reviewer?.full_name}</p>

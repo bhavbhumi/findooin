@@ -52,7 +52,7 @@ export function EventDetailSheet({ event, open, onClose, onRegister, onCancelReg
           {/* Organizer */}
           <div className="flex items-center gap-3">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={event.organizer_profile?.avatar_url || ""} />
+              <AvatarImage src={event.organizer_profile?.avatar_url || undefined} />
               <AvatarFallback>{(event.organizer_profile?.full_name || "O")[0]}</AvatarFallback>
             </Avatar>
             <div>
@@ -128,7 +128,7 @@ export function EventDetailSheet({ event, open, onClose, onRegister, onCancelReg
                   {speakers.map((s) => (
                     <div key={s.id} className="flex items-center gap-3">
                       <Avatar className="h-9 w-9">
-                        <AvatarImage src={s.speaker_avatar_url || ""} />
+                        <AvatarImage src={s.speaker_avatar_url || undefined} />
                         <AvatarFallback><User className="h-4 w-4" /></AvatarFallback>
                       </Avatar>
                       <div>

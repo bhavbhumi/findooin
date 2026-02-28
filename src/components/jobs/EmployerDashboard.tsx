@@ -104,7 +104,7 @@ function ApplicantsList({ jobId }: { jobId: string }) {
         return (
           <div key={app.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border">
             <Avatar className="h-9 w-9">
-              <AvatarImage src={profile?.avatar_url || ""} />
+              <AvatarImage src={profile?.avatar_url || undefined} />
               <AvatarFallback>{(profile?.full_name || "?")[0]}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
