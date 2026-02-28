@@ -134,13 +134,30 @@ const Feed = () => {
             <MemoizedPostCard key={post.id} post={post} />
           ))}
 
-          {/* Infinite scroll trigger */}
-          {hasMore && <div ref={observerRef} className="h-1" />}
+          {/* Infinite scroll trigger + manual fallback */}
+          {hasMore && (
+            <>
+              <div ref={observerRef} className="h-4" />
+              {!isFetchingMore && (
+                <div className="flex justify-center py-4">
+                  <button
+                    onClick={() => fetchNextForYou()}
+                    className="px-6 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                  >
+                    Load More Posts
+                  </button>
+                </div>
+              )}
+            </>
+          )}
           {isFetchingMore && (
             <div className="space-y-4">
               <PostCardSkeleton />
               <PostCardSkeleton />
             </div>
+          )}
+          {!hasMore && !isLoading && visiblePosts && visiblePosts.length > 0 && (
+            <p className="text-center text-xs text-muted-foreground py-6">You're all caught up!</p>
           )}
         </div>
 
