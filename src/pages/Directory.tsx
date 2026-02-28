@@ -1,18 +1,20 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Search, Plus, Package, LayoutGrid, GitCompare, Info } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
-import { FindooLoader } from "@/components/FindooLoader";
 import { useListings, type Listing, type ListingType } from "@/hooks/useListings";
 import { ListingCard } from "@/components/directory/ListingCard";
+import { ListingCardSkeleton } from "@/components/skeletons/ListingCardSkeleton";
 import { DirectorySidebar } from "@/components/directory/DirectorySidebar";
 import { ListingDetailSheet } from "@/components/directory/ListingDetailSheet";
 import { CreateListingDialog } from "@/components/directory/CreateListingDialog";
 import { ListingComparison } from "@/components/directory/ListingComparison";
 import { useRole } from "@/contexts/RoleContext";
+
+const MemoizedDirectorySidebar = memo(DirectorySidebar);
 
 const Directory = () => {
   usePageMeta({ title: "Directory" });
@@ -114,7 +116,9 @@ const Directory = () => {
 
           {/* Listings grid */}
           {isLoading ? (
-            <FindooLoader text="Loading listings..." />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map((i) => <ListingCardSkeleton key={i} />)}
+            </div>
           ) : listings && listings.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {listings.map((listing) => (
@@ -150,7 +154,7 @@ const Directory = () => {
         {/* Right sidebar */}
         <aside className="hidden lg:block">
           <div className="sticky top-20">
-            <DirectorySidebar
+            <MemoizedDirectorySidebar
               selectedType={selectedType}
               selectedCategory={selectedCategory}
               onTypeChange={setSelectedType}

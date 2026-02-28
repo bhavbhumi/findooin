@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AppLayout from "@/components/AppLayout";
-import { FindooLoader } from "@/components/FindooLoader";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
 import { NetworkSidebar } from "@/components/network/NetworkSidebar";
 import { InviteDialog } from "@/components/network/InviteDialog";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NetworkUserSkeleton } from "@/components/skeletons/NetworkUserSkeleton";
 import {
   Users, UserPlus, UserCheck, UserMinus, Clock, Search, CheckCircle2,
   TrendingUp, Sparkles, Send,
@@ -25,6 +25,8 @@ interface NetworkUser {
   user_type: string;
   organization: string | null;
 }
+
+const MemoizedNetworkSidebar = memo(NetworkSidebar);
 
 const Network = () => {
   usePageMeta({ title: "Network", description: "Build your trust network — connect with verified financial professionals." });
@@ -51,7 +53,6 @@ const Network = () => {
 
   const loadNetwork = async (userId: string) => {
     setLoading(true);
-
     const [followersRes, followingRes, connRes, pendInRes, pendOutRes] = await Promise.all([
       supabase.from("connections").select("from_user_id").eq("to_user_id", userId).eq("connection_type", "follow"),
       supabase.from("connections").select("to_user_id").eq("from_user_id", userId).eq("connection_type", "follow"),
@@ -69,7 +70,6 @@ const Network = () => {
     pendInRes.data?.forEach((r: any) => userIds.add(r.from_user_id));
     pendOutRes.data?.forEach((r: any) => userIds.add(r.to_user_id));
 
-    // Also fetch some suggestions (users not yet connected)
     const { data: allProfiles } = await supabase
       .from("profiles")
       .select("id, full_name, display_name, avatar_url, headline, verification_status, user_type, organization")
@@ -78,15 +78,12 @@ const Network = () => {
 
     const connectedIds = new Set(userIds);
     connectedIds.add(userId);
-
     const suggestedUsers = (allProfiles || []).filter((p: any) => !connectedIds.has(p.id)).slice(0, 10);
-
     allProfiles?.forEach((p: any) => userIds.add(p.id));
 
     const profilesMap: Record<string, NetworkUser> = {};
     (allProfiles || []).forEach((p: any) => { profilesMap[p.id] = p; });
 
-    // If there are IDs not in allProfiles, fetch them
     const missingIds = Array.from(userIds).filter((id) => !profilesMap[id]);
     if (missingIds.length > 0) {
       const { data: extra } = await supabase
@@ -108,24 +105,40 @@ const Network = () => {
       pendOutRes.data?.map((r: any) => ({ id: r.id, user: profilesMap[r.to_user_id] })).filter((r: any) => r.user) || []
     );
     setSuggestions(suggestedUsers);
-
     setLoading(false);
   };
 
-  const handleAccept = async (connectionId: string) => {
-    await supabase.from("connections").update({ status: "accepted" }).eq("id", connectionId);
-    if (currentUserId) loadNetwork(currentUserId);
-  };
+  // Optimistic accept
+  const handleAccept = useCallback(async (connectionId: string) => {
+    const req = pendingIncoming.find((r) => r.id === connectionId);
+    if (!req) return;
+    // Optimistic: move from pending to connections
+    setPendingIncoming((prev) => prev.filter((r) => r.id !== connectionId));
+    setMyConnections((prev) => [...prev, req.user]);
+    // Server update
+    const { error } = await supabase.from("connections").update({ status: "accepted" }).eq("id", connectionId);
+    if (error) {
+      // Rollback
+      setPendingIncoming((prev) => [...prev, req]);
+      setMyConnections((prev) => prev.filter((u) => u.id !== req.user.id));
+    }
+  }, [pendingIncoming]);
 
-  const handleReject = async (connectionId: string) => {
-    await supabase.from("connections").update({ status: "rejected" }).eq("id", connectionId);
-    if (currentUserId) loadNetwork(currentUserId);
-  };
+  // Optimistic reject
+  const handleReject = useCallback(async (connectionId: string) => {
+    const req = pendingIncoming.find((r) => r.id === connectionId);
+    if (!req) return;
+    setPendingIncoming((prev) => prev.filter((r) => r.id !== connectionId));
+    const { error } = await supabase.from("connections").update({ status: "rejected" }).eq("id", connectionId);
+    if (error) {
+      setPendingIncoming((prev) => [...prev, req]);
+    }
+  }, [pendingIncoming]);
 
   const getInitials = (name: string) =>
     name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 
-  const filterUsers = (users: NetworkUser[]) => {
+  const filterUsers = useCallback((users: NetworkUser[]) => {
     if (!searchQuery.trim()) return users;
     const q = searchQuery.toLowerCase();
     return users.filter(
@@ -135,7 +148,7 @@ const Network = () => {
         u.headline?.toLowerCase().includes(q) ||
         u.organization?.toLowerCase().includes(q)
     );
-  };
+  }, [searchQuery]);
 
   const totalPending = pendingIncoming.length + pendingOutgoing.length;
 
@@ -185,7 +198,9 @@ const Network = () => {
         </div>
 
         {loading ? (
-          <FindooLoader text="Loading your network..." />
+          <div className="space-y-2">
+            {[1, 2, 3, 4, 5].map((i) => <NetworkUserSkeleton key={i} />)}
+          </div>
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1 mb-4 overflow-x-auto">
@@ -307,7 +322,7 @@ const Network = () => {
           {/* Sidebar */}
           <aside className="hidden lg:block">
             <div className="sticky top-20">
-              <NetworkSidebar
+              <MemoizedNetworkSidebar
                 connectionsCount={myConnections.length}
                 followersCount={myFollowers.length}
                 followingCount={myFollowing.length}
@@ -326,7 +341,7 @@ const Network = () => {
   );
 };
 
-const NetworkUserList = ({ users, getInitials, emptyMessage }: { users: NetworkUser[]; getInitials: (n: string) => string; emptyMessage: string }) => {
+const NetworkUserList = memo(({ users, getInitials, emptyMessage }: { users: NetworkUser[]; getInitials: (n: string) => string; emptyMessage: string }) => {
   if (users.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card p-10 text-center">
@@ -362,6 +377,6 @@ const NetworkUserList = ({ users, getInitials, emptyMessage }: { users: NetworkU
       ))}
     </>
   );
-};
+});
 
 export default Network;

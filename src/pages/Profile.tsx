@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles, Store } from "lucide-react";
-import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
+import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
 import AppLayout from "@/components/AppLayout";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -25,6 +25,83 @@ import { FeaturedContent } from "@/components/profile/FeaturedContent";
 import { ProfileCompletenessRing } from "@/components/profile/ProfileCompletenessRing";
 import { MutualConnections } from "@/components/profile/MutualConnections";
 import { TrustScoreBadge } from "@/components/profile/TrustScoreBadge";
+import { useQuery } from "@tanstack/react-query";
+import type { FeedPost } from "@/hooks/useFeedPosts";
+
+const MemoizedPostCard = memo(PostCard);
+const MemoizedProfileSidebar = memo(ProfileSidebar);
+
+// Hook to fetch user's posts directly from DB instead of loading all feed posts
+function useUserPosts(profileId: string | undefined) {
+  return useQuery({
+    queryKey: ["user-posts", profileId],
+    enabled: !!profileId,
+    queryFn: async (): Promise<FeedPost[]> => {
+      if (!profileId) return [];
+      const { data: posts, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("author_id", profileId)
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      
+      // Fetch profile for this author
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id, full_name, display_name, avatar_url, verification_status")
+        .eq("id", profileId)
+        .single();
+      
+      // Fetch interaction counts in parallel
+      const postIds = posts?.map((p) => p.id) || [];
+      const [likesRes, commentsRes, bookmarksRes, rolesRes] = await Promise.all([
+        postIds.length > 0
+          ? supabase.from("post_interactions").select("post_id").in("post_id", postIds).eq("interaction_type", "like")
+          : Promise.resolve({ data: [] }),
+        postIds.length > 0
+          ? supabase.from("comments").select("post_id").in("post_id", postIds)
+          : Promise.resolve({ data: [] }),
+        postIds.length > 0
+          ? supabase.from("post_interactions").select("post_id").in("post_id", postIds).eq("interaction_type", "bookmark")
+          : Promise.resolve({ data: [] }),
+        supabase.from("user_roles").select("role, sub_type").eq("user_id", profileId),
+      ]);
+
+      const likeCounts = new Map<string, number>();
+      const commentCounts = new Map<string, number>();
+      const bookmarkCounts = new Map<string, number>();
+      (likesRes.data || []).forEach((r: any) => likeCounts.set(r.post_id, (likeCounts.get(r.post_id) || 0) + 1));
+      (commentsRes.data || []).forEach((r: any) => commentCounts.set(r.post_id, (commentCounts.get(r.post_id) || 0) + 1));
+      (bookmarksRes.data || []).forEach((r: any) => bookmarkCounts.set(r.post_id, (bookmarkCounts.get(r.post_id) || 0) + 1));
+
+      return (posts || []).map((p) => ({
+        id: p.id,
+        content: p.content,
+        post_type: p.post_type,
+        post_kind: p.post_kind,
+        query_category: p.query_category || null,
+        hashtags: p.hashtags,
+        attachment_url: p.attachment_url,
+        attachment_name: p.attachment_name,
+        attachment_type: p.attachment_type,
+        created_at: p.created_at,
+        author: {
+          id: profile?.id || profileId,
+          full_name: profile?.full_name || "Unknown",
+          display_name: profile?.display_name || null,
+          avatar_url: profile?.avatar_url || null,
+          verification_status: profile?.verification_status || "unverified",
+        },
+        roles: rolesRes.data?.map((r) => ({ role: r.role, sub_type: r.sub_type })) || [],
+        like_count: likeCounts.get(p.id) || 0,
+        comment_count: commentCounts.get(p.id) || 0,
+        bookmark_count: bookmarkCounts.get(p.id) || 0,
+      }));
+    },
+    staleTime: 60_000,
+  });
+}
 
 const Profile = () => {
   usePageMeta({ title: "Profile" });
@@ -39,11 +116,13 @@ const Profile = () => {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "about");
   const [endorsementCount, setEndorsementCount] = useState(0);
-  const { flatPosts: allPosts } = useFeedPosts();
   const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
   const { refreshRoles } = useRole();
 
   const isOwnProfile = !id || id === currentUserId;
+  
+  // Query user posts directly instead of loading all feed posts
+  const { data: userPosts, isLoading: postsLoading } = useUserPosts(profile?.id);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -105,8 +184,6 @@ const Profile = () => {
     if (targetId) loadProfile(targetId);
     refreshRoles();
   };
-
-  const userPosts = allPosts?.filter((p) => p.author.id === profile?.id) ?? [];
 
   const tabTriggerClass = "rounded-lg text-sm font-medium whitespace-nowrap px-4 sm:px-6 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground";
 
@@ -186,7 +263,11 @@ const Profile = () => {
               </TabsContent>
 
               <TabsContent value="posts" className="space-y-4 mt-0">
-                {userPosts.length === 0 ? (
+                {postsLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => <PostCardSkeleton key={i} />)}
+                  </div>
+                ) : !userPosts?.length ? (
                   <div className="rounded-xl border border-border bg-card p-10 text-center">
                     <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
                       <Edit3 className="h-5 w-5 text-muted-foreground" />
@@ -197,7 +278,7 @@ const Profile = () => {
                     </p>
                   </div>
                 ) : (
-                  userPosts.map((post) => <PostCard key={post.id} post={post} />)
+                  userPosts.map((post) => <MemoizedPostCard key={post.id} post={post} />)
                 )}
               </TabsContent>
 
@@ -207,7 +288,7 @@ const Profile = () => {
 
               {isOwnProfile && (
                 <TabsContent value="bookmarks" className="space-y-4 mt-0">
-                  <BookmarkedPosts allPosts={allPosts} currentUserId={currentUserId} />
+                  <BookmarkedPosts currentUserId={currentUserId} />
                 </TabsContent>
               )}
 
@@ -232,7 +313,6 @@ const Profile = () => {
           {/* Right Sidebar */}
           <aside className="hidden lg:block">
             <div className="sticky top-20 space-y-4">
-              {/* Profile Completeness (own profile only) */}
               {isOwnProfile && (
                 <ProfileCompletenessRing
                   profile={profile}
@@ -241,23 +321,17 @@ const Profile = () => {
                   onEditProfile={() => setEditOpen(true)}
                 />
               )}
-
-              {/* Trust Score */}
               <TrustScoreBadge
                 profile={profile}
                 stats={stats}
                 endorsementCount={endorsementCount}
               />
-
-              {/* Mutual Connections & People Also Viewed */}
               <MutualConnections
                 profileId={profile.id}
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
-
-              {/* Existing sidebar */}
-              <ProfileSidebar
+              <MemoizedProfileSidebar
                 profile={profile}
                 roles={roles}
                 stats={stats}
@@ -285,28 +359,74 @@ const Profile = () => {
   );
 };
 
-function BookmarkedPosts({ allPosts, currentUserId }: { allPosts: FeedPost[] | undefined; currentUserId: string | null }) {
-  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(true);
+function BookmarkedPosts({ currentUserId }: { currentUserId: string | null }) {
+  const { data: bookmarks, isLoading } = useQuery({
+    queryKey: ["bookmarked-posts", currentUserId],
+    enabled: !!currentUserId,
+    queryFn: async (): Promise<FeedPost[]> => {
+      if (!currentUserId) return [];
+      const { data: interactions } = await supabase
+        .from("post_interactions")
+        .select("post_id")
+        .eq("user_id", currentUserId)
+        .eq("interaction_type", "bookmark");
+      
+      const postIds = interactions?.map((i) => i.post_id) || [];
+      if (postIds.length === 0) return [];
 
-  useEffect(() => {
-    if (!currentUserId) return;
-    supabase
-      .from("post_interactions")
-      .select("post_id")
-      .eq("user_id", currentUserId)
-      .eq("interaction_type", "bookmark")
-      .then(({ data }) => {
-        setBookmarkedIds(new Set(data?.map((d: any) => d.post_id) || []));
-        setLoading(false);
+      const { data: posts } = await supabase
+        .from("posts")
+        .select("*")
+        .in("id", postIds)
+        .order("created_at", { ascending: false });
+      
+      if (!posts?.length) return [];
+
+      const authorIds = [...new Set(posts.map((p) => p.author_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, display_name, avatar_url, verification_status")
+        .in("id", authorIds);
+      
+      const profileMap = new Map(profiles?.map((p) => [p.id, p]) || []);
+      
+      return posts.map((p) => {
+        const author = profileMap.get(p.author_id);
+        return {
+          id: p.id,
+          content: p.content,
+          post_type: p.post_type,
+          post_kind: p.post_kind,
+          query_category: p.query_category || null,
+          hashtags: p.hashtags,
+          attachment_url: p.attachment_url,
+          attachment_name: p.attachment_name,
+          attachment_type: p.attachment_type,
+          created_at: p.created_at,
+          author: {
+            id: author?.id || p.author_id,
+            full_name: author?.full_name || "Unknown",
+            display_name: author?.display_name || null,
+            avatar_url: author?.avatar_url || null,
+            verification_status: author?.verification_status || "unverified",
+          },
+          roles: [],
+          like_count: 0,
+          comment_count: 0,
+          bookmark_count: 0,
+        };
       });
-  }, [currentUserId]);
+    },
+    staleTime: 30_000,
+  });
 
-  if (loading) return <FindooLoader size="sm" text="Loading bookmarks..." />;
+  if (isLoading) return (
+    <div className="space-y-4">
+      {[1, 2].map((i) => <PostCardSkeleton key={i} />)}
+    </div>
+  );
 
-  const bookmarkedPosts = allPosts?.filter((p) => bookmarkedIds.has(p.id)) || [];
-
-  if (bookmarkedPosts.length === 0) {
+  if (!bookmarks?.length) {
     return (
       <div className="rounded-xl border border-border bg-card p-10 text-center">
         <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
@@ -318,7 +438,7 @@ function BookmarkedPosts({ allPosts, currentUserId }: { allPosts: FeedPost[] | u
     );
   }
 
-  return <>{bookmarkedPosts.map((post) => <PostCard key={post.id} post={post} />)}</>;
+  return <>{bookmarks.map((post) => <MemoizedPostCard key={post.id} post={post} />)}</>;
 }
 
 export default Profile;
