@@ -203,25 +203,27 @@ const Network = () => {
           </div>
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1 mb-4 overflow-x-auto">
-              <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
-                Connections ({myConnections.length})
-              </TabsTrigger>
-              <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
-                Followers ({myFollowers.length})
-              </TabsTrigger>
-              <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
-                Following ({myFollowing.length})
-              </TabsTrigger>
-              {totalPending > 0 && (
-                <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
-                  Pending ({totalPending})
+            <div className="overflow-x-auto -mx-1 px-1 mb-4 scrollbar-hide">
+              <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
+                <TabsTrigger value="connections" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+                  Connections ({myConnections.length})
                 </TabsTrigger>
-              )}
-              <TabsTrigger value="suggestions" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium sm:px-4">
-                <Sparkles className="h-3.5 w-3.5 mr-1" /> Discover
-              </TabsTrigger>
-            </TabsList>
+                <TabsTrigger value="followers" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+                  Followers ({myFollowers.length})
+                </TabsTrigger>
+                <TabsTrigger value="following" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+                  Following ({myFollowing.length})
+                </TabsTrigger>
+                {totalPending > 0 && (
+                  <TabsTrigger value="pending" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+                    Pending ({totalPending})
+                  </TabsTrigger>
+                )}
+                <TabsTrigger value="suggestions" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
+                  <Sparkles className="h-3.5 w-3.5 mr-1" /> Discover
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="connections" className="mt-0 space-y-2">
               <NetworkUserList users={filterUsers(myConnections)} getInitials={getInitials} emptyMessage="No connections yet. Start building your professional network!" />

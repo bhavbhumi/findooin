@@ -83,7 +83,7 @@ export default function Admin() {
           </header>
 
           {/* Content */}
-          <main className="flex-1 p-4 md:p-6 overflow-auto">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-auto">
             <div className="max-w-6xl mx-auto">
               <Outlet />
             </div>

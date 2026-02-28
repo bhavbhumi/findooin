@@ -77,42 +77,45 @@ const Jobs = () => {
           </div>
 
           <Tabs defaultValue="browse" className="space-y-4">
-            <TabsList className="bg-muted/50">
-              <TabsTrigger value="browse" className="gap-1.5">
-                <Briefcase className="h-3.5 w-3.5" />
-                Browse Jobs
-              </TabsTrigger>
-              {(isIndividual || activeRole === "investor") && (
-                <TabsTrigger value="dashboard" className="gap-1.5">
-                  <LayoutDashboard className="h-3.5 w-3.5" />
-                  My Dashboard
+            <div className="overflow-x-auto -mx-1 px-1 scrollbar-hide">
+              <TabsList className="inline-flex w-max sm:w-auto bg-muted/50">
+                <TabsTrigger value="browse" className="gap-1.5 whitespace-nowrap">
+                  <Briefcase className="h-3.5 w-3.5" />
+                  Browse Jobs
                 </TabsTrigger>
-              )}
-              {canPostJobs && (
-                <TabsTrigger value="employer" className="gap-1.5">
-                  <Building2 className="h-3.5 w-3.5" />
-                  Employer Dashboard
-                </TabsTrigger>
-              )}
-            </TabsList>
+                {(isIndividual || activeRole === "investor") && (
+                  <TabsTrigger value="dashboard" className="gap-1.5 whitespace-nowrap">
+                    <LayoutDashboard className="h-3.5 w-3.5" />
+                    My Dashboard
+                  </TabsTrigger>
+                )}
+                {canPostJobs && (
+                  <TabsTrigger value="employer" className="gap-1.5 whitespace-nowrap">
+                    <Building2 className="h-3.5 w-3.5" />
+                    Employer Dashboard
+                  </TabsTrigger>
+                )}
+              </TabsList>
+            </div>
 
             <TabsContent value="browse" className="space-y-4">
-              <div className="flex flex-wrap gap-3">
-                <div className="relative flex-1 min-w-[200px]">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1 min-w-0">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search jobs, companies..." className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger className="w-[180px]"><SelectValue placeholder="Category" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
-                      <SelectItem key={k} value={k}>{v}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={jobType} onValueChange={setJobType}>
-                  <SelectTrigger className="w-[140px]"><SelectValue placeholder="Type" /></SelectTrigger>
+                <div className="flex gap-2">
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger className="w-full sm:w-[180px]"><SelectValue placeholder="Category" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {Object.entries(CATEGORY_LABELS).map(([k, v]) => (
+                        <SelectItem key={k} value={k}>{v}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={jobType} onValueChange={setJobType}>
+                    <SelectTrigger className="w-full sm:w-[140px]"><SelectValue placeholder="Type" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="full_time">Full-Time</SelectItem>
@@ -120,8 +123,9 @@ const Jobs = () => {
                     <SelectItem value="contract">Contract</SelectItem>
                     <SelectItem value="internship">Internship</SelectItem>
                     <SelectItem value="freelance">Freelance</SelectItem>
-                  </SelectContent>
-                </Select>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               {isLoading ? (

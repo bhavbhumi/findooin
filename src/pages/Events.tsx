@@ -73,43 +73,47 @@ const Events = () => {
           </div>
 
           <Tabs defaultValue="browse" className="space-y-4">
-            <TabsList className="bg-muted/50">
-              <TabsTrigger value="browse" className="gap-1.5">
-                <CalendarDays className="h-3.5 w-3.5" />
-                Browse Events
-              </TabsTrigger>
-              {canCreateEvents && (
-                <TabsTrigger value="dashboard" className="gap-1.5">
-                  <LayoutDashboard className="h-3.5 w-3.5" />
-                  Organizer Dashboard
+            <div className="overflow-x-auto -mx-1 px-1 scrollbar-hide">
+              <TabsList className="inline-flex w-max sm:w-auto bg-muted/50">
+                <TabsTrigger value="browse" className="gap-1.5 whitespace-nowrap">
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  Browse Events
                 </TabsTrigger>
-              )}
-            </TabsList>
+                {canCreateEvents && (
+                  <TabsTrigger value="dashboard" className="gap-1.5 whitespace-nowrap">
+                    <LayoutDashboard className="h-3.5 w-3.5" />
+                    Organizer Dashboard
+                  </TabsTrigger>
+                )}
+              </TabsList>
+            </div>
 
             <TabsContent value="browse" className="space-y-4">
-              <div className="flex flex-wrap gap-3">
-                <div className="relative flex-1 min-w-[200px]">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1 min-w-0">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input placeholder="Search events..." className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger className="w-[180px]"><SelectValue placeholder="Category" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    {Object.entries(EVENT_CATEGORY_LABELS).map(([k, v]) => (
-                      <SelectItem key={k} value={k}>{v}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={mode} onValueChange={setMode}>
-                  <SelectTrigger className="w-[130px]"><SelectValue placeholder="Mode" /></SelectTrigger>
+                <div className="flex gap-2">
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger className="w-full sm:w-[180px]"><SelectValue placeholder="Category" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {Object.entries(EVENT_CATEGORY_LABELS).map(([k, v]) => (
+                        <SelectItem key={k} value={k}>{v}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={mode} onValueChange={setMode}>
+                    <SelectTrigger className="w-full sm:w-[130px]"><SelectValue placeholder="Mode" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Modes</SelectItem>
                     <SelectItem value="virtual">Virtual</SelectItem>
                     <SelectItem value="physical">In-Person</SelectItem>
                     <SelectItem value="hybrid">Hybrid</SelectItem>
-                  </SelectContent>
-                </Select>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               {selectedDate && (

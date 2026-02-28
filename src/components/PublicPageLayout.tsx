@@ -303,7 +303,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} FindOO. All rights reserved.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <Link to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Terms
               </Link>
