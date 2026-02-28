@@ -1,8 +1,22 @@
+/**
+ * useFeedPosts — Infinite-scroll feed data hook.
+ *
+ * Uses `useInfiniteQuery` to paginate via the `get_feed_posts` RPC.
+ * Returns `flatPosts` (a flattened array of all loaded pages) for
+ * consumers like Discover and Profile that need a simple array.
+ *
+ * Performance notes:
+ * - PAGE_SIZE of 15 balances perceived speed vs. network calls
+ * - `staleTime: 30s` prevents refetches during rapid tab switches
+ * - `refetchOnWindowFocus: false` avoids jarring reloads
+ */
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+/** Number of posts fetched per page */
 const PAGE_SIZE = 15;
 
+/** Normalized feed post shape used across the entire app */
 export interface FeedPost {
   id: string;
   content: string;

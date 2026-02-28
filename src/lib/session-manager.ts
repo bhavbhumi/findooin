@@ -1,3 +1,17 @@
+/**
+ * Session Manager — Multi-device session control.
+ *
+ * Enforces a maximum of 3 concurrent sessions per user.
+ * Each browser tab gets a unique session token stored in
+ * sessionStorage → localStorage → in-memory (fallback chain).
+ *
+ * Exports:
+ * - `registerSession(userId)` — Create/update session on login
+ * - `removeSession()` — Clean up on sign-out
+ * - `touchSession()` — Heartbeat to keep session alive (called every 5min by AppLayout)
+ *
+ * The `enforce_session_limit` RPC evicts the oldest sessions when the limit is exceeded.
+ */
 import { supabase } from "@/integrations/supabase/client";
 
 const MAX_SESSIONS = 3;
