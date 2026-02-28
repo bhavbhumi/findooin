@@ -4,7 +4,7 @@
  * Provides real-time operational metrics, usage analytics, infrastructure health,
  * and error tracking using live data from the database.
  */
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useSyncExternalStore } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -12,12 +12,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Activity, Users, Database, Zap, AlertTriangle, TrendingUp, Clock,
   HardDrive, RefreshCw, Server, Wifi, BarChart3, Globe, Shield,
   MessageSquare, FileText, Briefcase, Calendar, ArrowUpRight, ArrowDownRight,
-  CheckCircle2, XCircle, Timer
+  CheckCircle2, XCircle, Timer, Bug, Ban, Radio, Trash2
 } from "lucide-react";
+import { errorTracker, type ErrorEntry } from "@/lib/error-tracker";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
@@ -344,6 +346,17 @@ export function AdminMonitoring() {
   const [lastRefresh, setLastRefresh] = useState(new Date());
   const [subTab, setSubTab] = useState("realtime");
 
+  // Error tracking - subscribe to live error updates
+  const trackedErrors = useSyncExternalStore(
+    errorTracker.subscribe,
+    errorTracker.getErrors
+  );
+  const errorCounts = useMemo(() => errorTracker.getCounts(), [trackedErrors]);
+  const [errorFilter, setErrorFilter] = useState<"all" | ErrorEntry["category"]>("all");
+  const filteredErrors = useMemo(
+    () => errorFilter === "all" ? trackedErrors : trackedErrors.filter((e) => e.category === errorFilter),
+    [trackedErrors, errorFilter]
+  );
   useEffect(() => {
     const interval = setInterval(() => setLastRefresh(new Date()), 15000);
     return () => clearInterval(interval);
@@ -389,7 +402,7 @@ export function AdminMonitoring() {
 
       {/* Sub-tabs */}
       <Tabs value={subTab} onValueChange={setSubTab}>
-        <TabsList className="w-full grid grid-cols-4 h-9">
+        <TabsList className="w-full grid grid-cols-5 h-9">
           <TabsTrigger value="realtime" className="text-xs gap-1">
             <Activity className="h-3 w-3" /> Real-time
           </TabsTrigger>
@@ -398,6 +411,14 @@ export function AdminMonitoring() {
           </TabsTrigger>
           <TabsTrigger value="infrastructure" className="text-xs gap-1">
             <Server className="h-3 w-3" /> Infra
+          </TabsTrigger>
+          <TabsTrigger value="errors" className="text-xs gap-1 relative">
+            <Bug className="h-3 w-3" /> Errors
+            {errorCounts.total > 0 && (
+              <span className="absolute -top-1 -right-1 h-4 min-w-[16px] rounded-full bg-destructive text-destructive-foreground text-[9px] flex items-center justify-center px-1">
+                {errorCounts.total}
+              </span>
+            )}
           </TabsTrigger>
           <TabsTrigger value="audit" className="text-xs gap-1">
             <Shield className="h-3 w-3" /> Audit
@@ -593,7 +614,113 @@ export function AdminMonitoring() {
           </div>
         </TabsContent>
 
-        {/* AUDIT TAB */}
+        {/* ERRORS TAB */}
+        <TabsContent value="errors" className="space-y-4 mt-4">
+          {/* Error summary cards */}
+          <div className="grid grid-cols-3 gap-3">
+            <Card className="cursor-pointer" onClick={() => setErrorFilter("client")}>
+              <CardContent className="pt-3 pb-3 flex items-center gap-3">
+                <div className="h-8 w-8 rounded-lg bg-destructive/10 flex items-center justify-center">
+                  <Bug className="h-4 w-4 text-destructive" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold font-heading leading-none">{errorCounts.client}</p>
+                  <p className="text-[10px] text-muted-foreground">Client Errors</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="cursor-pointer" onClick={() => setErrorFilter("api")}>
+              <CardContent className="pt-3 pb-3 flex items-center gap-3">
+                <div className="h-8 w-8 rounded-lg bg-secondary/50 flex items-center justify-center">
+                  <Globe className="h-4 w-4 text-secondary-foreground" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold font-heading leading-none">{errorCounts.api}</p>
+                  <p className="text-[10px] text-muted-foreground">API Failures</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="cursor-pointer" onClick={() => setErrorFilter("rate_limit")}>
+              <CardContent className="pt-3 pb-3 flex items-center gap-3">
+                <div className="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center">
+                  <Ban className="h-4 w-4 text-accent" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold font-heading leading-none">{errorCounts.rate_limit}</p>
+                  <p className="text-[10px] text-muted-foreground">Rate Limits</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Filter bar */}
+          <div className="flex items-center justify-between">
+            <div className="flex gap-1.5">
+              {(["all", "client", "api", "rate_limit"] as const).map((f) => (
+                <Badge
+                  key={f}
+                  variant={errorFilter === f ? "default" : "outline"}
+                  className="cursor-pointer text-[10px] px-2 py-0.5"
+                  onClick={() => setErrorFilter(f)}
+                >
+                  {f === "all" ? "All" : f === "rate_limit" ? "Rate Limits" : f === "api" ? "API" : "Client"}
+                </Badge>
+              ))}
+            </div>
+            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs gap-1" onClick={() => errorTracker.clear()}>
+              <Trash2 className="h-3 w-3" /> Clear
+            </Button>
+          </div>
+
+          {/* Error list */}
+          <Card>
+            <CardContent className="p-0">
+              <ScrollArea className="h-[400px]">
+                {filteredErrors.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+                    <CheckCircle2 className="h-8 w-8 mb-2 text-accent" />
+                    <p className="text-sm font-medium">No errors captured</p>
+                    <p className="text-xs mt-1">Errors will appear here in real-time</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-border">
+                    {filteredErrors.map((err) => (
+                      <div key={err.id} className="p-3 hover:bg-muted/30 transition-colors">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-start gap-2 min-w-0">
+                            <div className="mt-0.5">
+                              {err.category === "client" && <Bug className="h-3.5 w-3.5 text-destructive" />}
+                              {err.category === "api" && <Globe className="h-3.5 w-3.5 text-secondary-foreground" />}
+                              {err.category === "rate_limit" && <Ban className="h-3.5 w-3.5 text-accent" />}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-xs font-medium truncate">{err.message}</p>
+                              {err.source && (
+                                <p className="text-[10px] text-muted-foreground truncate mt-0.5">
+                                  {err.source}
+                                </p>
+                              )}
+                              {err.statusCode ? (
+                                <Badge variant="outline" className="text-[9px] mt-1 px-1.5 py-0">
+                                  HTTP {err.statusCode}
+                                </Badge>
+                              ) : null}
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
+                            {format(new Date(err.timestamp), "HH:mm:ss")}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+
         <TabsContent value="audit" className="mt-4">
           <div className="grid md:grid-cols-2 gap-4">
             <Card>
