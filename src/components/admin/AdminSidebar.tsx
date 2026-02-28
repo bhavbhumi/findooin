@@ -1,6 +1,7 @@
 /**
  * AdminSidebar — Collapsible sidebar navigation for the admin panel.
  * Groups sections into Operations, Content, Platform, and Coming Soon.
+ * Shows real-time badge counts for pending verifications and reports.
  */
 import { useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
@@ -22,50 +23,62 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
-
-const NAV_SECTIONS = [
-  {
-    label: "Overview",
-    items: [
-      { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
-    ],
-  },
-  {
-    label: "Operations",
-    items: [
-      { title: "Users", url: "/admin/users", icon: Users },
-      { title: "Verification", url: "/admin/verification", icon: ShieldCheck },
-      { title: "Reports", url: "/admin/moderation", icon: Flag },
-      { title: "Audit Log", url: "/admin/audit", icon: Activity },
-    ],
-  },
-  {
-    label: "Content",
-    items: [
-      { title: "Blog", url: "/admin/blog", icon: BookOpen },
-    ],
-  },
-  {
-    label: "Infrastructure",
-    items: [
-      { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
-    ],
-  },
-  {
-    label: "Coming Soon",
-    items: [
-      { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true },
-      { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true },
-      { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true },
-      { title: "Support", url: "/admin/support", icon: LifeBuoy, soon: true },
-    ],
-  },
-];
+import { useVerificationQueue, useAdminReports } from "@/hooks/useAdmin";
 
 export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+
+  const { data: requests } = useVerificationQueue();
+  const { data: reports } = useAdminReports();
+
+  const pendingVerifications = requests?.filter(r => r.status === "pending").length || 0;
+  const pendingReports = reports?.filter(r => r.status === "pending").length || 0;
+
+  const badgeMap: Record<string, number> = {
+    "/admin/verification": pendingVerifications,
+    "/admin/moderation": pendingReports,
+  };
+
+  const NAV_SECTIONS = [
+    {
+      label: "Overview",
+      items: [
+        { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
+      ],
+    },
+    {
+      label: "Operations",
+      items: [
+        { title: "Users", url: "/admin/users", icon: Users },
+        { title: "Verification", url: "/admin/verification", icon: ShieldCheck },
+        { title: "Reports", url: "/admin/moderation", icon: Flag },
+        { title: "Audit Log", url: "/admin/audit", icon: Activity },
+      ],
+    },
+    {
+      label: "Content",
+      items: [
+        { title: "Blog", url: "/admin/blog", icon: BookOpen },
+      ],
+    },
+    {
+      label: "Infrastructure",
+      items: [
+        { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
+      ],
+    },
+    {
+      label: "Coming Soon",
+      items: [
+        { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true },
+        { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true },
+        { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true },
+        { title: "Support", url: "/admin/support", icon: LifeBuoy, soon: true },
+      ],
+    },
+  ];
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border/50">
@@ -100,24 +113,37 @@ export function AdminSidebar() {
                   const isActive = item.end
                     ? location.pathname === item.url
                     : location.pathname.startsWith(item.url);
+                  const badgeCount = badgeMap[item.url] || 0;
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
                         <NavLink
                           to={item.url}
                           end={item.end}
-                          className={`hover:bg-muted/50 transition-colors ${
+                          className={`hover:bg-muted/50 transition-colors relative ${
                             item.soon ? "opacity-60" : ""
                           }`}
                           activeClassName="bg-primary/10 text-primary font-medium"
                         >
-                          <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                          <div className="relative mr-2 shrink-0">
+                            <item.icon className="h-4 w-4" />
+                            {collapsed && badgeCount > 0 && (
+                              <span className="absolute -top-1.5 -right-1.5 h-3.5 min-w-3.5 rounded-full bg-destructive text-destructive-foreground text-[8px] flex items-center justify-center px-0.5">
+                                {badgeCount}
+                              </span>
+                            )}
+                          </div>
                           {!collapsed && (
                             <span className="flex-1 flex items-center justify-between">
                               <span className="text-sm">{item.title}</span>
                               {item.soon && (
                                 <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0">
                                   Soon
+                                </Badge>
+                              )}
+                              {!item.soon && badgeCount > 0 && (
+                                <Badge variant="destructive" className="text-[9px] h-4.5 min-w-5 px-1.5 ml-1 shrink-0">
+                                  {badgeCount}
                                 </Badge>
                               )}
                             </span>
