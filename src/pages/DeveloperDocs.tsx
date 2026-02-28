@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Lock, BookOpen, Code2, Server, Rocket, ChevronRight, Database, Shield, Zap, Layers, AlertTriangle, Bug } from "lucide-react";
@@ -809,6 +808,14 @@ const tabs = [
   { id: "troubleshooting", label: "Troubleshooting", icon: Bug, isPublic: true },
 ];
 
+const tabContentMap: Record<string, React.FC> = {
+  "architecture": ArchitectureTab,
+  "getting-started": GettingStartedTab,
+  "api-reference": ApiReferenceTab,
+  "edge-functions": EdgeFunctionsTab,
+  "troubleshooting": TroubleshootingTab,
+};
+
 /* ── Main Page ── */
 const DeveloperDocs = () => {
   usePageMeta({
@@ -836,6 +843,8 @@ const DeveloperDocs = () => {
     });
   }, [activeTab]);
 
+  const Content = tabContentMap[activeTab] || ArchitectureTab;
+
   return (
     <PublicPageLayout>
       <PageHero
@@ -846,47 +855,32 @@ const DeveloperDocs = () => {
         variant="dots"
       />
 
+      <div className="border-b border-border bg-background sticky top-16 z-30">
+        <div className="container flex gap-0 overflow-x-auto scrollbar-none">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setSearchParams({ tab: tab.id })}
+              className={`px-5 py-3.5 text-sm font-medium transition-colors relative whitespace-nowrap flex items-center gap-1.5 ${
+                activeTab === tab.id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <tab.icon className="h-3.5 w-3.5" />
+              {tab.label}
+              {!tab.isPublic && (
+                <Lock className="h-3 w-3 text-muted-foreground/60 ml-0.5" />
+              )}
+              {activeTab === tab.id && (
+                <motion.div layoutId="devdocs-tab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <section className="py-10">
         <div className="container max-w-5xl">
-          <motion.div initial="hidden" animate="visible" variants={fadeUp}>
-            <Tabs
-              value={activeTab}
-              onValueChange={(v) => setSearchParams({ tab: v })}
-              className="space-y-8"
-            >
-              <TabsList className="flex flex-wrap gap-1 bg-muted/50 p-1 rounded-xl h-auto">
-                {tabs.map((tab) => (
-                  <TabsTrigger
-                    key={tab.id}
-                    value={tab.id}
-                    className="flex items-center gap-1.5 text-xs sm:text-sm px-3 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg"
-                  >
-                    <tab.icon className="h-3.5 w-3.5" />
-                    {tab.label}
-                    {!tab.isPublic && (
-                      <Lock className="h-3 w-3 text-muted-foreground ml-0.5" />
-                    )}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
-              <TabsContent value="architecture">
-                <ArchitectureTab />
-              </TabsContent>
-              <TabsContent value="getting-started">
-                <GettingStartedTab />
-              </TabsContent>
-              <TabsContent value="api-reference">
-                <ApiReferenceTab />
-              </TabsContent>
-              <TabsContent value="edge-functions">
-                <EdgeFunctionsTab />
-              </TabsContent>
-              <TabsContent value="troubleshooting">
-                <TroubleshootingTab />
-              </TabsContent>
-            </Tabs>
-          </motion.div>
+          <Content />
         </div>
       </section>
     </PublicPageLayout>
