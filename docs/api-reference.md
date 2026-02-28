@@ -1,6 +1,6 @@
 # FindOO — API Reference
 
-> Complete reference for all custom hooks and key components.
+> Complete reference for all custom hooks, library modules, and key components.
 
 ---
 
@@ -365,9 +365,26 @@ Global role context. See [Architecture Guide](./architecture.md#rolecontext-flow
 const { activeRole, availableRoles, hasRole, setActiveRole, userId, loaded, refreshRoles } = useRole();
 ```
 
+### `useIsMobile()`
+**File:** `src/hooks/use-mobile.tsx`
+
+Returns `boolean` — `true` when viewport width < 768px. Uses `matchMedia` listener.
+
+```ts
+const isMobile = useIsMobile();
+```
+
 ---
 
 ## Library Modules
+
+### `src/lib/utils.ts`
+`cn()` — clsx + tailwind-merge for conditional class names.
+
+```ts
+import { cn } from "@/lib/utils";
+cn("text-sm", isActive && "font-bold", className)
+```
 
 ### `src/lib/storage.ts`
 File upload via `upload-file` edge function.
@@ -387,6 +404,24 @@ Multi-device session management (max 3 concurrent).
 | `removeSession()`   | Clean up on sign-out                       |
 | `touchSession()`    | Heartbeat (called every 5min by AppLayout) |
 
+### `src/lib/sanitize.ts`
+XSS prevention via DOMPurify.
+
+| Export              | Purpose                                    |
+| ------------------- | ------------------------------------------ |
+| `sanitizeContent()` | Strip dangerous HTML from user input       |
+
+Configured with a strict allowlist of HTML tags. All user-generated content (posts, comments, messages) is sanitized before submission.
+
+### `src/lib/throttle.ts`
+Generic throttle utility for action guards.
+
+| Export        | Purpose                                    |
+| ------------- | ------------------------------------------ |
+| `throttle(fn, ms)` | Returns throttled version of `fn` that executes at most once per `ms` milliseconds |
+
+Used to prevent rapid-fire API calls on likes, bookmarks, and connection actions.
+
 ### `src/lib/role-config.ts`
 Role metadata: labels, icons, colors, CSS variables.
 
@@ -401,5 +436,52 @@ getRoleBadgeClasses("admin")   // "bg-primary/10 text-primary border-primary/20"
 ### `src/lib/vcard.ts`
 vCard (.vcf) generation for digital business cards.
 
-### `src/lib/utils.ts`
-`cn()` — clsx + tailwind-merge for conditional class names.
+| Export           | Purpose                                    |
+| ---------------- | ------------------------------------------ |
+| `generateVCard()` | Creates VCF string from profile data      |
+| `downloadVCard()` | Triggers browser download of .vcf file    |
+
+### `src/lib/web-vitals.ts`
+Core Web Vitals monitoring.
+
+| Export             | Purpose                                    |
+| ------------------ | ------------------------------------------ |
+| `reportWebVitals()`| Measures LCP, CLS, FID, TTFB, INP        |
+
+Called in `main.tsx` to track performance metrics. Results are logged to console in development.
+
+---
+
+## Key Shared Components
+
+### `AppLayout`
+**File:** `src/components/AppLayout.tsx`
+
+Wraps all protected pages. Provides:
+- `AppNavbar` (desktop top nav + mobile bottom nav)
+- Session heartbeat (touches active session every 5 minutes)
+- `CommandPalette` (Ctrl+K quick navigation)
+
+### `ProtectedRoute`
+**File:** `src/components/ProtectedRoute.tsx`
+
+Auth guard that:
+1. Shows `SplashScreen` while checking session
+2. Redirects to `/auth` if not authenticated
+3. Redirects to `/onboarding` if `onboarding_completed` is false
+4. Renders children if all checks pass
+
+### `RouteErrorBoundary`
+**File:** `src/components/RouteErrorBoundary.tsx`
+
+Per-route error boundary that catches render errors and shows a retry-able error UI. Prevents one broken page from crashing the entire app.
+
+### `PublicPageLayout`
+**File:** `src/components/PublicPageLayout.tsx`
+
+Shared layout for public pages (About, Contact, Legal, etc.) with consistent header, footer, and SEO meta tags.
+
+### `PageHero`
+**File:** `src/components/PageHero.tsx`
+
+Reusable hero section with title, subtitle, and optional background gradient. Used on most public and protected pages.

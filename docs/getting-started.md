@@ -37,12 +37,12 @@ The app opens at `http://localhost:5173`. Backend is automatically connected via
 ```
 findoo/
 ├── docs/                    # ← You are here
-│   ├── architecture.md      # System design & data flow
+│   ├── architecture.md      # System design, ERD, data flow, security
 │   ├── api-reference.md     # Hook & component API docs
 │   ├── edge-functions.md    # Backend function documentation
 │   └── getting-started.md   # This file
 │
-├── public/                  # Static assets (favicon, PWA icons, sitemap)
+├── public/                  # Static assets (favicon, PWA icons, sitemap, robots.txt)
 ├── supabase/
 │   ├── config.toml          # Backend config (auto-managed, DO NOT EDIT)
 │   ├── functions/           # Edge functions (auto-deployed)
@@ -51,25 +51,25 @@ findoo/
 ├── src/
 │   ├── assets/              # Logo images (imported as ES6 modules)
 │   ├── components/
-│   │   ├── ui/              # shadcn/ui primitives (50+ components)
-│   │   ├── skeletons/       # Loading skeletons per module
+│   │   ├── ui/              # shadcn/ui primitives (53 components)
+│   │   ├── skeletons/       # Loading skeletons per module (5 files)
 │   │   ├── selectors/       # Location, Certification, Language pickers
-│   │   ├── feed/            # Feed module components
-│   │   ├── jobs/            # Jobs module components
-│   │   ├── events/          # Events module components
-│   │   ├── directory/       # Directory module components
-│   │   ├── network/         # Network module components
-│   │   ├── profile/         # Profile module components
-│   │   ├── vault/           # Vault module components
-│   │   ├── admin/           # Admin panel components
-│   │   └── discover/        # Discover sidebar
+│   │   ├── feed/            # Feed module components (10 files)
+│   │   ├── jobs/            # Jobs module components (7 files)
+│   │   ├── events/          # Events module components (6 files)
+│   │   ├── directory/       # Directory module components (5 files)
+│   │   ├── network/         # Network module components (2 files)
+│   │   ├── profile/         # Profile module components (13 files)
+│   │   ├── vault/           # Vault module components (3 files)
+│   │   ├── admin/           # Admin panel components (6 files)
+│   │   └── discover/        # Discover sidebar (1 file)
 │   ├── contexts/            # React contexts (RoleContext)
 │   ├── data/                # Static data (certifications, languages, locations)
-│   ├── hooks/               # Custom hooks (20+) — one per module
+│   ├── hooks/               # 18 custom hooks — one per module
 │   ├── integrations/        # Auto-generated Supabase client & types (DO NOT EDIT)
-│   ├── lib/                 # Utilities (storage, session, vcard, role-config)
-│   ├── pages/               # Route-level page components
-│   ├── test/                # Vitest unit tests
+│   ├── lib/                 # 8 utility modules (utils, storage, session, sanitize, throttle, etc.)
+│   ├── pages/               # 36 route-level page components
+│   ├── test/                # 16 test files (unit + integration)
 │   ├── index.css            # Design system tokens (HSL custom properties)
 │   ├── App.tsx              # Root component (providers, routes)
 │   └── main.tsx             # Entry point
@@ -87,7 +87,7 @@ findoo/
 ### File Naming
 - **Components:** PascalCase (`PostCard.tsx`, `CreateEventDialog.tsx`)
 - **Hooks:** camelCase with `use` prefix (`useJobs.ts`, `useFeedPosts.ts`)
-- **Lib modules:** camelCase (`session-manager.ts`, `role-config.ts`)
+- **Lib modules:** kebab-case (`session-manager.ts`, `role-config.ts`)
 - **Pages:** PascalCase (`Feed.tsx`, `Jobs.tsx`)
 
 ### Component Organization
@@ -95,6 +95,7 @@ findoo/
 - Components are co-located with their module (e.g., `components/jobs/JobCard.tsx`)
 - Shared UI primitives live in `components/ui/`
 - Skeletons live in `components/skeletons/`
+- Shared layout components live at the root of `components/` (AppLayout, ProtectedRoute, etc.)
 
 ### Hook Patterns
 - One hook file per module (e.g., `useJobs.ts` exports all job-related hooks)
@@ -102,6 +103,7 @@ findoo/
 - Always include `toast.error()` in `onError` callbacks
 - Invalidate relevant query keys in `onSuccess`
 - Export TypeScript interfaces for return types
+- Include JSDoc headers on all hooks
 
 ### State Management
 - **Server state:** TanStack React Query (all DB data)
@@ -152,7 +154,7 @@ colors: {
 
 ### shadcn/ui Components
 
-50+ components available in `src/components/ui/`. Add new ones via:
+53 components available in `src/components/ui/`. Add new ones via:
 ```bash
 npx shadcn-ui@latest add <component-name>
 ```
@@ -170,26 +172,61 @@ npm test
 
 # Run specific test file
 npx vitest run src/test/useFeedPosts.test.ts
+
+# Run with coverage
+npx vitest run --coverage
 ```
 
 ### Test Structure
 
 ```
 src/test/
-├── setup.ts                      # Global test setup
-├── useFeedPosts.test.ts          # Feed post normalization
-├── usePostInteractions.test.ts   # Optimistic update arithmetic
-├── useConnectionActions.test.ts  # Connection state transitions
-├── session-manager.test.ts       # Session lifecycle
-└── example.test.ts               # Smoke test
+├── setup.ts                              # Global test setup (mocks, providers)
+│
+│ # Unit Tests
+├── useFeedPosts.test.ts                  # Feed post normalization & defaults
+├── usePostInteractions.test.ts           # Optimistic update/rollback arithmetic
+├── useConnectionActions.test.ts          # Connection state transitions
+├── session-manager.test.ts              # Session lifecycle (register, touch, remove)
+├── sanitize.test.ts                     # DOMPurify XSS prevention
+├── throttle.test.ts                     # Action guard timing
+├── example.test.ts                      # Smoke test
+│
+│ # Component Tests
+├── PostCard.test.tsx                     # PostCard render & interaction
+├── JobCard.test.tsx                      # JobCard render & accessibility
+├── EventCard.test.tsx                    # EventCard render & accessibility
+├── ListingCard.test.tsx                  # ListingCard render & accessibility
+│
+│ # Integration Tests
+├── Auth.integration.test.tsx            # Sign-up, sign-in, sign-out flows
+├── ConnectionFlow.integration.test.tsx  # Follow/connect/disconnect journeys
+├── CreatePostComposer.integration.test.tsx # Post creation with all types
+├── PostJobDialog.integration.test.tsx   # Job posting validation
+└── Infrastructure.integration.test.tsx  # Rate limiting, session management
 ```
 
 ### Testing Conventions
 
 - Test files live in `src/test/` (not co-located)
 - Use `describe` / `it` blocks with descriptive names
-- Test pure logic (normalization, state transitions, arithmetic) — not React rendering
+- Unit tests: Test pure logic (normalization, state transitions, arithmetic)
+- Component tests: Verify render output, accessibility attributes, user interactions
+- Integration tests: Test full flows with mocked Supabase client
 - Mock Supabase client for DB-dependent tests
+
+---
+
+## Security Practices
+
+### Input Sanitization
+All user-generated content must pass through `sanitizeContent()` from `src/lib/sanitize.ts` before being submitted to the database. This uses DOMPurify to prevent XSS attacks.
+
+### Action Throttling
+Use `throttle()` from `src/lib/throttle.ts` to prevent rapid-fire API calls on user actions (likes, bookmarks, connection requests). Default: 500ms guard.
+
+### Session Management
+The platform enforces max 3 concurrent sessions per user via `src/lib/session-manager.ts`. Sessions are automatically cleaned up after 7 days of inactivity.
 
 ---
 
@@ -234,9 +271,12 @@ See [Edge Functions Reference](./edge-functions.md) for details.
 ## PR Checklist
 
 - [ ] TypeScript compiles without errors
+- [ ] All existing tests pass (`npm test`)
 - [ ] New hooks include JSDoc header
 - [ ] Error states include `toast.error()` feedback
 - [ ] Interactive elements have `aria-label` attributes
 - [ ] No raw color values — uses design system tokens
 - [ ] Relevant unit tests added/updated
 - [ ] Both light and dark modes visually verified
+- [ ] Mobile responsive layout verified
+- [ ] Input sanitization applied on user-generated content
