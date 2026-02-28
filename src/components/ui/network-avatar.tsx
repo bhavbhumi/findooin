@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface NetworkAvatarProps {
@@ -24,6 +25,9 @@ export const NetworkAvatar = ({
 }: NetworkAvatarProps) => {
   const s = sizeMap[size];
   const nodeColor = roleColor || "hsl(var(--primary))";
+  const [imgError, setImgError] = useState(false);
+
+  const showImage = !!src && !imgError;
 
   return (
     <div className={cn("relative shrink-0", s.box, className)}>
@@ -35,8 +39,13 @@ export const NetworkAvatar = ({
           "overflow-hidden bg-muted flex items-center justify-center font-bold font-heading text-muted-foreground border-[3px] border-card shadow-lg ring-2 ring-border"
         )}
       >
-        {src ? (
-          <img src={src} alt="avatar" className="h-full w-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+        {showImage ? (
+          <img
+            src={src}
+            alt="avatar"
+            className="h-full w-full object-cover"
+            onError={() => setImgError(true)}
+          />
         ) : (
           <span className={s.text}>{initials}</span>
         )}

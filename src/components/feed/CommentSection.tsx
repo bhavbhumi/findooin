@@ -5,6 +5,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 
+function CommentAvatar({ src, name }: { src: string | null; name: string }) {
+  const [err, setErr] = useState(false);
+  const show = !!src && !err;
+  return (
+    <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground shrink-0 overflow-hidden">
+      {show ? (
+        <img src={src} alt={name} className="h-full w-full object-cover" onError={() => setErr(true)} />
+      ) : (
+        getInitials(name)
+      )}
+    </div>
+  );
+}
+
 interface Comment {
   id: string;
   content: string;
@@ -152,13 +166,7 @@ export function CommentSection({ postId }: { postId: string }) {
         <div className="space-y-2.5 max-h-60 overflow-y-auto">
           {(showAll ? comments : comments.slice(0, MAX_VISIBLE)).map((comment) => (
             <div key={comment.id} className="flex items-start gap-2">
-              <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground shrink-0 overflow-hidden">
-                {comment.author.avatar_url ? (
-                  <img src={comment.author.avatar_url} alt={comment.author.full_name} className="h-full w-full object-cover" />
-                ) : (
-                  getInitials(comment.author.full_name)
-                )}
-              </div>
+              <CommentAvatar src={comment.author.avatar_url} name={comment.author.full_name} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-semibold text-card-foreground">
