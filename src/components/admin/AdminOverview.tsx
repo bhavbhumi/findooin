@@ -1,6 +1,6 @@
 /**
  * AdminOverview — Enhanced dashboard with sparkline trends, metric cards,
- * and quick-action buttons for common admin tasks.
+ * date-range-filtered charts, CSV export, and quick-action buttons.
  */
 import { useVerificationQueue, useAdminReports, useAdminUsers } from "@/hooks/useAdmin";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -8,14 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Users, ShieldCheck, Flag, Clock, CheckCircle2, TrendingUp, TrendingDown,
-  ArrowRight, UserPlus, FileText, Eye, BarChart3, Briefcase, CalendarDays
+  ArrowRight, FileText, BarChart3, CalendarDays, Download
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useState, useCallback } from "react";
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis,
   Tooltip, PieChart, Pie, Cell, Legend
 } from "recharts";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { toast } from "sonner";
+
+type RangeDays = 7 | 14 | 30;
 
 /* Mini sparkline component using recharts */
 function Sparkline({ data, color }: { data: number[]; color: string }) {
@@ -43,7 +47,6 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   );
 }
 
-/* Fake 7-day trend data generator seeded by current value */
 function fakeTrend(current: number): number[] {
   const base = Math.max(1, current - 5);
   return Array.from({ length: 7 }, (_, i) =>
@@ -57,24 +60,26 @@ const DONUT_COLORS = [
   "hsl(var(--muted-foreground))",
 ];
 
-function NewUsersBarChart({ users }: { users: any[] }) {
+function NewUsersBarChart({ users, days }: { users: any[]; days: RangeDays }) {
   const chartData = useMemo(() => {
-    const days: { label: string; count: number }[] = [];
-    for (let i = 6; i >= 0; i--) {
+    const result: { label: string; count: number }[] = [];
+    for (let i = days - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
       const dateStr = d.toISOString().slice(0, 10);
-      const label = d.toLocaleDateString("en-IN", { weekday: "short" });
+      const label = days <= 7
+        ? d.toLocaleDateString("en-IN", { weekday: "short" })
+        : d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
       const count = users.filter((u: any) => u.created_at?.slice(0, 10) === dateStr).length;
-      days.push({ label, count });
+      result.push({ label, count });
     }
-    return days;
-  }, [users]);
+    return result;
+  }, [users, days]);
 
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={chartData} margin={{ top: 4, right: 4, bottom: 0, left: -20 }}>
-        <XAxis dataKey="label" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+        <XAxis dataKey="label" tick={{ fontSize: days > 14 ? 9 : 11 }} axisLine={false} tickLine={false} interval={days > 14 ? 2 : 0} />
         <YAxis allowDecimals={false} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
         <Tooltip
           contentStyle={{ fontSize: 12, borderRadius: 8, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }}
@@ -118,11 +123,25 @@ function VerificationDonut({ users, pendingRequests }: { users: any[]; pendingRe
   );
 }
 
+/* ── CSV helpers ── */
+function downloadCsv(filename: string, headers: string[], rows: string[][]) {
+  const escape = (v: string) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = [headers.join(","), ...rows.map(r => r.map(escape).join(","))].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export function AdminOverview() {
   const { data: requests } = useVerificationQueue();
   const { data: reports } = useAdminReports();
   const { data: users } = useAdminUsers();
   const navigate = useNavigate();
+  const [chartRange, setChartRange] = useState<RangeDays>(7);
 
   const pendingVerifications = requests?.filter(r => r.status === "pending").length || 0;
   const pendingReports = reports?.filter(r => r.status === "pending").length || 0;
@@ -131,9 +150,34 @@ export function AdminOverview() {
 
   const recentUsers = useMemo(() => {
     if (!users) return 0;
-    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
-    return users.filter((u: any) => u.created_at > weekAgo).length;
+    const cutoff = new Date(Date.now() - chartRange * 86400000).toISOString();
+    return users.filter((u: any) => u.created_at > cutoff).length;
+  }, [users, chartRange]);
+
+  /* CSV exports */
+  const exportUsers = useCallback(() => {
+    if (!users?.length) return toast.error("No user data to export");
+    const headers = ["Name", "Display Name", "Email/ID", "Type", "Verification", "Location", "Organization", "Created"];
+    const rows = users.map((u: any) => [
+      u.full_name, u.display_name || "", u.id, u.user_type,
+      u.verification_status, u.location || "", u.organization || "",
+      new Date(u.created_at).toLocaleDateString(),
+    ]);
+    downloadCsv(`findoo-users-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
+    toast.success(`Exported ${rows.length} users`);
   }, [users]);
+
+  const exportVerifications = useCallback(() => {
+    if (!requests?.length) return toast.error("No verification data to export");
+    const headers = ["User", "Document", "Type", "Regulator", "Status", "Submitted", "Reviewed"];
+    const rows = requests.map(r => [
+      r.profile?.full_name || r.user_id, r.document_name, r.document_type || "",
+      r.regulator || "", r.status, new Date(r.created_at).toLocaleDateString(),
+      r.reviewed_at ? new Date(r.reviewed_at).toLocaleDateString() : "",
+    ]);
+    downloadCsv(`findoo-verifications-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
+    toast.success(`Exported ${rows.length} verification records`);
+  }, [requests]);
 
   const stats = [
     {
@@ -141,7 +185,7 @@ export function AdminOverview() {
       value: totalUsers,
       icon: Users,
       color: "primary",
-      sub: `+${recentUsers} this week`,
+      sub: `+${recentUsers} in ${chartRange}d`,
       trend: "up" as const,
     },
     {
@@ -181,12 +225,22 @@ export function AdminOverview() {
 
   return (
     <div className="space-y-8">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold font-heading text-foreground">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Platform health at a glance — {new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" })}
-        </p>
+      {/* Page header with export buttons */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold font-heading text-foreground">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Platform health at a glance — {new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" })}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={exportUsers} className="text-xs gap-1.5">
+            <Download className="h-3.5 w-3.5" /> Users CSV
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportVerifications} className="text-xs gap-1.5">
+            <Download className="h-3.5 w-3.5" /> Verifications CSV
+          </Button>
+        </div>
       </div>
 
       {/* Stat cards with sparklines */}
@@ -246,29 +300,48 @@ export function AdminOverview() {
         </div>
       </div>
 
-      {/* Analytics Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* New Users This Week Bar Chart */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">New Users This Week</CardTitle>
-            <CardDescription>Daily signups over the last 7 days</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <NewUsersBarChart users={users || []} />
-          </CardContent>
-        </Card>
+      {/* Analytics Charts with date range selector */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold font-heading text-foreground">Analytics</h2>
+          <ToggleGroup
+            type="single"
+            value={String(chartRange)}
+            onValueChange={(v) => v && setChartRange(Number(v) as RangeDays)}
+            className="bg-muted/50 rounded-lg p-0.5"
+          >
+            {([7, 14, 30] as RangeDays[]).map((d) => (
+              <ToggleGroupItem
+                key={d}
+                value={String(d)}
+                className="text-xs px-3 py-1 h-7 data-[state=on]:bg-background data-[state=on]:shadow-sm rounded-md"
+              >
+                {d}d
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">New Users — Last {chartRange} Days</CardTitle>
+              <CardDescription>Daily signups over the selected period</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <NewUsersBarChart users={users || []} days={chartRange} />
+            </CardContent>
+          </Card>
 
-        {/* Verification Funnel Donut Chart */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Verification Funnel</CardTitle>
-            <CardDescription>User verification status breakdown</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <VerificationDonut users={users || []} pendingRequests={pendingVerifications} />
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Verification Funnel</CardTitle>
+              <CardDescription>User verification status breakdown</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <VerificationDonut users={users || []} pendingRequests={pendingVerifications} />
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Recent activity summary cards */}
