@@ -85,6 +85,7 @@ export type Database = {
           excerpt: string
           featured: boolean
           id: string
+          post_type: Database["public"]["Enums"]["blog_post_type"]
           published: boolean
           published_at: string | null
           read_time_minutes: number
@@ -103,6 +104,7 @@ export type Database = {
           excerpt?: string
           featured?: boolean
           id?: string
+          post_type?: Database["public"]["Enums"]["blog_post_type"]
           published?: boolean
           published_at?: string | null
           read_time_minutes?: number
@@ -121,6 +123,7 @@ export type Database = {
           excerpt?: string
           featured?: boolean
           id?: string
+          post_type?: Database["public"]["Enums"]["blog_post_type"]
           published?: boolean
           published_at?: string | null
           read_time_minutes?: number
@@ -1853,6 +1856,7 @@ export type Database = {
         | "hired"
         | "rejected"
         | "withdrawn"
+      blog_post_type: "article" | "survey" | "poll" | "bulletin"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
       event_category:
@@ -2082,6 +2086,7 @@ export const Constants = {
         "rejected",
         "withdrawn",
       ],
+      blog_post_type: ["article", "survey", "poll", "bulletin"],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
       event_category: [

@@ -19,10 +19,18 @@ import {
 } from "lucide-react";
 
 const CATEGORIES = [
-  { value: "market-insights", label: "Market Insights" },
-  { value: "regulation", label: "Regulation" },
-  { value: "investing", label: "Investing" },
   { value: "general", label: "General" },
+  { value: "awareness", label: "Awareness" },
+  { value: "opinion", label: "Opinion" },
+  { value: "analysis", label: "Analysis" },
+  { value: "compliance", label: "Compliance" },
+];
+
+const POST_TYPES = [
+  { value: "article", label: "Article" },
+  { value: "survey", label: "Survey" },
+  { value: "poll", label: "Poll" },
+  { value: "bulletin", label: "Bulletin" },
 ];
 
 interface BlogPostForm {
@@ -31,6 +39,7 @@ interface BlogPostForm {
   excerpt: string;
   content: string;
   category: string;
+  post_type: "article" | "survey" | "poll" | "bulletin";
   cover_image_url: string;
   tags: string;
   read_time_minutes: number;
@@ -46,6 +55,7 @@ const emptyForm: BlogPostForm = {
   excerpt: "",
   content: "",
   category: "general",
+  post_type: "article",
   cover_image_url: "",
   tags: "",
   read_time_minutes: 3,
@@ -89,6 +99,7 @@ export function AdminBlogManagement() {
         excerpt: f.excerpt,
         content: f.content,
         category: f.category,
+        post_type: f.post_type,
         cover_image_url: f.cover_image_url || null,
         tags: f.tags.split(",").map((t) => t.trim()).filter(Boolean),
         read_time_minutes: f.read_time_minutes,
@@ -175,6 +186,7 @@ export function AdminBlogManagement() {
       excerpt: post.excerpt,
       content: post.content,
       category: post.category,
+      post_type: post.post_type || "article",
       cover_image_url: post.cover_image_url || "",
       tags: (post.tags || []).join(", "),
       read_time_minutes: post.read_time_minutes,
@@ -247,6 +259,17 @@ export function AdminBlogManagement() {
                     onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
                     placeholder="url-friendly-slug"
                   />
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Post Type</Label>
+                  <Select value={form.post_type} onValueChange={(v) => setForm((f) => ({ ...f, post_type: v as BlogPostForm["post_type"] }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {POST_TYPES.map((t) => (
+                        <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Category</Label>
@@ -394,7 +417,8 @@ export function AdminBlogManagement() {
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Badge variant="outline" className="text-[10px] px-1.5 py-0">{post.category}</Badge>
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize">{post.post_type}</Badge>
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 capitalize">{post.category}</Badge>
                       <span>{post.author_name}</span>
                       <span className="flex items-center gap-0.5">
                         <Clock className="h-2.5 w-2.5" />

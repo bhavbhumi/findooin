@@ -11,6 +11,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+export type BlogPostType = "article" | "survey" | "poll" | "bulletin";
+
 export interface BlogPost {
   id: string;
   title: string;
@@ -19,6 +21,7 @@ export interface BlogPost {
   content: string;
   cover_image_url: string | null;
   category: string;
+  post_type: BlogPostType;
   tags: string[];
   author_name: string;
   author_avatar_url: string | null;
