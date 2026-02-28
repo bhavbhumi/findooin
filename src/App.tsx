@@ -49,6 +49,17 @@ const QuickLinks = lazy(() => import("./pages/QuickLinks"));
 const Legal = lazy(() => import("./pages/Legal"));
 const SiteMap = lazy(() => import("./pages/SiteMap"));
 const Admin = lazy(() => import("./pages/Admin"));
+const AdminOverviewPage = lazy(() => import("./pages/admin/AdminOverviewPage"));
+const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
+const AdminVerificationPage = lazy(() => import("./pages/admin/AdminVerificationPage"));
+const AdminModerationPage = lazy(() => import("./pages/admin/AdminModerationPage"));
+const AdminAuditPage = lazy(() => import("./pages/admin/AdminAuditPage"));
+const AdminBlogPage = lazy(() => import("./pages/admin/AdminBlogPage"));
+const AdminMonitoringPage = lazy(() => import("./pages/admin/AdminMonitoringPage"));
+const AdminBillingPage = lazy(() => import("./pages/admin/AdminBillingPage"));
+const AdminNotificationsPage = lazy(() => import("./pages/admin/AdminNotificationsPage"));
+const AdminFeaturesPage = lazy(() => import("./pages/admin/AdminFeaturesPage"));
+const AdminSupportPage = lazy(() => import("./pages/admin/AdminSupportPage"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
@@ -121,7 +132,19 @@ const App = () => {
                       <Route path="/notifications" element={<ProtectedRoute><RouteErrorBoundary routeName="Notifications"><Notifications /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/messages" element={<ProtectedRoute><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/settings" element={<ProtectedRoute><RouteErrorBoundary routeName="Settings"><Settings /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/admin" element={<ProtectedRoute><RouteErrorBoundary routeName="Admin"><Admin /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/admin" element={<ProtectedRoute><RouteErrorBoundary routeName="Admin"><Admin /></RouteErrorBoundary></ProtectedRoute>}>
+                        <Route index element={<Suspense fallback={<LazyFallback />}><AdminOverviewPage /></Suspense>} />
+                        <Route path="users" element={<Suspense fallback={<LazyFallback />}><AdminUsersPage /></Suspense>} />
+                        <Route path="verification" element={<Suspense fallback={<LazyFallback />}><AdminVerificationPage /></Suspense>} />
+                        <Route path="moderation" element={<Suspense fallback={<LazyFallback />}><AdminModerationPage /></Suspense>} />
+                        <Route path="audit" element={<Suspense fallback={<LazyFallback />}><AdminAuditPage /></Suspense>} />
+                        <Route path="blog" element={<Suspense fallback={<LazyFallback />}><AdminBlogPage /></Suspense>} />
+                        <Route path="monitoring" element={<Suspense fallback={<LazyFallback />}><AdminMonitoringPage /></Suspense>} />
+                        <Route path="billing" element={<Suspense fallback={<LazyFallback />}><AdminBillingPage /></Suspense>} />
+                        <Route path="notifications" element={<Suspense fallback={<LazyFallback />}><AdminNotificationsPage /></Suspense>} />
+                        <Route path="features" element={<Suspense fallback={<LazyFallback />}><AdminFeaturesPage /></Suspense>} />
+                        <Route path="support" element={<Suspense fallback={<LazyFallback />}><AdminSupportPage /></Suspense>} />
+                      </Route>
                       <Route path="/jobs" element={<ProtectedRoute><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/directory" element={<ProtectedRoute><RouteErrorBoundary routeName="Directory"><Directory /></RouteErrorBoundary></ProtectedRoute>} />

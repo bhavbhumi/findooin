@@ -1,0 +1,145 @@
+/**
+ * AdminSidebar — Collapsible sidebar navigation for the admin panel.
+ * Groups sections into Operations, Content, Platform, and Coming Soon.
+ */
+import { useLocation } from "react-router-dom";
+import { NavLink } from "@/components/NavLink";
+import {
+  LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
+  Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield
+} from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { Badge } from "@/components/ui/badge";
+
+const NAV_SECTIONS = [
+  {
+    label: "Overview",
+    items: [
+      { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
+    ],
+  },
+  {
+    label: "Operations",
+    items: [
+      { title: "Users", url: "/admin/users", icon: Users },
+      { title: "Verification", url: "/admin/verification", icon: ShieldCheck },
+      { title: "Reports", url: "/admin/moderation", icon: Flag },
+      { title: "Audit Log", url: "/admin/audit", icon: Activity },
+    ],
+  },
+  {
+    label: "Content",
+    items: [
+      { title: "Blog", url: "/admin/blog", icon: BookOpen },
+    ],
+  },
+  {
+    label: "Infrastructure",
+    items: [
+      { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
+    ],
+  },
+  {
+    label: "Coming Soon",
+    items: [
+      { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true },
+      { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true },
+      { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true },
+      { title: "Support", url: "/admin/support", icon: LifeBuoy, soon: true },
+    ],
+  },
+];
+
+export function AdminSidebar() {
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
+  const location = useLocation();
+
+  return (
+    <Sidebar collapsible="icon" className="border-r border-border/50">
+      <SidebarHeader className="p-3">
+        {!collapsed && (
+          <div className="flex items-center gap-2 px-1">
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Shield className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm font-bold font-heading">Admin</p>
+              <p className="text-[10px] text-muted-foreground">Control Center</p>
+            </div>
+          </div>
+        )}
+        {collapsed && (
+          <div className="flex justify-center">
+            <Shield className="h-5 w-5 text-primary" />
+          </div>
+        )}
+      </SidebarHeader>
+
+      <SidebarContent>
+        {NAV_SECTIONS.map((section) => (
+          <SidebarGroup key={section.label}>
+            <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
+              {!collapsed && section.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => {
+                  const isActive = item.end
+                    ? location.pathname === item.url
+                    : location.pathname.startsWith(item.url);
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <NavLink
+                          to={item.url}
+                          end={item.end}
+                          className={`hover:bg-muted/50 transition-colors ${
+                            item.soon ? "opacity-60" : ""
+                          }`}
+                          activeClassName="bg-primary/10 text-primary font-medium"
+                        >
+                          <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                          {!collapsed && (
+                            <span className="flex-1 flex items-center justify-between">
+                              <span className="text-sm">{item.title}</span>
+                              {item.soon && (
+                                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0">
+                                  Soon
+                                </Badge>
+                              )}
+                            </span>
+                          )}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+
+      <SidebarFooter className="p-3">
+        {!collapsed && (
+          <p className="text-[10px] text-muted-foreground text-center">
+            FindOO Admin v2.0
+          </p>
+        )}
+      </SidebarFooter>
+    </Sidebar>
+  );
+}

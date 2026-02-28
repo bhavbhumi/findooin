@@ -1,24 +1,35 @@
-import { useState, useEffect } from "react";
+/**
+ * Admin — Layout shell with sidebar + nested routes for all admin sections.
+ */
+import { useEffect } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { useNavigate } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { FindooLoader } from "@/components/FindooLoader";
-import AppNavbar from "@/components/AppNavbar";
-import { Shield, ShieldCheck, Users, Flag, LayoutDashboard, BookOpen, Activity, Monitor } from "lucide-react";
-import { AdminVerificationQueue } from "@/components/admin/AdminVerificationQueue";
-import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
-import { AdminContentModeration } from "@/components/admin/AdminContentModeration";
-import { AdminOverview } from "@/components/admin/AdminOverview";
-import { AdminBlogManagement } from "@/components/admin/AdminBlogManagement";
-import { AdminAuditLog } from "@/components/admin/AdminAuditLog";
-import { AdminMonitoring } from "@/components/admin/AdminMonitoring";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Shield } from "lucide-react";
+
+const BREADCRUMB_MAP: Record<string, string> = {
+  "/admin": "Dashboard",
+  "/admin/users": "Users",
+  "/admin/verification": "Verification",
+  "/admin/moderation": "Reports",
+  "/admin/audit": "Audit Log",
+  "/admin/blog": "Blog",
+  "/admin/monitoring": "Monitoring",
+  "/admin/billing": "Billing",
+  "/admin/notifications": "Notifications",
+  "/admin/features": "Feature Flags",
+  "/admin/support": "Support",
+};
 
 export default function Admin() {
   usePageMeta({ title: "Admin Panel" });
   const navigate = useNavigate();
+  const location = useLocation();
   const { data: isAdmin, isLoading } = useIsAdmin();
-  const [tab, setTab] = useState("overview");
 
   useEffect(() => {
     if (!isLoading && !isAdmin) {
@@ -36,61 +47,49 @@ export default function Admin() {
 
   if (!isAdmin) return null;
 
+  const currentLabel = BREADCRUMB_MAP[location.pathname] || "Admin";
+  const isRoot = location.pathname === "/admin";
+
   return (
-    <div className="min-h-screen bg-background">
-      <AppNavbar />
-      <div className="container max-w-6xl py-6 px-4">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Shield className="h-5 w-5 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold font-heading text-foreground">Admin Panel</h1>
-            <p className="text-sm text-muted-foreground">Manage users, verification & moderation</p>
-          </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        <AdminSidebar />
+
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Top bar */}
+          <header className="h-12 flex items-center gap-3 border-b border-border/50 px-4 shrink-0 bg-background/80 backdrop-blur-sm sticky top-0 z-30">
+            <SidebarTrigger className="shrink-0" />
+            
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href="/admin" className="flex items-center gap-1.5 text-xs">
+                    <Shield className="h-3 w-3" />
+                    Admin
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                {!isRoot && (
+                  <>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage className="text-xs font-medium">
+                        {currentLabel}
+                      </BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </>
+                )}
+              </BreadcrumbList>
+            </Breadcrumb>
+          </header>
+
+          {/* Content */}
+          <main className="flex-1 p-4 md:p-6 overflow-auto">
+            <div className="max-w-6xl mx-auto">
+              <Outlet />
+            </div>
+          </main>
         </div>
-
-        <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="w-full grid grid-cols-7 h-10 mb-6">
-            <TabsTrigger value="overview" className="gap-1.5 text-xs sm:text-sm">
-              <LayoutDashboard className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Overview</span>
-            </TabsTrigger>
-            <TabsTrigger value="verification" className="gap-1.5 text-xs sm:text-sm">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Verification</span>
-            </TabsTrigger>
-            <TabsTrigger value="users" className="gap-1.5 text-xs sm:text-sm">
-              <Users className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Users</span>
-            </TabsTrigger>
-            <TabsTrigger value="moderation" className="gap-1.5 text-xs sm:text-sm">
-              <Flag className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Reports</span>
-            </TabsTrigger>
-            <TabsTrigger value="blog" className="gap-1.5 text-xs sm:text-sm">
-              <BookOpen className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Blog</span>
-            </TabsTrigger>
-            <TabsTrigger value="audit" className="gap-1.5 text-xs sm:text-sm">
-              <Activity className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Audit</span>
-            </TabsTrigger>
-            <TabsTrigger value="monitoring" className="gap-1.5 text-xs sm:text-sm">
-              <Monitor className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Monitor</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview"><AdminOverview /></TabsContent>
-          <TabsContent value="verification"><AdminVerificationQueue /></TabsContent>
-          <TabsContent value="users"><AdminUserManagement /></TabsContent>
-          <TabsContent value="moderation"><AdminContentModeration /></TabsContent>
-          <TabsContent value="blog"><AdminBlogManagement /></TabsContent>
-          <TabsContent value="audit"><AdminAuditLog /></TabsContent>
-          <TabsContent value="monitoring"><AdminMonitoring /></TabsContent>
-        </Tabs>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
