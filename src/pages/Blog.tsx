@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { Clock, BookOpen, FileText, BarChart3, ScrollText, Bell, Loader2 } from "lucide-react";
+import { Clock, BookOpen, FileText, BarChart3, ScrollText, Bell, Loader2, MessageSquare, Vote, Megaphone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBlogPosts, BlogPost, BlogPostType } from "@/hooks/useBlogPosts";
@@ -37,8 +37,114 @@ const tabDescriptions: Record<string, string> = {
   bulletin: "Important announcements, updates, and time-sensitive information.",
 };
 
+/* ── Post type icon map ── */
+const postTypeIcon: Record<string, typeof FileText> = {
+  article: FileText,
+  survey: BarChart3,
+  poll: Vote,
+  bulletin: Megaphone,
+};
+
+const postTypeColor: Record<string, string> = {
+  article: "bg-primary/10 text-primary",
+  survey: "bg-chart-2/15 text-chart-2",
+  poll: "bg-chart-4/15 text-chart-4",
+  bulletin: "bg-destructive/10 text-destructive",
+};
+
 /* ── Blog card ── */
 function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+  const Icon = postTypeIcon[post.post_type] || FileText;
+  const colorClass = postTypeColor[post.post_type] || "bg-primary/10 text-primary";
+
+  // Bulletin: compact horizontal card
+  if (post.post_type === "bulletin") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.06, duration: 0.4, ease: "easeOut" }}
+      >
+        <Link to={`/blog/${post.slug}`} className="group block">
+          <div className="rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-all duration-300 hover:border-destructive/20 flex">
+            <div className={`w-1.5 shrink-0 bg-destructive/60`} />
+            <div className="p-4 flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2">
+                <div className={`inline-flex h-6 w-6 items-center justify-center rounded ${colorClass}`}>
+                  <Megaphone className="h-3 w-3" />
+                </div>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-destructive">Bulletin</span>
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground capitalize">{post.category}</span>
+              </div>
+              <h3 className="text-sm font-semibold font-heading text-card-foreground group-hover:text-destructive transition-colors leading-snug mb-1 line-clamp-2">
+                {post.title}
+              </h3>
+              <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{post.excerpt}</p>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="font-medium text-card-foreground">{post.author_name}</span>
+                {post.published_at && (
+                  <>
+                    <span>·</span>
+                    <span>{formatDistanceToNow(new Date(post.published_at), { addSuffix: true })}</span>
+                  </>
+                )}
+              </div>
+            </div>
+            {post.cover_image_url && (
+              <div className="w-28 shrink-0 bg-muted overflow-hidden hidden sm:block">
+                <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+            )}
+          </div>
+        </Link>
+      </motion.div>
+    );
+  }
+
+  // Poll / Survey: distinct card with icon accent
+  if (post.post_type === "poll" || post.post_type === "survey") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.06, duration: 0.4, ease: "easeOut" }}
+      >
+        <Link to={`/blog/${post.slug}`} className="group block">
+          <div className="rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-all duration-300 hover:border-primary/20">
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <div className={`inline-flex h-7 w-7 items-center justify-center rounded-lg ${colorClass}`}>
+                  <Icon className="h-3.5 w-3.5" />
+                </div>
+                <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "inherit" }}>
+                  {post.post_type}
+                </span>
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground capitalize">{post.category}</span>
+              </div>
+              <h3 className="text-base font-semibold font-heading text-card-foreground group-hover:text-primary transition-colors leading-snug mb-2 line-clamp-2">
+                {post.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 mb-4">{post.excerpt}</p>
+              <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-card-foreground">{post.author_name}</span>
+                  {post.published_at && (
+                    <>
+                      <span className="text-border">·</span>
+                      <span>{formatDistanceToNow(new Date(post.published_at), { addSuffix: true })}</span>
+                    </>
+                  )}
+                </div>
+                <Badge variant="outline" className="text-[10px] capitalize">{post.post_type}</Badge>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </motion.div>
+    );
+  }
+
+  // Article: full card with image (default)
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -47,45 +153,25 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
     >
       <Link to={`/blog/${post.slug}`} className="group block">
         <div className="rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-all duration-300 hover:border-primary/20">
-          {/* Image */}
           {post.cover_image_url ? (
             <div className="aspect-[16/9] bg-muted overflow-hidden">
-              <img
-                src={post.cover_image_url}
-                alt={post.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
+              <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
           ) : (
             <div className="aspect-[16/9] bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center">
               <BookOpen className="h-10 w-10 text-primary/25" />
             </div>
           )}
-
-          {/* Content */}
           <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">
-                {post.post_type}
-              </span>
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                {post.category}
-              </span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Article</span>
+              <span className="text-[11px] uppercase tracking-wider text-muted-foreground capitalize">{post.category}</span>
               {post.featured && (
-                <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary border-0 px-2 py-0">
-                  Featured
-                </Badge>
+                <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary border-0 px-2 py-0">Featured</Badge>
               )}
             </div>
-
-            <h3 className="text-base font-semibold font-heading text-card-foreground group-hover:text-primary transition-colors leading-snug mb-2 line-clamp-2">
-              {post.title}
-            </h3>
-
-            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-4">
-              {post.excerpt}
-            </p>
-
+            <h3 className="text-base font-semibold font-heading text-card-foreground group-hover:text-primary transition-colors leading-snug mb-2 line-clamp-2">{post.title}</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-4">{post.excerpt}</p>
             <div className="flex items-center justify-between text-xs text-muted-foreground pt-3 border-t border-border">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-card-foreground">{post.author_name}</span>
@@ -119,18 +205,13 @@ const Blog = () => {
   // Filter posts by post_type then category
   const filteredPosts = (() => {
     let result = posts || [];
-
-    // Primary tab = post_type
     result = result.filter((p) => p.post_type === activeTab);
-
-    // Sub-filter = category
     if (activeSubFilter !== "All") {
       const cat = categoryValueMap[activeSubFilter];
       if (cat) {
         result = result.filter((p) => p.category === cat);
       }
     }
-
     return result;
   })();
 
@@ -282,11 +363,12 @@ const Blog = () => {
             ) : filteredPosts.length > 0 ? (
               <motion.div
                 key={`${activeTab}-${activeSubFilter}`}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                className={activeTab === "bulletin" 
+                  ? "grid grid-cols-1 md:grid-cols-2 gap-4" 
+                  : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
               >
                 {filteredPosts.map((post, i) => (
                   <BlogCard key={post.id} post={post} index={i} />
