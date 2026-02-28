@@ -1,11 +1,12 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import {
   Search, Shield, Users, Lightbulb, Target, TrendingUp, CheckCircle,
   ArrowRight, Zap, Globe, Lock, BarChart3, Building2, UserCheck,
   Handshake, Eye, MessageSquare, Briefcase, Calendar, Award,
-  Bell, FileText, Landmark, Settings
+  Bell, FileText, Landmark, Settings, FolderOpen, CreditCard, User,
+  XCircle, Package, Wrench, LayoutDashboard
 } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
@@ -182,59 +183,213 @@ const WhyExistsContent = () => (
   </>
 );
 
+/* ── Role-based feature data ── */
+const roleFeatures = {
+  investor: {
+    icon: BarChart3,
+    label: "Investor",
+    tagline: "Retail, HNI, Institutional & NRI",
+    colorClass: "text-investor",
+    bgClass: "bg-investor/10 border-investor/30",
+    activeClass: "bg-investor/15 border-investor ring-2 ring-investor/20",
+    features: [
+      { module: "Feed", icon: MessageSquare, can: ["Browse all posts", "Like, comment, bookmark & share", "Create text posts & announcements"], cant: ["Create Polls or Surveys"] },
+      { module: "Directory", icon: Package, can: ["Browse & compare products and services", "Send enquiries to listings", "Write reviews & ratings"], cant: ["Create product or service listings"] },
+      { module: "Jobs", icon: Briefcase, can: ["Browse all active jobs", "Apply with resume & cover note", "Track applications via Candidate Dashboard"], cant: ["Post jobs or access Employer Dashboard"] },
+      { module: "Events", icon: Calendar, can: ["Browse & register for events", "Attend webinars and investor meets"], cant: ["Create or organize events"] },
+      { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
+      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card"], cant: [] },
+    ],
+  },
+  intermediary: {
+    icon: UserCheck,
+    label: "Intermediary",
+    tagline: "Advisors, Brokers & Distributors",
+    colorClass: "text-intermediary",
+    bgClass: "bg-intermediary/10 border-intermediary/30",
+    activeClass: "bg-intermediary/15 border-intermediary ring-2 ring-intermediary/20",
+    features: [
+      { module: "Feed", icon: MessageSquare, can: ["All post types: research, commentary, articles", "Create Polls & Surveys", "Schedule & draft posts"], cant: [] },
+      { module: "Directory", icon: Wrench, can: ["List professional services (Advisory, Compliance, etc.)", "Manage enquiries & reviews"], cant: ["Create product listings (Issuer only)"] },
+      { module: "Jobs", icon: Briefcase, can: ["Post jobs & access Employer Dashboard", "Apply for jobs as Individual (Candidate Dashboard)", "Browse & save jobs"], cant: [] },
+      { module: "Events", icon: Calendar, can: ["Create & organize events", "Manage registrations & speakers", "Access Organizer Dashboard"], cant: [] },
+      { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
+      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card"], cant: [] },
+    ],
+  },
+  issuer: {
+    icon: Landmark,
+    label: "Issuer",
+    tagline: "Companies, AMCs & Fund Houses",
+    colorClass: "text-issuer",
+    bgClass: "bg-issuer/10 border-issuer/30",
+    activeClass: "bg-issuer/15 border-issuer ring-2 ring-issuer/20",
+    features: [
+      { module: "Feed", icon: MessageSquare, can: ["All post types: announcements, research, articles", "Create Polls & Surveys", "Schedule & draft posts"], cant: [] },
+      { module: "Directory", icon: Package, can: ["List financial products (MF, Insurance, PMS, AIF, etc.)", "Manage enquiries & reviews"], cant: ["Create service listings (Intermediary only)"] },
+      { module: "Jobs", icon: Briefcase, can: ["Post jobs & access Employer Dashboard", "Browse & save jobs"], cant: ["Candidate Dashboard (Individual accounts only)"] },
+      { module: "Events", icon: Calendar, can: ["Create & organize events", "Manage registrations & speakers", "Access Organizer Dashboard"], cant: [] },
+      { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
+      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card"], cant: [] },
+    ],
+  },
+};
+
+type RoleKey = keyof typeof roleFeatures;
+
 /* ── How it works ── */
-const HowItWorksContent = () => (
-  <>
-    <section className="py-16">
-      <div className="container max-w-4xl">
-        <motion.div className="text-center mb-12" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-          <h2 className="text-2xl font-bold font-heading text-foreground mb-4">Getting Started is Simple</h2>
-          <p className="text-muted-foreground">Three steps to join India's first financial network.</p>
-        </motion.div>
+const HowItWorksContent = () => {
+  const [selectedRole, setSelectedRole] = useState<RoleKey>("investor");
+  const role = roleFeatures[selectedRole];
 
-        <div className="space-y-6">
-          {[
-            { step: "01", title: "Create Your Profile", desc: "Sign up with your professional details. Select your role — Issuer, Intermediary, or Investor. Add your regulatory credentials and organizational information.", icon: UserCheck },
-            { step: "02", title: "Get Verified", desc: "Upload your SEBI, RBI, IRDAI, AMFI, or PFRDA credentials. Our verification team reviews and issues your trust badge — visible across the entire network.", icon: Shield },
-            { step: "03", title: "Discover & Connect", desc: "Browse verified professionals, share market insights, apply to BFSI jobs, engage in meaningful discussions, and build your financial circle.", icon: Handshake },
-          ].map((item, i) => (
-            <motion.div key={item.step} className="flex gap-6 items-start p-6 rounded-xl border border-border bg-card"
-              initial="hidden" animate="visible" variants={fadeUp} custom={i + 1}>
-              <div className="shrink-0">
-                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <span className="text-lg font-bold font-heading text-primary">{item.step}</span>
+  return (
+    <>
+      {/* Steps section */}
+      <section className="py-16">
+        <div className="container max-w-4xl">
+          <motion.div className="text-center mb-12" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
+            <h2 className="text-2xl font-bold font-heading text-foreground mb-4">Getting Started is Simple</h2>
+            <p className="text-muted-foreground">Three steps to join India's first financial network.</p>
+          </motion.div>
+
+          <div className="space-y-6">
+            {[
+              { step: "01", title: "Create Your Profile", desc: "Sign up with your professional details. Select your role — Issuer, Intermediary, or Investor. Add your regulatory credentials and organizational information.", icon: UserCheck },
+              { step: "02", title: "Get Verified", desc: "Upload your SEBI, RBI, IRDAI, AMFI, or PFRDA credentials. Our verification team reviews and issues your trust badge — visible across the entire network.", icon: Shield },
+              { step: "03", title: "Discover & Connect", desc: "Browse verified professionals, share market insights, apply to BFSI jobs, engage in meaningful discussions, and build your financial circle.", icon: Handshake },
+            ].map((item, i) => (
+              <motion.div key={item.step} className="flex gap-6 items-start p-6 rounded-xl border border-border bg-card"
+                initial="hidden" animate="visible" variants={fadeUp} custom={i + 1}>
+                <div className="shrink-0">
+                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                    <span className="text-lg font-bold font-heading text-primary">{item.step}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <item.icon className="h-4 w-4 text-primary" />
-                  <h3 className="text-base font-bold font-heading text-card-foreground">{item.title}</h3>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <item.icon className="h-4 w-4 text-primary" />
+                    <h3 className="text-base font-bold font-heading text-card-foreground">{item.title}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <motion.div className="mt-12 grid md:grid-cols-3 gap-5" initial="hidden" animate="visible" variants={fadeUp} custom={4}>
-          {[
-            { icon: TrendingUp, title: "Share Insights", desc: "Post market commentary, research notes, and professional updates" },
-            { icon: Target, title: "Find Experts", desc: "Discover verified professionals with the expertise you need" },
-            { icon: Briefcase, title: "BFSI Careers", desc: "Browse or post jobs in India's financial services sector" },
-          ].map((item) => (
-            <div key={item.title} className="rounded-xl border border-border bg-card p-5 text-center">
-              <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-3 mx-auto">
-                <item.icon className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold font-heading text-card-foreground mb-1">{item.title}</h4>
-              <p className="text-xs text-muted-foreground">{item.desc}</p>
+      {/* Role-based features section */}
+      <section className="py-16 border-t border-border">
+        <div className="container max-w-5xl">
+          <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+              <LayoutDashboard className="h-3.5 w-3.5" />
+              Role-Based Capabilities
             </div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  </>
-);
+            <h2 className="text-2xl font-bold font-heading text-foreground mb-3">
+              What can you do on FindOO?
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto text-sm">
+              Your role shapes your experience. Select a role to explore what features and capabilities are available.
+            </p>
+          </motion.div>
+
+          {/* Role selector */}
+          <motion.div className="flex flex-wrap justify-center gap-3 mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}>
+            {(Object.keys(roleFeatures) as RoleKey[]).map((key) => {
+              const r = roleFeatures[key];
+              const isActive = selectedRole === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setSelectedRole(key)}
+                  className={`flex items-center gap-2.5 px-5 py-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
+                    isActive ? r.activeClass + " shadow-sm" : r.bgClass + " hover:shadow-sm"
+                  }`}
+                >
+                  <r.icon className={`h-4.5 w-4.5 ${r.colorClass}`} />
+                  <div className="text-left">
+                    <div className={`font-semibold ${isActive ? r.colorClass : "text-card-foreground"}`}>{r.label}</div>
+                    <div className="text-[10px] text-muted-foreground font-normal">{r.tagline}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </motion.div>
+
+          {/* Feature grid */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedRole}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.3 }}
+              className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
+              {role.features.map((feat, i) => (
+                <motion.div
+                  key={feat.module}
+                  className="rounded-xl border border-border bg-card p-5 flex flex-col"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06, duration: 0.35 }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${roleFeatures[selectedRole].bgClass}`}>
+                      <feat.icon className={`h-4 w-4 ${roleFeatures[selectedRole].colorClass}`} />
+                    </div>
+                    <h4 className="text-sm font-bold font-heading text-card-foreground">{feat.module}</h4>
+                  </div>
+                  <ul className="space-y-1.5 flex-1">
+                    {feat.can.map((c) => (
+                      <li key={c} className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                        <CheckCircle className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                        <span>{c}</span>
+                      </li>
+                    ))}
+                    {feat.cant.map((c) => (
+                      <li key={c} className="flex items-start gap-1.5 text-xs text-muted-foreground/60">
+                        <XCircle className="h-3.5 w-3.5 text-muted-foreground/40 shrink-0 mt-0.5" />
+                        <span className="line-through">{c}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Account type note */}
+          <motion.div className="mt-8 rounded-xl border border-border bg-muted/30 p-5" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={2}>
+            <div className="flex items-start gap-3">
+              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <User className="h-4.5 w-4.5 text-primary" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold font-heading text-card-foreground mb-1">Individual vs Entity Accounts</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  <span className="font-semibold text-foreground">Individual</span> accounts (personal professionals) can apply for jobs via the Candidate Dashboard across any role.
+                  <span className="font-semibold text-foreground"> Entity</span> accounts (companies, firms) focus on employer and organizational capabilities — they can post jobs and manage listings but cannot apply as candidates.
+                  Both account types can hold multiple roles and switch between them anytime.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div className="mt-10 text-center" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={3}>
+            <Button asChild size="lg">
+              <Link to="/auth?mode=signup">
+                Get Started Free <ArrowRight className="h-4 w-4 ml-1.5" />
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
+};
 
 /* ── Who is it for ── */
 const WhoIsItForContent = () => (
