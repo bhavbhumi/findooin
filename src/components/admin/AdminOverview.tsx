@@ -256,17 +256,17 @@ export function AdminOverview() {
             Platform health at a glance — {new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" })}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={exportUsers} className="text-xs gap-1.5">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mb-1 scrollbar-hide">
+          <Button variant="outline" size="sm" onClick={exportUsers} className="text-xs gap-1.5 shrink-0">
             <Download className="h-3.5 w-3.5" /> Users CSV
           </Button>
-          <Button variant="outline" size="sm" onClick={exportVerifications} className="text-xs gap-1.5">
+          <Button variant="outline" size="sm" onClick={exportVerifications} className="text-xs gap-1.5 shrink-0">
             <Download className="h-3.5 w-3.5" /> Verifications CSV
           </Button>
-          <Button variant="outline" size="sm" onClick={exportReports} className="text-xs gap-1.5">
+          <Button variant="outline" size="sm" onClick={exportReports} className="text-xs gap-1.5 shrink-0">
             <Download className="h-3.5 w-3.5" /> Reports CSV
           </Button>
-          <Button variant="default" size="sm" onClick={handlePrint} className="text-xs gap-1.5">
+          <Button variant="default" size="sm" onClick={handlePrint} className="text-xs gap-1.5 shrink-0">
             <Printer className="h-3.5 w-3.5" /> Print / PDF
           </Button>
         </div>
