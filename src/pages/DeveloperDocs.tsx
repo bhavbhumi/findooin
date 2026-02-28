@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
@@ -267,17 +267,25 @@ npx vitest run src/test/useFeedPosts.test.ts`}
   </div>
 );
 
-/* ── Protected Content Wrapper ── */
+/* ── Protected Content Wrapper (Admin-only) ── */
 const ProtectedSection = ({ children, label }: { children: React.ReactNode; label: string }) => {
-  const [authed, setAuthed] = useState<boolean | null>(null);
+  const [access, setAccess] = useState<"loading" | "denied" | "no-auth" | "granted">("loading");
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setAuthed(!!session);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session) {
+        setAccess("no-auth");
+        return;
+      }
+      const { data } = await supabase.rpc("has_role", {
+        _user_id: session.user.id,
+        _role: "admin",
+      });
+      setAccess(data ? "granted" : "denied");
     });
   }, []);
 
-  if (authed === null) {
+  if (access === "loading") {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="animate-pulse text-muted-foreground text-sm">Loading...</div>
@@ -285,7 +293,7 @@ const ProtectedSection = ({ children, label }: { children: React.ReactNode; labe
     );
   }
 
-  if (!authed) {
+  if (access === "no-auth") {
     return (
       <Card className="border-dashed">
         <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
@@ -295,12 +303,30 @@ const ProtectedSection = ({ children, label }: { children: React.ReactNode; labe
           <div className="text-center space-y-1.5">
             <h3 className="text-lg font-semibold text-foreground">Authentication Required</h3>
             <p className="text-sm text-muted-foreground max-w-md">
-              The {label} section is available to authenticated developers. Please sign in to access the full documentation.
+              The {label} section is restricted to platform administrators. Please sign in first.
             </p>
           </div>
           <a href="/auth" className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
             Sign In <ChevronRight className="h-3.5 w-3.5" />
           </a>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (access === "denied") {
+    return (
+      <Card className="border-dashed border-destructive/30">
+        <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
+          <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center">
+            <Shield className="h-6 w-6 text-destructive" />
+          </div>
+          <div className="text-center space-y-1.5">
+            <h3 className="text-lg font-semibold text-foreground">Admin Access Only</h3>
+            <p className="text-sm text-muted-foreground max-w-md">
+              The {label} section contains sensitive technical details and is restricted to administrators.
+            </p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -792,6 +818,23 @@ const DeveloperDocs = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "architecture";
+  const loggedTabs = useRef<Set<string>>(new Set());
+
+  // Log doc access for audit trail
+  useEffect(() => {
+    if (loggedTabs.current.has(activeTab)) return;
+    loggedTabs.current.add(activeTab);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) return;
+      supabase.from("audit_logs").insert({
+        user_id: session.user.id,
+        action: "view_docs",
+        resource_type: "developer_docs",
+        resource_id: activeTab,
+        metadata: { tab: activeTab },
+      }).then(() => {});
+    });
+  }, [activeTab]);
 
   return (
     <PublicPageLayout>
