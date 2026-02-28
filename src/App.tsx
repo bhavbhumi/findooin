@@ -55,6 +55,8 @@ const Vault = lazy(() => import("./pages/Vault"));
 const SharedVaultFile = lazy(() => import("./pages/SharedVaultFile"));
 const DeveloperDocs = lazy(() => import("./pages/DeveloperDocs"));
 const CostReport = lazy(() => import("./pages/CostReport"));
+const PitchIndex = lazy(() => import("./pages/PitchIndex"));
+const PitchDeck = lazy(() => import("./pages/PitchDeck"));
 
 const queryClient = new QueryClient();
 
@@ -106,6 +108,8 @@ const App = () => {
                       <Route path="/developer" element={<RouteErrorBoundary routeName="Developer Docs"><DeveloperDocs /></RouteErrorBoundary>} />
                       <Route path="/developer-docs" element={<RouteErrorBoundary routeName="Developer Docs"><DeveloperDocs /></RouteErrorBoundary>} />
                       <Route path="/cost-report" element={<CostReport />} />
+                      <Route path="/pitch" element={<PitchIndex />} />
+                      <Route path="/pitch/:persona" element={<PitchDeck />} />
                       <Route path="/feed" element={<ProtectedRoute><RouteErrorBoundary routeName="Feed"><Feed /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/profile" element={<ProtectedRoute><RouteErrorBoundary routeName="Profile"><Profile /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/profile/:id" element={<ProtectedRoute><RouteErrorBoundary routeName="Profile"><Profile /></RouteErrorBoundary></ProtectedRoute>} />
