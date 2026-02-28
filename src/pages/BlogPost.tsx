@@ -159,8 +159,11 @@ const BlogPostPage = () => {
               <article className="flex-1 min-w-0">
                 {/* Category badges */}
                 <div className="flex items-center gap-2 mb-4">
-                  <Badge variant="outline" className="text-xs font-medium text-primary border-primary/30 bg-primary/5">
-                    {post.category.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                  <Badge variant="outline" className="text-xs font-medium capitalize border-primary/30 bg-primary/5 text-primary">
+                    {post.post_type}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs font-medium capitalize border-border">
+                    {post.category}
                   </Badge>
                   {post.featured && (
                     <Badge variant="secondary" className="text-[10px] bg-primary/10 text-primary border-0">Featured</Badge>

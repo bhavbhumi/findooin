@@ -2,56 +2,39 @@ import { Link } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { Clock, BookOpen, FileText, BarChart3, ScrollText, Bell, Shield, Loader2 } from "lucide-react";
+import { Clock, BookOpen, FileText, BarChart3, ScrollText, Bell, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useBlogPosts, BlogPost } from "@/hooks/useBlogPosts";
+import { useBlogPosts, BlogPost, BlogPostType } from "@/hooks/useBlogPosts";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 import { formatDistanceToNow } from "date-fns";
 
-/* ── Primary tabs (top-level categories like Sernet) ── */
+/* ── Primary tabs map to post_type ── */
 const primaryTabs = [
-  { key: "articles", label: "Articles", icon: FileText },
-  { key: "analysis", label: "Analysis", icon: BarChart3 },
-  { key: "reports", label: "Reports", icon: ScrollText },
+  { key: "article", label: "Articles", icon: FileText },
+  { key: "survey", label: "Surveys", icon: BarChart3 },
+  { key: "poll", label: "Polls", icon: ScrollText },
   { key: "bulletin", label: "Bulletin", icon: Bell },
-  { key: "awareness", label: "Awareness", icon: Shield },
 ];
 
-/* ── Map primary tabs to actual DB categories ── */
-const tabCategoryMap: Record<string, string | null> = {
-  articles: null, // show all
-  analysis: "market-insights",
-  reports: "regulation",
-  bulletin: "investing",
-  awareness: "general",
-};
+/* ── Category sub-filters (shared across all tabs) ── */
+const CATEGORY_FILTERS = ["All", "General", "Awareness", "Opinion", "Analysis", "Compliance"];
 
-/* ── Sub-filter chips per tab ── */
-const subFilters: Record<string, string[]> = {
-  articles: ["All", "Market Insights", "Regulation", "Investing", "General"],
-  analysis: ["All", "Equity", "Debt", "Commodities"],
-  reports: ["All", "Quarterly", "Annual", "Special"],
-  bulletin: ["All", "Updates", "Announcements"],
-  awareness: ["All", "Basics", "Advanced"],
+const categoryValueMap: Record<string, string | null> = {
+  All: null,
+  General: "general",
+  Awareness: "awareness",
+  Opinion: "opinion",
+  Analysis: "analysis",
+  Compliance: "compliance",
 };
 
 const tabDescriptions: Record<string, string> = {
-  articles: "Explore insights in text, image, audio, and video formats — learn the way that suits you best.",
-  analysis: "Deep-dive market analysis and expert commentary on trends shaping the financial landscape.",
-  reports: "Regulatory updates, compliance changes, and policy insights you need to know.",
+  article: "Explore insights in text, image, audio, and video formats — learn the way that suits you best.",
+  survey: "Participate in surveys and share your perspective on industry trends.",
+  poll: "Quick polls on topics that matter — see where the community stands.",
   bulletin: "Important announcements, updates, and time-sensitive information.",
-  awareness: "Educational content to help you make informed financial decisions.",
-};
-
-/* ── Sub-filter to category mapping ── */
-const subFilterCategoryMap: Record<string, string | null> = {
-  "All": null,
-  "Market Insights": "market-insights",
-  "Regulation": "regulation",
-  "Investing": "investing",
-  "General": "general",
 };
 
 /* ── Blog card ── */
@@ -125,33 +108,30 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
 const Blog = () => {
   usePageMeta({ title: "Blog", description: "Articles, analysis, reports, and insights from the financial ecosystem." });
   const { data: posts, isLoading } = useBlogPosts();
-  const [activeTab, setActiveTab] = useState("articles");
+  const [activeTab, setActiveTab] = useState<string>("article");
   const [activeSubFilter, setActiveSubFilter] = useState("All");
 
   const ActiveIcon = primaryTabs.find((t) => t.key === activeTab)?.icon || FileText;
 
-  // Filter posts
+  // Filter posts by post_type then category
   const filteredPosts = (() => {
     let result = posts || [];
 
-    // Primary tab filter
-    const tabCategory = tabCategoryMap[activeTab];
-    if (tabCategory) {
-      result = result.filter((p) => p.category === tabCategory);
-    }
+    // Primary tab = post_type
+    result = result.filter((p) => p.post_type === activeTab);
 
-    // Sub-filter (only for articles tab where we have real mappings)
-    if (activeTab === "articles" && activeSubFilter !== "All") {
-      const subCat = subFilterCategoryMap[activeSubFilter];
-      if (subCat) {
-        result = result.filter((p) => p.category === subCat);
+    // Sub-filter = category
+    if (activeSubFilter !== "All") {
+      const cat = categoryValueMap[activeSubFilter];
+      if (cat) {
+        result = result.filter((p) => p.category === cat);
       }
     }
 
     return result;
   })();
 
-  const currentSubFilters = subFilters[activeTab] || [];
+  const currentSubFilters = CATEGORY_FILTERS;
 
   return (
     <PublicPageLayout>
@@ -237,8 +217,8 @@ const Blog = () => {
       </section>
 
       {/* ── Featured post hero (if on Articles tab) ── */}
-      {activeTab === "articles" && !isLoading && (() => {
-        const featured = (posts || []).find((p) => p.featured);
+      {activeTab === "article" && !isLoading && (() => {
+        const featured = (posts || []).find((p) => p.featured && p.post_type === "article");
         if (!featured) return null;
         return (
           <section className="py-6 border-b border-border">
