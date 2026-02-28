@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
+import { sanitizeText } from "@/lib/sanitize";
 
 function CommentAvatar({ src, name }: { src: string | null; name: string }) {
   const [err, setErr] = useState(false);
@@ -106,7 +107,7 @@ export function CommentSection({ postId }: { postId: string }) {
   const handleSubmit = async () => {
     if (!text.trim() || !currentUserId || submitting) return;
     setSubmitting(true);
-    const commentText = text.trim();
+    const commentText = sanitizeText(text.trim());
 
     // Optimistic: add comment immediately
     const optimisticComment: Comment = {

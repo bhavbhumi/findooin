@@ -18,6 +18,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
+import { sanitizeText } from "@/lib/sanitize";
 import { useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -345,7 +346,7 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
       const postType = isInvestorMode ? "query" : category;
       const { data: postData, error } = await supabase.from("posts").insert({
         author_id: userId,
-        content: content.trim(),
+        content: sanitizeText(content.trim()),
         post_type: postType as any,
         post_kind: postKind as any,
         visibility: audience as any,
