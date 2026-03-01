@@ -148,19 +148,29 @@ const Landing = () => {
               variants={fadeUp}
               custom={0}
             >
+              {/* Tag */}
+              <motion.span
+                className="inline-block px-4 py-1.5 rounded-full bg-primary/[0.08] text-primary text-sm font-semibold tracking-wide mb-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                Financially Social
+              </motion.span>
+
               <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-6">
-                Unlock your path to{" "}
-                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Financial Trust</span>
+                Connect. Share. Discover.{" "}
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Prosper Together.</span>
               </h1>
               <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-8">
-                Connect, Verify and Collaborate across India's regulated financial ecosystem. Discover verified Issuers, Intermediaries & Investors through a trust-first platform.
+                Build Trusted Relationships with Verified Professionals and Entities across India's Financial Ecosystem and Turn Insights into Opportunities.
               </p>
 
-              {/* CTA Buttons — matching Sernet: filled + outline */}
+              {/* CTA Buttons */}
               <div className="flex items-center gap-4 mb-12">
                 <Button size="lg" className="h-13 px-8 text-base rounded-xl" asChild>
                   <Link to="/auth?mode=signup">
-                    Join FindOO
+                    Join Findoo
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -169,27 +179,24 @@ const Landing = () => {
                 </Button>
               </div>
 
-              {/* Stat Badges — icon + label + sublabel, horizontal row */}
-              <div className="flex items-center gap-8">
+              {/* 3 Icon Stat Badges */}
+              <div className="flex flex-wrap items-center gap-6 sm:gap-8">
                 {[
-                  { icon: CheckCircle2, label: "AMFI Registered", sub: "Regulated & Compliant" },
-                  { icon: Clock, label: "10Cr+ Demat", sub: "Accounts in India" },
-                  { icon: Heart, label: "100% Verified", sub: "Trust Network" },
+                  { icon: Lock, label: "End to End Encrypted" },
+                  { icon: Activity, label: "99.9% Uptime" },
+                  { icon: Shield, label: "100% Verified Network" },
                 ].map((stat, i) => (
                   <motion.div
                     key={i}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-2.5"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 + i * 0.15 }}
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/[0.08]">
-                      <stat.icon className="h-5 w-5 text-primary" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/[0.08]">
+                      <stat.icon className="h-4 w-4 text-primary" />
                     </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground leading-tight">{stat.label}</p>
-                      <p className="text-xs text-muted-foreground">{stat.sub}</p>
-                    </div>
+                    <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
                   </motion.div>
                 ))}
               </div>
