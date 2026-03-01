@@ -4,13 +4,22 @@ import {
   Shield, Users, TrendingUp, Building2, UserCheck, BarChart3,
   ArrowRight, CheckCircle2, Briefcase, Calendar, MessageSquare,
   Globe, Zap, Lock, Search, Landmark, Award, Activity, Presentation,
-  Clock, Heart, Star, Quote
+  Clock, Heart, Star, Quote, Sparkles as SparklesIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import networkBrainHero from "@/assets/network-brain-hero.png";
+import {
+  DotGrid,
+  GridLines,
+  NetworkMesh,
+  GlowBlob,
+  Sparkles,
+  ConcentricRings,
+  DiamondGrid,
+} from "@/components/decorative/SectionDecorations";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -134,8 +143,17 @@ const Landing = () => {
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
       <section className="relative pt-12 pb-10 lg:pt-16 lg:pb-14 overflow-hidden">
-        {/* Subtle gradient wash */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent" />
+        {/* Layered background: gradient + dot grid + network mesh */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02]" />
+        <DotGrid />
+        <NetworkMesh />
+        
+        {/* Glow blobs for depth */}
+        <GlowBlob position="top-left" color="primary" size="xl" />
+        <GlowBlob position="bottom-right" color="accent" size="lg" />
+        
+        {/* Decorative concentric rings */}
+        <ConcentricRings className="top-8 right-[5%] hidden lg:block" />
 
         <div className="container relative">
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 items-center">
@@ -213,20 +231,23 @@ const Landing = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <div className="relative">
-                {/* Soft glow */}
-                <div className="absolute inset-[10%] bg-gradient-to-br from-primary/[0.08] via-accent/[0.04] to-transparent rounded-full blur-3xl" />
+                {/* Enhanced glow behind brain */}
+                <div className="absolute inset-[5%] bg-gradient-to-br from-primary/[0.12] via-accent/[0.06] to-transparent rounded-full blur-3xl" />
+                <div className="absolute inset-[20%] bg-gradient-to-tr from-gold/[0.04] to-transparent rounded-full blur-2xl" />
                 <img
                   src={networkBrainHero}
                   alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain"
+                  className="relative w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(25,25,112,0.08)]"
                 />
+                {/* Small sparkle accents near the brain */}
+                <Sparkles count={4} />
               </div>
             </motion.div>
           </div>
 
           {/* ─── Inline Media Bar ─── */}
           <motion.div
-            className="mt-10 pt-6 border-t border-border"
+            className="mt-10 pt-6 border-t border-border/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
@@ -245,7 +266,11 @@ const Landing = () => {
 
       {/* ═══ VALUE PROPOSITIONS — "Achieve and Prosper" style ═══ */}
       <section className="py-14 relative overflow-hidden">
-        <div className="container">
+        {/* Subtle grid background */}
+        <GridLines />
+        <GlowBlob position="bottom-left" color="primary" size="md" />
+        
+        <div className="container relative">
           <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-start">
             {/* Left — Heading + value props */}
             <div>
@@ -290,11 +315,14 @@ const Landing = () => {
               transition={{ duration: 0.7 }}
             >
               <div className="relative">
+                {/* Background glow for orbital */}
+                <div className="absolute inset-[-20%] bg-gradient-to-br from-primary/[0.05] to-transparent rounded-full blur-3xl" />
+                
                 {/* Orbital ring visual */}
                 <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full border-2 border-dashed border-border relative flex items-center justify-center">
                   <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full border border-border/60 flex items-center justify-center">
                     <div className="text-center">
-                      <div className="w-16 h-16 mx-auto rounded-2xl bg-primary flex items-center justify-center mb-3">
+                      <div className="w-16 h-16 mx-auto rounded-2xl bg-primary flex items-center justify-center mb-3 shadow-lg shadow-primary/20">
                         <span className="text-xl font-bold text-primary-foreground font-heading">F</span>
                       </div>
                       <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">FindOO</p>
@@ -328,6 +356,9 @@ const Landing = () => {
                     );
                   })}
                 </div>
+                
+                {/* Sparkle accents */}
+                <Sparkles count={3} />
               </div>
             </motion.div>
           </div>
@@ -349,7 +380,12 @@ const Landing = () => {
 
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
-        <div className="container">
+        {/* Subtle decoration */}
+        <DotGrid />
+        <GlowBlob position="top-right" color="gold" size="md" />
+        <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
+        
+        <div className="container relative">
           <motion.div
             className="text-center mb-8"
             initial="hidden"
@@ -366,12 +402,12 @@ const Landing = () => {
             </p>
           </motion.div>
 
-          {/* Testimonial cards — horizontal scroll on mobile, grid on desktop */}
+          {/* Testimonial cards */}
           <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:overflow-visible scrollbar-hide">
             {testimonials.map((t, i) => (
               <motion.div
                 key={i}
-                className="min-w-[280px] lg:min-w-0 snap-start rounded-xl border border-border bg-card p-5 flex flex-col"
+                className="min-w-[280px] lg:min-w-0 snap-start rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 flex flex-col hover:shadow-lg hover:border-primary/10 transition-all duration-300"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -381,13 +417,13 @@ const Landing = () => {
                 {/* Rating */}
                 <div className="flex items-center gap-0.5 mb-3">
                   {Array.from({ length: t.rating }).map((_, s) => (
-                    <Star key={s} className="h-4 w-4 fill-accent text-accent" />
+                    <Star key={s} className="h-4 w-4 fill-gold text-gold" />
                   ))}
                   <span className="ml-2 text-sm font-semibold text-foreground">{t.rating}.0</span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">"{t.quote}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center text-sm font-bold text-primary">
                     {t.name.charAt(0)}
                   </div>
                   <div>
@@ -404,7 +440,12 @@ const Landing = () => {
 
       {/* ═══ WHOM WE SERVE ═══ */}
       <section className="py-14 relative overflow-hidden">
-        <div className="container">
+        {/* Network mesh background */}
+        <NetworkMesh />
+        <GlowBlob position="top-right" color="primary" size="lg" />
+        <GlowBlob position="bottom-left" color="investor" size="md" />
+        
+        <div className="container relative">
           <motion.div
             className="text-center mb-6"
             initial="hidden"
@@ -436,11 +477,11 @@ const Landing = () => {
               {clientSegments.map((seg, i) => (
                 <motion.div
                   key={seg.title}
-                  className="rounded-xl border border-border bg-card p-5 text-center hover:shadow-md transition-shadow"
+                  className="rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 text-center hover:shadow-lg hover:border-primary/15 transition-all duration-300"
                   variants={fadeUp}
                   custom={i + 2}
                 >
-                  <div className="h-12 w-12 mx-auto rounded-xl bg-primary/[0.08] flex items-center justify-center mb-3">
+                  <div className="h-12 w-12 mx-auto rounded-xl bg-gradient-to-br from-primary/[0.12] to-primary/[0.04] flex items-center justify-center mb-3">
                     <seg.icon className="h-6 w-6 text-primary" />
                   </div>
                   <h4 className="text-sm font-bold font-heading text-foreground mb-1">{seg.title}</h4>
@@ -450,52 +491,56 @@ const Landing = () => {
             </div>
           </motion.div>
 
-          {/* Partners + Principals — side by side cards */}
+          {/* Partners + Principals */}
           <div className="grid md:grid-cols-2 gap-5">
             <motion.div
-              className="rounded-xl border border-border bg-card p-6"
+              className="rounded-xl border border-border bg-card/80 backdrop-blur-sm p-6 relative overflow-hidden"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={fadeUp}
               custom={1}
             >
-              <h3 className="text-lg font-bold font-heading text-foreground mb-1">Intermediaries</h3>
-              <p className="text-sm text-muted-foreground mb-4">Professionals who grow with the network</p>
-              <div className="text-3xl font-bold font-heading text-foreground mb-4">
+              {/* Subtle gradient accent */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-intermediary/[0.06] to-transparent rounded-bl-full" />
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1 relative">Intermediaries</h3>
+              <p className="text-sm text-muted-foreground mb-4 relative">Professionals who grow with the network</p>
+              <div className="text-3xl font-bold font-heading text-foreground mb-4 relative">
                 <AnimatedCounter value={44000} suffix="+" />
               </div>
-              <p className="text-xs text-muted-foreground mb-4">AMFI-registered distributors nationwide</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground mb-4 relative">AMFI-registered distributors nationwide</p>
+              <ul className="space-y-2 text-sm text-muted-foreground relative">
                 <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> MF Distributors & RIAs</li>
                 <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Insurance Agents & Brokers</li>
                 <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Research Analysts & Advisors</li>
               </ul>
-              <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-medium text-primary mt-6 hover:underline">
+              <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-medium text-primary mt-6 hover:underline relative">
                 Learn more <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </motion.div>
 
             <motion.div
-              className="rounded-xl border border-border bg-card p-6"
+              className="rounded-xl border border-border bg-card/80 backdrop-blur-sm p-6 relative overflow-hidden"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
               variants={fadeUp}
               custom={2}
             >
-              <h3 className="text-lg font-bold font-heading text-foreground mb-1">Issuers & Principals</h3>
-              <p className="text-sm text-muted-foreground mb-4">Institutions who power the ecosystem</p>
-              <div className="text-3xl font-bold font-heading text-foreground mb-4">
+              {/* Subtle gradient accent */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-issuer/[0.06] to-transparent rounded-bl-full" />
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1 relative">Issuers & Principals</h3>
+              <p className="text-sm text-muted-foreground mb-4 relative">Institutions who power the ecosystem</p>
+              <div className="text-3xl font-bold font-heading text-foreground mb-4 relative">
                 <AnimatedCounter value={5000} suffix="+" />
               </div>
-              <p className="text-xs text-muted-foreground mb-4">SEBI-regulated entities</p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground mb-4 relative">SEBI-regulated entities</p>
+              <ul className="space-y-2 text-sm text-muted-foreground relative">
                 <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> AMCs & Fund Houses</li>
                 <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Banks, NBFCs & Insurance Companies</li>
                 <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Listed Corporates & Exchanges</li>
               </ul>
-              <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-medium text-primary mt-6 hover:underline">
+              <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-medium text-primary mt-6 hover:underline relative">
                 Learn more <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </motion.div>
@@ -520,7 +565,12 @@ const Landing = () => {
 
       {/* ═══ PLATFORM FEATURES ═══ */}
       <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
-        <div className="container max-w-5xl">
+        {/* Grid pattern background */}
+        <GridLines />
+        <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
+        <ConcentricRings className="-bottom-20 -left-20 hidden lg:block" />
+        
+        <div className="container max-w-5xl relative">
           <motion.div
             className="text-center mb-8"
             initial="hidden"
@@ -540,7 +590,7 @@ const Landing = () => {
             {platformFeatures.map((feat, i) => (
               <motion.div
                 key={feat.title}
-                className="rounded-xl border border-border bg-card p-5 relative"
+                className="rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 relative hover:shadow-lg hover:border-primary/15 transition-all duration-300 group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -548,11 +598,11 @@ const Landing = () => {
                 custom={i + 1}
               >
                 {feat.status === "coming" && (
-                  <span className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-accent/10 text-accent">
+                  <span className="absolute top-4 right-4 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-gold/10 text-gold">
                     Coming Soon
                   </span>
                 )}
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/[0.08] text-primary mb-3">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-primary/[0.12] to-primary/[0.04] text-primary mb-3 group-hover:shadow-md group-hover:shadow-primary/10 transition-shadow">
                   <feat.icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-base font-bold font-heading text-card-foreground mb-2">{feat.title}</h3>
@@ -565,10 +615,33 @@ const Landing = () => {
 
       {/* ═══ CTA — "Open Account" style ═══ */}
       <section className="py-16 bg-brand text-white relative overflow-hidden">
+        {/* Rich decorative background */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-20 -left-20 w-[300px] h-[300px] rounded-full border border-white/10" />
           <div className="absolute -bottom-16 -right-16 w-[250px] h-[250px] rounded-full border border-white/[0.07]" />
+          <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-3xl" />
+          <div className="absolute -top-10 right-1/3 w-[200px] h-[200px] rounded-full bg-gold/[0.04] blur-2xl" />
         </div>
+        {/* Network mesh overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
+          <svg className="w-full h-full" viewBox="0 0 800 400" preserveAspectRatio="none">
+            <line x1="100" y1="50" x2="350" y2="150" stroke="white" strokeWidth="0.5" />
+            <line x1="350" y1="150" x2="600" y2="80" stroke="white" strokeWidth="0.5" />
+            <line x1="600" y1="80" x2="750" y2="200" stroke="white" strokeWidth="0.5" />
+            <line x1="200" y1="300" x2="500" y2="350" stroke="white" strokeWidth="0.5" />
+            <line x1="350" y1="150" x2="500" y2="350" stroke="white" strokeWidth="0.3" />
+            <circle cx="100" cy="50" r="2" fill="white" />
+            <circle cx="350" cy="150" r="2.5" fill="white" />
+            <circle cx="600" cy="80" r="2" fill="white" />
+            <circle cx="750" cy="200" r="2" fill="white" />
+            <circle cx="200" cy="300" r="2" fill="white" />
+            <circle cx="500" cy="350" r="2" fill="white" />
+          </svg>
+        </div>
+        
+        {/* Sparkle accents */}
+        <Sparkles count={6} />
+        
         <div className="container relative">
           <motion.div
             className="max-w-2xl mx-auto text-center"
@@ -586,7 +659,7 @@ const Landing = () => {
             </p>
             <Button
               size="lg"
-              className="h-13 px-10 text-base rounded-xl bg-white text-foreground hover:bg-white/90"
+              className="h-13 px-10 text-base rounded-xl bg-white text-foreground hover:bg-white/90 shadow-lg shadow-white/10"
               asChild
             >
               <Link to="/auth?mode=signup">
@@ -600,7 +673,11 @@ const Landing = () => {
 
       {/* ═══ PITCH DECKS ═══ */}
       <section className="py-14 relative overflow-hidden">
-        <div className="container max-w-5xl">
+        <DotGrid />
+        <GlowBlob position="top-left" color="accent" size="md" />
+        <DiamondGrid className="top-12 right-12 hidden lg:block" />
+        
+        <div className="container max-w-5xl relative">
           <motion.div
             className="text-center mb-8"
             initial="hidden"
@@ -637,7 +714,7 @@ const Landing = () => {
               >
                 <Link
                   to={deck.to}
-                  className="group block rounded-2xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+                  className="group block rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
                 >
                   <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${deck.color} mb-4 group-hover:scale-110 transition-transform`}>
                     <deck.icon className="h-5 w-5" />
@@ -655,8 +732,10 @@ const Landing = () => {
       </section>
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-14 border-t border-border">
-        <div className="container max-w-5xl">
+      <section className="py-14 border-t border-border relative overflow-hidden">
+        <GlowBlob position="bottom-right" color="primary" size="md" />
+        
+        <div className="container max-w-5xl relative">
           <motion.div
             className="flex items-center justify-between mb-6"
             initial="hidden"
@@ -678,18 +757,32 @@ const Landing = () => {
             ].map((post, i) => (
               <motion.div
                 key={i}
-                className="rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow"
+                className="rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i + 1}
               >
-                {/* Placeholder cover */}
-                <div className="h-32 bg-gradient-to-br from-primary/[0.08] to-accent/[0.04]" />
+                {/* Placeholder cover with network pattern */}
+                <div className="h-32 bg-gradient-to-br from-primary/[0.1] via-accent/[0.05] to-muted/30 relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-[0.06]">
+                    <svg className="w-full h-full" viewBox="0 0 300 130" preserveAspectRatio="none">
+                      <line x1="30" y1="20" x2="120" y2="60" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                      <line x1="120" y1="60" x2="250" y2="30" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                      <line x1="80" y1="100" x2="200" y2="110" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                      <line x1="120" y1="60" x2="200" y2="110" stroke="currentColor" strokeWidth="0.3" className="text-primary" />
+                      <circle cx="30" cy="20" r="2" fill="currentColor" className="text-primary" />
+                      <circle cx="120" cy="60" r="2.5" fill="currentColor" className="text-primary" />
+                      <circle cx="250" cy="30" r="2" fill="currentColor" className="text-primary" />
+                      <circle cx="80" cy="100" r="2" fill="currentColor" className="text-primary" />
+                      <circle cx="200" cy="110" r="2" fill="currentColor" className="text-primary" />
+                    </svg>
+                  </div>
+                </div>
                 <div className="p-4">
                   <p className="text-xs text-muted-foreground mb-2">{post.tag}</p>
-                  <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug">{post.title}</h3>
+                  <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">{post.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.excerpt}</p>
                   <p className="text-xs text-muted-foreground mt-3">{post.date}</p>
                 </div>
