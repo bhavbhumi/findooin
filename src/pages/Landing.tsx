@@ -100,175 +100,145 @@ const Landing = () => {
   return (
     <PublicPageLayout>
       {/* Hero */}
-      <section className="relative pt-16 pb-20 overflow-hidden">
+      <section className="relative pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.06] to-transparent" />
-        
-        {/* Network Brain BW background */}
-        <motion.div
-          className="absolute right-0 top-0 w-[55%] h-full pointer-events-none opacity-[0.07] dark:opacity-[0.04]"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 0.07, x: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-        >
-          <img src={networkBrainBW} alt="" className="w-full h-full object-contain object-right-top" aria-hidden="true" />
-        </motion.div>
-        {/* Decorative elements — VISIBLE */}
+
+        {/* Subtle geometric decorations */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Large gradient blob top-right */}
-          <div className="absolute -top-32 -right-32 w-[500px] h-[400px] bg-gradient-to-bl from-primary/[0.1] via-accent/[0.05] to-transparent rounded-full blur-3xl" />
-          {/* Concentric rings */}
+          <div className="absolute -top-32 -right-32 w-[500px] h-[400px] bg-gradient-to-bl from-primary/[0.08] via-accent/[0.04] to-transparent rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-[350px] h-[200px] bg-gradient-to-tr from-primary/[0.05] to-transparent rounded-full blur-3xl" />
           <motion.div
-            className="absolute -top-16 -right-16 w-[340px] h-[340px] rounded-full border-2 border-primary/20 dark:border-accent/25"
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
-          />
-          <motion.div
-            className="absolute -top-8 -right-8 w-[260px] h-[260px] rounded-full border border-primary/15 dark:border-accent/20"
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.4, delay: 0.15, ease: "easeOut" }}
-          />
-          <motion.div
-            className="absolute top-[30px] right-[30px] w-[180px] h-[180px] rounded-full border border-primary/10"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-          />
-          {/* Diamond shapes left */}
-          <motion.div
-            className="absolute top-1/4 left-[8%] w-6 h-6 rotate-45 border-2 border-primary/20"
+            className="absolute top-20 left-[6%] w-5 h-5 rotate-45 border-2 border-primary/15"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           />
           <motion.div
-            className="absolute top-[38%] left-[5%] w-4 h-4 rotate-12 bg-accent/15 rounded-sm"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          />
-          {/* Dot grid — left */}
-          <motion.div
-            className="absolute bottom-12 left-[6%] grid grid-cols-5 gap-2.5"
+            className="absolute bottom-16 left-[4%] grid grid-cols-4 gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.5 }}
+            transition={{ duration: 1, delay: 0.6 }}
           >
-            {Array.from({ length: 25 }).map((_, i) => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/15" />
+            {Array.from({ length: 16 }).map((_, i) => (
+              <div key={i} className="w-1 h-1 rounded-full bg-primary/12" />
             ))}
           </motion.div>
-          {/* Gradient line */}
           <motion.div
-            className="absolute top-[55%] right-[7%] w-px h-32 bg-gradient-to-b from-transparent via-primary/25 to-transparent rotate-[25deg]"
+            className="absolute top-[55%] right-[5%] w-px h-24 bg-gradient-to-b from-transparent via-primary/20 to-transparent rotate-[25deg] hidden lg:block"
             initial={{ opacity: 0, scaleY: 0 }}
             animate={{ opacity: 1, scaleY: 1 }}
             transition={{ duration: 1, delay: 0.7 }}
           />
-          {/* Pulsing accent dot */}
           <motion.div
-            className="absolute bottom-20 right-[12%] w-3 h-3 rounded-full bg-accent/30"
-            animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0.8, 0.4] }}
+            className="absolute bottom-24 right-[10%] w-2.5 h-2.5 rounded-full bg-accent/25"
+            animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          />
-          {/* Bottom-left gradient blob */}
-          <div className="absolute bottom-0 left-0 w-[350px] h-[200px] bg-gradient-to-tr from-primary/[0.06] to-transparent rounded-full blur-3xl" />
-          {/* Cross accent right */}
-          <motion.div
-            className="absolute top-[20%] right-[15%] w-8 h-px bg-primary/20"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-          />
-          <motion.div
-            className="absolute top-[20%] right-[15%] w-px h-8 bg-primary/20 -translate-x-[15px]"
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 0.6, delay: 1 }}
           />
         </div>
 
         <div className="container relative">
-          <motion.div
-            className="max-w-3xl mx-auto text-center"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0}
-          >
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 mb-6 text-sm text-muted-foreground">
-              <Landmark className="h-3.5 w-3.5 text-accent" />
-              Financially Social — The world's first financial network
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.1] mb-6">
-              Not social. Not professional.
-              <br />
-              <span className="text-accent">Financial.</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-4 leading-relaxed">
-              There are social networks. Professional networks. Micro-blogging platforms. Media broadcasters.
-              But until now — <span className="font-semibold text-foreground">no financial network.</span>
-            </p>
-            <p className="text-base text-muted-foreground max-w-xl mx-auto mb-10">
-              FindOO is where India's verified Issuers, Intermediaries, and Investors discover,
-              connect, and transact — within a regulated, trust-first framework.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="h-12 px-8 text-base" asChild>
-                <Link to="/auth?mode=signup">
-                  Join FindOO
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
-                <Link to="/explore">Explore the Platform</Link>
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* Social Proof Stats */}
-          <motion.div
-            className="max-w-3xl mx-auto mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={2}
-          >
-            {[
-              { value: 10, suffix: "Cr+", label: "Demat Accounts", icon: BarChart3 },
-              { value: 44000, suffix: "+", label: "AMFI Distributors", icon: UserCheck },
-              { value: 5000, suffix: "+", label: "SEBI Entities", icon: Shield },
-              { value: 100, suffix: "%", label: "Verified Network", icon: CheckCircle2 },
-            ].map((stat, i) => (
-              <div key={i} className="text-center rounded-xl border border-border bg-card/50 backdrop-blur-sm p-4">
-                <stat.icon className="h-4 w-4 mx-auto mb-2 text-accent" />
-                <div className="text-2xl sm:text-3xl font-bold font-heading text-foreground">
-                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
+          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 xl:gap-16 items-center">
+            
+            {/* Left — Text Content */}
+            <motion.div
+              className="mt-10 lg:mt-0 text-center lg:text-left"
+              initial="hidden"
+              animate="visible"
+              variants={fadeUp}
+              custom={0}
+            >
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 mb-6 text-sm text-muted-foreground">
+                <Landmark className="h-3.5 w-3.5 text-accent" />
+                Financially Social
               </div>
-            ))}
-          </motion.div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.1] mb-5">
+                Not social. Not professional.
+                <br />
+                <span className="text-accent">Financial.</span>
+              </h1>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto lg:mx-0 mb-4 leading-relaxed">
+                There are social networks. Professional networks. But until now —{" "}
+                <span className="font-semibold text-foreground">no financial network.</span>
+              </p>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto lg:mx-0 mb-8">
+                FindOO connects India's verified Issuers, Intermediaries & Investors within a regulated, trust-first framework.
+              </p>
 
-          {/* Trust Badges */}
-          <motion.div
-            className="flex flex-wrap items-center justify-center gap-3 mt-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
-          >
-            {[
-              { icon: Shield, label: "SEBI Ready" },
-              { icon: Lock, label: "End-to-End Encrypted" },
-              { icon: Activity, label: "99.9% Uptime" },
-            ].map((badge, i) => (
-              <div key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-xs text-muted-foreground">
-                <badge.icon className="h-3 w-3 text-primary" />
-                {badge.label}
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 mb-10">
+                <Button size="lg" className="h-12 px-8 text-base" asChild>
+                  <Link to="/auth?mode=signup">
+                    Join FindOO
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
+                  <Link to="/explore">Explore Platform</Link>
+                </Button>
               </div>
-            ))}
-          </motion.div>
+
+              {/* Stat Counters — inline row */}
+              <motion.div
+                className="grid grid-cols-2 sm:grid-cols-4 gap-3"
+                initial="hidden"
+                animate="visible"
+                variants={fadeUp}
+                custom={2}
+              >
+                {[
+                  { value: 10, suffix: "Cr+", label: "Demat Accounts" },
+                  { value: 44000, suffix: "+", label: "AMFI Distributors" },
+                  { value: 5000, suffix: "+", label: "SEBI Entities" },
+                  { value: 100, suffix: "%", label: "Verified Network" },
+                ].map((stat, i) => (
+                  <div key={i} className="text-center lg:text-left rounded-lg border border-border bg-card/50 backdrop-blur-sm p-3">
+                    <div className="text-xl sm:text-2xl font-bold font-heading text-foreground">
+                      <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">{stat.label}</p>
+                  </div>
+                ))}
+              </motion.div>
+
+              {/* Trust Tags */}
+              <motion.div
+                className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-5"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+              >
+                {[
+                  { icon: Shield, label: "SEBI Ready" },
+                  { icon: Lock, label: "Encrypted" },
+                  { icon: Activity, label: "99.9% Uptime" },
+                ].map((badge, i) => (
+                  <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/20 text-[11px] text-muted-foreground">
+                    <badge.icon className="h-3 w-3 text-primary" />
+                    {badge.label}
+                  </div>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            {/* Right — Network Brain Image */}
+            <motion.div
+              className="relative w-full max-w-md lg:max-w-none mx-auto"
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: "easeOut" }}
+            >
+              <div className="relative aspect-square lg:aspect-[4/3]">
+                {/* Glow behind brain */}
+                <div className="absolute inset-[10%] bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 rounded-full blur-3xl" />
+                <img
+                  src={networkBrainBW}
+                  alt="FindOO Network — connecting Issuers, Intermediaries and Investors"
+                  className="relative w-full h-full object-contain drop-shadow-lg dark:opacity-90"
+                />
+              </div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
