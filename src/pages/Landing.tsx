@@ -133,16 +133,16 @@ const Landing = () => {
   return (
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
+      <section className="relative pt-12 pb-10 lg:pt-16 lg:pb-14 overflow-hidden">
         {/* Subtle gradient wash */}
         <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent" />
 
         <div className="container relative">
-          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 items-center">
 
             {/* Left — Text */}
             <motion.div
-              className="mt-10 lg:mt-0"
+              className="mt-8 lg:mt-0"
               initial="hidden"
               animate="visible"
               variants={fadeUp}
@@ -150,7 +150,7 @@ const Landing = () => {
             >
               {/* Tag */}
               <motion.span
-                className="inline-block px-3.5 py-1 rounded-full bg-primary/[0.08] text-primary text-xs font-semibold tracking-wide mb-6"
+                className="inline-block px-3.5 py-1 rounded-full bg-primary/[0.08] text-primary text-xs font-semibold tracking-wide mb-4"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
@@ -158,29 +158,29 @@ const Landing = () => {
                 Financially Social
               </motion.span>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-4">
                 Connect. Share. Discover.{" "}
                 <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Prosper Together.</span>
               </h1>
-              <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-8">
+              <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-6">
                 Build Trusted Relationships with Verified Professionals and Entities across India's Financial Ecosystem and Turn Insights into Opportunities.
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex items-center gap-4 mb-12">
-                <Button size="lg" className="h-13 px-8 text-base rounded-md" asChild>
+              <div className="flex items-center gap-4 mb-8">
+                <Button size="lg" className="h-12 px-8 text-base rounded-md" asChild>
                   <Link to="/auth?mode=signup">
                     Join Findoo
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-13 px-8 text-base rounded-md" asChild>
+                <Button size="lg" variant="outline" className="h-12 px-8 text-base rounded-md" asChild>
                   <Link to="/explore">Explore Platform</Link>
                 </Button>
               </div>
 
               {/* 3 Icon Stat Badges */}
-              <div className="flex flex-wrap items-center gap-6 sm:gap-8">
+              <div className="flex flex-wrap items-center gap-5 sm:gap-6">
                 {[
                   { icon: Lock, label: "End to End", sub: "Encrypted" },
                   { icon: Activity, label: "99.9%", sub: "Uptime" },
@@ -188,13 +188,13 @@ const Landing = () => {
                 ].map((stat, i) => (
                   <motion.div
                     key={i}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-2.5"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 + i * 0.15 }}
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/[0.08]">
-                      <stat.icon className="h-5 w-5 text-primary" />
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/[0.08]">
+                      <stat.icon className="h-4 w-4 text-primary" />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground leading-tight">{stat.label}</p>
@@ -207,7 +207,7 @@ const Landing = () => {
 
             {/* Right — Hero Illustration */}
             <motion.div
-              className="relative w-full max-w-md lg:max-w-lg mx-auto"
+              className="relative w-full max-w-sm lg:max-w-md mx-auto"
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
@@ -223,43 +223,30 @@ const Landing = () => {
               </div>
             </motion.div>
           </div>
-        </div>
-      </section>
 
-      {/* ═══ MEDIA / FEATURED IN BAR ═══ */}
-      <section className="py-12 bg-muted/40 border-y border-border">
-        <div className="container">
+          {/* ─── Inline Media Bar ─── */}
           <motion.div
-            className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4"
+            className="mt-10 pt-6 border-t border-border"
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.5 }}
           >
-            {["Economic Times", "Mint", "CNBC TV18", "Business Standard", "Forbes India", "Money Control", "NDTV Profit"].map((name) => (
-              <span key={name} className="text-base sm:text-lg font-heading font-semibold text-muted-foreground/50 tracking-wide select-none">
-                {name}
-              </span>
-            ))}
-          </motion.div>
-          <motion.div
-            className="mt-4 text-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            <Link to="/about?tab=Press" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-              Featured in <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+              <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider mr-2">Featured in</span>
+              {["Economic Times", "Mint", "CNBC TV18", "Business Standard", "Forbes India", "Money Control", "NDTV Profit"].map((name) => (
+                <span key={name} className="text-sm font-heading font-semibold text-muted-foreground/40 tracking-wide select-none">
+                  {name}
+                </span>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — "Achieve and Prosper" style ═══ */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-14 relative overflow-hidden">
         <div className="container">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-start">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-start">
             {/* Left — Heading + value props */}
             <div>
               <motion.div
@@ -272,12 +259,12 @@ const Landing = () => {
                 <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-3">
                   Achieve and Prosper
                 </h2>
-                <p className="text-muted-foreground text-lg mb-10">
+                <p className="text-muted-foreground text-lg mb-6">
                   Your financial progress, our priority.
                 </p>
               </motion.div>
 
-              <div className="space-y-8">
+              <div className="space-y-5">
                 {valueProps.map((prop, i) => (
                   <motion.div
                     key={prop.title}
@@ -347,7 +334,7 @@ const Landing = () => {
 
           {/* "Explore" link */}
           <motion.div
-            className="mt-12 text-center lg:text-left"
+            className="mt-8 text-center lg:text-left"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -361,10 +348,10 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-20 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
         <div className="container">
           <motion.div
-            className="text-center mb-14"
+            className="text-center mb-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -380,11 +367,11 @@ const Landing = () => {
           </motion.div>
 
           {/* Testimonial cards — horizontal scroll on mobile, grid on desktop */}
-          <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:overflow-visible scrollbar-hide">
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:overflow-visible scrollbar-hide">
             {testimonials.map((t, i) => (
               <motion.div
                 key={i}
-                className="min-w-[300px] lg:min-w-0 snap-start rounded-2xl border border-border bg-card p-6 flex flex-col"
+                className="min-w-[280px] lg:min-w-0 snap-start rounded-xl border border-border bg-card p-5 flex flex-col"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -392,13 +379,13 @@ const Landing = () => {
                 custom={i + 1}
               >
                 {/* Rating */}
-                <div className="flex items-center gap-0.5 mb-4">
+                <div className="flex items-center gap-0.5 mb-3">
                   {Array.from({ length: t.rating }).map((_, s) => (
                     <Star key={s} className="h-4 w-4 fill-accent text-accent" />
                   ))}
                   <span className="ml-2 text-sm font-semibold text-foreground">{t.rating}.0</span>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-5">"{t.quote}"</p>
+                <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">"{t.quote}"</p>
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
                     {t.name.charAt(0)}
@@ -416,7 +403,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHOM WE SERVE ═══ */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="py-14 relative overflow-hidden">
         <div className="container">
           <motion.div
             className="text-center mb-6"
@@ -436,7 +423,7 @@ const Landing = () => {
 
           {/* Client segments */}
           <motion.div
-            className="mb-16"
+            className="mb-10"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -444,17 +431,17 @@ const Landing = () => {
             custom={1}
           >
             <h3 className="text-lg font-bold font-heading text-foreground mb-2">Participants</h3>
-            <p className="text-sm text-muted-foreground mb-6">Connecting verified entities across segments</p>
+            <p className="text-sm text-muted-foreground mb-4">Connecting verified entities across segments</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {clientSegments.map((seg, i) => (
                 <motion.div
                   key={seg.title}
-                  className="rounded-2xl border border-border bg-card p-6 text-center hover:shadow-md transition-shadow"
+                  className="rounded-xl border border-border bg-card p-5 text-center hover:shadow-md transition-shadow"
                   variants={fadeUp}
                   custom={i + 2}
                 >
-                  <div className="h-14 w-14 mx-auto rounded-2xl bg-primary/[0.08] flex items-center justify-center mb-4">
-                    <seg.icon className="h-7 w-7 text-primary" />
+                  <div className="h-12 w-12 mx-auto rounded-xl bg-primary/[0.08] flex items-center justify-center mb-3">
+                    <seg.icon className="h-6 w-6 text-primary" />
                   </div>
                   <h4 className="text-sm font-bold font-heading text-foreground mb-1">{seg.title}</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed">{seg.desc}</p>
@@ -464,9 +451,9 @@ const Landing = () => {
           </motion.div>
 
           {/* Partners + Principals — side by side cards */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-5">
             <motion.div
-              className="rounded-2xl border border-border bg-card p-8"
+              className="rounded-xl border border-border bg-card p-6"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -490,7 +477,7 @@ const Landing = () => {
             </motion.div>
 
             <motion.div
-              className="rounded-2xl border border-border bg-card p-8"
+              className="rounded-xl border border-border bg-card p-6"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -532,10 +519,10 @@ const Landing = () => {
       </section>
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-24 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
         <div className="container max-w-5xl">
           <motion.div
-            className="text-center mb-14"
+            className="text-center mb-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -549,11 +536,11 @@ const Landing = () => {
               Not just networking — FindOO is a complete operating system for India's financial professionals.
             </p>
           </motion.div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {platformFeatures.map((feat, i) => (
               <motion.div
                 key={feat.title}
-                className="rounded-2xl border border-border bg-card p-6 relative"
+                className="rounded-xl border border-border bg-card p-5 relative"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -565,7 +552,7 @@ const Landing = () => {
                     Coming Soon
                   </span>
                 )}
-                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/[0.08] text-primary mb-4">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/[0.08] text-primary mb-3">
                   <feat.icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-base font-bold font-heading text-card-foreground mb-2">{feat.title}</h3>
@@ -577,7 +564,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ CTA — "Open Account" style ═══ */}
-      <section className="py-24 bg-brand text-white relative overflow-hidden">
+      <section className="py-16 bg-brand text-white relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-20 -left-20 w-[300px] h-[300px] rounded-full border border-white/10" />
           <div className="absolute -bottom-16 -right-16 w-[250px] h-[250px] rounded-full border border-white/[0.07]" />
@@ -594,7 +581,7 @@ const Landing = () => {
             <h2 className="text-3xl sm:text-4xl font-bold font-heading mb-4">
               Join India's Financial Network
             </h2>
-            <p className="text-white/70 text-lg mb-8">
+            <p className="text-white/70 text-lg mb-6">
               Modern and verified tools to Connect, Discover and Grow in India's regulated financial ecosystem.
             </p>
             <Button
@@ -612,10 +599,10 @@ const Landing = () => {
       </section>
 
       {/* ═══ PITCH DECKS ═══ */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-14 relative overflow-hidden">
         <div className="container max-w-5xl">
           <motion.div
-            className="text-center mb-14"
+            className="text-center mb-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -633,7 +620,7 @@ const Landing = () => {
               See how FindOO serves every participant in India's financial ecosystem.
             </p>
           </motion.div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { icon: Landmark, title: "Regulators", desc: "Compliance by design", color: "bg-primary/10 text-primary", to: "/pitch/regulator" },
               { icon: Building2, title: "Issuers", desc: "Verified distribution", color: "bg-issuer/10 text-issuer", to: "/pitch/issuer" },
@@ -668,10 +655,10 @@ const Landing = () => {
       </section>
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-20 border-t border-border">
+      <section className="py-14 border-t border-border">
         <div className="container max-w-5xl">
           <motion.div
-            className="flex items-center justify-between mb-10"
+            className="flex items-center justify-between mb-6"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
@@ -683,7 +670,7 @@ const Landing = () => {
               View all Insights <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-5">
             {[
               { tag: "Platform · Launch", title: "Why India needs a dedicated Financial Network", excerpt: "Social media is noisy. Professional networks are generic. Here's why a purpose-built financial network changes everything.", date: "Feb 2026" },
               { tag: "Trust · Verification", title: "How FindOO's Verification Engine works", excerpt: "From SEBI registration to AMFI credentials — a look at how FindOO verifies every financial professional on the network.", date: "Feb 2026" },
@@ -691,7 +678,7 @@ const Landing = () => {
             ].map((post, i) => (
               <motion.div
                 key={i}
-                className="rounded-2xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow"
+                className="rounded-xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -699,8 +686,8 @@ const Landing = () => {
                 custom={i + 1}
               >
                 {/* Placeholder cover */}
-                <div className="h-40 bg-gradient-to-br from-primary/[0.08] to-accent/[0.04]" />
-                <div className="p-5">
+                <div className="h-32 bg-gradient-to-br from-primary/[0.08] to-accent/[0.04]" />
+                <div className="p-4">
                   <p className="text-xs text-muted-foreground mb-2">{post.tag}</p>
                   <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug">{post.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.excerpt}</p>
