@@ -17,6 +17,7 @@ import { JobsSidebar } from "@/components/jobs/JobsSidebar";
 import AppLayout from "@/components/AppLayout";
 import { MobileFilterDrawer } from "@/components/MobileFilterDrawer";
 import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyJobsIllustration } from "@/components/illustrations/EmptyStateIllustrations";
 import type { Job } from "@/hooks/useJobs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -142,6 +143,7 @@ const Jobs = () => {
                 </div>
               ) : !jobs?.length ? (
                 <EmptyState
+                  illustration={<EmptyJobsIllustration />}
                   icon={Briefcase}
                   title="No jobs match your search"
                   description="Try adjusting your filters or check back later. New BFSI roles are posted daily by verified employers."

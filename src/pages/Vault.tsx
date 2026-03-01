@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FindooLoader } from "@/components/FindooLoader";
+import { VaultSkeletonGroup } from "@/components/skeletons/VaultFileSkeleton";
 import { useVault, VAULT_CATEGORIES } from "@/hooks/useVault";
 import { VaultUploadDialog } from "@/components/vault/VaultUploadDialog";
 import { VaultFileCard } from "@/components/vault/VaultFileCard";
@@ -141,7 +141,7 @@ const Vault = () => {
 
           {/* File List */}
           {loading ? (
-            <FindooLoader text="Loading vault..." />
+            <VaultSkeletonGroup />
           ) : filteredFiles.length === 0 ? (
             <Card className="border-border">
               <CardContent className="p-10 text-center">

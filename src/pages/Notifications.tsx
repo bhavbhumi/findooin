@@ -4,7 +4,7 @@ import { useNotifications, Notification } from "@/hooks/useNotifications";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/components/AppLayout";
-import { FindooLoader } from "@/components/FindooLoader";
+import { NotificationSkeletonGroup } from "@/components/skeletons/NotificationSkeleton";
 import { useNavigate } from "react-router-dom";
 import {
   Heart, MessageCircle, UserPlus, UserCheck, Users,
@@ -201,7 +201,7 @@ const Notifications = () => {
 
       {/* Notifications list */}
       {loading ? (
-        <FindooLoader text="Loading notifications..." />
+        <NotificationSkeletonGroup />
       ) : dateGrouped.length === 0 ? (
         <div className="rounded-xl border border-border bg-card p-12 text-center">
           <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">

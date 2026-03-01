@@ -1,10 +1,11 @@
 /**
- * EmptyState — Personality-driven empty state with role-aware CTAs.
+ * EmptyState — Personality-driven empty state with optional SVG illustration.
  */
 import { motion } from "framer-motion";
 import { type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { type ReactNode } from "react";
 
 interface EmptyStateProps {
   icon: LucideIcon;
@@ -15,6 +16,8 @@ interface EmptyStateProps {
   onAction?: () => void;
   secondaryLabel?: string;
   secondaryLink?: string;
+  /** Optional SVG illustration component to replace the icon */
+  illustration?: ReactNode;
 }
 
 export function EmptyState({
@@ -26,6 +29,7 @@ export function EmptyState({
   onAction,
   secondaryLabel,
   secondaryLink,
+  illustration,
 }: EmptyStateProps) {
   return (
     <motion.div
@@ -34,13 +38,23 @@ export function EmptyState({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
     >
-      <motion.div
-        className="mx-auto mb-4 h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/10 via-accent/10 to-gold/10 flex items-center justify-center"
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Icon className="h-8 w-8 text-primary/60" />
-      </motion.div>
+      {illustration ? (
+        <motion.div
+          className="mx-auto mb-4 flex items-center justify-center"
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
+          {illustration}
+        </motion.div>
+      ) : (
+        <motion.div
+          className="mx-auto mb-4 h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/10 via-accent/10 to-gold/10 flex items-center justify-center"
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Icon className="h-8 w-8 text-primary/60" />
+        </motion.div>
+      )}
       <h3 className="font-heading font-semibold text-foreground text-lg mb-2">{title}</h3>
       <p className="text-sm text-muted-foreground max-w-sm mx-auto mb-6 leading-relaxed">{description}</p>
       <div className="flex items-center justify-center gap-3">
