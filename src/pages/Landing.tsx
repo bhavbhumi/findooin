@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
+import networkBrainBW from "@/assets/network-brain-bw.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -101,7 +102,16 @@ const Landing = () => {
       {/* Hero */}
       <section className="relative pt-16 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.06] to-transparent" />
-
+        
+        {/* Network Brain BW background */}
+        <motion.div
+          className="absolute right-0 top-0 w-[55%] h-full pointer-events-none opacity-[0.07] dark:opacity-[0.04]"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 0.07, x: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        >
+          <img src={networkBrainBW} alt="" className="w-full h-full object-contain object-right-top" aria-hidden="true" />
+        </motion.div>
         {/* Decorative elements — VISIBLE */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {/* Large gradient blob top-right */}
