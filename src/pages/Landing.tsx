@@ -150,7 +150,7 @@ const Landing = () => {
             >
               {/* Tag */}
               <motion.span
-                className="inline-block px-4 py-1.5 rounded-full bg-primary/[0.08] text-primary text-sm font-semibold tracking-wide mb-6"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-primary/20 bg-primary/[0.05] text-primary text-xs font-medium uppercase tracking-widest mb-6"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
