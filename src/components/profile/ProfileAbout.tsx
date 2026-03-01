@@ -10,7 +10,11 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 import { VerificationRequestForm } from "@/components/admin/VerificationRequestForm";
 import { ManageRolesDialog } from "@/components/profile/ManageRolesDialog";
 import { EndorsementsBadge } from "@/components/profile/EndorsementsBadge";
-
+import { ExperienceSection } from "@/components/profile/ExperienceSection";
+import { EducationSection } from "@/components/profile/EducationSection";
+import { RecommendationsSection } from "@/components/profile/RecommendationsSection";
+import { PublicationsSection } from "@/components/profile/PublicationsSection";
+import { ProfileAnalyticsSection } from "@/components/profile/ProfileAnalyticsSection";
 const regulatoryLabels: Record<string, string> = {
   sebi: "SEBI Registration",
   rbi: "RBI License",
@@ -269,6 +273,21 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged, cur
           </div>
         </div>
       )}
+
+      {/* Experience Section */}
+      <ExperienceSection profileId={profile.id} isOwnProfile={isOwnProfile} />
+
+      {/* Education Section */}
+      <EducationSection profileId={profile.id} isOwnProfile={isOwnProfile} />
+
+      {/* Publications & Research */}
+      <PublicationsSection profileId={profile.id} isOwnProfile={isOwnProfile} />
+
+      {/* Recommendations */}
+      <RecommendationsSection profileId={profile.id} isOwnProfile={isOwnProfile} currentUserId={currentUserId ?? null} />
+
+      {/* Profile Analytics — own profile only */}
+      {isOwnProfile && <ProfileAnalyticsSection profileId={profile.id} />}
 
       {/* Empty state for own profile */}
       {isOwnProfile && !hasAnyDetail && (

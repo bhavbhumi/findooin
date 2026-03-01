@@ -484,6 +484,54 @@ export type Database = {
         }
         Relationships: []
       }
+      education: {
+        Row: {
+          activities: string | null
+          created_at: string
+          degree: string
+          description: string | null
+          end_year: number | null
+          field_of_study: string | null
+          grade: string | null
+          id: string
+          institution: string
+          is_current: boolean
+          start_year: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          activities?: string | null
+          created_at?: string
+          degree: string
+          description?: string | null
+          end_year?: number | null
+          field_of_study?: string | null
+          grade?: string | null
+          id?: string
+          institution: string
+          is_current?: boolean
+          start_year: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          activities?: string | null
+          created_at?: string
+          degree?: string
+          description?: string | null
+          end_year?: number | null
+          field_of_study?: string | null
+          grade?: string | null
+          id?: string
+          institution?: string
+          is_current?: boolean
+          start_year?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       endorsements: {
         Row: {
           created_at: string
@@ -1458,6 +1506,84 @@ export type Database = {
         }
         Relationships: []
       }
+      publications: {
+        Row: {
+          co_authors: string[] | null
+          created_at: string
+          description: string | null
+          id: string
+          publication_type: string
+          published_date: string | null
+          publisher: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          co_authors?: string[] | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          publication_type?: string
+          published_date?: string | null
+          publisher?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          co_authors?: string[] | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          publication_type?: string
+          published_date?: string | null
+          publisher?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      recommendations: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          recipient_id: string
+          relationship: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          recipient_id: string
+          relationship?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          recipient_id?: string
+          relationship?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       registry_entities: {
         Row: {
           address: string | null
@@ -1986,6 +2112,54 @@ export type Database = {
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      work_experiences: {
+        Row: {
+          company: string
+          company_logo_url: string | null
+          created_at: string
+          description: string | null
+          employment_type: string | null
+          end_date: string | null
+          id: string
+          is_current: boolean
+          location: string | null
+          start_date: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company: string
+          company_logo_url?: string | null
+          created_at?: string
+          description?: string | null
+          employment_type?: string | null
+          end_date?: string | null
+          id?: string
+          is_current?: boolean
+          location?: string | null
+          start_date: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company?: string
+          company_logo_url?: string | null
+          created_at?: string
+          description?: string | null
+          employment_type?: string | null
+          end_date?: string | null
+          id?: string
+          is_current?: boolean
+          location?: string | null
+          start_date?: string
+          title?: string
           updated_at?: string
           user_id?: string
         }
