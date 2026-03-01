@@ -377,7 +377,7 @@ const Landing = () => {
               >
                 <Link to="/auth?mode=signup">
                   Signup for FREE
-                  <ArrowRight className="ml-2 h-4.5 w-4.5" />
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </motion.div>

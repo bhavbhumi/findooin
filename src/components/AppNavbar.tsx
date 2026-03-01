@@ -276,7 +276,7 @@ const AppNavbar = () => {
               className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-foreground transition-colors px-1 py-1"
               aria-label={item.label}
             >
-              <item.icon className="h-4.5 w-4.5" />
+              <item.icon className="h-5 w-5" />
               <span className="text-[9px]">{item.label}</span>
             </Link>
           ))}
