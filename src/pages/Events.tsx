@@ -14,6 +14,7 @@ import { CreateEventDialog } from "@/components/events/CreateEventDialog";
 import { OrganizerDashboard } from "@/components/events/OrganizerDashboard";
 import { EventsSidebar } from "@/components/events/EventsSidebar";
 import AppLayout from "@/components/AppLayout";
+import { MobileFilterDrawer } from "@/components/MobileFilterDrawer";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { EventData } from "@/hooks/useEvents";
 import { isSameDay } from "date-fns";
@@ -55,6 +56,15 @@ const Events = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      {/* Mobile filter drawer */}
+      <MobileFilterDrawer title="Events Filters & Calendar">
+        <EventsSidebar
+          onCategoryClick={handleCategoryClick}
+          selectedDate={selectedDate}
+          onDateSelect={setSelectedDate}
+          eventDates={eventDates}
+        />
+      </MobileFilterDrawer>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
         {/* Main Column */}
         <div className="min-w-0">
@@ -159,7 +169,7 @@ const Events = () => {
           </Tabs>
         </div>
 
-        {/* Sidebar */}
+        {/* Sidebar — desktop sticky, mobile drawer */}
         <aside className="hidden lg:block">
           <div className="sticky top-20">
             <MemoizedEventsSidebar
@@ -171,6 +181,7 @@ const Events = () => {
           </div>
         </aside>
       </div>
+
 
       <EventDetailSheet
         event={selectedEvent}

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store, Bookmark } from "lucide-react";
@@ -25,6 +25,7 @@ const NAVBAR_ROLE_CONFIG: Partial<Record<AppRole, { label: string; icon: typeof 
 
 const AppNavbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { availableRoles, activeRole, setActiveRole, loaded } = useRole();
   const [unreadCount, setUnreadCount] = useState(0);
   const { data: isAdmin } = useIsAdmin();
@@ -269,17 +270,26 @@ const AppNavbar = () => {
             { icon: CalendarDays, label: "Events", href: "/events" },
             { icon: Compass, label: "Discover", href: "/discover" },
             { icon: User, label: "Profile", href: "/profile" },
-          ].map((item) => (
-            <Link
-              key={item.label}
-              to={item.href}
-              className="flex flex-col items-center gap-0.5 text-muted-foreground hover:text-foreground transition-colors px-1 py-1"
-              aria-label={item.label}
-            >
-              <item.icon className="h-5 w-5" />
-              <span className="text-[9px]">{item.label}</span>
-            </Link>
-          ))}
+          ].map((item) => {
+            const isActive = location.pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.label}
+                to={item.href}
+                className={cn(
+                  "flex flex-col items-center gap-0.5 transition-colors px-1 py-1",
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+                aria-label={item.label}
+                aria-current={isActive ? "page" : undefined}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className={cn("text-[9px]", isActive && "font-semibold")}>{item.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>
