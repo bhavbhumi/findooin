@@ -12,6 +12,8 @@ import { type ReactNode, useEffect } from "react";
 import { touchSession } from "@/lib/session-manager";
 import AppNavbar from "@/components/AppNavbar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -23,6 +25,8 @@ interface AppLayoutProps {
   className?: string;
   /** Full-bleed layout without container (e.g., Messages) */
   fullBleed?: boolean;
+  /** Hide breadcrumbs (default false) */
+  hideBreadcrumbs?: boolean;
 }
 
 export default function AppLayout({
@@ -31,6 +35,7 @@ export default function AppLayout({
   maxWidth = "max-w-4xl",
   className = "",
   fullBleed = false,
+  hideBreadcrumbs = false,
 }: AppLayoutProps) {
   // Keep session heartbeat alive every 5 minutes
   useEffect(() => {
@@ -47,10 +52,12 @@ export default function AppLayout({
           <div className={className}>{children}</div>
         ) : (
           <div className={`container py-6 ${maxWidth} mx-auto ${className}`}>
+            {!hideBreadcrumbs && <AppBreadcrumbs />}
             {children}
           </div>
         )}
       </ErrorBoundary>
+      <ScrollToTop />
     </div>
   );
 }

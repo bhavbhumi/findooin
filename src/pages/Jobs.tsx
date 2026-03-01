@@ -15,6 +15,7 @@ import { EmployerDashboard } from "@/components/jobs/EmployerDashboard";
 import { CandidateDashboard } from "@/components/jobs/CandidateDashboard";
 import { JobsSidebar } from "@/components/jobs/JobsSidebar";
 import AppLayout from "@/components/AppLayout";
+import { MobileFilterDrawer } from "@/components/MobileFilterDrawer";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Job } from "@/hooks/useJobs";
 import { useQuery } from "@tanstack/react-query";
@@ -59,6 +60,13 @@ const Jobs = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      {/* Mobile filter drawer */}
+      <MobileFilterDrawer title="Jobs Filters & Insights">
+        <JobsSidebar
+          onCategoryClick={handleCategoryClick}
+          onLocationClick={handleLocationClick}
+        />
+      </MobileFilterDrawer>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
         {/* Main Column */}
         <div className="min-w-0">
@@ -169,7 +177,7 @@ const Jobs = () => {
           </Tabs>
         </div>
 
-        {/* Sidebar */}
+        {/* Sidebar — desktop sticky, mobile drawer */}
         <aside className="hidden lg:block">
           <div className="sticky top-20">
             <MemoizedJobsSidebar
@@ -179,6 +187,7 @@ const Jobs = () => {
           </div>
         </aside>
       </div>
+
 
       <JobDetailSheet
         job={selectedJob}
