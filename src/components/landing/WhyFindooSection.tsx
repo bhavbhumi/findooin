@@ -216,26 +216,19 @@ const cards = [
   },
 ];
 
-/* ─── Peek strip height for inactive cards ─── */
-const PEEK_H = 44; // px – enough for tag + title line
-
 /* ─── Stacked Card Carousel ─── */
 export default function WhyFindooSection() {
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const bringToTop = useCallback((idx: number) => {
-    setActiveIndex(idx);
-  }, []);
 
   const rotateNext = useCallback(() => {
     setActiveIndex(prev => (prev + 1) % cards.length);
   }, []);
 
-  // Build ordered list: active first, then the rest in order
-  const orderedIndices = [
-    activeIndex,
-    ...cards.map((_, i) => i).filter(i => i !== activeIndex),
-  ];
+  // Inactive cards sorted so they stack visually above the active card
+  // Bottom of stack (narrowest) first, then wider, then active (full width)
+  const inactiveIndices = cards
+    .map((_, i) => i)
+    .filter(i => i !== activeIndex);
 
   return (
     <div>
@@ -255,87 +248,90 @@ export default function WhyFindooSection() {
         </p>
       </motion.div>
 
-      {/* Card Stack Container */}
-      <div className="max-w-2xl mx-auto flex flex-col gap-0">
-        {orderedIndices.map((cardIndex, stackPos) => {
+      {/* Stacked Deck — inactive peek strips on top, active card below */}
+      <div className="flex flex-col items-center">
+        {/* ── Inactive peek strips (narrower, stacked above) ── */}
+        {inactiveIndices.map((cardIndex, i) => {
           const card = cards[cardIndex];
-          const isActive = stackPos === 0;
+          // i=0 is the farthest back (narrowest), i=1 is closer (slightly wider)
+          const depth = inactiveIndices.length - 1 - i; // 1, 0
+          const widthPercent = depth === 1 ? 78 : 86; // narrowest → widest
+          const opacity = depth === 1 ? 0.45 : 0.65;
 
           return (
-            <motion.div
+            <motion.button
               key={cardIndex}
               layout
-              className={`rounded-xl border overflow-hidden transition-shadow ${
-                isActive
-                  ? "bg-card shadow-md border-border cursor-pointer"
-                  : "bg-card/70 shadow-sm border-border/40 cursor-pointer hover:bg-card/90"
-              }`}
-              onClick={() => (isActive ? rotateNext() : bringToTop(cardIndex))}
-              transition={{
-                layout: { type: "spring", stiffness: 350, damping: 32, mass: 0.7 },
-              }}
+              onClick={() => setActiveIndex(cardIndex)}
+              className="rounded-t-xl border border-b-0 border-border/40 bg-card/60 backdrop-blur-sm
+                cursor-pointer hover:bg-card/80 transition-colors overflow-hidden"
+              style={{ width: `${widthPercent}%`, maxWidth: `${widthPercent}%` }}
+              animate={{ opacity }}
+              transition={{ layout: { type: "spring", stiffness: 400, damping: 30 } }}
             >
-              {/* Tag + Title strip (always visible) */}
-              <div
-                className={`flex items-center gap-3 px-4 ${
-                  isActive ? "pt-3 pb-2" : "py-2"
-                }`}
-                style={!isActive ? { height: `${PEEK_H}px` } : undefined}
-              >
-                <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-primary/[0.08] text-primary text-[10px] font-semibold tracking-wider uppercase">
+              <div className="flex items-center gap-2 px-4 py-2 h-10">
+                <span className="shrink-0 px-2 py-0.5 rounded-full bg-primary/[0.07] text-primary text-[9px] font-semibold tracking-wider uppercase">
                   {card.tag}
                 </span>
-                <span
-                  className={`text-sm font-semibold font-heading truncate ${
-                    isActive ? "text-foreground" : "text-muted-foreground"
-                  }`}
-                >
+                <span className="text-xs font-medium font-heading text-muted-foreground truncate">
                   {card.headline}
                 </span>
-                {isActive && (
-                  <motion.span
-                    className="ml-auto shrink-0 flex items-center gap-0.5 text-[10px] text-muted-foreground/60"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <ChevronDown className="h-3 w-3" />
-                  </motion.span>
-                )}
               </div>
-
-              {/* Expanded content (only for active card) */}
-              <AnimatePresence initial={false}>
-                {isActive && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.35, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    {/* Art — compact aspect ratio */}
-                    <div className="mx-4 rounded-lg border border-border/30 bg-muted/20 overflow-hidden aspect-[5/2]">
-                      {card.art}
-                    </div>
-
-                    {/* Body */}
-                    <div className="px-4 pt-2.5 pb-4 text-[13px] sm:text-sm text-muted-foreground leading-relaxed">
-                      {card.body}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+            </motion.button>
           );
         })}
 
+        {/* ── Active card (full width, expands below the peek strips) ── */}
+        <motion.div
+          layout
+          className="w-full max-w-3xl rounded-xl border border-border bg-card shadow-lg overflow-hidden cursor-pointer"
+          onClick={rotateNext}
+          transition={{ layout: { type: "spring", stiffness: 350, damping: 32, mass: 0.7 } }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Header strip */}
+              <div className="flex items-center justify-between px-5 pt-3.5 pb-2">
+                <div className="flex items-center gap-3">
+                  <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-primary/[0.08] text-primary text-[10px] font-semibold tracking-wider uppercase">
+                    {cards[activeIndex].tag}
+                  </span>
+                  <h3 className="text-base sm:text-lg font-bold font-heading text-foreground leading-tight">
+                    {cards[activeIndex].headline}
+                  </h3>
+                </div>
+                <span className="shrink-0 flex items-center gap-0.5 text-[10px] text-muted-foreground/50">
+                  <ChevronDown className="h-3 w-3" />
+                </span>
+              </div>
+
+              {/* Art + Body: side-by-side on desktop, stacked on mobile */}
+              <div className="flex flex-col lg:flex-row gap-4 px-5 pb-5">
+                {/* Art */}
+                <div className="lg:w-1/2 shrink-0 rounded-lg border border-border/30 bg-muted/20 overflow-hidden aspect-[5/2] lg:aspect-[4/3]">
+                  {cards[activeIndex].art}
+                </div>
+                {/* Body */}
+                <div className="lg:w-1/2 text-[13px] sm:text-sm text-muted-foreground leading-relaxed flex flex-col justify-center">
+                  {cards[activeIndex].body}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
+
         {/* Dot indicators */}
-        <div className="flex justify-center gap-1.5 mt-3">
+        <div className="flex justify-center gap-1.5 mt-4">
           {cards.map((_, i) => (
             <button
               key={i}
-              onClick={() => bringToTop(i)}
+              onClick={() => setActiveIndex(i)}
               className={`h-1 rounded-full transition-all duration-300 ${
                 i === activeIndex
                   ? "w-5 bg-primary"
