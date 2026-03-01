@@ -246,10 +246,22 @@ export default function WhyFindooSection() {
         {/* ── Active card ── */}
         <motion.div
           layout
-          className="w-full rounded-xl border border-border bg-card shadow-lg overflow-hidden cursor-pointer relative"
-          onClick={rotateNext}
+          className="w-full rounded-xl border border-border bg-card shadow-lg overflow-hidden relative"
           transition={{ layout: { type: "spring", stiffness: 350, damping: 32, mass: 0.7 } }}
         >
+          {/* Rotate button — top right, always visible */}
+          <button
+            onClick={rotateNext}
+            className="absolute top-3 right-3 z-20 flex items-center gap-1 px-2.5 py-1 rounded-full
+              border border-border/50 bg-card/80 backdrop-blur-sm text-muted-foreground
+              hover:bg-primary/10 hover:text-primary hover:border-primary/30
+              transition-all duration-200 text-[11px] font-medium group"
+            aria-label="Next card"
+          >
+            Next
+            <ChevronDown className="h-3 w-3 -rotate-90 transition-transform group-hover:translate-x-0.5" />
+          </button>
+
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
@@ -257,15 +269,15 @@ export default function WhyFindooSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.3 }}
-              className="relative"
+              className="relative min-h-[260px] sm:min-h-[240px]"
             >
               {/* Background decoration on right */}
               {cards[activeIndex].bg}
 
-              {/* Content area */}
-              <div className="relative z-10 px-5 sm:px-6 py-4 sm:py-5 lg:pr-[42%]">
+              {/* Content area — fixed height via min-h + flex */}
+              <div className="relative z-10 px-5 sm:px-6 py-4 sm:py-5 lg:pr-[42%] flex flex-col min-h-[260px] sm:min-h-[240px]">
                 {/* Tag */}
-                <span className="inline-block px-2.5 py-0.5 rounded-full bg-primary/[0.08] text-primary text-[10px] font-semibold tracking-wider uppercase mb-2">
+                <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-primary/[0.08] text-primary text-[10px] font-semibold tracking-wider uppercase mb-2">
                   {cards[activeIndex].tag}
                 </span>
 
@@ -274,18 +286,13 @@ export default function WhyFindooSection() {
                   {cards[activeIndex].title}
                 </h3>
 
-                {/* Content */}
-                <p className="text-[13px] sm:text-sm text-muted-foreground leading-relaxed mb-4">
+                {/* Content — flex-1 to push data strip to bottom */}
+                <p className="text-[13px] sm:text-sm text-muted-foreground leading-relaxed mb-4 flex-1">
                   {cards[activeIndex].content}
                 </p>
 
                 {/* Data strip — horizontal badges (per card) */}
                 <DataStripHorizontal badges={cardStats[activeIndex]} />
-              </div>
-
-              {/* Click hint */}
-              <div className="absolute bottom-2 right-3 z-10 flex items-center gap-0.5 text-[10px] text-muted-foreground/40">
-                <ChevronDown className="h-3 w-3" />
               </div>
             </motion.div>
           </AnimatePresence>
