@@ -254,7 +254,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-14 relative overflow-hidden">
+      <section className="py-10 relative overflow-hidden">
         <GlowBlob position="bottom-left" color="primary" size="md" />
         <div className="container relative">
           <CosmicValueSection />
