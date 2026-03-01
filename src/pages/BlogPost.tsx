@@ -12,6 +12,7 @@ import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { format } from "date-fns";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { toast } from "sonner";
+import { marked } from "marked";
 
 function extractHeadings(html: string) {
   const regex = /<h([2-3])[^>]*>(.*?)<\/h[2-3]>/gi;
@@ -40,8 +41,15 @@ const BlogPostPage = () => {
   const [activeHeading, setActiveHeading] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const headings = useMemo(() => (post ? extractHeadings(post.content) : []), [post]);
-  const processedContent = useMemo(() => (post ? injectHeadingIds(post.content) : ""), [post]);
+  const renderedHtml = useMemo(() => {
+    if (!post) return "";
+    // If content looks like markdown (has ## headings or **bold**), convert it
+    const isMarkdown = /^#{1,3}\s|^\*\*|^-\s/m.test(post.content);
+    return isMarkdown ? marked.parse(post.content, { async: false }) as string : post.content;
+  }, [post]);
+
+  const headings = useMemo(() => (renderedHtml ? extractHeadings(renderedHtml) : []), [renderedHtml]);
+  const processedContent = useMemo(() => (renderedHtml ? injectHeadingIds(renderedHtml) : ""), [renderedHtml]);
 
   useEffect(() => {
     if (!contentRef.current || headings.length === 0) return;
