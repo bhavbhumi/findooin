@@ -150,7 +150,7 @@ const Landing = () => {
             >
               {/* Tag */}
               <motion.span
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md border border-primary/20 bg-primary/[0.05] text-primary text-xs font-medium uppercase tracking-widest mb-6"
+                className="inline-block px-3.5 py-1 rounded-full bg-primary/[0.08] text-primary text-xs font-semibold tracking-wide mb-6"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
@@ -168,13 +168,13 @@ const Landing = () => {
 
               {/* CTA Buttons */}
               <div className="flex items-center gap-4 mb-12">
-                <Button size="lg" className="h-13 px-8 text-base rounded-xl" asChild>
+                <Button size="lg" className="h-13 px-8 text-base rounded-md" asChild>
                   <Link to="/auth?mode=signup">
                     Join Findoo
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-13 px-8 text-base rounded-xl" asChild>
+                <Button size="lg" variant="outline" className="h-13 px-8 text-base rounded-md" asChild>
                   <Link to="/explore">Explore Platform</Link>
                 </Button>
               </div>
