@@ -11,7 +11,7 @@ import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import networkBrainHero from "@/assets/network-brain-hero.png";
-import networkBrainHeroDark from "@/assets/network-brain-hero-dark.png";
+import networkBrainHeroDark from "@/assets/network-brain-hero-dark-transparent.png";
 import {
   NetworkMesh,
   GlowBlob,
