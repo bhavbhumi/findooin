@@ -12,8 +12,6 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import networkBrainHero from "@/assets/network-brain-hero.png";
 import {
-  DotGrid,
-  GridLines,
   NetworkMesh,
   GlowBlob,
   Sparkles,
@@ -145,7 +143,6 @@ const Landing = () => {
       <section className="relative pt-12 pb-10 lg:pt-16 lg:pb-14 overflow-hidden">
         {/* Layered background: gradient + dot grid + network mesh */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02]" />
-        <DotGrid />
         <NetworkMesh />
         
         {/* Glow blobs for depth */}
@@ -266,8 +263,6 @@ const Landing = () => {
 
       {/* ═══ VALUE PROPOSITIONS — "Achieve and Prosper" style ═══ */}
       <section className="py-14 relative overflow-hidden">
-        {/* Subtle grid background */}
-        <GridLines />
         <GlowBlob position="bottom-left" color="primary" size="md" />
         
         <div className="container relative">
@@ -380,8 +375,6 @@ const Landing = () => {
 
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
-        {/* Subtle decoration */}
-        <DotGrid />
         <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         
@@ -565,8 +558,6 @@ const Landing = () => {
 
       {/* ═══ PLATFORM FEATURES ═══ */}
       <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
-        {/* Grid pattern background */}
-        <GridLines />
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         <ConcentricRings className="-bottom-20 -left-20 hidden lg:block" />
         
@@ -673,7 +664,6 @@ const Landing = () => {
 
       {/* ═══ PITCH DECKS ═══ */}
       <section className="py-14 relative overflow-hidden">
-        <DotGrid />
         <GlowBlob position="top-left" color="accent" size="md" />
         <DiamondGrid className="top-12 right-12 hidden lg:block" />
         
