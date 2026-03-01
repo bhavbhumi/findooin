@@ -7,6 +7,8 @@ import {
   Globe, Zap, Lock, Search, Landmark, Award, Activity, Presentation,
   Clock, Heart, Sparkles as SparklesIcon
 } from "lucide-react";
+import { useBlogPosts } from "@/hooks/useBlogPosts";
+import { format } from "date-fns";
 import CosmicValueSection from "@/components/landing/CosmicValueSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import WhyFindooSection from "@/components/landing/WhyFindooSection";
@@ -76,6 +78,8 @@ const platformFeatures = [
 ];
 
 const Landing = () => {
+  const { data: blogPosts } = useBlogPosts(3);
+
   usePageMeta({ title: "India's First Financial Network", description: "FindOO is India's first financial network — Financially Social. Connecting verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA ecosystems." });
 
   return (
@@ -280,35 +284,58 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ═══ CTA — "Open Account" style ═══ */}
-      <section className="py-16 bg-brand text-white relative overflow-hidden">
-        {/* Rich decorative background */}
+      {/* ═══ CTA — "Signup for FREE" with celebrating gradient ═══ */}
+      <section className="py-20 relative overflow-hidden">
+        {/* Multi-layered gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-[hsl(var(--accent))]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/[0.05]" />
+
+        {/* Celebrating decorative elements */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-20 -left-20 w-[300px] h-[300px] rounded-full border border-white/10" />
-          <div className="absolute -bottom-16 -right-16 w-[250px] h-[250px] rounded-full border border-white/[0.07]" />
-          <div className="absolute top-1/2 left-1/4 w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-3xl" />
-          <div className="absolute -top-10 right-1/3 w-[200px] h-[200px] rounded-full bg-gold/[0.04] blur-2xl" />
+          {/* Radiating rings */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/[0.06]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-white/[0.08]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] rounded-full border border-white/[0.10]" />
+
+          {/* Confetti-style floating shapes */}
+          <motion.div
+            className="absolute top-[15%] left-[10%] w-3 h-3 rounded-full bg-gold/40"
+            animate={{ y: [0, -12, 0], rotate: [0, 180, 360] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute top-[20%] right-[12%] w-2.5 h-2.5 rounded-sm bg-white/20 rotate-45"
+            animate={{ y: [0, -16, 0], rotate: [45, 225, 405] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          />
+          <motion.div
+            className="absolute bottom-[20%] left-[18%] w-2 h-2 rounded-full bg-gold/30"
+            animate={{ y: [0, -10, 0], x: [0, 6, 0] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          />
+          <motion.div
+            className="absolute bottom-[25%] right-[15%] w-3.5 h-1 rounded-full bg-white/15 rotate-12"
+            animate={{ y: [0, -14, 0], rotate: [12, 192, 372] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+          />
+          <motion.div
+            className="absolute top-[40%] left-[5%] w-1.5 h-4 rounded-full bg-gold/20 rotate-[-20deg]"
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+          />
+          <motion.div
+            className="absolute top-[35%] right-[8%] w-2 h-2 rounded-full bg-white/25"
+            animate={{ scale: [1, 1.4, 1], opacity: [0.25, 0.5, 0.25] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+          />
+
+          {/* Gold glow blobs */}
+          <div className="absolute -top-16 right-1/4 w-[280px] h-[280px] rounded-full bg-gold/[0.08] blur-3xl" />
+          <div className="absolute -bottom-20 left-1/3 w-[320px] h-[320px] rounded-full bg-white/[0.03] blur-3xl" />
         </div>
-        {/* Network mesh overlay */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]">
-          <svg className="w-full h-full" viewBox="0 0 800 400" preserveAspectRatio="none">
-            <line x1="100" y1="50" x2="350" y2="150" stroke="white" strokeWidth="0.5" />
-            <line x1="350" y1="150" x2="600" y2="80" stroke="white" strokeWidth="0.5" />
-            <line x1="600" y1="80" x2="750" y2="200" stroke="white" strokeWidth="0.5" />
-            <line x1="200" y1="300" x2="500" y2="350" stroke="white" strokeWidth="0.5" />
-            <line x1="350" y1="150" x2="500" y2="350" stroke="white" strokeWidth="0.3" />
-            <circle cx="100" cy="50" r="2" fill="white" />
-            <circle cx="350" cy="150" r="2.5" fill="white" />
-            <circle cx="600" cy="80" r="2" fill="white" />
-            <circle cx="750" cy="200" r="2" fill="white" />
-            <circle cx="200" cy="300" r="2" fill="white" />
-            <circle cx="500" cy="350" r="2" fill="white" />
-          </svg>
-        </div>
-        
-        {/* Sparkle accents */}
-        <Sparkles count={6} />
-        
+
+        <Sparkles count={8} />
+
         <div className="container relative">
           <motion.div
             className="max-w-2xl mx-auto text-center"
@@ -318,22 +345,55 @@ const Landing = () => {
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading mb-4">
+            {/* Celebrating icon cluster */}
+            <motion.div
+              className="flex items-center justify-center gap-2 mb-5"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+            >
+              <SparklesIcon className="h-5 w-5 text-gold" />
+              <span className="text-sm font-semibold text-white/80 tracking-wide uppercase">It's Free Forever</span>
+              <SparklesIcon className="h-5 w-5 text-gold" />
+            </motion.div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading text-white mb-4 leading-tight">
               Join India's Financial Network
             </h2>
-            <p className="text-white/70 text-lg mb-6">
+            <p className="text-white/70 text-lg mb-8 max-w-lg mx-auto">
               Modern and verified tools to Connect, Discover and Grow in India's regulated financial ecosystem.
             </p>
-            <Button
-              size="lg"
-              className="h-13 px-10 text-base rounded-xl bg-white text-foreground hover:bg-white/90 shadow-lg shadow-white/10"
-              asChild
+
+            {/* Gradient-bordered CTA button */}
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Link to="/auth?mode=signup">
-                Signup for FREE
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+              <Button
+                size="lg"
+                className="h-14 px-12 text-base font-bold rounded-xl bg-gradient-to-r from-gold to-gold/80 text-primary-foreground hover:from-gold/90 hover:to-gold/70 shadow-xl shadow-gold/20 border border-gold/30"
+                asChild
+              >
+                <Link to="/auth?mode=signup">
+                  Signup for FREE
+                  <ArrowRight className="ml-2 h-4.5 w-4.5" />
+                </Link>
+              </Button>
+            </motion.div>
+
+            {/* Trust indicators */}
+            <motion.div
+              className="mt-6 flex items-center justify-center gap-4 text-white/50 text-xs"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> No credit card</span>
+              <span className="flex items-center gap-1"><Lock className="h-3 w-3" /> Secure & encrypted</span>
+              <span className="flex items-center gap-1"><Shield className="h-3 w-3" /> 100% verified</span>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -358,42 +418,43 @@ const Landing = () => {
             </Link>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-5">
-            {[
-              { tag: "Platform · Launch", title: "Why India needs a dedicated Financial Network", excerpt: "Social media is noisy. Professional networks are generic. Here's why a purpose-built financial network changes everything.", date: "Feb 2026" },
-              { tag: "Trust · Verification", title: "How FindOO's Verification Engine works", excerpt: "From SEBI registration to AMFI credentials — a look at how FindOO verifies every financial professional on the network.", date: "Feb 2026" },
-              { tag: "Industry · Insights", title: "The state of BFSI networking in 2026", excerpt: "An analysis of how financial professionals connect, collaborate and discover opportunities in today's fragmented ecosystem.", date: "Feb 2026" },
-            ].map((post, i) => (
+            {(blogPosts ?? []).map((post, i) => (
               <motion.div
-                key={i}
-                className="rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
+                key={post.id}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i + 1}
               >
-                {/* Placeholder cover with network pattern */}
-                <div className="h-32 bg-gradient-to-br from-primary/[0.1] via-accent/[0.05] to-muted/30 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-[0.06]">
-                    <svg className="w-full h-full" viewBox="0 0 300 130" preserveAspectRatio="none">
-                      <line x1="30" y1="20" x2="120" y2="60" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                      <line x1="120" y1="60" x2="250" y2="30" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                      <line x1="80" y1="100" x2="200" y2="110" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                      <line x1="120" y1="60" x2="200" y2="110" stroke="currentColor" strokeWidth="0.3" className="text-primary" />
-                      <circle cx="30" cy="20" r="2" fill="currentColor" className="text-primary" />
-                      <circle cx="120" cy="60" r="2.5" fill="currentColor" className="text-primary" />
-                      <circle cx="250" cy="30" r="2" fill="currentColor" className="text-primary" />
-                      <circle cx="80" cy="100" r="2" fill="currentColor" className="text-primary" />
-                      <circle cx="200" cy="110" r="2" fill="currentColor" className="text-primary" />
-                    </svg>
+                <Link
+                  to={`/blog/${post.slug}`}
+                  className="block rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
+                >
+                  {/* Cover image or gradient placeholder */}
+                  <div className="h-36 bg-gradient-to-br from-primary/[0.1] via-accent/[0.05] to-muted/30 relative overflow-hidden">
+                    {post.cover_image_url ? (
+                      <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="absolute inset-0 opacity-[0.06]">
+                        <svg className="w-full h-full" viewBox="0 0 300 130" preserveAspectRatio="none">
+                          <line x1="30" y1="20" x2="120" y2="60" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                          <line x1="120" y1="60" x2="250" y2="30" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                          <line x1="80" y1="100" x2="200" y2="110" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                          <circle cx="30" cy="20" r="2" fill="currentColor" className="text-primary" />
+                          <circle cx="120" cy="60" r="2.5" fill="currentColor" className="text-primary" />
+                          <circle cx="250" cy="30" r="2" fill="currentColor" className="text-primary" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
-                </div>
-                <div className="p-4">
-                  <p className="text-xs text-muted-foreground mb-2">{post.tag}</p>
-                  <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">{post.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.excerpt}</p>
-                  <p className="text-xs text-muted-foreground mt-3">{post.date}</p>
-                </div>
+                  <div className="p-4">
+                    <p className="text-xs text-muted-foreground mb-2 capitalize">{post.category} · {post.read_time_minutes} min read</p>
+                    <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.excerpt}</p>
+                    <p className="text-xs text-muted-foreground mt-3">{post.published_at ? format(new Date(post.published_at), "MMM yyyy") : ""}</p>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>
