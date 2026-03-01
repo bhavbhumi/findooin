@@ -11,6 +11,7 @@ import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import networkBrainHero from "@/assets/network-brain-hero.png";
+import networkBrainHeroDark from "@/assets/network-brain-hero-dark.png";
 import {
   NetworkMesh,
   GlowBlob,
@@ -233,7 +234,12 @@ const Landing = () => {
                 <img
                   src={networkBrainHero}
                   alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:brightness-110"
+                  className="relative w-full h-auto object-contain mix-blend-multiply dark:hidden"
+                />
+                <img
+                  src={networkBrainHeroDark}
+                  alt="FindOO — The brain of your financial life"
+                  className="relative w-full h-auto object-contain hidden dark:block"
                 />
                 <Sparkles count={4} />
               </div>
