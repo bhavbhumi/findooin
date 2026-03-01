@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import networkBrainBW from "@/assets/network-brain-bw.png";
+import networkBrainHero from "@/assets/network-brain-hero.png";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -231,7 +231,7 @@ const Landing = () => {
                 {/* Glow behind brain */}
                 <div className="absolute inset-[10%] bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 rounded-full blur-3xl" />
                 <img
-                  src={networkBrainBW}
+                  src={networkBrainHero}
                   alt="FindOO Network — connecting Issuers, Intermediaries and Investors"
                   className="relative w-full h-full object-contain drop-shadow-lg dark:opacity-90"
                 />
