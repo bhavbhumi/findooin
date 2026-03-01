@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import CosmicValueSection from "@/components/landing/CosmicValueSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
+import WhyFindooSection from "@/components/landing/WhyFindooSection";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -224,6 +225,15 @@ const Landing = () => {
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
           <TestimonialsSection />
+        </div>
+      </section>
+
+      {/* ═══ WHY FINDOO ═══ */}
+      <section className="py-14 relative overflow-hidden">
+        <GlowBlob position="top-left" color="primary" size="lg" />
+        <GlowBlob position="bottom-right" color="accent" size="md" />
+        <div className="container max-w-4xl relative">
+          <WhyFindooSection />
         </div>
       </section>
 
