@@ -12,43 +12,89 @@ const fadeUp = {
 };
 
 const sections = [
-  { title: "1. Information We Collect", content: "We collect information you provide during registration (name, email, phone, professional credentials), profile data (organization, designations, certifications), content you create (posts, comments, messages), and usage data (device info, IP address, browsing patterns within the Platform)." },
-  { title: "2. How We Use Your Information", content: "Your information is used to: provide and personalize the Platform experience; verify professional credentials with regulatory bodies; facilitate connections between verified participants; send notifications and platform updates; improve our services through aggregated analytics; comply with applicable legal and regulatory requirements." },
-  { title: "3. Information Sharing", content: "We do not sell your personal information. We may share information with: regulatory authorities when required by law; verification partners for credential validation; service providers who help operate the Platform (under strict confidentiality agreements). Your profile information is visible to other users based on your privacy settings." },
-  { title: "4. Data Security", content: "We implement industry-standard security measures including encryption in transit and at rest, regular security audits, and access controls. However, no method of electronic transmission or storage is 100% secure, and we cannot guarantee absolute security." },
-  { title: "5. Your Rights", content: "You have the right to: access your personal data; correct inaccurate information; delete your account and associated data; export your data; opt out of non-essential communications; restrict processing of your data in certain circumstances." },
-  { title: "6. Cookies & Tracking", content: "We use essential cookies for authentication and session management. Analytics cookies help us understand platform usage patterns. You can manage cookie preferences through your browser settings, though disabling essential cookies may affect Platform functionality." },
-  { title: "7. Data Retention", content: "We retain your data for as long as your account is active. Upon account deletion, personal data is removed within 30 days, except where retention is required by law or for legitimate business purposes (e.g., compliance records, dispute resolution)." },
-  { title: "8. Children's Privacy", content: "FindOO is not intended for users under 18 years of age. We do not knowingly collect information from minors. If we learn that we have collected data from a user under 18, we will delete it promptly." },
-  { title: "9. Changes to This Policy", content: "We may update this Privacy Policy periodically. Material changes will be communicated via email or prominent notice on the Platform. Continued use after changes constitutes acceptance of the updated policy." },
-  { title: "10. Contact", content: "For privacy-related inquiries, data requests, or concerns, contact our Data Protection Officer at privacy@findoo.in." },
+  {
+    title: "1. Introduction",
+    content: `This Privacy Policy describes how FindOO Technologies Private Limited ("FindOO") collects, uses, shares, protects, and retains your personal information. This Policy is published in compliance with the Information Technology Act, 2000, the IT (Reasonable Security Practices) Rules, 2011, the IT (Intermediary Guidelines) Rules, 2021, and the Digital Personal Data Protection Act, 2023 ("DPDP Act").`,
+  },
+  {
+    title: "2. Information We Collect",
+    content: `We collect: (a) Registration data — name, email, phone, date of birth; (b) Professional information — organization, designation, regulatory registration numbers (SEBI, AMFI ARN, IRDAI, RBI, PFRDA), certifications, specializations; (c) Profile data — biography, photos, location, website, social links; (d) Content — posts, comments, messages, research notes, uploaded documents; (e) Verification documents — regulatory certificates and identity proofs; (f) Device & log data — device type, OS, browser, IP address, access timestamps, pages visited; (g) Location data — approximate location from IP (precise only with consent); (h) Third-party data — verification data from regulatory databases, third-party sign-in profiles.`,
+  },
+  {
+    title: "3. How We Use Your Information",
+    content: `We use your information to: (a) manage your account and provide Platform services; (b) verify regulatory credentials against official databases; (c) personalize your feed, recommendations, and content discovery; (d) send service notifications and security alerts; (e) detect and prevent fraud, abuse, and policy violations; (f) conduct aggregated, anonymized analytics; (g) comply with Indian legal and regulatory requirements; (h) resolve disputes and enforce our Terms; and (i) conduct voluntary research and surveys.`,
+  },
+  {
+    title: "4. Legal Basis (DPDP Act, 2023)",
+    content: `We process personal data based on: (a) Consent — provided when you create an account and use the Platform; (b) Legitimate uses — for contractual obligations, legal compliance, and protecting vital interests; (c) Contractual necessity — for delivering requested services. You may withdraw consent at any time by adjusting privacy settings or deleting your account.`,
+  },
+  {
+    title: "5. Information Sharing",
+    content: `We do not sell your personal data. We may share information: (a) With other Users — profile data visible per your privacy settings; (b) With regulators — SEBI, RBI, IRDAI, law enforcement when required by law; (c) With service providers — hosting, analytics, email delivery providers under strict confidentiality; (d) Business transfers — in mergers or acquisitions with prior notice; (e) With your consent — for other purposes you explicitly approve.`,
+  },
+  {
+    title: "6. Data Security",
+    content: `We implement security practices per IT Rules, 2011, including: TLS/SSL encryption in transit, AES-256 encryption at rest, secure authentication with password hashing, role-based access controls, regular security assessments, and incident response procedures per the DPDP Act. Data is stored on servers in India or jurisdictions with adequate data protection.`,
+  },
+  {
+    title: "7. Your Rights Under Indian Law",
+    content: `Under the DPDP Act, 2023, you have the right to: (a) Access your personal data; (b) Correct inaccurate data; (c) Erase your data (subject to legal retention); (d) Nominate someone to exercise your rights; (e) File grievances with our Grievance Officer or the Data Protection Board of India; (f) Withdraw consent; (g) Data portability in machine-readable format. Contact privacy@findoo.in to exercise these rights (response within 30 days).`,
+  },
+  {
+    title: "8. Cookies & Tracking",
+    content: `We use: (a) Strictly necessary cookies — for authentication and security; (b) Functional cookies — for preferences and settings; (c) Analytics cookies — for aggregated usage statistics; (d) Performance cookies — for monitoring Platform performance. We do not use advertising or third-party tracking cookies. Manage preferences through browser settings.`,
+  },
+  {
+    title: "9. Data Retention",
+    content: `Active account data is retained while your account is active. Post-deletion, personal data is removed within 90 days except where retention is required by law. Audit logs, regulatory records, and financial data may be retained up to 8 years per Indian tax laws and SEBI regulations. Anonymized, aggregated data may be retained indefinitely.`,
+  },
+  {
+    title: "10. Cross-Border Transfers",
+    content: `Data is primarily stored in India. Cross-border transfers comply with the DPDP Act, 2023, with appropriate contractual safeguards. We do not transfer data to jurisdictions restricted by the Central Government.`,
+  },
+  {
+    title: "11. Children's Privacy",
+    content: `The Platform is not intended for individuals under 18. We do not knowingly collect data from minors. If discovered, such data is promptly deleted. Report concerns to privacy@findoo.in.`,
+  },
+  {
+    title: "12. Changes to This Policy",
+    content: `Material changes are communicated via email, in-app notification, and prominent Platform notice. Continued use after changes constitutes acceptance.`,
+  },
+  {
+    title: "13. Grievance Officer & Contact",
+    content: `Grievance Officer: grievance@findoo.in (acknowledged within 24 hours, resolved within 15 days)
+Data Protection Officer: privacy@findoo.in
+Support: support@findoo.in
+
+If unsatisfied with resolution, you may approach the Data Protection Board of India under the DPDP Act, 2023.`,
+  },
 ];
 
 const Privacy = () => {
-  usePageMeta({ title: "Privacy Policy" });
+  usePageMeta({ title: "Privacy Policy", description: "FindOO Privacy Policy — DPDP Act 2023 and IT Act compliant, Indian jurisdiction." });
   return (
-  <PublicPageLayout>
-    <PageHero
-      breadcrumb="Privacy Policy"
-      title="Privacy"
-      titleAccent="Policy"
-      subtitle="Last updated: February 2026"
-      variant="circles"
-    />
+    <PublicPageLayout>
+      <PageHero
+        breadcrumb="Privacy Policy"
+        title="Privacy"
+        titleAccent="Policy"
+        subtitle="Last updated: March 2026"
+        variant="circles"
+      />
 
-    <section className="py-14">
-      <div className="container max-w-3xl">
-        <div className="space-y-8">
-          {sections.map((s, i) => (
-            <motion.div key={s.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
-              <h2 className="text-lg font-bold font-heading text-foreground mb-2">{s.title}</h2>
-              <p className="text-muted-foreground leading-relaxed">{s.content}</p>
-            </motion.div>
-          ))}
+      <section className="py-14">
+        <div className="container max-w-3xl">
+          <div className="space-y-8">
+            {sections.map((s, i) => (
+              <motion.div key={s.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i}>
+                <h2 className="text-lg font-bold font-heading text-foreground mb-2">{s.title}</h2>
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{s.content}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  </PublicPageLayout>
+      </section>
+    </PublicPageLayout>
   );
 };
 
