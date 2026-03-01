@@ -17,19 +17,19 @@ const cosmicValueProps = [
   {
     icon: Shield,
     title: "A Universe of Verified Trust",
-    subtitle: "Where every connection is authentic, regulated, and credible.",
+    subtitle: "Every profile is credential-checked against SEBI, AMFI, IRDAI & PFRDA registries — so you always know who you're dealing with.",
     orbit: "issuer",
   },
   {
     icon: Compass,
     title: "Constellations of Opportunity",
-    subtitle: "Discover aligned issuers, intermediaries, and investors.",
+    subtitle: "Smart matching surfaces the right issuers, intermediaries, and investors for your goals — no cold outreach, just warm introductions.",
     orbit: "intermediary",
   },
   {
     icon: Rss,
     title: "Intelligence that Illuminates",
-    subtitle: "Network feed transformed into actionable insight.",
+    subtitle: "Market commentary, research notes, and regulatory updates from verified professionals — curated signal, zero noise.",
     orbit: "investor",
   },
 ];
@@ -38,10 +38,10 @@ const CosmicValueSection: React.FC = () => {
   const [hoveredOrbit, setHoveredOrbit] = useState<string | null>(null);
 
   return (
-    <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+    <div className="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
       {/* Left — Cosmic Network Visualization */}
       <motion.div
-        className="mb-10 lg:mb-0"
+        className="mb-6 lg:mb-0"
         initial={{ opacity: 0, scale: 0.92 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
@@ -59,19 +59,19 @@ const CosmicValueSection: React.FC = () => {
           variants={fadeUp}
           custom={0}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-2">
+          <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-1">
             Your Financial Cosmos
           </h2>
-          <p className="text-muted-foreground text-lg mb-8">
+          <p className="text-muted-foreground text-base mb-5">
             A living universe of trust, opportunity, and insight.
           </p>
         </motion.div>
 
-        <div className="space-y-6">
+        <div className="space-y-3">
           {cosmicValueProps.map((prop, i) => (
             <motion.div
               key={prop.title}
-              className="group flex gap-4 p-4 rounded-xl border border-transparent hover:border-border/60 hover:bg-card/50 transition-all duration-300 cursor-default"
+              className="group flex gap-3 p-3 rounded-lg border border-transparent hover:border-border/60 hover:bg-card/50 transition-all duration-300 cursor-default"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
@@ -99,7 +99,7 @@ const CosmicValueSection: React.FC = () => {
 
         {/* Explore link */}
         <motion.div
-          className="mt-6 pl-4"
+          className="mt-4 pl-3"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
