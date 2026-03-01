@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import {
   Shield, Users, TrendingUp, Building2, UserCheck, BarChart3,
   ArrowRight, CheckCircle2, Briefcase, Calendar, MessageSquare,
-  Globe, Zap, Lock, Search, Landmark, Award, Activity, Presentation
+  Globe, Zap, Lock, Search, Landmark, Award, Activity, Presentation,
+  Clock, Heart, Star, Quote
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
@@ -20,32 +21,71 @@ const fadeUp = {
   }),
 };
 
-const roles = [
+const valueProps = [
   {
-    icon: Building2,
-    title: "Issuers",
-    description: "Listed companies, AMCs, NBFCs, Banks & Insurance companies — reach verified investors and intermediaries directly.",
-    color: "bg-issuer/10 text-issuer",
+    title: "Trust and Confidence",
+    description: "Thousands trust FindOO for verified, credible connections across India's financial ecosystem — because your growth depends on who you trust.",
   },
   {
-    icon: UserCheck,
-    title: "Intermediaries",
-    description: "Brokers, RIAs, MF Distributors, Research Analysts — build trust with verified SEBI/AMFI/IRDAI credentials.",
-    color: "bg-intermediary/10 text-intermediary",
+    title: "Clarity Over Chaos",
+    description: "No anonymous tips, no unverified claims. Just transparent, verified professionals building meaningful financial connections.",
   },
   {
-    icon: BarChart3,
-    title: "Investors",
-    description: "Retail, HNI, Institutional & NRI investors — discover verified entities, access quality insights, and connect with confidence.",
-    color: "bg-investor/10 text-investor",
+    title: "Beyond Transactions, Towards Transformation",
+    description: "Not just a directory — a living financial ecosystem. From verified feeds and jobs to events, we connect every participant seamlessly.",
   },
 ];
 
-const trustPoints = [
-  "SEBI, RBI, IRDAI, AMFI & PFRDA regulated entities",
-  "Manual verification with trust badges",
-  "Role-based access & privacy controls",
-  "Multi-role support — grow from Investor to Intermediary",
+const testimonials = [
+  {
+    quote: "FindOO has completely transformed how I discover and connect with verified financial professionals. The trust badges give me confidence that I'm dealing with regulated entities.",
+    name: "Priya Mehta",
+    role: "Wealth Advisor",
+    location: "Mumbai",
+    rating: 5,
+  },
+  {
+    quote: "As a SEBI-registered RIA, FindOO gives me the credibility platform I was looking for. My client inquiries increased 3x after getting verified on the network.",
+    name: "Varun Kapoor",
+    role: "Registered Investment Adviser",
+    location: "Delhi",
+    rating: 5,
+  },
+  {
+    quote: "Finally, a network where I can verify credentials before taking financial advice. The verification engine is a game-changer for retail investors like me.",
+    name: "Anita Krishnan",
+    role: "Retail Investor",
+    location: "Chennai",
+    rating: 5,
+  },
+  {
+    quote: "Our NFO reach increased significantly after listing on FindOO's verified directory. The quality of connections is unmatched compared to generic platforms.",
+    name: "Rajesh Sharma",
+    role: "Product Head, AMC",
+    location: "Mumbai",
+    rating: 5,
+  },
+  {
+    quote: "The BFSI job board on FindOO is exactly what the industry needed. We found pre-verified candidates with the right certifications in record time.",
+    name: "Deepak Malhotra",
+    role: "HR Director, NBFC",
+    location: "Bangalore",
+    rating: 5,
+  },
+  {
+    quote: "What sets FindOO apart is accountability. Every profile, every post comes from a verified entity. No more anonymous noise — just signal.",
+    name: "Karan Patel",
+    role: "Research Analyst",
+    location: "Mumbai",
+    rating: 5,
+  },
+];
+
+const clientSegments = [
+  { icon: BarChart3, title: "Retail Investors", desc: "Salaried professionals & business owners building long-term wealth" },
+  { icon: TrendingUp, title: "HNI & Institutional", desc: "CXOs, family offices & institutional investors seeking verified access" },
+  { icon: Globe, title: "NRI Investors", desc: "Indians abroad connecting with regulated financial intermediaries" },
+  { icon: Building2, title: "Corporate & Entities", desc: "AMCs, NBFCs, insurance companies & listed corporates" },
 ];
 
 const platformFeatures = [
@@ -87,263 +127,231 @@ const platformFeatures = [
   },
 ];
 
-const categoryComparisons = [
-  { platform: "Social Networks", gap: "No identity verification, rampant misinformation, anonymous financial advice" },
-  { platform: "Professional Networks", gap: "Generic — not built for financial regulation, no SEBI/RBI credential checks" },
-  { platform: "Bloomberg / Reuters", gap: "Terminal-based, enterprise-only pricing — excludes retail and small intermediaries" },
-  { platform: "WhatsApp / Telegram", gap: "Unregulated tip-sharing, no accountability, no compliance framework" },
-];
-
 const Landing = () => {
   usePageMeta({ title: "India's First Financial Network", description: "FindOO is India's first financial network — Financially Social. Connecting verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA ecosystems." });
 
   return (
     <PublicPageLayout>
-      {/* Hero */}
-      <section className="relative pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.06] to-transparent" />
-
-        {/* Subtle geometric decorations */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-32 -right-32 w-[500px] h-[400px] bg-gradient-to-bl from-primary/[0.08] via-accent/[0.04] to-transparent rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-[350px] h-[200px] bg-gradient-to-tr from-primary/[0.05] to-transparent rounded-full blur-3xl" />
-          <motion.div
-            className="absolute top-20 left-[6%] w-5 h-5 rotate-45 border-2 border-primary/15"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          />
-          <motion.div
-            className="absolute bottom-16 left-[4%] grid grid-cols-4 gap-2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-          >
-            {Array.from({ length: 16 }).map((_, i) => (
-              <div key={i} className="w-1 h-1 rounded-full bg-primary/12" />
-            ))}
-          </motion.div>
-          <motion.div
-            className="absolute top-[55%] right-[5%] w-px h-24 bg-gradient-to-b from-transparent via-primary/20 to-transparent rotate-[25deg] hidden lg:block"
-            initial={{ opacity: 0, scaleY: 0 }}
-            animate={{ opacity: 1, scaleY: 1 }}
-            transition={{ duration: 1, delay: 0.7 }}
-          />
-          <motion.div
-            className="absolute bottom-24 right-[10%] w-2.5 h-2.5 rounded-full bg-accent/25"
-            animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
+      {/* ═══ HERO ═══ */}
+      <section className="relative pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden">
+        {/* Subtle gradient wash */}
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent" />
 
         <div className="container relative">
-          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 xl:gap-16 items-center">
-            
-            {/* Left — Text Content */}
+          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+
+            {/* Left — Text */}
             <motion.div
-              className="mt-10 lg:mt-0 text-center lg:text-left"
+              className="mt-10 lg:mt-0"
               initial="hidden"
               animate="visible"
               variants={fadeUp}
               custom={0}
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 mb-6 text-sm text-muted-foreground">
-                <Landmark className="h-3.5 w-3.5 text-accent" />
-                Financially Social
-              </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.1] mb-5">
-                Not social. Not professional.
-                <br />
-                <span className="text-accent">Financial.</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] xl:text-6xl font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-6">
+                Unlock your path to{" "}
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Financial Trust</span>
               </h1>
-              <p className="text-base sm:text-lg text-muted-foreground max-w-lg mx-auto lg:mx-0 mb-4 leading-relaxed">
-                There are social networks. Professional networks. But until now —{" "}
-                <span className="font-semibold text-foreground">no financial network.</span>
-              </p>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto lg:mx-0 mb-8">
-                FindOO connects India's verified Issuers, Intermediaries & Investors within a regulated, trust-first framework.
+              <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-8">
+                Connect, Verify and Collaborate across India's regulated financial ecosystem. Discover verified Issuers, Intermediaries & Investors through a trust-first platform.
               </p>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3 mb-10">
-                <Button size="lg" className="h-12 px-8 text-base" asChild>
+              {/* CTA Buttons — matching Sernet: filled + outline */}
+              <div className="flex items-center gap-4 mb-12">
+                <Button size="lg" className="h-13 px-8 text-base rounded-xl" asChild>
                   <Link to="/auth?mode=signup">
                     Join FindOO
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-12 px-8 text-base" asChild>
+                <Button size="lg" variant="outline" className="h-13 px-8 text-base rounded-xl" asChild>
                   <Link to="/explore">Explore Platform</Link>
                 </Button>
               </div>
 
-              {/* Stat Counters — inline row */}
-              <motion.div
-                className="grid grid-cols-2 sm:grid-cols-4 gap-3"
-                initial="hidden"
-                animate="visible"
-                variants={fadeUp}
-                custom={2}
-              >
+              {/* Stat Badges — icon + label + sublabel, horizontal row */}
+              <div className="flex items-center gap-8">
                 {[
-                  { value: 10, suffix: "Cr+", label: "Demat Accounts" },
-                  { value: 44000, suffix: "+", label: "AMFI Distributors" },
-                  { value: 5000, suffix: "+", label: "SEBI Entities" },
-                  { value: 100, suffix: "%", label: "Verified Network" },
+                  { icon: CheckCircle2, label: "AMFI Registered", sub: "Regulated & Compliant" },
+                  { icon: Clock, label: "10Cr+ Demat", sub: "Accounts in India" },
+                  { icon: Heart, label: "100% Verified", sub: "Trust Network" },
                 ].map((stat, i) => (
-                  <div key={i} className="text-center lg:text-left rounded-lg border border-border bg-card/50 backdrop-blur-sm p-3">
-                    <div className="text-xl sm:text-2xl font-bold font-heading text-foreground">
-                      <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                  <motion.div
+                    key={i}
+                    className="flex items-center gap-3"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 + i * 0.15 }}
+                  >
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/[0.08]">
+                      <stat.icon className="h-5 w-5 text-primary" />
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">{stat.label}</p>
-                  </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground leading-tight">{stat.label}</p>
+                      <p className="text-xs text-muted-foreground">{stat.sub}</p>
+                    </div>
+                  </motion.div>
                 ))}
-              </motion.div>
-
-              {/* Trust Tags */}
-              <motion.div
-                className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-5"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
-              >
-                {[
-                  { icon: Shield, label: "SEBI Ready" },
-                  { icon: Lock, label: "Encrypted" },
-                  { icon: Activity, label: "99.9% Uptime" },
-                ].map((badge, i) => (
-                  <div key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/20 text-[11px] text-muted-foreground">
-                    <badge.icon className="h-3 w-3 text-primary" />
-                    {badge.label}
-                  </div>
-                ))}
-              </motion.div>
-            </motion.div>
-
-            {/* Right — Network Brain Image */}
-            <motion.div
-              className="relative w-full max-w-md lg:max-w-none mx-auto"
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-            >
-              <div className="relative aspect-square lg:aspect-[4/3]">
-                {/* Glow behind brain */}
-                <div className="absolute inset-[10%] bg-gradient-to-br from-primary/10 via-accent/8 to-primary/5 rounded-full blur-3xl" />
-                <img
-                  src={networkBrainHero}
-                  alt="FindOO Network — connecting Issuers, Intermediaries and Investors"
-                  className="relative w-full h-full object-contain drop-shadow-lg dark:opacity-90"
-                />
               </div>
             </motion.div>
 
+            {/* Right — Hero Illustration */}
+            <motion.div
+              className="relative w-full max-w-md lg:max-w-lg mx-auto"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <div className="relative">
+                {/* Soft glow */}
+                <div className="absolute inset-[10%] bg-gradient-to-br from-primary/[0.08] via-accent/[0.04] to-transparent rounded-full blur-3xl" />
+                <img
+                  src={networkBrainHero}
+                  alt="FindOO — The brain of your financial life"
+                  className="relative w-full h-auto object-contain"
+                />
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* The Gap Section */}
-      <section className="py-20 border-t border-border relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-[400px] h-[300px] bg-gradient-to-br from-destructive/[0.04] to-transparent rounded-full blur-3xl" />
+      {/* ═══ MEDIA / FEATURED IN BAR ═══ */}
+      <section className="py-12 bg-muted/40 border-y border-border">
+        <div className="container">
           <motion.div
-            className="absolute top-16 right-[8%] w-16 h-16 rounded-full border-2 border-primary/15"
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          />
-          <motion.div
-            className="absolute bottom-12 left-[5%] w-5 h-5 rotate-45 bg-primary/10"
+            className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          />
-          <motion.div
-            className="absolute top-1/2 right-[4%] grid grid-cols-4 gap-2"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.6 }}
           >
-            {Array.from({ length: 16 }).map((_, i) => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/12" />
+            {["Economic Times", "Mint", "CNBC TV18", "Business Standard", "Forbes India", "Money Control", "NDTV Profit"].map((name) => (
+              <span key={name} className="text-base sm:text-lg font-heading font-semibold text-muted-foreground/50 tracking-wide select-none">
+                {name}
+              </span>
             ))}
           </motion.div>
-        </div>
-        <div className="container max-w-5xl relative">
           <motion.div
-            className="text-center mb-14"
-            initial="hidden"
-            whileInView="visible"
+            className="mt-4 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
+            transition={{ delay: 0.3 }}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
-              The gap that no one filled
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              India's financial ecosystem has 10Cr+ demat accounts, 44,000+ AMFI-registered distributors,
-              and thousands of SEBI-regulated entities — yet no dedicated platform connects them.
-            </p>
+            <Link to="/about?tab=Press" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              Featured in <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </motion.div>
-          <div className="grid sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
-            {categoryComparisons.map((item, i) => (
+        </div>
+      </section>
+
+      {/* ═══ VALUE PROPOSITIONS — "Achieve and Prosper" style ═══ */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="container">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-start">
+            {/* Left — Heading + value props */}
+            <div>
               <motion.div
-                key={item.platform}
-                className="flex items-start gap-3 p-5 rounded-xl border border-border bg-card"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
-                custom={i + 1}
+                custom={0}
               >
-                <div className="h-2 w-2 rounded-full bg-destructive/60 mt-2 shrink-0" />
-                <div>
-                  <p className="text-sm font-semibold text-card-foreground">{item.platform}</p>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{item.gap}</p>
-                </div>
+                <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-3">
+                  Achieve and Prosper
+                </h2>
+                <p className="text-muted-foreground text-lg mb-10">
+                  Your financial progress, our priority.
+                </p>
               </motion.div>
-            ))}
-          </div>
-          <motion.div
-            className="mt-10 text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={5}
-          >
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent/15 text-accent text-sm font-semibold">
-              <Zap className="h-4 w-4" />
-              FindOO fills this gap — purpose-built for finance.
+
+              <div className="space-y-8">
+                {valueProps.map((prop, i) => (
+                  <motion.div
+                    key={prop.title}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={fadeUp}
+                    custom={i + 1}
+                  >
+                    <h3 className="text-xl font-bold font-heading text-foreground mb-2">{prop.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{prop.description}</p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
+
+            {/* Right — Brand ecosystem logos / visual */}
+            <motion.div
+              className="mt-12 lg:mt-0 flex items-center justify-center"
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="relative">
+                {/* Orbital ring visual */}
+                <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full border-2 border-dashed border-border relative flex items-center justify-center">
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full border border-border/60 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto rounded-2xl bg-primary flex items-center justify-center mb-3">
+                        <span className="text-xl font-bold text-primary-foreground font-heading">F</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">FindOO</p>
+                    </div>
+                  </div>
+                  {/* Orbiting role icons */}
+                  {[
+                    { icon: Building2, angle: 0, color: "bg-issuer text-issuer-foreground" },
+                    { icon: UserCheck, angle: 120, color: "bg-intermediary text-intermediary-foreground" },
+                    { icon: BarChart3, angle: 240, color: "bg-investor text-investor-foreground" },
+                  ].map((item, i) => {
+                    const radius = 140;
+                    const angleRad = (item.angle * Math.PI) / 180;
+                    const x = Math.cos(angleRad) * radius;
+                    const y = Math.sin(angleRad) * radius;
+                    return (
+                      <motion.div
+                        key={i}
+                        className={`absolute w-11 h-11 rounded-xl ${item.color} flex items-center justify-center shadow-md`}
+                        style={{
+                          left: `calc(50% + ${x}px - 22px)`,
+                          top: `calc(50% + ${y}px - 22px)`,
+                        }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 + i * 0.15, type: "spring" }}
+                      >
+                        <item.icon className="h-5 w-5" />
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* "Explore" link */}
+          <motion.div
+            className="mt-12 text-center lg:text-left"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+          >
+            <Link to="/explore" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              Explore our Platform <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* Roles */}
-      <section className="py-20 border-t border-border relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -bottom-20 right-0 w-[400px] h-[300px] bg-gradient-to-tl from-primary/[0.06] to-transparent rounded-full blur-3xl" />
-          <motion.div
-            className="absolute top-20 left-[4%] w-20 h-20 rounded-full border border-accent/15"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-          />
-          <motion.div
-            className="absolute bottom-16 right-[6%] w-4 h-4 rotate-45 border-2 border-primary/15"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          />
-        </div>
+      {/* ═══ TESTIMONIALS ═══ */}
+      <section className="py-20 bg-muted/30 border-y border-border relative overflow-hidden">
         <div className="container">
           <motion.div
             className="text-center mb-14"
@@ -353,58 +361,168 @@ const Landing = () => {
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
-              Built for every participant
+            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-3">
+              Trusted by Thousands
             </h2>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              One platform. Every role. Verified trust at every layer.
+            <p className="text-muted-foreground text-lg">
+              Voices from India's financial community
             </p>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {roles.map((role, i) => (
+
+          {/* Testimonial cards — horizontal scroll on mobile, grid on desktop */}
+          <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:overflow-visible scrollbar-hide">
+            {testimonials.map((t, i) => (
               <motion.div
-                key={role.title}
-                className="rounded-xl border border-border bg-card p-8 hover:shadow-lg transition-shadow"
+                key={i}
+                className="min-w-[300px] lg:min-w-0 snap-start rounded-2xl border border-border bg-card p-6 flex flex-col"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i + 1}
               >
-                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-lg ${role.color} mb-5`}>
-                  <role.icon className="h-6 w-6" />
+                {/* Rating */}
+                <div className="flex items-center gap-0.5 mb-4">
+                  {Array.from({ length: t.rating }).map((_, s) => (
+                    <Star key={s} className="h-4 w-4 fill-accent text-accent" />
+                  ))}
+                  <span className="ml-2 text-sm font-semibold text-foreground">{t.rating}.0</span>
                 </div>
-                <h3 className="text-xl font-bold font-heading text-card-foreground mb-3">{role.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{role.description}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-5">"{t.quote}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                    <p className="text-xs text-muted-foreground">{t.role}</p>
+                  </div>
+                  <span className="ml-auto text-xs text-muted-foreground">{t.location} 🇮🇳</span>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Platform Features */}
-      <section className="py-20 border-t border-border bg-muted/30 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-gradient-to-bl from-primary/[0.05] to-transparent rounded-full blur-3xl" />
+      {/* ═══ WHOM WE SERVE ═══ */}
+      <section className="py-24 relative overflow-hidden">
+        <div className="container">
           <motion.div
-            className="absolute bottom-8 left-[3%] grid grid-cols-6 gap-2"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            className="text-center mb-6"
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
+            variants={fadeUp}
+            custom={0}
           >
-            {Array.from({ length: 24 }).map((_, i) => (
-              <div key={i} className="w-1 h-1 rounded-full bg-primary/12" />
-            ))}
+            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-3">
+              Whom we serve
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Built for every participant in India's regulated financial ecosystem — a growing network of verified professionals.
+            </p>
           </motion.div>
+
+          {/* Client segments */}
           <motion.div
-            className="absolute top-24 right-[5%] w-8 h-8 rotate-12 border border-accent/15 rounded-sm"
+            className="mb-16"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={1}
+          >
+            <h3 className="text-lg font-bold font-heading text-foreground mb-2">Participants</h3>
+            <p className="text-sm text-muted-foreground mb-6">Connecting verified entities across segments</p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {clientSegments.map((seg, i) => (
+                <motion.div
+                  key={seg.title}
+                  className="rounded-2xl border border-border bg-card p-6 text-center hover:shadow-md transition-shadow"
+                  variants={fadeUp}
+                  custom={i + 2}
+                >
+                  <div className="h-14 w-14 mx-auto rounded-2xl bg-primary/[0.08] flex items-center justify-center mb-4">
+                    <seg.icon className="h-7 w-7 text-primary" />
+                  </div>
+                  <h4 className="text-sm font-bold font-heading text-foreground mb-1">{seg.title}</h4>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{seg.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Partners + Principals — side by side cards */}
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              className="rounded-2xl border border-border bg-card p-8"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              custom={1}
+            >
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1">Intermediaries</h3>
+              <p className="text-sm text-muted-foreground mb-4">Professionals who grow with the network</p>
+              <div className="text-3xl font-bold font-heading text-foreground mb-4">
+                <AnimatedCounter value={44000} suffix="+" />
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">AMFI-registered distributors nationwide</p>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> MF Distributors & RIAs</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Insurance Agents & Brokers</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Research Analysts & Advisors</li>
+              </ul>
+              <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-medium text-primary mt-6 hover:underline">
+                Learn more <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </motion.div>
+
+            <motion.div
+              className="rounded-2xl border border-border bg-card p-8"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              custom={2}
+            >
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1">Issuers & Principals</h3>
+              <p className="text-sm text-muted-foreground mb-4">Institutions who power the ecosystem</p>
+              <div className="text-3xl font-bold font-heading text-foreground mb-4">
+                <AnimatedCounter value={5000} suffix="+" />
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">SEBI-regulated entities</p>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> AMCs & Fund Houses</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Banks, NBFCs & Insurance Companies</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary shrink-0" /> Listed Corporates & Exchanges</li>
+              </ul>
+              <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-medium text-primary mt-6 hover:underline">
+                Learn more <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </motion.div>
+          </div>
+
+          <motion.div
+            className="mt-8 text-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          />
+            transition={{ delay: 0.3 }}
+          >
+            <Button variant="outline" className="rounded-xl" asChild>
+              <Link to="/explore">
+                Explore Our Network
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
+      </section>
+
+      {/* ═══ PLATFORM FEATURES ═══ */}
+      <section className="py-24 bg-muted/30 border-y border-border relative overflow-hidden">
         <div className="container max-w-5xl">
           <motion.div
             className="text-center mb-14"
@@ -425,7 +543,7 @@ const Landing = () => {
             {platformFeatures.map((feat, i) => (
               <motion.div
                 key={feat.title}
-                className="rounded-xl border border-border bg-card p-6 relative"
+                className="rounded-2xl border border-border bg-card p-6 relative"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -437,7 +555,7 @@ const Landing = () => {
                     Coming Soon
                   </span>
                 )}
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent mb-4">
+                <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/[0.08] text-primary mb-4">
                   <feat.icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-base font-bold font-heading text-card-foreground mb-2">{feat.title}</h3>
@@ -448,78 +566,43 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Trust */}
-      <section className="py-20 bg-brand text-white relative overflow-hidden">
-        {/* Trust section decorations */}
+      {/* ═══ CTA — "Open Account" style ═══ */}
+      <section className="py-24 bg-brand text-white relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-20 -left-20 w-[300px] h-[300px] rounded-full border border-white/10" />
           <div className="absolute -bottom-16 -right-16 w-[250px] h-[250px] rounded-full border border-white/[0.07]" />
-          <div className="absolute top-1/3 right-[8%] w-4 h-4 rotate-45 bg-white/10" />
-          <div className="absolute bottom-12 left-[10%] grid grid-cols-4 gap-2">
-            {Array.from({ length: 16 }).map((_, i) => (
-              <div key={i} className="w-1 h-1 rounded-full bg-white/15" />
-            ))}
-          </div>
         </div>
         <div className="container relative">
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeUp}
-              custom={0}
+          <motion.div
+            className="max-w-2xl mx-auto text-center"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold font-heading mb-4">
+              Join India's Financial Network
+            </h2>
+            <p className="text-white/70 text-lg mb-8">
+              Modern and verified tools to Connect, Discover and Grow in India's regulated financial ecosystem.
+            </p>
+            <Button
+              size="lg"
+              className="h-13 px-10 text-base rounded-xl bg-white text-foreground hover:bg-white/90"
+              asChild
             >
-              <h2 className="text-3xl sm:text-4xl font-bold font-heading mb-4">
-                Trust is not optional
-              </h2>
-              <p className="text-white/70 text-lg leading-relaxed">
-                Every Issuer and Intermediary goes through verification.
-                Upload your SEBI, RBI, or IRDAI registration — earn a verified badge
-                that signals credibility to the entire network.
-              </p>
-            </motion.div>
-            <motion.div
-              className="space-y-4"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              {trustPoints.map((point, i) => (
-                <motion.div
-                  key={i}
-                  className="flex items-start gap-3"
-                  variants={fadeUp}
-                  custom={i + 1}
-                >
-                  <CheckCircle2 className="h-5 w-5 text-accent mt-0.5 shrink-0" />
-                  <span className="text-white/90">{point}</span>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
+              <Link to="/auth?mode=signup">
+                Signup for FREE
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
 
-      {/* Pitch Decks Section */}
-      <section className="py-20 border-t border-border relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-0 w-[400px] h-[250px] bg-gradient-to-tr from-primary/[0.05] to-transparent rounded-full blur-3xl" />
-          <motion.div
-            className="absolute top-12 right-[6%] w-12 h-12 rounded-full border border-accent/15"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          />
-          <motion.div
-            className="absolute bottom-20 left-[4%] w-3 h-3 rotate-45 bg-primary/15"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          />
-        </div>
+      {/* ═══ PITCH DECKS ═══ */}
+      <section className="py-20 relative overflow-hidden">
         <div className="container max-w-5xl">
           <motion.div
             className="text-center mb-14"
@@ -537,7 +620,7 @@ const Landing = () => {
               Four perspectives. One platform.
             </h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              See how FindOO serves every participant in India's financial ecosystem — from regulators to retail investors.
+              See how FindOO serves every participant in India's financial ecosystem.
             </p>
           </motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -557,9 +640,9 @@ const Landing = () => {
               >
                 <Link
                   to={deck.to}
-                  className="group block rounded-xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
+                  className="group block rounded-2xl border border-border bg-card p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
                 >
-                  <div className={`inline-flex h-11 w-11 items-center justify-center rounded-lg ${deck.color} mb-4 group-hover:scale-110 transition-transform`}>
+                  <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${deck.color} mb-4 group-hover:scale-110 transition-transform`}>
                     <deck.icon className="h-5 w-5" />
                   </div>
                   <h3 className="text-base font-bold font-heading text-card-foreground mb-1">{deck.title}</h3>
@@ -574,202 +657,48 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Ecosystem Visual Section */}
-      <section className="py-20 border-t border-border relative overflow-hidden">
-        {/* Decorative geometric bg */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-20 left-0 w-[450px] h-[350px] bg-gradient-to-br from-primary/[0.07] to-transparent rounded-full blur-3xl" />
-          <div className="absolute -bottom-16 right-0 w-[350px] h-[250px] bg-gradient-to-tl from-accent/[0.05] to-transparent rounded-full blur-3xl" />
+      {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
+      <section className="py-20 border-t border-border">
+        <div className="container max-w-5xl">
           <motion.div
-            className="absolute top-12 left-[8%] w-48 h-48 rounded-full border-2 border-primary/15"
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            className="flex items-center justify-between mb-10"
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            transition={{ duration: 1.2 }}
-          />
-          <motion.div
-            className="absolute bottom-16 right-[10%] w-32 h-32 rounded-full border border-accent/15"
-            initial={{ opacity: 0, scale: 0.5 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
-          />
-          <motion.div
-            className="absolute top-1/3 right-[5%] grid grid-cols-5 gap-3"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            variants={fadeUp}
+            custom={0}
           >
-            {Array.from({ length: 25 }).map((_, i) => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary/15" />
+            <h2 className="text-3xl font-bold font-heading text-foreground">Latest from FindOO</h2>
+            <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+              View all Insights <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </motion.div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { tag: "Platform · Launch", title: "Why India needs a dedicated Financial Network", excerpt: "Social media is noisy. Professional networks are generic. Here's why a purpose-built financial network changes everything.", date: "Feb 2026" },
+              { tag: "Trust · Verification", title: "How FindOO's Verification Engine works", excerpt: "From SEBI registration to AMFI credentials — a look at how FindOO verifies every financial professional on the network.", date: "Feb 2026" },
+              { tag: "Industry · Insights", title: "The state of BFSI networking in 2026", excerpt: "An analysis of how financial professionals connect, collaborate and discover opportunities in today's fragmented ecosystem.", date: "Feb 2026" },
+            ].map((post, i) => (
+              <motion.div
+                key={i}
+                className="rounded-2xl border border-border bg-card overflow-hidden hover:shadow-md transition-shadow"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                custom={i + 1}
+              >
+                {/* Placeholder cover */}
+                <div className="h-40 bg-gradient-to-br from-primary/[0.08] to-accent/[0.04]" />
+                <div className="p-5">
+                  <p className="text-xs text-muted-foreground mb-2">{post.tag}</p>
+                  <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug">{post.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.excerpt}</p>
+                  <p className="text-xs text-muted-foreground mt-3">{post.date}</p>
+                </div>
+              </motion.div>
             ))}
-          </motion.div>
-          <motion.div
-            className="absolute bottom-1/4 left-[15%] w-8 h-8 rotate-45 border-2 border-primary/15"
-            initial={{ opacity: 0, rotate: 0 }}
-            whileInView={{ opacity: 1, rotate: 45 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          />
-          <motion.div
-            className="absolute top-[60%] left-[5%] w-3 h-3 rounded-full bg-accent/25"
-            animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.7, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
-        </div>
-
-        <div className="container max-w-5xl relative">
-          <motion.div
-            className="text-center mb-14"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
-              How the ecosystem connects
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              FindOO is the connective tissue between India's financial participants — enabling verified discovery, trusted communication, and compliant collaboration.
-            </p>
-          </motion.div>
-
-          {/* Ecosystem visual — interconnected nodes */}
-          <motion.div
-            className="relative max-w-3xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={1}
-          >
-            <div className="grid grid-cols-3 gap-4 sm:gap-6">
-              {[
-                { icon: Shield, label: "Regulators", sub: "SEBI · RBI · IRDAI", color: "border-primary/30 bg-primary/[0.06]" },
-                { icon: Building2, label: "Issuers", sub: "AMCs · NBFCs · Banks", color: "border-issuer/30 bg-issuer/[0.06]" },
-                { icon: UserCheck, label: "Intermediaries", sub: "MFDs · RIAs · Agents", color: "border-intermediary/30 bg-intermediary/[0.06]" },
-              ].map((node, i) => (
-                <motion.div
-                  key={node.label}
-                  className={`rounded-2xl border-2 ${node.color} p-5 sm:p-6 text-center`}
-                  variants={fadeUp}
-                  custom={i + 2}
-                >
-                  <node.icon className="h-7 w-7 mx-auto mb-3 text-foreground/70" />
-                  <p className="text-sm font-bold font-heading text-foreground">{node.label}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{node.sub}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Center node */}
-            <motion.div
-              className="mx-auto -mt-4 mb-4 w-fit"
-              variants={fadeUp}
-              custom={5}
-            >
-              <div className="relative z-10 rounded-full bg-brand px-6 py-3 text-center shadow-lg">
-                <p className="text-sm font-bold text-white tracking-wide">FindOO</p>
-                <p className="text-[10px] text-white/70 uppercase tracking-widest">Financially Social</p>
-              </div>
-            </motion.div>
-
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 max-w-md mx-auto">
-              {[
-                { icon: BarChart3, label: "Investors", sub: "Retail · HNI · NRI", color: "border-investor/30 bg-investor/[0.06]" },
-                { icon: Globe, label: "Ecosystem", sub: "Events · Jobs · Directory", color: "border-accent/20 bg-accent/[0.04]" },
-              ].map((node, i) => (
-                <motion.div
-                  key={node.label}
-                  className={`rounded-2xl border-2 ${node.color} p-5 sm:p-6 text-center`}
-                  variants={fadeUp}
-                  custom={i + 6}
-                >
-                  <node.icon className="h-7 w-7 mx-auto mb-3 text-foreground/70" />
-                  <p className="text-sm font-bold font-heading text-foreground">{node.label}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{node.sub}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Testimonial / Social Proof */}
-      <section className="py-16 border-t border-border bg-muted/30 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[350px] h-[300px] bg-gradient-to-bl from-primary/[0.06] to-transparent rounded-full blur-3xl" />
-          <motion.div
-            className="absolute bottom-8 left-[6%] w-10 h-10 rounded-full border border-primary/15"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          />
-          <motion.div
-            className="absolute top-12 left-[50%] w-3 h-3 rotate-45 bg-accent/15"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          />
-        </div>
-        <div className="container max-w-4xl relative">
-          <motion.div
-            className="text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-          >
-            <div className="grid sm:grid-cols-3 gap-6">
-              {[
-                { quote: "Finally, a network where I can verify who I'm talking to before sharing market views.", persona: "— SEBI-registered RIA, Mumbai" },
-                { quote: "Our NFO reach increased 3x after listing on FindOO's verified directory.", persona: "— Product Head, mid-size AMC" },
-                { quote: "As a retail investor, I feel safer knowing every advisor has verified credentials.", persona: "— HNI Investor, Bengaluru" },
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  className="rounded-xl border border-border bg-card p-6 text-left"
-                  variants={fadeUp}
-                  custom={i + 1}
-                >
-                  <p className="text-sm text-muted-foreground leading-relaxed italic mb-4">"{item.quote}"</p>
-                  <p className="text-xs font-medium text-foreground/70">{item.persona}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20">
-        <div className="container">
-          <motion.div
-            className="max-w-2xl mx-auto text-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
-              The financial network India was waiting for
-            </h2>
-            <p className="text-muted-foreground text-lg mb-8">
-              Whether you're a retail investor, a SEBI-registered advisor, or a listed company — there's a place for you. Be part of history.
-            </p>
-            <Button size="lg" className="h-12 px-8 text-base" asChild>
-              <Link to="/auth?mode=signup">
-                Create Your Profile
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
     </PublicPageLayout>
