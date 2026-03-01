@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -6,6 +7,7 @@ import {
   Globe, Zap, Lock, Search, Landmark, Award, Activity, Presentation,
   Clock, Heart, Star, Quote, Sparkles as SparklesIcon
 } from "lucide-react";
+import CosmicValueSection from "@/components/landing/CosmicValueSection";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -29,20 +31,6 @@ const fadeUp = {
   }),
 };
 
-const valueProps = [
-  {
-    title: "Trust and Confidence",
-    description: "Thousands trust FindOO for verified, credible connections across India's financial ecosystem — because your growth depends on who you trust.",
-  },
-  {
-    title: "Clarity Over Chaos",
-    description: "No anonymous tips, no unverified claims. Just transparent, verified professionals building meaningful financial connections.",
-  },
-  {
-    title: "Beyond Transactions, Towards Transformation",
-    description: "Not just a directory — a living financial ecosystem. From verified feeds and jobs to events, we connect every participant seamlessly.",
-  },
-];
 
 const testimonials = [
   {
@@ -265,115 +253,11 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ═══ VALUE PROPOSITIONS — "Achieve and Prosper" style ═══ */}
+      {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
       <section className="py-14 relative overflow-hidden">
         <GlowBlob position="bottom-left" color="primary" size="md" />
-        
         <div className="container relative">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-12 items-start">
-            {/* Left — Heading + value props */}
-            <div>
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={0}
-              >
-                <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-3">
-                  Achieve and Prosper
-                </h2>
-                <p className="text-muted-foreground text-lg mb-6">
-                  Your financial progress, our priority.
-                </p>
-              </motion.div>
-
-              <div className="space-y-5">
-                {valueProps.map((prop, i) => (
-                  <motion.div
-                    key={prop.title}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true }}
-                    variants={fadeUp}
-                    custom={i + 1}
-                  >
-                    <h3 className="text-xl font-bold font-heading text-foreground mb-2">{prop.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{prop.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right — Brand ecosystem logos / visual */}
-            <motion.div
-              className="mt-12 lg:mt-0 flex items-center justify-center"
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-            >
-              <div className="relative">
-                {/* Background glow for orbital */}
-                <div className="absolute inset-[-20%] bg-gradient-to-br from-primary/[0.05] to-transparent rounded-full blur-3xl" />
-                
-                {/* Orbital ring visual */}
-                <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full border-2 border-dashed border-border relative flex items-center justify-center">
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full border border-border/60 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto rounded-2xl bg-primary flex items-center justify-center mb-3 shadow-lg shadow-primary/20">
-                        <span className="text-xl font-bold text-primary-foreground font-heading">F</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">FindOO</p>
-                    </div>
-                  </div>
-                  {/* Orbiting role icons */}
-                  {[
-                    { icon: Building2, angle: 0, color: "bg-issuer text-issuer-foreground" },
-                    { icon: UserCheck, angle: 120, color: "bg-intermediary text-intermediary-foreground" },
-                    { icon: BarChart3, angle: 240, color: "bg-investor text-investor-foreground" },
-                  ].map((item, i) => {
-                    const radius = 140;
-                    const angleRad = (item.angle * Math.PI) / 180;
-                    const x = Math.cos(angleRad) * radius;
-                    const y = Math.sin(angleRad) * radius;
-                    return (
-                      <motion.div
-                        key={i}
-                        className={`absolute w-11 h-11 rounded-xl ${item.color} flex items-center justify-center shadow-md`}
-                        style={{
-                          left: `calc(50% + ${x}px - 22px)`,
-                          top: `calc(50% + ${y}px - 22px)`,
-                        }}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.3 + i * 0.15, type: "spring" }}
-                      >
-                        <item.icon className="h-5 w-5" />
-                      </motion.div>
-                    );
-                  })}
-                </div>
-                
-                {/* Sparkle accents */}
-                <Sparkles count={3} />
-              </div>
-            </motion.div>
-          </div>
-
-          {/* "Explore" link */}
-          <motion.div
-            className="mt-8 text-center lg:text-left"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-          >
-            <Link to="/explore" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-              Explore our Platform <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </motion.div>
+          <CosmicValueSection />
         </div>
       </section>
 
