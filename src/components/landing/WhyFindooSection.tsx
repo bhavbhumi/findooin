@@ -4,7 +4,8 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import { ChevronDown, Building2, Users, UserCheck, Briefcase } from "lucide-react";
+import { ChevronDown, Building2, Users, UserCheck, Briefcase, Globe, ShieldCheck, Target, TrendingUp, ArrowRight, Network, Layers } from "lucide-react";
+import { Link } from "react-router-dom";
 
 /* ─── Background Decorations (shown on right side of card) ─── */
 
@@ -103,18 +104,37 @@ function EcosystemBackground() {
   );
 }
 
-/* ─── Stat Badge (2-line: icon+value / label) ─── */
-const statBadges = [
-  { icon: Building2, value: 7000, suffix: "+", label: "Issuers" },
-  { icon: Users, value: 35000, suffix: "+", label: "Intermediaries" },
-  { icon: UserCheck, value: 7, suffix: " Cr+", label: "Investors" },
-  { icon: Briefcase, value: 6, suffix: " Lakh+", label: "Professionals" },
+/* ─── Per-card stat badges ─── */
+type StatBadge = { icon: typeof Building2; value: number; suffix: string; label: string };
+
+const cardStats: StatBadge[][] = [
+  // Card 0: Category Creation — market gap stats
+  [
+    { icon: Globe, value: 50, suffix: " Cr+", label: "Financial Users" },
+    { icon: Network, value: 0, suffix: "Zero", label: "Dedicated Networks" },
+    { icon: TrendingUp, value: 14, suffix: "%", label: "GDP from Finance" },
+    { icon: Layers, value: 3, suffix: "rd", label: "Life Network" },
+  ],
+  // Card 1: Purpose Over Generic Noise — signal vs noise
+  [
+    { icon: ShieldCheck, value: 100, suffix: "%", label: "Verified Profiles" },
+    { icon: Target, value: 12, suffix: "+", label: "Role Categories" },
+    { icon: Users, value: 50, suffix: "+", label: "Specializations" },
+    { icon: TrendingUp, value: 3, suffix: "x", label: "Engagement Lift" },
+  ],
+  // Card 2: Neutral Ecosystem Infrastructure — ecosystem scale
+  [
+    { icon: Building2, value: 7000, suffix: "+", label: "Issuers" },
+    { icon: Users, value: 35000, suffix: "+", label: "Intermediaries" },
+    { icon: UserCheck, value: 7, suffix: " Cr+", label: "Investors" },
+    { icon: Briefcase, value: 6, suffix: " Lakh+", label: "Professionals" },
+  ],
 ];
 
-function DataStripHorizontal() {
+function DataStripHorizontal({ badges }: { badges: StatBadge[] }) {
   return (
     <div className="flex items-stretch gap-2 flex-wrap">
-      {statBadges.map((s, i) => {
+      {badges.map((s, i) => {
         const Icon = s.icon;
         return (
           <motion.div
@@ -259,8 +279,8 @@ export default function WhyFindooSection() {
                   {cards[activeIndex].content}
                 </p>
 
-                {/* Data strip — horizontal badges */}
-                <DataStripHorizontal />
+                {/* Data strip — horizontal badges (per card) */}
+                <DataStripHorizontal badges={cardStats[activeIndex]} />
               </div>
 
               {/* Click hint */}
@@ -286,6 +306,23 @@ export default function WhyFindooSection() {
             />
           ))}
         </div>
+
+        {/* Footer CTA */}
+        <motion.div
+          className="mt-6 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+        >
+          <Link
+            to="/auth"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors group"
+          >
+            Enter the Financial Network
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
       </div>
     </div>
   );
