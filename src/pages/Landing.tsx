@@ -338,64 +338,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* ═══ PITCH DECKS ═══ */}
-      <section className="py-14 relative overflow-hidden">
-        <GlowBlob position="top-left" color="accent" size="md" />
-        <DiamondGrid className="top-12 right-12 hidden lg:block" />
-        
-        <div className="container max-w-5xl relative">
-          <motion.div
-            className="text-center mb-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-          >
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 mb-4 text-sm text-muted-foreground">
-              <Presentation className="h-3.5 w-3.5 text-accent" />
-              Explore our pitch decks
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
-              Four perspectives. One platform.
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              See how FindOO serves every participant in India's financial ecosystem.
-            </p>
-          </motion.div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { icon: Landmark, title: "Regulators", desc: "Compliance by design", color: "bg-primary/10 text-primary", to: "/pitch/regulator" },
-              { icon: Building2, title: "Issuers", desc: "Verified distribution", color: "bg-issuer/10 text-issuer", to: "/pitch/issuer" },
-              { icon: UserCheck, title: "Intermediaries", desc: "Professional network", color: "bg-intermediary/10 text-intermediary", to: "/pitch/intermediary" },
-              { icon: BarChart3, title: "Investors", desc: "Trust-first discovery", color: "bg-investor/10 text-investor", to: "/pitch/investor" },
-            ].map((deck, i) => (
-              <motion.div
-                key={deck.title}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i + 1}
-              >
-                <Link
-                  to={deck.to}
-                  className="group block rounded-2xl border border-border bg-card/80 backdrop-blur-sm p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300"
-                >
-                  <div className={`inline-flex h-11 w-11 items-center justify-center rounded-xl ${deck.color} mb-4 group-hover:scale-110 transition-transform`}>
-                    <deck.icon className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-base font-bold font-heading text-card-foreground mb-1">{deck.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">{deck.desc}</p>
-                  <span className="inline-flex items-center gap-1 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                    View Deck <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
       <section className="py-14 border-t border-border relative overflow-hidden">
