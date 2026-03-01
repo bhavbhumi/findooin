@@ -5,9 +5,10 @@ import {
   Shield, Users, TrendingUp, Building2, UserCheck, BarChart3,
   ArrowRight, CheckCircle2, Briefcase, Calendar, MessageSquare,
   Globe, Zap, Lock, Search, Landmark, Award, Activity, Presentation,
-  Clock, Heart, Star, Quote, Sparkles as SparklesIcon
+  Clock, Heart, Sparkles as SparklesIcon
 } from "lucide-react";
 import CosmicValueSection from "@/components/landing/CosmicValueSection";
+import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -32,50 +33,6 @@ const fadeUp = {
 };
 
 
-const testimonials = [
-  {
-    quote: "FindOO has completely transformed how I discover and connect with verified financial professionals. The trust badges give me confidence that I'm dealing with regulated entities.",
-    name: "Priya Mehta",
-    role: "Wealth Advisor",
-    location: "Mumbai",
-    rating: 5,
-  },
-  {
-    quote: "As a SEBI-registered RIA, FindOO gives me the credibility platform I was looking for. My client inquiries increased 3x after getting verified on the network.",
-    name: "Varun Kapoor",
-    role: "Registered Investment Adviser",
-    location: "Delhi",
-    rating: 5,
-  },
-  {
-    quote: "Finally, a network where I can verify credentials before taking financial advice. The verification engine is a game-changer for retail investors like me.",
-    name: "Anita Krishnan",
-    role: "Retail Investor",
-    location: "Chennai",
-    rating: 5,
-  },
-  {
-    quote: "Our NFO reach increased significantly after listing on FindOO's verified directory. The quality of connections is unmatched compared to generic platforms.",
-    name: "Rajesh Sharma",
-    role: "Product Head, AMC",
-    location: "Mumbai",
-    rating: 5,
-  },
-  {
-    quote: "The BFSI job board on FindOO is exactly what the industry needed. We found pre-verified candidates with the right certifications in record time.",
-    name: "Deepak Malhotra",
-    role: "HR Director, NBFC",
-    location: "Bangalore",
-    rating: 5,
-  },
-  {
-    quote: "What sets FindOO apart is accountability. Every profile, every post comes from a verified entity. No more anonymous noise — just signal.",
-    name: "Karan Patel",
-    role: "Research Analyst",
-    location: "Mumbai",
-    rating: 5,
-  },
-];
 
 const clientSegments = [
   { icon: BarChart3, title: "Retail Investors", desc: "Salaried professionals & business owners building long-term wealth" },
@@ -262,60 +219,11 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-12 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
-        
         <div className="container relative">
-          <motion.div
-            className="text-center mb-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-3">
-              Trusted by Thousands
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Voices from India's financial community
-            </p>
-          </motion.div>
-
-          {/* Testimonial cards */}
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-3 lg:overflow-visible scrollbar-hide">
-            {testimonials.map((t, i) => (
-              <motion.div
-                key={i}
-                className="min-w-[280px] lg:min-w-0 snap-start rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 flex flex-col hover:shadow-lg hover:border-primary/10 transition-all duration-300"
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i + 1}
-              >
-                {/* Rating */}
-                <div className="flex items-center gap-0.5 mb-3">
-                  {Array.from({ length: t.rating }).map((_, s) => (
-                    <Star key={s} className="h-4 w-4 fill-gold text-gold" />
-                  ))}
-                  <span className="ml-2 text-sm font-semibold text-foreground">{t.rating}.0</span>
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">"{t.quote}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center text-sm font-bold text-primary">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.role}</p>
-                  </div>
-                  <span className="ml-auto text-xs text-muted-foreground">{t.location} 🇮🇳</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <TestimonialsSection />
         </div>
       </section>
 
