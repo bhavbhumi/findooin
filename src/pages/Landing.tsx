@@ -182,21 +182,24 @@ const Landing = () => {
               {/* 3 Icon Stat Badges */}
               <div className="flex flex-wrap items-center gap-6 sm:gap-8">
                 {[
-                  { icon: Lock, label: "End to End Encrypted" },
-                  { icon: Activity, label: "99.9% Uptime" },
-                  { icon: Shield, label: "100% Verified Network" },
+                  { icon: Lock, label: "End to End", sub: "Encrypted" },
+                  { icon: Activity, label: "99.9%", sub: "Uptime" },
+                  { icon: Shield, label: "100% Verified", sub: "Network" },
                 ].map((stat, i) => (
                   <motion.div
                     key={i}
-                    className="flex items-center gap-2.5"
+                    className="flex items-center gap-3"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 + i * 0.15 }}
                   >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/[0.08]">
-                      <stat.icon className="h-4 w-4 text-primary" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/[0.08]">
+                      <stat.icon className="h-5 w-5 text-primary" />
                     </div>
-                    <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground leading-tight">{stat.label}</p>
+                      <p className="text-xs text-muted-foreground">{stat.sub}</p>
+                    </div>
                   </motion.div>
                 ))}
               </div>
