@@ -216,146 +216,132 @@ const cards = [
   },
 ];
 
+/* ─── Peek strip height for inactive cards ─── */
+const PEEK_H = 44; // px – enough for tag + title line
+
 /* ─── Stacked Card Carousel ─── */
 export default function WhyFindooSection() {
-  const [order, setOrder] = useState([0, 1, 2]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  const rotateNext = useCallback(() => {
-    setOrder(prev => {
-      const next = [...prev];
-      const top = next.shift()!;
-      next.push(top);
-      return next;
-    });
+  const bringToTop = useCallback((idx: number) => {
+    setActiveIndex(idx);
   }, []);
 
-  // Stack layout: order[0] = top, order[1] = middle, order[2] = bottom
-  const stackVariants = {
-    top: {
-      y: 0,
-      scale: 1,
-      opacity: 1,
-      zIndex: 30,
-      filter: "blur(0px)",
-    },
-    middle: {
-      y: 56,
-      scale: 0.96,
-      opacity: 0.7,
-      zIndex: 20,
-      filter: "blur(0px)",
-    },
-    bottom: {
-      y: 100,
-      scale: 0.92,
-      opacity: 0.4,
-      zIndex: 10,
-      filter: "blur(1px)",
-    },
-  };
+  const rotateNext = useCallback(() => {
+    setActiveIndex(prev => (prev + 1) % cards.length);
+  }, []);
 
-  const positionForIndex = (cardIndex: number) => {
-    const pos = order.indexOf(cardIndex);
-    if (pos === 0) return "top";
-    if (pos === 1) return "middle";
-    return "bottom";
-  };
+  // Build ordered list: active first, then the rest in order
+  const orderedIndices = [
+    activeIndex,
+    ...cards.map((_, i) => i).filter(i => i !== activeIndex),
+  ];
 
   return (
     <div>
       {/* Section Header */}
       <motion.div
-        className="text-center mb-8"
+        className="text-center mb-5 lg:mb-6"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground mb-1.5">
           Why Findoo
         </h2>
-        <p className="text-muted-foreground text-base sm:text-lg max-w-xl mx-auto">
+        <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
           Your financial life deserves its own trusted network.
         </p>
       </motion.div>
 
-      {/* Stacked Card Deck */}
-      <div className="max-w-2xl mx-auto relative" style={{ minHeight: "520px" }}>
-        {cards.map((card, cardIndex) => {
-          const position = positionForIndex(cardIndex);
-          const isTop = position === "top";
+      {/* Card Stack Container */}
+      <div className="max-w-2xl mx-auto flex flex-col gap-0">
+        {orderedIndices.map((cardIndex, stackPos) => {
+          const card = cards[cardIndex];
+          const isActive = stackPos === 0;
 
           return (
             <motion.div
               key={cardIndex}
-              className={`absolute inset-x-0 rounded-xl border bg-card shadow-lg overflow-hidden
-                ${isTop ? "cursor-pointer border-border" : "border-border/40"}
-              `}
-              animate={stackVariants[position]}
+              layout
+              className={`rounded-xl border overflow-hidden transition-shadow ${
+                isActive
+                  ? "bg-card shadow-md border-border cursor-pointer"
+                  : "bg-card/70 shadow-sm border-border/40 cursor-pointer hover:bg-card/90"
+              }`}
+              onClick={() => (isActive ? rotateNext() : bringToTop(cardIndex))}
               transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                mass: 0.8,
+                layout: { type: "spring", stiffness: 350, damping: 32, mass: 0.7 },
               }}
-              onClick={isTop ? rotateNext : undefined}
-              style={{ transformOrigin: "top center" }}
             >
-              {/* Card Tag + Indicator */}
-              <div className="flex items-center justify-between px-5 pt-4 pb-2">
-                <span className="inline-block px-3 py-1 rounded-full bg-primary/[0.08] text-primary text-[11px] font-semibold tracking-wider uppercase">
+              {/* Tag + Title strip (always visible) */}
+              <div
+                className={`flex items-center gap-3 px-4 ${
+                  isActive ? "pt-3 pb-2" : "py-2"
+                }`}
+                style={!isActive ? { height: `${PEEK_H}px` } : undefined}
+              >
+                <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-primary/[0.08] text-primary text-[10px] font-semibold tracking-wider uppercase">
                   {card.tag}
                 </span>
-                {isTop && (
+                <span
+                  className={`text-sm font-semibold font-heading truncate ${
+                    isActive ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  {card.headline}
+                </span>
+                {isActive && (
                   <motion.span
-                    className="flex items-center gap-1 text-[11px] text-muted-foreground"
+                    className="ml-auto shrink-0 flex items-center gap-0.5 text-[10px] text-muted-foreground/60"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.4 }}
                   >
-                    Tap to rotate
                     <ChevronDown className="h-3 w-3" />
                   </motion.span>
                 )}
               </div>
 
-              {/* Headline */}
-              <h3 className="text-lg sm:text-xl font-bold font-heading text-foreground px-5 pb-3 leading-tight">
-                {card.headline}
-              </h3>
+              {/* Expanded content (only for active card) */}
+              <AnimatePresence initial={false}>
+                {isActive && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    className="overflow-hidden"
+                  >
+                    {/* Art — compact aspect ratio */}
+                    <div className="mx-4 rounded-lg border border-border/30 bg-muted/20 overflow-hidden aspect-[5/2]">
+                      {card.art}
+                    </div>
 
-              {/* Art */}
-              <div className="mx-5 rounded-lg border border-border/30 bg-muted/20 overflow-hidden aspect-[2/1]">
-                {card.art}
-              </div>
-
-              {/* Body (only fully visible on top card, but rendered for layout) */}
-              <div className="px-5 pt-3 pb-5 text-sm text-muted-foreground leading-relaxed">
-                {card.body}
-              </div>
+                    {/* Body */}
+                    <div className="px-4 pt-2.5 pb-4 text-[13px] sm:text-sm text-muted-foreground leading-relaxed">
+                      {card.body}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           );
         })}
 
-        {/* Peek labels for stacked cards */}
-        <div className="absolute bottom-0 inset-x-0 flex justify-center gap-2 pb-2" style={{ zIndex: 5 }}>
-          {order.map((cardIndex, pos) => (
+        {/* Dot indicators */}
+        <div className="flex justify-center gap-1.5 mt-3">
+          {cards.map((_, i) => (
             <button
-              key={cardIndex}
-              onClick={() => {
-                // Move clicked card to top
-                setOrder(prev => {
-                  const next = prev.filter(i => i !== cardIndex);
-                  next.unshift(cardIndex);
-                  return next;
-                });
-              }}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                pos === 0
-                  ? "w-6 bg-primary"
-                  : "w-3 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+              key={i}
+              onClick={() => bringToTop(i)}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                i === activeIndex
+                  ? "w-5 bg-primary"
+                  : "w-2 bg-muted-foreground/25 hover:bg-muted-foreground/40"
               }`}
-              aria-label={`Go to: ${cards[cardIndex].tag}`}
+              aria-label={`Go to: ${cards[i].tag}`}
             />
           ))}
         </div>
