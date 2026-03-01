@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import findooLogoIcon from "@/assets/findoo-logo-icon.png";
 import { motion, AnimatePresence } from "framer-motion";
 
 /* ── Types ── */
@@ -258,7 +259,7 @@ const CosmicNetworkVisualization: React.FC<Props> = ({ highlightedOrbit }) => {
         <motion.circle
           cx={CENTER}
           cy={CENTER}
-          r={24}
+          r={28}
           fill="hsl(var(--primary))"
           animate={{ scale: [1, 1.04, 1] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -267,30 +268,24 @@ const CosmicNetworkVisualization: React.FC<Props> = ({ highlightedOrbit }) => {
         <motion.circle
           cx={CENTER}
           cy={CENTER}
-          r={28}
+          r={33}
           fill="none"
           stroke="hsl(var(--primary))"
           strokeWidth={1}
           opacity={0.3}
-          animate={{ r: [28, 32, 28], opacity: [0.3, 0.15, 0.3] }}
+          animate={{ r: [33, 37, 33], opacity: [0.3, 0.15, 0.3] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         />
-        <text
-          x={CENTER}
-          y={CENTER - 4}
-          textAnchor="middle"
-          className="fill-primary-foreground text-[11px] font-bold font-heading"
-        >
-          F
-        </text>
-        <text
-          x={CENTER}
-          y={CENTER + 8}
-          textAnchor="middle"
-          className="fill-primary-foreground text-[5px] font-medium tracking-[0.15em] uppercase"
-        >
-          FINDOO
-        </text>
+        {/* Findoo logo image */}
+        <image
+          href={findooLogoIcon}
+          x={CENTER - 18}
+          y={CENTER - 18}
+          width={36}
+          height={36}
+          className="pointer-events-none"
+          style={{ borderRadius: "50%" }}
+        />
 
         {/* Orbit labels */}
         {(Object.entries(ORBITS) as [string, { radius: number; nodes: number }][]).map(
