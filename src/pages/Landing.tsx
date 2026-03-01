@@ -228,14 +228,21 @@ const Landing = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               <div className="relative">
-                {/* Enhanced glow behind brain */}
-                <div className="absolute inset-[5%] bg-gradient-to-br from-primary/[0.12] via-accent/[0.06] to-transparent rounded-full blur-3xl" />
-                <div className="absolute inset-[20%] bg-gradient-to-tr from-gold/[0.04] to-transparent rounded-full blur-2xl" />
-                <img
-                  src={networkBrainHero}
-                  alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(25,25,112,0.08)] mix-blend-multiply dark:mix-blend-screen dark:invert"
-                />
+                {/* Soft ambient glow behind brain */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-accent/[0.04] rounded-full blur-3xl scale-110" />
+                <div
+                  className="relative"
+                  style={{
+                    maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 100%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 100%)',
+                  }}
+                >
+                  <img
+                    src={networkBrainHero}
+                    alt="FindOO — The brain of your financial life"
+                    className="relative w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert opacity-90"
+                  />
+                </div>
                 {/* Small sparkle accents near the brain */}
                 <Sparkles count={4} />
               </div>
