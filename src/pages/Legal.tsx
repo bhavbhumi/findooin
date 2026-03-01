@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 
@@ -537,7 +538,21 @@ const contentMap: Record<string, { sections: typeof termsSections; lastUpdated: 
 
 const Legal = () => {
   usePageMeta({ title: "Legal & Compliance", description: "FindOO terms of service, privacy policy, platform policies, and regulatory disclosures — Indian jurisdiction, DPDP Act compliant." });
-  const [activeTab, setActiveTab] = useState("Terms");
+  const [searchParams] = useSearchParams();
+  const tabParamMap: Record<string, string> = {
+    terms: "Terms", privacy: "Privacy", policies: "Policies",
+    "cookie-policy": "Cookie Policy", accessibility: "Accessibility",
+    "refund-policy": "Refund Policy", transparency: "Transparency",
+    disclosures: "Disclosures",
+  };
+  const initialTab = tabParamMap[searchParams.get("tab") || ""] || "Terms";
+  const [activeTab, setActiveTab] = useState(initialTab);
+
+  useEffect(() => {
+    const mapped = tabParamMap[searchParams.get("tab") || ""];
+    if (mapped) setActiveTab(mapped);
+  }, [searchParams]);
+
   const { sections, lastUpdated } = contentMap[activeTab];
 
   return (

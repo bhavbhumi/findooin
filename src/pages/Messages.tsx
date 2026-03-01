@@ -295,7 +295,7 @@ const Messages = () => {
     <div className="h-screen flex flex-col bg-background">
       <AppNavbar />
       <div className={cn(
-        "flex-1 min-h-0 container max-w-4xl mx-auto md:pt-4 md:px-4 md:pb-4 pb-16",
+        "flex-1 min-h-0 container max-w-4xl mx-auto md:pt-4 md:px-4 md:pb-4 pb-[4.5rem]",
         selectedUserId ? "px-0 pt-0" : "px-2 pt-2"
       )}>
         <div className={cn(

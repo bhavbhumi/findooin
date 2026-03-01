@@ -222,7 +222,7 @@ const Profile = () => {
             <FeaturedContent profileId={profile.id} isOwnProfile={isOwnProfile} />
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
-              <div className="overflow-x-auto -mx-1 px-1 mb-4">
+              <div className="overflow-x-auto -mx-1 px-1 mb-4 scrollbar-hide">
                 <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
                   <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
                   <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
