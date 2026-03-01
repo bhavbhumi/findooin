@@ -12,7 +12,7 @@ const fadeUp = {
   }),
 };
 
-const tabs = ["Terms", "Privacy", "Policies", "Disclosures"];
+const tabs = ["Terms", "Privacy", "Policies", "Cookie Policy", "Accessibility", "Refund Policy", "Transparency", "Disclosures"];
 
 /* ───────────────────── TERMS OF SERVICE ───────────────────── */
 const termsSections = [
@@ -299,10 +299,239 @@ Mutual fund investments are subject to market risks. Read all scheme-related doc
   },
 ];
 
+/* ───────────────────── COOKIE POLICY ───────────────────── */
+const cookiePolicySections = [
+  {
+    title: "1. What Are Cookies",
+    content: `Cookies are small text files stored on your device (computer, tablet, or mobile phone) when you visit a website. They are widely used to make websites function efficiently, enhance user experience, and provide reporting information. FindOO Technologies Private Limited ("FindOO", "we", "us") uses cookies and similar technologies (web beacons, pixel tags, local storage) on the FindOO platform ("Platform") to provide, protect, and improve our services. This Cookie Policy should be read alongside our Privacy Policy and Terms of Service.`,
+  },
+  {
+    title: "2. Types of Cookies We Use",
+    content: `2.1 Strictly Necessary Cookies: These cookies are essential for the Platform to function and cannot be disabled. They include: (a) Authentication cookies — to keep you signed in during your session; (b) Security cookies — to detect authentication abuse, protect against CSRF attacks, and prevent unauthorized access; (c) Load-balancing cookies — to distribute traffic across servers for optimal performance; (d) Cookie consent cookies — to remember your cookie preferences.
+
+2.2 Functional Cookies: These cookies enable personalized features: (a) Theme and display preferences (dark/light mode); (b) Language settings; (c) Feed layout and sort preferences; (d) Notification settings; (e) Recently viewed profiles, listings, and events.
+
+2.3 Analytics Cookies: These cookies collect aggregated, anonymized data to help us understand Platform usage: (a) Pages visited and time spent; (b) Feature adoption rates; (c) Navigation paths and user flows; (d) Error tracking and performance monitoring. We use web-vitals and internal analytics. We do NOT use Google Analytics or any third-party behavioral advertising trackers.
+
+2.4 Performance Cookies: These cookies monitor Platform stability: (a) Page load times and Core Web Vitals; (b) API response times; (c) Client-side error rates; (d) Resource utilization metrics.`,
+  },
+  {
+    title: "3. Cookies We Do NOT Use",
+    content: `FindOO is committed to user privacy. We explicitly do NOT use: (a) Third-party advertising cookies; (b) Cross-site tracking cookies; (c) Behavioral profiling cookies for ad targeting; (d) Social media tracking pixels from external platforms; (e) Fingerprinting technologies to identify users across sites. We do not sell or share cookie data with advertisers, data brokers, or any third parties for marketing purposes.`,
+  },
+  {
+    title: "4. Cookie Duration",
+    content: `4.1 Session Cookies: Temporary cookies that are deleted when you close your browser. Used for authentication and security during your active session.
+
+4.2 Persistent Cookies: Cookies that remain on your device for a set period: (a) Authentication "remember me" cookies — up to 30 days; (b) Preference cookies — up to 12 months; (c) Analytics cookies — up to 12 months; (d) Consent cookies — up to 12 months. All persistent cookies have defined expiry dates and are not set to persist indefinitely.`,
+  },
+  {
+    title: "5. Managing Cookie Preferences",
+    content: `You have the right to control cookies: (a) Browser Settings — most browsers allow you to refuse or delete cookies through their settings (Chrome, Firefox, Safari, Edge); (b) Account Settings — you can manage functional and analytics cookie preferences in your FindOO account settings under Privacy & Data; (c) Opt-Out — you may opt out of analytics cookies at any time without affecting Platform functionality.
+
+Important: Disabling strictly necessary cookies may prevent you from signing in, posting content, or using core Platform features. Functional cookies being disabled may result in a less personalized experience.`,
+  },
+  {
+    title: "6. Local Storage & Similar Technologies",
+    content: `In addition to cookies, FindOO uses: (a) Local Storage — to store theme preferences, cached feed data, and draft posts for offline resilience; (b) Session Storage — for temporary data during active browser sessions; (c) Web Beacons — invisible pixel-sized images used in emails to confirm delivery and open rates for service-related communications only (not marketing). These technologies are governed by the same principles outlined in this Cookie Policy and our Privacy Policy.`,
+  },
+  {
+    title: "7. Legal Basis (Indian Law)",
+    content: `Under the Information Technology Act, 2000, the IT (Reasonable Security Practices) Rules, 2011, and the Digital Personal Data Protection Act, 2023: (a) Strictly necessary cookies are placed without consent as they are essential for Platform operation; (b) Functional, analytics, and performance cookies are placed based on your consent, which you may withdraw at any time; (c) We process cookie data as a "Data Fiduciary" under the DPDP Act and maintain appropriate security measures.`,
+  },
+  {
+    title: "8. Updates to This Cookie Policy",
+    content: `We may update this Cookie Policy periodically. Material changes will be communicated via in-app notification. The "Last Updated" date will be revised accordingly. For questions about cookies, contact: privacy@findoo.in.`,
+  },
+];
+
+/* ───────────────────── ACCESSIBILITY STATEMENT ───────────────────── */
+const accessibilitySections = [
+  {
+    title: "1. Our Commitment",
+    content: `FindOO Technologies Private Limited is committed to ensuring digital accessibility for people with diverse abilities. We believe the financial networking ecosystem should be inclusive and available to everyone, regardless of ability or disability. We continually improve the user experience for all visitors and apply the relevant accessibility standards to ensure we provide equal access to all users.`,
+  },
+  {
+    title: "2. Standards We Follow",
+    content: `We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA, as recommended by the World Wide Web Consortium (W3C). These guidelines address: (a) Perceivable — information and user interface components are presentable to users in ways they can perceive; (b) Operable — user interface components and navigation must be operable by all users; (c) Understandable — information and the operation of the user interface must be understandable; (d) Robust — content must be robust enough to be interpreted reliably by a wide variety of user agents, including assistive technologies. We also align with the Rights of Persons with Disabilities Act, 2016 (RPwD Act), which mandates accessible information and communication technology for persons with disabilities in India.`,
+  },
+  {
+    title: "3. Accessibility Features on FindOO",
+    content: `Our Platform includes the following accessibility features: (a) Semantic HTML — proper use of headings (H1–H6), landmarks (header, nav, main, footer), and ARIA attributes for screen reader compatibility; (b) Keyboard Navigation — all interactive elements (buttons, links, form fields, dialogs, menus) are fully navigable using keyboard alone (Tab, Enter, Escape, Arrow keys); (c) Skip Navigation — a "Skip to main content" link is provided for keyboard users to bypass repetitive navigation; (d) Focus Management — visible focus indicators on all interactive elements, with proper focus trapping in modals and dialogs; (e) Color Contrast — text and interactive elements maintain a minimum contrast ratio of 4.5:1 (AA standard) against their backgrounds; (f) Text Resizing — the Platform supports browser-level text zoom up to 200% without loss of content or functionality; (g) Alt Text — meaningful alternative text is provided for informational images; decorative images are marked appropriately; (h) Form Accessibility — all form inputs have associated labels, error messages are programmatically linked, and required fields are clearly indicated; (i) Dark & Light Themes — both themes maintain accessibility contrast standards; (j) Responsive Design — the Platform is fully responsive and accessible across desktop, tablet, and mobile devices; (k) Motion Sensitivity — animations respect the "prefers-reduced-motion" media query for users who experience motion sensitivity.`,
+  },
+  {
+    title: "4. Assistive Technology Compatibility",
+    content: `FindOO is designed to be compatible with: (a) Screen readers — NVDA, JAWS, VoiceOver (macOS/iOS), TalkBack (Android); (b) Screen magnification software — ZoomText, built-in browser zoom; (c) Speech recognition software — Dragon NaturallySpeaking, system-level voice control; (d) Alternative input devices — switch access, eye-tracking systems, sip-and-puff devices; (e) High-contrast modes — Windows High Contrast Mode, browser-based contrast extensions. We test regularly with NVDA and VoiceOver as primary screen readers.`,
+  },
+  {
+    title: "5. Known Limitations",
+    content: `While we strive for comprehensive accessibility, some areas may have limitations: (a) User-generated content — images uploaded by users may lack alt text; we encourage all users to add descriptive text to uploads; (b) Third-party embeds — some embedded third-party content (e.g., external event widgets, map embeds) may not fully meet accessibility standards; (c) PDF documents — some documents uploaded to the Platform by users may not be fully accessible; (d) Complex data visualizations — charts and graphs in analytics sections provide data tables as alternatives but may not be fully navigable by all assistive technologies; (e) Real-time features — live chat and real-time notifications may have limited screen reader support in certain browser/AT combinations. We are actively working to address these limitations.`,
+  },
+  {
+    title: "6. Accessibility Feedback",
+    content: `We welcome your feedback on the accessibility of FindOO. If you encounter any accessibility barriers or have suggestions for improvement, please contact us:
+
+Email: accessibility@findoo.in
+Subject line: Accessibility Feedback — [Brief Description]
+
+When reporting an issue, please include: (a) the page or feature URL; (b) a description of the problem; (c) the assistive technology you are using (if applicable); (d) your browser and operating system; and (e) any screenshots or recordings that illustrate the issue.
+
+We aim to respond to accessibility feedback within 5 business days and to address critical accessibility barriers within 30 days.`,
+  },
+  {
+    title: "7. Accessibility Roadmap",
+    content: `Our ongoing accessibility improvements include: (a) Regular automated and manual accessibility audits (quarterly); (b) User testing with people with disabilities (bi-annually); (c) VPAT (Voluntary Product Accessibility Template) documentation for enterprise clients; (d) Accessibility training for all development and design team members; (e) Integration of accessibility checks into our CI/CD pipeline; (f) Ongoing remediation of any identified WCAG 2.1 Level AA non-conformances.`,
+  },
+  {
+    title: "8. Legal Framework",
+    content: `This Accessibility Statement is published in alignment with: (a) Rights of Persons with Disabilities Act, 2016 (RPwD Act) — Section 42 mandates accessibility of electronic and information technology for persons with disabilities; (b) Guidelines for Indian Government Websites (GIGW) — while these primarily apply to government websites, we voluntarily align with their accessibility standards; (c) Web Content Accessibility Guidelines (WCAG) 2.1 Level AA — the international standard for web accessibility; (d) United Nations Convention on the Rights of Persons with Disabilities (UNCRPD) — ratified by India in 2007. This statement was last reviewed and updated in March 2026.`,
+  },
+];
+
+/* ───────────────────── REFUND & CANCELLATION POLICY ───────────────────── */
+const refundPolicySections = [
+  {
+    title: "1. Applicability",
+    content: `This Refund and Cancellation Policy applies to all paid features, subscription plans, and premium services offered by FindOO Technologies Private Limited ("FindOO") through the FindOO platform ("Platform"). As of the current date, FindOO's core networking features are free to use. This policy will govern future premium offerings including, but not limited to: (a) FindOO Pro subscriptions; (b) FindOO Enterprise plans; (c) Promoted listings and sponsored content; (d) Premium event hosting features; (e) Enhanced analytics and lead capture tools; (f) Any other paid features introduced on the Platform.`,
+  },
+  {
+    title: "2. Subscription Plans",
+    content: `2.1 Billing Cycle: Subscriptions are billed on a recurring basis (monthly or annually, as selected by the User) starting from the date of purchase. Annual plans are billed as a single payment at the beginning of the billing cycle.
+
+2.2 Auto-Renewal: All subscriptions auto-renew at the end of each billing cycle unless cancelled before the renewal date. You will receive a reminder notification at least 7 days before your subscription renews.
+
+2.3 Price Changes: FindOO reserves the right to modify subscription pricing. Any price increase will be communicated at least 30 days before it takes effect and will apply only from your next billing cycle. Existing billing cycles will be honored at the original price.`,
+  },
+  {
+    title: "3. Cancellation Policy",
+    content: `3.1 How to Cancel: You may cancel your subscription at any time through: (a) Account Settings → Subscription → Cancel Plan; or (b) by contacting billing@findoo.in.
+
+3.2 Effect of Cancellation: Upon cancellation, your premium features remain active until the end of the current billing period. After the billing period expires, your account reverts to the free tier. No additional charges will be applied after cancellation.
+
+3.3 Data Retention After Cancellation: Your account data (profile, content, connections) is retained even after downgrading to the free tier. Premium-specific data (advanced analytics, lead capture data) will be retained for 90 days after cancellation, during which you may export it.`,
+  },
+  {
+    title: "4. Refund Policy",
+    content: `4.1 Cooling-Off Period: You may request a full refund within 7 days of your initial subscription purchase if you have not substantially used premium features. "Substantial use" is defined as accessing premium features on more than 3 separate days during the cooling-off period.
+
+4.2 Annual Subscriptions: For annual subscriptions cancelled after the 7-day cooling-off period, FindOO may provide a pro-rated refund for the unused months at its discretion, less a 10% administrative fee.
+
+4.3 Monthly Subscriptions: Monthly subscriptions cancelled after the 7-day cooling-off period are not eligible for refunds. The subscription will remain active until the end of the current monthly billing cycle.
+
+4.4 Refunds for Service Issues: If you experience a material service outage or deficiency that substantially impairs your ability to use paid features for more than 72 consecutive hours, you may request a pro-rated refund or credit for the affected period by contacting billing@findoo.in.
+
+4.5 Non-Refundable Items: The following are non-refundable: (a) one-time purchases (promoted listings, sponsored content) once the promotion has been delivered or is live; (b) features consumed in full during the billing period; (c) subscriptions purchased using promotional codes or discounts (unless otherwise stated in the promotion terms).`,
+  },
+  {
+    title: "5. Refund Process",
+    content: `5.1 How to Request: Submit a refund request via: (a) Account Settings → Billing → Request Refund; or (b) emailing billing@findoo.in with your account email, subscription details, and reason for the request.
+
+5.2 Processing Time: Refund requests are reviewed within 5 business days. Approved refunds are processed within 7–10 business days.
+
+5.3 Refund Method: Refunds are credited to the original payment method used for the purchase. In case the original payment method is unavailable, FindOO will coordinate an alternative refund method.
+
+5.4 Currency: All refunds are processed in Indian Rupees (INR). Exchange rate fluctuations for international payments are borne by the User.`,
+  },
+  {
+    title: "6. Taxes",
+    content: `All prices displayed on the Platform are exclusive of applicable Goods and Services Tax (GST) unless explicitly stated otherwise. GST will be charged at the prevailing rate as per the Central Goods and Services Tax Act, 2017, and respective State GST Acts. Tax invoices will be provided for all paid subscriptions and can be downloaded from Account Settings → Billing → Invoices. Refunds will include any GST originally charged.`,
+  },
+  {
+    title: "7. Disputes",
+    content: `If you disagree with a billing charge, you must notify FindOO within 30 days of the charge date by emailing billing@findoo.in. Failure to dispute a charge within 30 days constitutes acceptance of the charge. Billing disputes will be resolved in accordance with the Dispute Resolution mechanism outlined in our Terms of Service.`,
+  },
+  {
+    title: "8. Contact",
+    content: `For billing inquiries, refund requests, or cancellation assistance:
+Email: billing@findoo.in
+Support: support@findoo.in
+
+FindOO Technologies Private Limited
+Registered Office: Mumbai, Maharashtra, India`,
+  },
+];
+
+/* ───────────────────── TRANSPARENCY REPORT ───────────────────── */
+const transparencyReportSections = [
+  {
+    title: "1. Purpose",
+    content: `This Transparency Report is published by FindOO Technologies Private Limited ("FindOO") in compliance with Rule 4(1)(d) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, which requires significant social media intermediaries to publish periodic compliance reports. FindOO voluntarily publishes this report to demonstrate our commitment to responsible platform governance, even where the mandatory threshold may not yet apply. This report covers content moderation activities, user safety measures, and regulatory compliance actions.`,
+  },
+  {
+    title: "2. Compliance Framework",
+    content: `FindOO operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000, and complies with: (a) Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 — including due diligence obligations, grievance redressal mechanisms, and content moderation standards; (b) Digital Personal Data Protection Act, 2023 — data processing, consent management, and data principal rights; (c) SEBI regulations — monitoring financial content for compliance with market integrity rules; (d) Consumer Protection Act, 2019 — fair practices in platform services.
+
+Key Compliance Officers:
+• Grievance Officer: grievance@findoo.in (responds within 24 hours, resolves within 15 days)
+• Chief Compliance Officer: compliance@findoo.in
+• Nodal Contact Person: nodal@findoo.in (24×7 availability for law enforcement coordination)`,
+  },
+  {
+    title: "3. Content Moderation Overview",
+    content: `FindOO employs a multi-layered content moderation approach: (a) Automated Filters — keyword-based and pattern-matching filters that flag potentially violating content for human review, including SEBI-regulated terms and suspicious financial claims; (b) Community Reporting — users can report content, profiles, or messages through in-app report buttons; (c) Human Review — trained moderators review flagged and reported content against Community Guidelines and applicable financial regulations; (d) Proactive Monitoring — periodic sweeps for prohibited financial content including unregistered investment advice, insider information, and market manipulation attempts.
+
+Moderation Actions Available: Warning, Content Removal, Feature Restriction (temporary), Account Suspension (7–30 days), Permanent Termination.`,
+  },
+  {
+    title: "4. Reporting Period Statistics",
+    content: `The following statistics represent platform moderation activity. As FindOO is in its initial operational phase, these figures will be updated as the platform scales:
+
+Complaints Received: To be published quarterly upon platform reaching operational scale.
+Categories tracked: (a) Content violating Community Guidelines; (b) Financial misinformation or unregistered advice; (c) Intellectual property infringement; (d) Impersonation and fake accounts; (e) Harassment and intimidation; (f) Spam and automated abuse; (g) Privacy violations; (h) Other violations.
+
+For each category, we will report: total complaints received, content actioned (removed/restricted), complaints resolved within the prescribed timeframe, and average resolution time.`,
+  },
+  {
+    title: "5. Government & Regulatory Requests",
+    content: `FindOO tracks and reports on requests received from government authorities, law enforcement, and financial regulators:
+
+Types of requests tracked: (a) Information/data requests — requests for user data or platform records; (b) Content removal requests — orders to remove or restrict specific content; (c) Account action requests — directions to suspend or terminate specific accounts; (d) Preservation requests — requests to preserve specified data pending legal proceedings.
+
+For each type, we report: total requests received, requests complied with (fully or partially), requests denied or challenged, and average response time.
+
+Compliance principle: FindOO complies with lawful requests from competent authorities. We may challenge or seek clarification on requests that appear overbroad, lack legal basis, or conflict with user rights under applicable law.`,
+  },
+  {
+    title: "6. Verification & Trust Metrics",
+    content: `FindOO's credential verification system: (a) Total verification requests received; (b) Verifications completed and approved; (c) Verifications rejected (with reason categories: expired registration, unverifiable credentials, mismatched information); (d) Re-verification audits conducted; (e) Verified status revocations (due to lapsed/revoked registrations).
+
+Regulatory bodies verified against: SEBI, AMFI, IRDAI, RBI, PFRDA, ICAI, ICSI, ICMAI, and other relevant professional bodies.
+
+These metrics will be published on a quarterly basis.`,
+  },
+  {
+    title: "7. User Safety Measures",
+    content: `FindOO implements the following user safety measures: (a) Content warnings — automated disclaimers appended to financial content discussing specific securities or investment strategies; (b) Impersonation detection — monitoring for accounts that misrepresent identity, organizational affiliation, or regulatory status; (c) Suspicious activity detection — monitoring for patterns indicative of market manipulation, coordinated inauthentic behavior, or systematic harassment; (d) Data breach monitoring — continuous monitoring for unauthorized access with incident response procedures per DPDP Act requirements; (e) Rate limiting — controls on posting, messaging, and connection requests to prevent abuse; (f) Secure authentication — encrypted credentials, session management, and optional two-factor authentication.`,
+  },
+  {
+    title: "8. Appeals & Outcomes",
+    content: `FindOO provides an appeals process for all moderation actions: (a) Users may appeal via appeals@findoo.in within 30 days of any enforcement action; (b) Appeals are reviewed by a different moderator than the one who made the original decision; (c) Appeal decisions are communicated within 15 business days.
+
+Appeal outcome categories tracked: (a) Action upheld — original moderation decision confirmed; (b) Action modified — enforcement reduced (e.g., suspension shortened, content restored with warning); (c) Action reversed — original decision overturned and content/account fully restored; (d) Under review — appeal pending additional investigation.`,
+  },
+  {
+    title: "9. Report Schedule & Contact",
+    content: `Transparency Report Publication Schedule: (a) Monthly summary — published within 15 days of month-end (once platform reaches 50,000 registered users); (b) Quarterly detailed report — comprehensive statistics and analysis; (c) Annual review — year-in-review with trends, policy changes, and forward-looking measures.
+
+All reports are accessible via the Platform at /legal (Transparency tab).
+
+For questions about this report:
+Email: transparency@findoo.in
+Compliance: compliance@findoo.in
+
+FindOO Technologies Private Limited
+Registered Office: Mumbai, Maharashtra, India`,
+  },
+];
+
 const contentMap: Record<string, { sections: typeof termsSections; lastUpdated: string }> = {
   Terms: { sections: termsSections, lastUpdated: "March 2026" },
   Privacy: { sections: privacySections, lastUpdated: "March 2026" },
   Policies: { sections: policiesSections, lastUpdated: "March 2026" },
+  "Cookie Policy": { sections: cookiePolicySections, lastUpdated: "March 2026" },
+  Accessibility: { sections: accessibilitySections, lastUpdated: "March 2026" },
+  "Refund Policy": { sections: refundPolicySections, lastUpdated: "March 2026" },
+  Transparency: { sections: transparencyReportSections, lastUpdated: "March 2026" },
   Disclosures: { sections: disclosureSections, lastUpdated: "March 2026" },
 };
 
@@ -321,13 +550,13 @@ const Legal = () => {
         variant="dots"
       />
 
-      <div className="border-b border-border bg-background sticky top-16 z-30">
-        <div className="container flex gap-0">
+      <div className="border-b border-border bg-background sticky top-16 z-30 overflow-x-auto scrollbar-hide">
+        <div className="container flex gap-0 min-w-max">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-5 py-3.5 text-sm font-medium transition-colors relative ${
+              className={`px-4 py-3.5 text-sm font-medium transition-colors relative whitespace-nowrap ${
                 activeTab === tab ? "text-foreground" : "text-muted-foreground hover:text-foreground"
               }`}
             >
