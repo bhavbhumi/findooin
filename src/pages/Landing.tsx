@@ -234,7 +234,7 @@ const Landing = () => {
                 <img
                   src={networkBrainHero}
                   alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(25,25,112,0.08)]"
+                  className="relative w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(25,25,112,0.08)] mix-blend-multiply dark:mix-blend-screen dark:invert"
                 />
                 {/* Small sparkle accents near the brain */}
                 <Sparkles count={4} />
