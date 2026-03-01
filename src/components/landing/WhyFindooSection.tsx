@@ -1,162 +1,151 @@
 /**
- * WhyFindooSection — "Why Findoo" with stacked card carousel / deck rotation
+ * WhyFindooSection — Stacked card deck with background decorations instead of inline art
  */
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import { ChevronDown } from "lucide-react";
-import findooLogoIcon from "@/assets/findoo-logo-icon.png";
 
-/* ─── SVG Illustrations (kept compact) ─── */
+/* ─── Background Decorations per card ─── */
 
-function ConcentricOrbitsArt() {
-  const cx = 200, cy = 100;
+function OrbitsBackground() {
   return (
-    <svg viewBox="0 0 400 200" className="w-full h-full" aria-hidden="true">
-      <defs>
-        <radialGradient id="orb-bg" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.08" />
-          <stop offset="100%" stopColor="transparent" />
-        </radialGradient>
-        <linearGradient id="fin-orbit" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="hsl(var(--primary))" />
-          <stop offset="100%" stopColor="hsl(var(--accent))" />
-        </linearGradient>
-      </defs>
-      <rect width="400" height="200" fill="url(#orb-bg)" />
-      <circle cx={cx} cy={cy} r={85} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1" strokeOpacity="0.12" strokeDasharray="4 6" />
-      <circle cx={cx} cy={cy} r={58} fill="none" stroke="hsl(var(--muted-foreground))" strokeWidth="1" strokeOpacity="0.18" strokeDasharray="4 6" />
-      <motion.circle cx={cx} cy={cy} r={30} fill="none" stroke="url(#fin-orbit)" strokeWidth="2.5" strokeOpacity="0.8"
-        initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.5 }} />
-      <text x={cx + 62} y={cy - 48} fontSize="8" fill="hsl(var(--muted-foreground))" opacity="0.5">Social</text>
-      <text x={cx + 42} y={cy - 28} fontSize="8" fill="hsl(var(--muted-foreground))" opacity="0.6">Professional</text>
-      <text x={cx + 22} y={cy - 6} fontSize="9" fill="hsl(var(--primary))" opacity="0.9" fontWeight="600">Financial</text>
-      {[0, 72, 144, 216, 288].map((deg, i) => {
-        const x = cx + 85 * Math.cos((deg * Math.PI) / 180);
-        const y = cy + 85 * Math.sin((deg * Math.PI) / 180);
-        return <circle key={i} cx={x} cy={y} r={3} fill="hsl(var(--muted-foreground))" opacity="0.2" />;
-      })}
-      {[0, 120, 240].map((deg, i) => {
-        const x = cx + 30 * Math.cos((deg * Math.PI) / 180);
-        const y = cy + 30 * Math.sin((deg * Math.PI) / 180);
-        return <motion.circle key={i} cx={x} cy={y} r={5} fill="hsl(var(--primary))" opacity="0.7"
-          initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.8 + i * 0.15 }} />;
-      })}
-      <circle cx={cx} cy={cy} r={8} fill="hsl(var(--primary))" opacity="0.15" />
-      <circle cx={cx} cy={cy} r={4} fill="hsl(var(--primary))" opacity="0.5" />
-    </svg>
-  );
-}
-
-function NoiseToStructureArt() {
-  const chaosNodes = Array.from({ length: 16 }, (_, i) => ({
-    x: 20 + Math.sin(i * 7.3) * 55 + 45,
-    y: 20 + Math.cos(i * 5.1) * 60 + 45,
-  }));
-  const structuredNodes = [
-    { x: 270, y: 40 }, { x: 310, y: 40 }, { x: 350, y: 40 },
-    { x: 250, y: 75 }, { x: 290, y: 75 }, { x: 330, y: 75 }, { x: 370, y: 75 },
-    { x: 270, y: 110 }, { x: 310, y: 110 }, { x: 350, y: 110 },
-    { x: 250, y: 145 }, { x: 290, y: 145 }, { x: 330, y: 145 }, { x: 370, y: 145 },
-    { x: 270, y: 180 }, { x: 310, y: 180 }, { x: 350, y: 180 },
-  ];
-  return (
-    <svg viewBox="0 0 400 200" className="w-full h-full" aria-hidden="true">
-      <defs>
-        <linearGradient id="ns-bg" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="hsl(var(--destructive))" stopOpacity="0.04" />
-          <stop offset="50%" stopColor="transparent" />
-          <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0.06" />
-        </linearGradient>
-        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill="hsl(var(--primary))" opacity="0.6" />
-        </marker>
-      </defs>
-      <rect width="400" height="200" fill="url(#ns-bg)" />
-      {chaosNodes.slice(0, 10).map((n, i) => {
-        const t = chaosNodes[(i + 3) % chaosNodes.length];
-        return <line key={i} x1={n.x} y1={n.y} x2={t.x} y2={t.y} stroke="hsl(var(--muted-foreground))" strokeWidth="0.5" strokeOpacity="0.15" />;
-      })}
-      {chaosNodes.map((n, i) => <circle key={i} cx={n.x} cy={n.y} r={2.5} fill="hsl(var(--muted-foreground))" opacity={0.2 + (i % 3) * 0.1} />)}
-      <text x="60" y="195" fontSize="8" fill="hsl(var(--muted-foreground))" opacity="0.4" textAnchor="middle">Noise</text>
-      <motion.path d="M 180 100 L 220 100" stroke="hsl(var(--primary))" strokeWidth="2" strokeOpacity="0.4" fill="none" markerEnd="url(#arrowhead)"
-        initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.5 }} />
-      {structuredNodes.map((n, i) =>
-        structuredNodes.slice(i + 1).filter(t => Math.sqrt((n.x - t.x) ** 2 + (n.y - t.y) ** 2) < 50).map((t, j) => (
-          <motion.line key={`${i}-${j}`} x1={n.x} y1={n.y} x2={t.x} y2={t.y}
-            stroke="hsl(var(--primary))" strokeWidth="0.8" strokeOpacity="0.2"
-            initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.3, delay: 0.8 + i * 0.03 }} />
-        ))
-      )}
-      {structuredNodes.map((n, i) => (
-        <motion.circle key={i} cx={n.x} cy={n.y} r={4} fill="hsl(var(--primary))" opacity="0.6"
-          initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ delay: 1 + i * 0.04 }} />
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+      {/* Gradient wash */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-accent/[0.04]" />
+      {/* Concentric rings */}
+      <svg className="absolute -right-16 -top-16 w-64 h-64 opacity-[0.08]" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="hsl(var(--primary))" strokeWidth="1" strokeDasharray="4 6" />
+        <circle cx="100" cy="100" r="65" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" strokeDasharray="3 5" />
+        <circle cx="100" cy="100" r="38" fill="none" stroke="hsl(var(--primary))" strokeWidth="2" />
+        <circle cx="100" cy="100" r="12" fill="hsl(var(--primary))" opacity="0.3" />
+      </svg>
+      {/* Floating dots */}
+      {[
+        { x: "85%", y: "20%", size: 6 },
+        { x: "78%", y: "65%", size: 4 },
+        { x: "92%", y: "45%", size: 3 },
+        { x: "70%", y: "80%", size: 5 },
+      ].map((d, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full bg-primary/20"
+          style={{ left: d.x, top: d.y, width: d.size, height: d.size }}
+          animate={{ y: [0, -6, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 3 + i, repeat: Infinity, ease: "easeInOut" }}
+        />
       ))}
-      <text x="310" y="195" fontSize="8" fill="hsl(var(--primary))" opacity="0.6" textAnchor="middle">Signal</text>
-    </svg>
+      {/* Network lines */}
+      <svg className="absolute right-8 bottom-4 w-40 h-32 opacity-[0.06]" viewBox="0 0 160 128">
+        <line x1="20" y1="100" x2="80" y2="30" stroke="hsl(var(--primary))" strokeWidth="1" />
+        <line x1="80" y1="30" x2="140" y2="70" stroke="hsl(var(--primary))" strokeWidth="1" />
+        <line x1="140" y1="70" x2="60" y2="90" stroke="hsl(var(--primary))" strokeWidth="1" />
+        <circle cx="20" cy="100" r="4" fill="hsl(var(--primary))" />
+        <circle cx="80" cy="30" r="5" fill="hsl(var(--primary))" />
+        <circle cx="140" cy="70" r="4" fill="hsl(var(--primary))" />
+        <circle cx="60" cy="90" r="3" fill="hsl(var(--primary))" />
+      </svg>
+    </div>
   );
 }
 
-function NeutralCoreArt() {
-  const cx = 200, cy = 100;
-  const clusters = [
-    { label: "Issuers", color: "var(--issuer)", angle: -90, radius: 68, count: 6 },
-    { label: "Intermediaries", color: "var(--intermediary)", angle: 150, radius: 68, count: 7 },
-    { label: "Investors", color: "var(--investor)", angle: 30, radius: 68, count: 6 },
-  ];
+function SignalBackground() {
   return (
-    <svg viewBox="0 0 400 200" className="w-full h-full" aria-hidden="true">
-      <defs>
-        <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="transparent" />
-        </radialGradient>
-      </defs>
-      <rect width="400" height="200" fill="url(#core-glow)" />
-      {clusters.map((cluster, ci) => {
-        const clCx = cx + cluster.radius * Math.cos((cluster.angle * Math.PI) / 180);
-        const clCy = cy + cluster.radius * Math.sin((cluster.angle * Math.PI) / 180);
-        const nodes = Array.from({ length: cluster.count }, (_, i) => {
-          const a = (i / cluster.count) * Math.PI * 2;
-          const r = 18 + (i % 2) * 6;
-          return { x: clCx + r * Math.cos(a), y: clCy + r * Math.sin(a) };
-        });
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 bg-gradient-to-tr from-destructive/[0.03] via-transparent to-primary/[0.06]" />
+      {/* Diagonal mesh */}
+      <svg className="absolute -right-12 -bottom-12 w-72 h-56 opacity-[0.06]" viewBox="0 0 280 220">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <line key={`d${i}`} x1={i * 40} y1="0" x2={i * 40 - 60} y2="220" stroke="hsl(var(--primary))" strokeWidth="0.8" />
+        ))}
+        {Array.from({ length: 6 }).map((_, i) => (
+          <line key={`h${i}`} x1="0" y1={i * 44} x2="280" y2={i * 44} stroke="hsl(var(--primary))" strokeWidth="0.5" />
+        ))}
+      </svg>
+      {/* Arrow */}
+      <svg className="absolute right-10 top-1/2 -translate-y-1/2 w-16 h-8 opacity-[0.12]" viewBox="0 0 64 32">
+        <line x1="4" y1="16" x2="52" y2="16" stroke="hsl(var(--primary))" strokeWidth="2" />
+        <polygon points="48,8 60,16 48,24" fill="hsl(var(--primary))" />
+      </svg>
+      {/* Scattered diamonds */}
+      {[
+        { x: "75%", y: "15%", s: 8 },
+        { x: "88%", y: "70%", s: 6 },
+        { x: "65%", y: "85%", s: 5 },
+      ].map((d, i) => (
+        <motion.div
+          key={i}
+          className="absolute bg-primary/15"
+          style={{
+            left: d.x, top: d.y, width: d.s, height: d.s,
+            transform: "rotate(45deg)",
+          }}
+          animate={{ rotate: [45, 90, 45], opacity: [0.15, 0.35, 0.15] }}
+          transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function EcosystemBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+      <div className="absolute inset-0 bg-gradient-to-bl from-primary/[0.05] via-transparent to-accent/[0.03]" />
+      {/* Hexagonal hint */}
+      <svg className="absolute -right-8 top-1/2 -translate-y-1/2 w-52 h-52 opacity-[0.07]" viewBox="0 0 200 200">
+        <polygon points="100,10 178,55 178,145 100,190 22,145 22,55" fill="none" stroke="hsl(var(--primary))" strokeWidth="1.5" />
+        <polygon points="100,40 152,68 152,132 100,160 48,132 48,68" fill="none" stroke="hsl(var(--primary))" strokeWidth="1" strokeDasharray="4 4" />
+        <circle cx="100" cy="100" r="16" fill="hsl(var(--primary))" opacity="0.12" />
+        <circle cx="100" cy="100" r="6" fill="hsl(var(--primary))" opacity="0.25" />
+      </svg>
+      {/* Orbital dots */}
+      {[0, 60, 120, 180, 240, 300].map((deg, i) => {
+        const r = 80;
+        const cx = 50 + r * Math.cos((deg * Math.PI) / 180);
+        const cy = 50 + r * Math.sin((deg * Math.PI) / 180);
         return (
-          <g key={ci}>
-            <motion.line x1={clCx} y1={clCy} x2={cx} y2={cy} stroke={`hsl(${cluster.color})`} strokeWidth="1.5" strokeOpacity="0.25" strokeDasharray="4 4"
-              initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: ci * 0.2 }} />
-            {nodes.map((n, i) => <line key={i} x1={n.x} y1={n.y} x2={clCx} y2={clCy} stroke={`hsl(${cluster.color})`} strokeWidth="0.5" strokeOpacity="0.15" />)}
-            {nodes.map((n, i) => <motion.circle key={`n${i}`} cx={n.x} cy={n.y} r={3} fill={`hsl(${cluster.color})`} opacity="0.5"
-              initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.6 + ci * 0.15 + i * 0.04 }} />)}
-            <text x={clCx} y={clCy + (cluster.angle === -90 ? -28 : 35)} fontSize="7" fill={`hsl(${cluster.color})`} opacity="0.7" textAnchor="middle" fontWeight="500">{cluster.label}</text>
-          </g>
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-primary/20"
+            style={{
+              right: `${10 + cx * 0.3}%`,
+              top: `${10 + cy * 0.5}%`,
+              width: 4, height: 4,
+            }}
+            animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 2.5 + i * 0.3, repeat: Infinity, ease: "easeInOut" }}
+          />
         );
       })}
-      <motion.circle cx={cx} cy={cy} r={18} fill="hsl(var(--primary))" opacity="0.1" initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} />
-      <motion.circle cx={cx} cy={cy} r={13} fill="hsl(var(--primary))" opacity="0.15" initial={{ scale: 0 }} whileInView={{ scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} />
-      <image href={findooLogoIcon} x={cx - 9} y={cy - 9} width={18} height={18} className="pointer-events-none" />
-    </svg>
+    </div>
   );
 }
 
-/* ─── Data Strip ─── */
-function DataStrip() {
+/* ─── Data Strip (vertical for right side) ─── */
+function DataStripVertical() {
   const stats = [
-    { value: 7000, suffix: "+", label: "Issuers", sublabel: "AMCs, NBFCs, Insurers" },
-    { value: 35000, suffix: "+", label: "Intermediaries", sublabel: "MFDs, RIAs, Brokers" },
-    { value: 7, suffix: " Cr+", label: "Investors", sublabel: "Retail & HNI" },
-    { value: 6, suffix: " Lakh+", label: "Professionals", sublabel: "Licensed Individuals" },
+    { value: 7000, suffix: "+", label: "Issuers", sub: "AMCs · NBFCs · Insurers" },
+    { value: 35000, suffix: "+", label: "Intermediaries", sub: "MFDs · RIAs · Brokers" },
+    { value: 7, suffix: " Cr+", label: "Investors", sub: "Retail & HNI" },
+    { value: 6, suffix: " Lakh+", label: "Professionals", sub: "Licensed Individuals" },
   ];
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 my-4">
-      {stats.map((stat, i) => (
-        <motion.div key={stat.label} className="text-center p-3 rounded-lg border border-border/40 bg-card/40"
-          initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-          <div className="text-xl lg:text-2xl font-bold font-heading text-foreground">
-            <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+    <div className="flex flex-row lg:flex-col gap-2 lg:gap-2.5">
+      {stats.map((s, i) => (
+        <motion.div
+          key={s.label}
+          className="flex-1 lg:flex-none rounded-lg border border-border/30 bg-card/50 backdrop-blur-sm px-3 py-2 text-center lg:text-left"
+          initial={{ opacity: 0, x: 12 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.08 }}
+        >
+          <div className="text-base lg:text-lg font-bold font-heading text-foreground leading-tight">
+            <AnimatedCounter value={s.value} suffix={s.suffix} />
           </div>
-          <p className="text-xs font-semibold text-foreground mt-0.5">{stat.label}</p>
-          <p className="text-[10px] text-muted-foreground">{stat.sublabel}</p>
+          <p className="text-[10px] font-semibold text-foreground/80">{s.label}</p>
+          <p className="text-[9px] text-muted-foreground hidden lg:block">{s.sub}</p>
         </motion.div>
       ))}
     </div>
@@ -179,7 +168,7 @@ const cards = [
         </p>
       </>
     ),
-    art: <ConcentricOrbitsArt />,
+    bg: <OrbitsBackground />,
   },
   {
     tag: "Purpose Over Generic Noise",
@@ -196,14 +185,13 @@ const cards = [
         </p>
       </>
     ),
-    art: <NoiseToStructureArt />,
+    bg: <SignalBackground />,
   },
   {
     tag: "Neutral Ecosystem Infrastructure",
     headline: "A Neutral Layer for a Vast Ecosystem",
     body: (
       <>
-        <DataStrip />
         <p className="mb-2">One ecosystem with a neutral connective layer.</p>
         <p className="text-foreground font-medium leading-relaxed">
           Findoo is not an issuer.<br />
@@ -212,7 +200,8 @@ const cards = [
         </p>
       </>
     ),
-    art: <NeutralCoreArt />,
+    bg: <EcosystemBackground />,
+    hasDataStrip: true,
   },
 ];
 
@@ -224,8 +213,6 @@ export default function WhyFindooSection() {
     setActiveIndex(prev => (prev + 1) % cards.length);
   }, []);
 
-  // Inactive cards sorted so they stack visually above the active card
-  // Bottom of stack (narrowest) first, then wider, then active (full width)
   const inactiveIndices = cards
     .map((_, i) => i)
     .filter(i => i !== activeIndex);
@@ -248,14 +235,13 @@ export default function WhyFindooSection() {
         </p>
       </motion.div>
 
-      {/* Stacked Deck — inactive peek strips on top, active card below */}
-      <div className="flex flex-col items-center">
-        {/* ── Inactive peek strips (narrower, stacked above) ── */}
+      {/* Stacked Deck */}
+      <div className="flex flex-col items-center max-w-4xl mx-auto">
+        {/* ── Inactive peek strips (stacked above with decreasing width) ── */}
         {inactiveIndices.map((cardIndex, i) => {
           const card = cards[cardIndex];
-          // i=0 is the farthest back (narrowest), i=1 is closer (slightly wider)
-          const depth = inactiveIndices.length - 1 - i; // 1, 0
-          const widthPercent = depth === 1 ? 78 : 86; // narrowest → widest
+          const depth = inactiveIndices.length - 1 - i;
+          const widthPercent = depth === 1 ? 78 : 88;
           const opacity = depth === 1 ? 0.45 : 0.65;
 
           return (
@@ -281,10 +267,10 @@ export default function WhyFindooSection() {
           );
         })}
 
-        {/* ── Active card (full width, expands below the peek strips) ── */}
+        {/* ── Active card ── */}
         <motion.div
           layout
-          className="w-full max-w-3xl rounded-xl border border-border bg-card shadow-lg overflow-hidden cursor-pointer"
+          className="w-full rounded-xl border border-border bg-card shadow-lg overflow-hidden cursor-pointer relative"
           onClick={rotateNext}
           transition={{ layout: { type: "spring", stiffness: 350, damping: 32, mass: 0.7 } }}
         >
@@ -295,9 +281,13 @@ export default function WhyFindooSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.3 }}
+              className="relative"
             >
+              {/* Background decoration */}
+              {cards[activeIndex].bg}
+
               {/* Header strip */}
-              <div className="flex items-center justify-between px-5 pt-3.5 pb-2">
+              <div className="relative z-10 flex items-center justify-between px-5 pt-3.5 pb-2">
                 <div className="flex items-center gap-3">
                   <span className="shrink-0 px-2.5 py-0.5 rounded-full bg-primary/[0.08] text-primary text-[10px] font-semibold tracking-wider uppercase">
                     {cards[activeIndex].tag}
@@ -311,16 +301,18 @@ export default function WhyFindooSection() {
                 </span>
               </div>
 
-              {/* Art + Body: side-by-side on desktop, stacked on mobile */}
-              <div className="flex flex-col lg:flex-row gap-4 px-5 pb-5">
-                {/* Art */}
-                <div className="lg:w-1/2 shrink-0 rounded-lg border border-border/30 bg-muted/20 overflow-hidden aspect-[5/2] lg:aspect-[4/3]">
-                  {cards[activeIndex].art}
-                </div>
-                {/* Body */}
-                <div className="lg:w-1/2 text-[13px] sm:text-sm text-muted-foreground leading-relaxed flex flex-col justify-center">
+              {/* Content: text left, data strip right */}
+              <div className="relative z-10 flex flex-col lg:flex-row gap-4 px-5 pb-5 pt-1">
+                {/* Body text */}
+                <div className="lg:flex-1 text-[13px] sm:text-sm text-muted-foreground leading-relaxed flex flex-col justify-center min-h-[120px]">
                   {cards[activeIndex].body}
                 </div>
+                {/* Data strip on right */}
+                {cards[activeIndex].hasDataStrip && (
+                  <div className="lg:w-[200px] shrink-0">
+                    <DataStripVertical />
+                  </div>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
