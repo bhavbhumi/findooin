@@ -229,21 +229,12 @@ const Landing = () => {
             >
               <div className="relative">
                 {/* Soft ambient glow behind brain */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-accent/[0.04] rounded-full blur-3xl scale-110" />
-                <div
-                  className="relative"
-                  style={{
-                    maskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 100%)',
-                    WebkitMaskImage: 'radial-gradient(ellipse 70% 70% at 50% 50%, black 40%, transparent 100%)',
-                  }}
-                >
-                  <img
-                    src={networkBrainHero}
-                    alt="FindOO — The brain of your financial life"
-                    className="relative w-full h-auto object-contain mix-blend-multiply dark:mix-blend-screen dark:invert opacity-90"
-                  />
-                </div>
-                {/* Small sparkle accents near the brain */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-gold/[0.06] rounded-full blur-3xl scale-110" />
+                <img
+                  src={networkBrainHero}
+                  alt="FindOO — The brain of your financial life"
+                  className="relative w-full h-auto object-contain"
+                />
                 <Sparkles count={4} />
               </div>
             </motion.div>
