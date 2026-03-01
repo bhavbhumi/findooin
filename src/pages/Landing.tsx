@@ -158,7 +158,7 @@ const Landing = () => {
                 Financially Social
               </motion.span>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-4">
+              <h1 className="text-[1.7rem] sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-4">
                 Connect. Share. Discover.{" "}
                 <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Prosper Together.</span>
               </h1>
@@ -167,20 +167,20 @@ const Landing = () => {
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex items-center gap-4 mb-8">
-                <Button size="lg" className="h-12 px-8 text-base rounded-md" asChild>
+              <div className="flex items-center gap-3 mb-8">
+                <Button size="lg" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
                   <Link to="/auth?mode=signup">
                     Join Findoo
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="h-12 px-8 text-base rounded-md" asChild>
+                <Button size="lg" variant="outline" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
                   <Link to="/explore">Explore Platform</Link>
                 </Button>
               </div>
 
               {/* 3 Icon Stat Badges */}
-              <div className="flex flex-wrap items-center gap-5 sm:gap-6">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                 {[
                   { icon: Lock, label: "End to End", sub: "Encrypted" },
                   { icon: Activity, label: "99.9%", sub: "Uptime" },
@@ -193,7 +193,7 @@ const Landing = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 + i * 0.15 }}
                   >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/[0.08]">
+                    <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-primary/[0.08]">
                       <stat.icon className="h-4 w-4 text-primary" />
                     </div>
                     <div>
@@ -231,10 +231,10 @@ const Landing = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-8 gap-y-2">
               <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider mr-2">Featured in</span>
               {["Economic Times", "Mint", "CNBC TV18", "Business Standard", "Forbes India", "Money Control", "NDTV Profit"].map((name) => (
-                <span key={name} className="text-sm font-heading font-semibold text-muted-foreground/40 tracking-wide select-none">
+                <span key={name} className="text-xs sm:text-sm font-heading font-semibold text-muted-foreground/40 tracking-wide select-none">
                   {name}
                 </span>
               ))}
