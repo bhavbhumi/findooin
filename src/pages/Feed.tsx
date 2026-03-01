@@ -19,6 +19,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { DraftsPanel } from "@/components/feed/DraftsPanel";
 import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyFeedIllustration } from "@/components/illustrations/EmptyStateIllustrations";
 import { MessageSquare, TrendingUp, Zap } from "lucide-react";
 
 
@@ -124,6 +125,7 @@ const Feed = () => {
 
           {visiblePosts && visiblePosts.length === 0 && !isLoading && (
             <EmptyState
+              illustration={<EmptyFeedIllustration />}
               icon={filter === "foryou" ? MessageSquare : filter === "trending" ? TrendingUp : Zap}
               title={filter === "foryou" ? "Your feed is waiting" : filter === "trending" ? "Nothing trending yet" : "No viral posts yet"}
               description={

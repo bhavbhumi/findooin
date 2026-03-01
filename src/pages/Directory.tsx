@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Search, Plus, Package, LayoutGrid, GitCompare, Info } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
+import { MobileFilterDrawer } from "@/components/MobileFilterDrawer";
 import { useListings, type Listing, type ListingType } from "@/hooks/useListings";
 import { ListingCard } from "@/components/directory/ListingCard";
 import { ListingCardSkeleton } from "@/components/skeletons/ListingCardSkeleton";
@@ -53,6 +54,15 @@ const Directory = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      {/* Mobile filter drawer */}
+      <MobileFilterDrawer title="Directory Filters">
+        <DirectorySidebar
+          selectedType={selectedType}
+          selectedCategory={selectedCategory}
+          onTypeChange={setSelectedType}
+          onCategoryChange={setSelectedCategory}
+        />
+      </MobileFilterDrawer>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
         {/* Main content */}
         <div className="min-w-0 space-y-4">

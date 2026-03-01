@@ -13,6 +13,7 @@ import { FindooLoader } from "@/components/FindooLoader";
 import { SplashScreen } from "@/components/SplashScreen";
 import { CommandPalette } from "@/components/CommandPalette";
 import { SkipNav } from "@/components/SkipNav";
+import { useOfflineDetector } from "@/hooks/useOfflineDetector";
 
 // Eager load critical routes
 import Landing from "./pages/Landing";
@@ -85,6 +86,7 @@ const LazyFallback = () => (
 const App = () => {
   const [splashDone, setSplashDone] = useState(false);
   const handleSplashComplete = useCallback(() => setSplashDone(true), []);
+  useOfflineDetector();
 
   return (
     <QueryClientProvider client={queryClient}>

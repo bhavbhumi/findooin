@@ -16,6 +16,7 @@ import { EventsSidebar } from "@/components/events/EventsSidebar";
 import AppLayout from "@/components/AppLayout";
 import { MobileFilterDrawer } from "@/components/MobileFilterDrawer";
 import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyEventsIllustration } from "@/components/illustrations/EmptyStateIllustrations";
 import type { EventData } from "@/hooks/useEvents";
 import { isSameDay } from "date-fns";
 
@@ -139,6 +140,7 @@ const Events = () => {
                 </div>
               ) : !filteredEvents.length ? (
                 <EmptyState
+                  illustration={<EmptyEventsIllustration />}
                   icon={CalendarDays}
                   title={selectedDate ? "No events on this date" : "No upcoming events"}
                   description={selectedDate ? "Try selecting a different date or clear the filter." : "Check back later — webinars, investor meets, and conferences are added regularly."}
