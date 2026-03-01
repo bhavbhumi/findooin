@@ -74,6 +74,10 @@ const CostReport = lazy(() => import("./pages/CostReport"));
 const ScalingReport = lazy(() => import("./pages/ScalingReport"));
 const PitchIndex = lazy(() => import("./pages/PitchIndex"));
 const PitchDeck = lazy(() => import("./pages/PitchDeck"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const AccessibilityPage = lazy(() => import("./pages/Accessibility"));
+const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
+const TransparencyPage = lazy(() => import("./pages/Transparency"));
 
 const queryClient = new QueryClient();
 
@@ -120,6 +124,10 @@ const App = () => {
                       <Route path="/quick-links" element={<QuickLinks />} />
                       <Route path="/legal" element={<Legal />} />
                       <Route path="/sitemap" element={<SiteMap />} />
+                      <Route path="/cookies" element={<CookiePolicy />} />
+                      <Route path="/accessibility" element={<AccessibilityPage />} />
+                      <Route path="/refund-policy" element={<RefundPolicy />} />
+                      <Route path="/transparency" element={<TransparencyPage />} />
                       <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
                       <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
