@@ -4,7 +4,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles, Store } from "lucide-react";
+import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles, Store, ExternalLink, Download, Share2 } from "lucide-react";
 import { PostCard } from "@/components/feed/PostCard";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
@@ -235,11 +235,9 @@ const Profile = () => {
                       <FolderLock className="h-3.5 w-3.5 mr-1" /> Vault
                     </TabsTrigger>
                   )}
-                  {isOwnProfile && (
-                    <TabsTrigger value="digital-card" className={tabTriggerClass}>
-                      <CreditCard className="h-3.5 w-3.5 mr-1" /> Digital Card
-                    </TabsTrigger>
-                  )}
+                  <TabsTrigger value="digital-card" className={tabTriggerClass}>
+                    <CreditCard className="h-3.5 w-3.5 mr-1" /> Digital Card
+                  </TabsTrigger>
                 </TabsList>
               </div>
 
@@ -306,18 +304,22 @@ const Profile = () => {
                   />
                 </TabsContent>
               )}
+
+              {!isOwnProfile && profile && (
+                <TabsContent value="digital-card" className="mt-0">
+                  <DigitalCardPreview profileId={profile.id} />
+                </TabsContent>
+              )}
             </Tabs>
 
             {/* Mobile Sidebar Widgets — visible only on smaller screens */}
             <div className="lg:hidden space-y-4 mt-6">
-              {isOwnProfile && (
-                <ProfileCompletenessRing
-                  profile={profile}
-                  roles={roles}
-                  isOwnProfile={isOwnProfile}
-                  onEditProfile={() => setEditOpen(true)}
-                />
-              )}
+              <ProfileCompletenessRing
+                profile={profile}
+                roles={roles}
+                isOwnProfile={isOwnProfile}
+                onEditProfile={isOwnProfile ? () => setEditOpen(true) : undefined}
+              />
               <TrustScoreBadge
                 profile={profile}
                 stats={stats}
@@ -341,14 +343,12 @@ const Profile = () => {
           {/* Right Sidebar — desktop only */}
           <aside className="hidden lg:block">
             <div className="sticky top-20 space-y-4">
-              {isOwnProfile && (
-                <ProfileCompletenessRing
-                  profile={profile}
-                  roles={roles}
-                  isOwnProfile={isOwnProfile}
-                  onEditProfile={() => setEditOpen(true)}
-                />
-              )}
+              <ProfileCompletenessRing
+                profile={profile}
+                roles={roles}
+                isOwnProfile={isOwnProfile}
+                onEditProfile={isOwnProfile ? () => setEditOpen(true) : undefined}
+              />
               <TrustScoreBadge
                 profile={profile}
                 stats={stats}
@@ -467,6 +467,53 @@ function BookmarkedPosts({ currentUserId }: { currentUserId: string | null }) {
   }
 
   return <>{bookmarks.map((post) => <MemoizedPostCard key={post.id} post={post} />)}</>;
+}
+
+function DigitalCardPreview({ profileId }: { profileId: string }) {
+  const cardUrl = `${window.location.origin}/card/${profileId}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(cardUrl);
+    import("sonner").then(({ toast }) => toast.success("Card link copied!"));
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      await navigator.share({ title: "Digital Card", url: cardUrl });
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  return (
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
+      <div className="px-5 py-4 border-b border-border">
+        <h3 className="text-sm font-semibold font-heading text-card-foreground flex items-center gap-2">
+          <CreditCard className="h-4 w-4 text-muted-foreground" />
+          Digital Business Card
+        </h3>
+        <p className="text-xs text-muted-foreground mt-1">View or save this person's professional card.</p>
+      </div>
+      <div className="p-5 flex flex-col items-center gap-4">
+        <a
+          href={cardUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          <ExternalLink className="h-4 w-4" /> View Full Card
+        </a>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleCopyLink}>
+            Copy Link
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleShare}>
+            <Share2 className="h-3.5 w-3.5 mr-1" /> Share
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Profile;

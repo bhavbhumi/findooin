@@ -107,13 +107,13 @@ export const ActivityTimeline = ({ profileId, isOwnProfile }: ActivityTimelinePr
           <span className="text-xs text-muted-foreground">{events.length} actions</span>
         </div>
         <div className="p-5">
-          <div className="flex gap-[3px] overflow-x-auto pb-2">
+          <div className="flex gap-[3px] overflow-x-auto pb-2 touch-pan-x">
             {weeks.map((week, wi) => (
               <div key={wi} className="flex flex-col gap-[3px]">
                 {week.map((day) => (
                   <div
                     key={day}
-                    className={`h-3 w-3 rounded-[2px] ${getColor(heatmapData[day])} transition-colors`}
+                    className={`h-3 w-3 sm:h-3 sm:w-3 min-w-[12px] min-h-[12px] rounded-[2px] ${getColor(heatmapData[day])} transition-colors`}
                     title={`${format(parseISO(day), "MMM d")}: ${heatmapData[day]} action${heatmapData[day] !== 1 ? "s" : ""}`}
                   />
                 ))}
