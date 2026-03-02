@@ -186,14 +186,14 @@ const Landing = () => {
                   alt="FindOO — The brain of your financial life"
                   className="relative w-full h-auto object-contain hidden dark:block"
                 />
-                {/* Findoo logo fitted inside the brain silhouette */}
+                {/* Findoo logo as the brain inside the skull silhouette */}
                 <motion.img
                   src={findooLogoIcon}
                   alt="Findoo — Your Financial Brain"
-                  className="absolute top-[8%] left-1/2 -translate-x-1/2 w-[45%] h-auto object-contain opacity-[0.18] dark:opacity-[0.22] mix-blend-overlay dark:mix-blend-screen pointer-events-none z-10"
+                  className="absolute top-[5%] left-[48%] -translate-x-1/2 w-[55%] h-[55%] object-contain opacity-[0.12] dark:opacity-[0.15] pointer-events-none z-[5]"
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0.18, 0.25, 0.18] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8, duration: 1.5 }}
                 />
                 <Sparkles count={4} />
               </div>
