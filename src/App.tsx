@@ -65,6 +65,7 @@ const AdminInvitationsPage = lazy(() => import("./pages/admin/AdminInvitationsPa
 const AdminRegistryPage = lazy(() => import("./pages/admin/AdminRegistryPage"));
 const AdminSalesPage = lazy(() => import("./pages/admin/AdminSalesPage"));
 const AdminCampaignsPage = lazy(() => import("./pages/admin/AdminCampaignsPage"));
+const AdminScorecardPage = lazy(() => import("./pages/admin/AdminScorecardPage"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
@@ -162,6 +163,7 @@ const App = () => {
                         <Route path="registry" element={<Suspense fallback={<LazyFallback />}><AdminRegistryPage /></Suspense>} />
                         <Route path="sales" element={<Suspense fallback={<LazyFallback />}><AdminSalesPage /></Suspense>} />
                         <Route path="campaigns" element={<Suspense fallback={<LazyFallback />}><AdminCampaignsPage /></Suspense>} />
+                        <Route path="scorecard" element={<Suspense fallback={<LazyFallback />}><AdminScorecardPage /></Suspense>} />
                       </Route>
                       <Route path="/jobs" element={<ProtectedRoute><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
