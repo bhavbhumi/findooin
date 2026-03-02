@@ -18,6 +18,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import networkBrainHero from "@/assets/network-brain-hero.png";
 import networkBrainHeroDark from "@/assets/network-brain-hero-dark-transparent.png";
+import findooLogoIcon from "@/assets/findoo-logo-icon.png";
 import {
   NetworkMesh,
   GlowBlob,
@@ -185,6 +186,30 @@ const Landing = () => {
                   alt="FindOO — The brain of your financial life"
                   className="relative w-full h-auto object-contain hidden dark:block"
                 />
+                {/* Findoo logo on the brain's head — "Financial Life Brain" */}
+                <motion.div
+                  className="absolute top-[12%] left-1/2 -translate-x-1/2 z-10"
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5, duration: 0.6, type: "spring", stiffness: 180 }}
+                >
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl scale-150" />
+                    <motion.img
+                      src={findooLogoIcon}
+                      alt="Findoo — Your Financial Brain"
+                      className="relative h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 object-contain drop-shadow-lg"
+                      animate={{ 
+                        filter: [
+                          "drop-shadow(0 0 6px hsl(var(--primary) / 0.3))",
+                          "drop-shadow(0 0 14px hsl(var(--primary) / 0.5))",
+                          "drop-shadow(0 0 6px hsl(var(--primary) / 0.3))"
+                        ]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  </div>
+                </motion.div>
                 <Sparkles count={4} />
               </div>
             </motion.div>
