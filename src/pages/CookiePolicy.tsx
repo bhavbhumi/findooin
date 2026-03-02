@@ -12,7 +12,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. What Are Cookies",
-    content: `Cookies are small text files stored on your device (computer, tablet, or mobile phone) when you visit a website. They are widely used to make websites function efficiently, enhance user experience, and provide reporting information. FindOO Technologies Private Limited ("FindOO", "we", "us") uses cookies and similar technologies (web beacons, pixel tags, local storage) on the FindOO platform ("Platform") to provide, protect, and improve our services. This Cookie Policy should be read alongside our Privacy Policy and Terms of Service.`,
+    content: `Cookies are small text files stored on your device (computer, tablet, or mobile phone) when you visit a website. They are widely used to make websites function efficiently, enhance user experience, and provide reporting information. FindOO Solutions LLP ("FindOO", "we", "us") uses cookies and similar technologies (web beacons, pixel tags, local storage) on the FindOO platform ("Platform") to provide, protect, and improve our services. This Cookie Policy should be read alongside our Privacy Policy and Terms of Service.`,
   },
   {
     title: "2. Types of Cookies We Use",

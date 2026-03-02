@@ -12,7 +12,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Applicability",
-    content: `This Refund and Cancellation Policy applies to all paid features, subscription plans, and premium services offered by FindOO Technologies Private Limited ("FindOO") through the FindOO platform ("Platform"). As of the current date, FindOO's core networking features are free to use. This policy will govern future premium offerings including, but not limited to: (a) FindOO Pro subscriptions; (b) FindOO Enterprise plans; (c) Promoted listings and sponsored content; (d) Premium event hosting features; (e) Enhanced analytics and lead capture tools; (f) Any other paid features introduced on the Platform.`,
+    content: `This Refund and Cancellation Policy applies to all paid features, subscription plans, and premium services offered by FindOO Solutions LLP ("FindOO") through the FindOO platform ("Platform"). As of the current date, FindOO's core networking features are free to use. This policy will govern future premium offerings including, but not limited to: (a) FindOO Pro subscriptions; (b) FindOO Enterprise plans; (c) Promoted listings and sponsored content; (d) Premium event hosting features; (e) Enhanced analytics and lead capture tools; (f) Any other paid features introduced on the Platform.`,
   },
   {
     title: "2. Subscription Plans",
@@ -66,7 +66,7 @@ const sections = [
 Email: billing@findoo.in
 Support: support@findoo.in
 
-FindOO Technologies Private Limited
+FindOO Solutions LLP
 Registered Office: Mumbai, Maharashtra, India`,
   },
 ];

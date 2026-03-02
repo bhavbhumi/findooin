@@ -12,7 +12,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Our Commitment",
-    content: `FindOO Technologies Private Limited is committed to ensuring digital accessibility for people with diverse abilities. We believe the financial networking ecosystem should be inclusive and available to everyone, regardless of ability or disability. We continually improve the user experience for all visitors and apply the relevant accessibility standards to ensure we provide equal access to all users.`,
+    content: `FindOO Solutions LLP is committed to ensuring digital accessibility for people with diverse abilities. We believe the financial networking ecosystem should be inclusive and available to everyone, regardless of ability or disability. We continually improve the user experience for all visitors and apply the relevant accessibility standards to ensure we provide equal access to all users.`,
   },
   {
     title: "2. Standards We Follow",
