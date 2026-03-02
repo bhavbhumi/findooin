@@ -190,7 +190,7 @@ const Landing = () => {
                 <motion.img
                   src={findooLogoIcon}
                   alt="Findoo — Your Financial Brain"
-                  className="absolute top-[-12%] left-[46%] -translate-x-1/2 w-[95%] h-[95%] object-contain opacity-30 dark:opacity-25 pointer-events-none z-[1] mix-blend-luminosity dark:mix-blend-soft-light"
+                  className="absolute top-[-2%] left-[46%] -translate-x-1/2 w-[95%] h-[95%] object-contain opacity-70 dark:opacity-70 pointer-events-none z-[1]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 1.5 }}
