@@ -8,7 +8,7 @@ import { NavLink } from "@/components/NavLink";
 import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
-  Mail, Database, TrendingUp, Megaphone, Send, Gauge
+  Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList
 } from "lucide-react";
 import {
   Sidebar,
@@ -82,6 +82,7 @@ export function AdminSidebar() {
       items: [
         { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
         { title: "Scorecard", url: "/admin/scorecard", icon: Gauge },
+        { title: "Module Audit", url: "/admin/module-audit", icon: ClipboardList },
         { title: "Support", url: "/admin/support", icon: LifeBuoy },
       ],
     },
