@@ -55,6 +55,7 @@ interface PublicPageLayoutProps {
 
 const navLinks = [
   { label: "About", to: "/about" },
+  { label: "Explore", to: "/explore" },
   { label: "Blog", to: "/blog" },
   { label: "Contact", to: "/contact" },
 ];
