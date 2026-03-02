@@ -132,9 +132,8 @@ const Profile = () => {
       loadProfile(targetId);
 
       if (id && id !== session.user.id) {
-        supabase.from("profile_views").upsert(
-          { profile_id: id, viewer_id: session.user.id },
-          { onConflict: "profile_id,viewer_id" }
+        supabase.from("profile_views").insert(
+          { profile_id: id, viewer_id: session.user.id }
         ).then(() => {});
       }
     });
@@ -308,9 +307,38 @@ const Profile = () => {
                 </TabsContent>
               )}
             </Tabs>
+
+            {/* Mobile Sidebar Widgets — visible only on smaller screens */}
+            <div className="lg:hidden space-y-4 mt-6">
+              {isOwnProfile && (
+                <ProfileCompletenessRing
+                  profile={profile}
+                  roles={roles}
+                  isOwnProfile={isOwnProfile}
+                  onEditProfile={() => setEditOpen(true)}
+                />
+              )}
+              <TrustScoreBadge
+                profile={profile}
+                stats={stats}
+                endorsementCount={endorsementCount}
+              />
+              <MutualConnections
+                profileId={profile.id}
+                currentUserId={currentUserId}
+                isOwnProfile={isOwnProfile}
+              />
+              <MemoizedProfileSidebar
+                profile={profile}
+                roles={roles}
+                stats={stats}
+                isOwnProfile={isOwnProfile}
+                onNavigateToNetwork={() => setActiveTab("network")}
+              />
+            </div>
           </div>
 
-          {/* Right Sidebar */}
+          {/* Right Sidebar — desktop only */}
           <aside className="hidden lg:block">
             <div className="sticky top-20 space-y-4">
               {isOwnProfile && (

@@ -92,6 +92,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [bannerUploading, setBannerUploading] = useState(false);
   // Basic
+  const [fullName, setFullName] = useState(profile.full_name || "");
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url || "");
   const [bannerUrl, setBannerUrl] = useState(profile.banner_url || "");
   const [displayName, setDisplayName] = useState(profile.display_name || "");
@@ -123,6 +124,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
 
   // Reset when profile changes
   useEffect(() => {
+    setFullName(profile.full_name || "");
     setAvatarUrl(profile.avatar_url || "");
     setBannerUrl(profile.banner_url || "");
     setDisplayName(profile.display_name || "");
@@ -153,6 +155,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
     const { error } = await supabase
       .from("profiles")
       .update({
+        full_name: fullName.trim() || profile.full_name,
         avatar_url: avatarUrl || null,
         banner_url: bannerUrl || null,
         display_name: displayName || null,
@@ -192,7 +195,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
         </DialogHeader>
 
         <Tabs defaultValue="basic" className="w-full mt-2">
-          <TabsList className="w-full grid grid-cols-4 h-10">
+          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 h-auto sm:h-10 gap-1 sm:gap-0">
             <TabsTrigger value="basic" className="text-xs gap-1"><User className="h-3 w-3" /> Basic</TabsTrigger>
             <TabsTrigger value="professional" className="text-xs gap-1"><Briefcase className="h-3 w-3" /> Professional</TabsTrigger>
             <TabsTrigger value="expertise" className="text-xs gap-1"><Award className="h-3 w-3" /> Expertise</TabsTrigger>
@@ -257,6 +260,10 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
                   <Input value={bannerUrl} onChange={(e) => setBannerUrl(e.target.value)} placeholder="https://..." className="text-sm flex-1" />
                 </div>
               </div>
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Full Name</Label>
+              <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Your legal / full name" className="mt-1" />
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Display Name</Label>
