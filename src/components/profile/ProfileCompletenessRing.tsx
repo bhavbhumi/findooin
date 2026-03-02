@@ -55,7 +55,7 @@ export const ProfileCompletenessRing = ({ profile, roles, isOwnProfile, onEditPr
   const offset = circumference - (score / 100) * circumference;
   const color = score >= 80 ? "hsl(var(--accent))" : score >= 50 ? "hsl(var(--gold))" : "hsl(var(--destructive))";
 
-  if (score === 100 && !isOwnProfile) return null;
+  // Always show — visitors see read-only version
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden">

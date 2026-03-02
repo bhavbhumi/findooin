@@ -24,7 +24,7 @@ export const MutualConnections = ({ profileId, currentUserId, isOwnProfile }: Mu
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!currentUserId || isOwnProfile) {
+    if (!currentUserId) {
       setLoading(false);
       return;
     }
@@ -34,59 +34,72 @@ export const MutualConnections = ({ profileId, currentUserId, isOwnProfile }: Mu
   const loadData = async () => {
     setLoading(true);
 
-    // Get my connections
-    const { data: myConns } = await supabase
-      .from("connections")
-      .select("from_user_id, to_user_id")
-      .eq("connection_type", "connect")
-      .eq("status", "accepted")
-      .or(`from_user_id.eq.${currentUserId},to_user_id.eq.${currentUserId}`);
+    let mutualIds: string[] = [];
 
-    const myConnIds = new Set(
-      (myConns || []).map((c: any) => c.from_user_id === currentUserId ? c.to_user_id : c.from_user_id)
-    );
+    if (!isOwnProfile) {
+      // Get my connections
+      const { data: myConns } = await supabase
+        .from("connections")
+        .select("from_user_id, to_user_id")
+        .eq("connection_type", "connect")
+        .eq("status", "accepted")
+        .or(`from_user_id.eq.${currentUserId},to_user_id.eq.${currentUserId}`);
 
-    // Get their connections
-    const { data: theirConns } = await supabase
-      .from("connections")
-      .select("from_user_id, to_user_id")
-      .eq("connection_type", "connect")
-      .eq("status", "accepted")
-      .or(`from_user_id.eq.${profileId},to_user_id.eq.${profileId}`);
+      const myConnIds = new Set(
+        (myConns || []).map((c: any) => c.from_user_id === currentUserId ? c.to_user_id : c.from_user_id)
+      );
 
-    const theirConnIds = new Set(
-      (theirConns || []).map((c: any) => c.from_user_id === profileId ? c.to_user_id : c.from_user_id)
-    );
+      // Get their connections
+      const { data: theirConns } = await supabase
+        .from("connections")
+        .select("from_user_id, to_user_id")
+        .eq("connection_type", "connect")
+        .eq("status", "accepted")
+        .or(`from_user_id.eq.${profileId},to_user_id.eq.${profileId}`);
 
-    // Mutual = intersection
-    const mutualIds = [...myConnIds].filter((id) => theirConnIds.has(id) && id !== profileId && id !== currentUserId);
+      const theirConnIds = new Set(
+        (theirConns || []).map((c: any) => c.from_user_id === profileId ? c.to_user_id : c.from_user_id)
+      );
 
-    // Also viewed: people who viewed this profile also viewed
-    const { data: viewerIds } = await supabase
-      .from("profile_views")
-      .select("viewer_id")
-      .eq("profile_id", profileId)
-      .neq("viewer_id", currentUserId!)
-      .limit(20);
+      // Mutual = intersection
+      mutualIds = [...myConnIds].filter((id) => theirConnIds.has(id) && id !== profileId && id !== currentUserId);
+    }
 
+    // "People Also Viewed" — for own profile use similar profiles by location/role
     let alsoViewedIds: string[] = [];
-    if (viewerIds && viewerIds.length > 0) {
-      const vIds = viewerIds.map((v: any) => v.viewer_id);
-      const { data: otherViews } = await supabase
+    if (isOwnProfile) {
+      // Suggest similar profiles (same user_type, different user)
+      const { data: similar } = await supabase
+        .from("profiles")
+        .select("id")
+        .neq("id", profileId)
+        .limit(5);
+      alsoViewedIds = (similar || []).map((p: any) => p.id);
+    } else {
+      const { data: viewerIds } = await supabase
         .from("profile_views")
-        .select("profile_id")
-        .in("viewer_id", vIds)
-        .neq("profile_id", profileId)
-        .neq("profile_id", currentUserId!)
-        .limit(50);
+        .select("viewer_id")
+        .eq("profile_id", profileId)
+        .neq("viewer_id", currentUserId!)
+        .limit(20);
 
-      // Count occurrences, pick top 5
-      const counts: Record<string, number> = {};
-      (otherViews || []).forEach((v: any) => { counts[v.profile_id] = (counts[v.profile_id] || 0) + 1; });
-      alsoViewedIds = Object.entries(counts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5)
-        .map(([id]) => id);
+      if (viewerIds && viewerIds.length > 0) {
+        const vIds = viewerIds.map((v: any) => v.viewer_id);
+        const { data: otherViews } = await supabase
+          .from("profile_views")
+          .select("profile_id")
+          .in("viewer_id", vIds)
+          .neq("profile_id", profileId)
+          .neq("profile_id", currentUserId!)
+          .limit(50);
+
+        const counts: Record<string, number> = {};
+        (otherViews || []).forEach((v: any) => { counts[v.profile_id] = (counts[v.profile_id] || 0) + 1; });
+        alsoViewedIds = Object.entries(counts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([id]) => id);
+      }
     }
 
     // Fetch profiles
@@ -107,7 +120,7 @@ export const MutualConnections = ({ profileId, currentUserId, isOwnProfile }: Mu
     setLoading(false);
   };
 
-  if (loading || isOwnProfile) return null;
+  if (loading) return null;
   if (mutuals.length === 0 && alsoViewed.length === 0) return null;
 
   const getInitials = (name: string) => name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
