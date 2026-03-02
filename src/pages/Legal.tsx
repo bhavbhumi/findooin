@@ -19,7 +19,7 @@ const tabs = ["Terms", "Privacy", "Policies", "Cookie Policy", "Accessibility", 
 const termsSections = [
   {
     title: "1. Introduction & Acceptance",
-    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you", "your") and FindOO Technologies Private Limited ("FindOO", "we", "us", "our"), a company incorporated under the Companies Act, 2013, with its registered office in Mumbai, Maharashtra, India. By accessing or using the FindOO platform, mobile application, and related services (collectively, the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform. These Terms supersede any prior agreements between you and FindOO regarding your use of the Platform.`,
+    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you", "your") and FindOO Solutions LLP ("FindOO", "we", "us", "our"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office in Mumbai, Maharashtra, India. By accessing or using the FindOO platform, mobile application, and related services (collectively, the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform. These Terms supersede any prior agreements between you and FindOO regarding your use of the Platform.`,
   },
   {
     title: "2. Definitions",
@@ -45,7 +45,7 @@ const termsSections = [
     title: "6. Content & Intellectual Property",
     content: `6.1 Your Content: You retain ownership of all Content you create and post on the Platform. By posting Content, you grant FindOO a non-exclusive, worldwide, royalty-free, transferable, sub-licensable license to use, reproduce, modify, adapt, publish, display, and distribute such Content in connection with operating and improving the Platform. This license continues for a commercially reasonable period after you delete Content from the Platform, except where retention is required by law or legitimate business purposes.
 
-6.2 Platform IP: All intellectual property in the Platform, including its design, code, logos, trademarks ("FindOO" and associated branding), algorithms, databases, and documentation, is the exclusive property of FindOO Technologies Private Limited or its licensors. No license or right is granted to you other than the limited right to use the Platform as described in these Terms.
+6.2 Platform IP: All intellectual property in the Platform, including its design, code, logos, trademarks ("FindOO" and associated branding), algorithms, databases, and documentation, is the exclusive property of FindOO Solutions LLP or its licensors. No license or right is granted to you other than the limited right to use the Platform as described in these Terms.
 
 6.3 Copyright Claims: If you believe Content on the Platform infringes your copyright, you may submit a notice under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, to our Grievance Officer at grievance@findoo.in. Your notice must include identification of the copyrighted work, the infringing material, your contact details, and a statement of good faith belief.
 
@@ -91,7 +91,7 @@ const termsSections = [
 
 14.3 Jurisdiction: Subject to the arbitration clause above, the courts of Mumbai, Maharashtra shall have exclusive jurisdiction over any disputes arising from these Terms.
 
-14.4 Grievance Redressal: In compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, FindOO has appointed a Grievance Officer. Complaints and grievances may be addressed to: Grievance Officer, FindOO Technologies Private Limited, Email: grievance@findoo.in. The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days of receipt, or such other period as prescribed by applicable law.`,
+14.4 Grievance Redressal: In compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, FindOO has appointed a Grievance Officer. Complaints and grievances may be addressed to: Grievance Officer, FindOO Solutions LLP, Email: grievance@findoo.in. The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days of receipt, or such other period as prescribed by applicable law.`,
   },
   {
     title: "15. General Provisions",
@@ -111,7 +111,7 @@ const termsSections = [
     title: "16. Contact Information",
     content: `For questions regarding these Terms of Service, please contact:
 
-FindOO Technologies Private Limited
+FindOO Solutions LLP
 Email: legal@findoo.in
 Grievance Officer: grievance@findoo.in
 Support: support@findoo.in`,
@@ -122,7 +122,7 @@ Support: support@findoo.in`,
 const privacySections = [
   {
     title: "1. Introduction",
-    content: `This Privacy Policy ("Policy") describes how FindOO Technologies Private Limited ("FindOO", "we", "us", "our") collects, uses, shares, protects, and retains your personal information when you use the FindOO platform, mobile application, and related services (collectively, the "Platform"). This Policy is published in compliance with the Information Technology Act, 2000, the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011, the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and the Digital Personal Data Protection Act, 2023 ("DPDP Act"). By using the Platform, you consent to the collection and use of your information as described in this Policy.`,
+    content: `This Privacy Policy ("Policy") describes how FindOO Solutions LLP ("FindOO", "we", "us", "our") collects, uses, shares, protects, and retains your personal information when you use the FindOO platform, mobile application, and related services (collectively, the "Platform"). This Policy is published in compliance with the Information Technology Act, 2000, the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011, the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and the Digital Personal Data Protection Act, 2023 ("DPDP Act"). By using the Platform, you consent to the collection and use of your information as described in this Policy.`,
   },
   {
     title: "2. Information We Collect",
@@ -187,7 +187,7 @@ const privacySections = [
     content: `In accordance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and the DPDP Act, 2023, FindOO has appointed a Grievance Officer:
 
 Grievance Officer
-FindOO Technologies Private Limited
+FindOO Solutions LLP
 Email: grievance@findoo.in
 
 For privacy-related inquiries, data access requests, or concerns:
@@ -258,11 +258,11 @@ const policiesSections = [
 const disclosureSections = [
   {
     title: "1. Platform Disclosure",
-    content: `FindOO is a technology platform operated by FindOO Technologies Private Limited, a company incorporated under the Companies Act, 2013, in India. FindOO facilitates professional networking between participants in the Indian financial services ecosystem. FindOO is NOT: (a) a stock exchange recognized under the Securities Contracts (Regulation) Act, 1956; (b) a SEBI-registered stock broker, sub-broker, investment advisor, research analyst, portfolio manager, or any other market intermediary; (c) a bank or NBFC registered with the Reserve Bank of India; (d) an insurance company or intermediary registered with IRDAI; (e) a depository or depository participant; (f) a merchant banker, underwriter, or registrar to an issue. The Platform does not provide financial advice, investment recommendations, portfolio management services, or facilitate securities transactions.`,
+    content: `FindOO is a technology platform operated by FindOO Solutions LLP, a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, in India. FindOO facilitates professional networking between participants in the Indian financial services ecosystem. FindOO is NOT: (a) a stock exchange recognized under the Securities Contracts (Regulation) Act, 1956; (b) a SEBI-registered stock broker, sub-broker, investment advisor, research analyst, portfolio manager, or any other market intermediary; (c) a bank or NBFC registered with the Reserve Bank of India; (d) an insurance company or intermediary registered with IRDAI; (e) a depository or depository participant; (f) a merchant banker, underwriter, or registrar to an issue. The Platform does not provide financial advice, investment recommendations, portfolio management services, or facilitate securities transactions.`,
   },
   {
     title: "2. Regulatory Status",
-    content: `FindOO Technologies Private Limited is a technology company and is classified as an "intermediary" as defined under Section 2(1)(w) of the Information Technology Act, 2000, and operates in compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021. FindOO is NOT registered with SEBI, RBI, IRDAI, AMFI, PFRDA, or any other financial regulator as a market intermediary, advisor, or financial service provider. Individual Users on the Platform may hold registrations with these regulatory bodies, and such registrations are independently verified through publicly available regulatory databases. FindOO's verification process confirms regulatory registration status at the time of verification only.`,
+    content: `FindOO Solutions LLP is a technology company and is classified as an "intermediary" as defined under Section 2(1)(w) of the Information Technology Act, 2000, and operates in compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021. FindOO is NOT registered with SEBI, RBI, IRDAI, AMFI, PFRDA, or any other financial regulator as a market intermediary, advisor, or financial service provider. Individual Users on the Platform may hold registrations with these regulatory bodies, and such registrations are independently verified through publicly available regulatory databases. FindOO's verification process confirms regulatory registration status at the time of verification only.`,
   },
   {
     title: "3. Investment Risk Disclosure",
@@ -304,7 +304,7 @@ Mutual fund investments are subject to market risks. Read all scheme-related doc
 const cookiePolicySections = [
   {
     title: "1. What Are Cookies",
-    content: `Cookies are small text files stored on your device (computer, tablet, or mobile phone) when you visit a website. They are widely used to make websites function efficiently, enhance user experience, and provide reporting information. FindOO Technologies Private Limited ("FindOO", "we", "us") uses cookies and similar technologies (web beacons, pixel tags, local storage) on the FindOO platform ("Platform") to provide, protect, and improve our services. This Cookie Policy should be read alongside our Privacy Policy and Terms of Service.`,
+    content: `Cookies are small text files stored on your device (computer, tablet, or mobile phone) when you visit a website. They are widely used to make websites function efficiently, enhance user experience, and provide reporting information. FindOO Solutions LLP ("FindOO", "we", "us") uses cookies and similar technologies (web beacons, pixel tags, local storage) on the FindOO platform ("Platform") to provide, protect, and improve our services. This Cookie Policy should be read alongside our Privacy Policy and Terms of Service.`,
   },
   {
     title: "2. Types of Cookies We Use",
@@ -350,7 +350,7 @@ Important: Disabling strictly necessary cookies may prevent you from signing in,
 const accessibilitySections = [
   {
     title: "1. Our Commitment",
-    content: `FindOO Technologies Private Limited is committed to ensuring digital accessibility for people with diverse abilities. We believe the financial networking ecosystem should be inclusive and available to everyone, regardless of ability or disability. We continually improve the user experience for all visitors and apply the relevant accessibility standards to ensure we provide equal access to all users.`,
+    content: `FindOO Solutions LLP is committed to ensuring digital accessibility for people with diverse abilities. We believe the financial networking ecosystem should be inclusive and available to everyone, regardless of ability or disability. We continually improve the user experience for all visitors and apply the relevant accessibility standards to ensure we provide equal access to all users.`,
   },
   {
     title: "2. Standards We Follow",
@@ -393,7 +393,7 @@ We aim to respond to accessibility feedback within 5 business days and to addres
 const refundPolicySections = [
   {
     title: "1. Applicability",
-    content: `This Refund and Cancellation Policy applies to all paid features, subscription plans, and premium services offered by FindOO Technologies Private Limited ("FindOO") through the FindOO platform ("Platform"). As of the current date, FindOO's core networking features are free to use. This policy will govern future premium offerings including, but not limited to: (a) FindOO Pro subscriptions; (b) FindOO Enterprise plans; (c) Promoted listings and sponsored content; (d) Premium event hosting features; (e) Enhanced analytics and lead capture tools; (f) Any other paid features introduced on the Platform.`,
+    content: `This Refund and Cancellation Policy applies to all paid features, subscription plans, and premium services offered by FindOO Solutions LLP ("FindOO") through the FindOO platform ("Platform"). As of the current date, FindOO's core networking features are free to use. This policy will govern future premium offerings including, but not limited to: (a) FindOO Pro subscriptions; (b) FindOO Enterprise plans; (c) Promoted listings and sponsored content; (d) Premium event hosting features; (e) Enhanced analytics and lead capture tools; (f) Any other paid features introduced on the Platform.`,
   },
   {
     title: "2. Subscription Plans",
@@ -447,7 +447,7 @@ const refundPolicySections = [
 Email: billing@findoo.in
 Support: support@findoo.in
 
-FindOO Technologies Private Limited
+FindOO Solutions LLP
 Registered Office: Mumbai, Maharashtra, India`,
   },
 ];
@@ -456,7 +456,7 @@ Registered Office: Mumbai, Maharashtra, India`,
 const transparencyReportSections = [
   {
     title: "1. Purpose",
-    content: `This Transparency Report is published by FindOO Technologies Private Limited ("FindOO") in compliance with Rule 4(1)(d) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, which requires significant social media intermediaries to publish periodic compliance reports. FindOO voluntarily publishes this report to demonstrate our commitment to responsible platform governance, even where the mandatory threshold may not yet apply. This report covers content moderation activities, user safety measures, and regulatory compliance actions.`,
+    content: `This Transparency Report is published by FindOO Solutions LLP ("FindOO") in compliance with Rule 4(1)(d) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, which requires significant social media intermediaries to publish periodic compliance reports. FindOO voluntarily publishes this report to demonstrate our commitment to responsible platform governance, even where the mandatory threshold may not yet apply. This report covers content moderation activities, user safety measures, and regulatory compliance actions.`,
   },
   {
     title: "2. Compliance Framework",
@@ -520,7 +520,7 @@ For questions about this report:
 Email: transparency@findoo.in
 Compliance: compliance@findoo.in
 
-FindOO Technologies Private Limited
+FindOO Solutions LLP
 Registered Office: Mumbai, Maharashtra, India`,
   },
 ];

@@ -14,7 +14,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Introduction & Acceptance",
-    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User") and FindOO Technologies Private Limited ("FindOO"), a company incorporated under the Companies Act, 2013, with its registered office in Mumbai, Maharashtra, India. By accessing or using the FindOO platform and related services (the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform.`,
+    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User") and FindOO Solutions LLP ("FindOO"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office in Mumbai, Maharashtra, India. By accessing or using the FindOO platform and related services (the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform.`,
   },
   {
     title: "2. Eligibility",

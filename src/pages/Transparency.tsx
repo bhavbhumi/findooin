@@ -25,7 +25,7 @@ const metrics = [
 const sections = [
   {
     title: "1. Purpose",
-    content: `This Transparency Report is published by FindOO Technologies Private Limited ("FindOO") in compliance with Rule 4(1)(d) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, which requires significant social media intermediaries to publish periodic compliance reports. FindOO voluntarily publishes this report to demonstrate our commitment to responsible platform governance, even where the mandatory threshold may not yet apply.`,
+    content: `This Transparency Report is published by FindOO Solutions LLP ("FindOO") in compliance with Rule 4(1)(d) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, which requires significant social media intermediaries to publish periodic compliance reports. FindOO voluntarily publishes this report to demonstrate our commitment to responsible platform governance, even where the mandatory threshold may not yet apply.`,
   },
   {
     title: "2. Compliance Framework",
@@ -63,7 +63,7 @@ We notify affected users of data requests unless prohibited by law or court orde
 Grievance Officer: grievance@findoo.in
 Compliance Team: compliance@findoo.in
 
-FindOO Technologies Private Limited
+FindOO Solutions LLP
 Registered Office: Mumbai, Maharashtra, India`,
   },
 ];

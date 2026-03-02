@@ -14,7 +14,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Introduction",
-    content: `This Privacy Policy describes how FindOO Technologies Private Limited ("FindOO") collects, uses, shares, protects, and retains your personal information. This Policy is published in compliance with the Information Technology Act, 2000, the IT (Reasonable Security Practices) Rules, 2011, the IT (Intermediary Guidelines) Rules, 2021, and the Digital Personal Data Protection Act, 2023 ("DPDP Act").`,
+    content: `This Privacy Policy describes how FindOO Solutions LLP ("FindOO") collects, uses, shares, protects, and retains your personal information. This Policy is published in compliance with the Information Technology Act, 2000, the IT (Reasonable Security Practices) Rules, 2011, the IT (Intermediary Guidelines) Rules, 2021, and the Digital Personal Data Protection Act, 2023 ("DPDP Act").`,
   },
   {
     title: "2. Information We Collect",
