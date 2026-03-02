@@ -290,12 +290,6 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
 
       {/* ── Content ── */}
       <main className="flex-1 pt-16">
-        {/* Public breadcrumbs */}
-        {location.pathname !== "/" && (
-          <div className="container pt-4">
-            <PublicBreadcrumbs />
-          </div>
-        )}
         {children}
       </main>
 
