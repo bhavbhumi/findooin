@@ -29,6 +29,8 @@ const BREADCRUMB_MAP: Record<string, string> = {
   "/admin/support": "Support",
   "/admin/scorecard": "Project Scorecard",
   "/admin/module-audit": "Module Audit",
+  "/admin/cost-report": "Cost Report",
+  "/admin/scaling-report": "Scaling Report",
 };
 
 export default function Admin() {

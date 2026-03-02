@@ -8,7 +8,8 @@ import { NavLink } from "@/components/NavLink";
 import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
-  Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList
+  Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
+  IndianRupee, Server
 } from "lucide-react";
 import {
   Sidebar,
@@ -69,6 +70,8 @@ export function AdminSidebar() {
         { title: "Registry", url: "/admin/registry", icon: Database },
         { title: "Sales", url: "/admin/sales", icon: TrendingUp },
         { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone },
+        { title: "Cost Report", url: "/admin/cost-report", icon: IndianRupee },
+        { title: "Scaling Report", url: "/admin/scaling-report", icon: Server },
       ],
     },
     {
