@@ -9,7 +9,7 @@ import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
-  IndianRupee, Server
+  IndianRupee, Server, Search
 } from "lucide-react";
 import {
   Sidebar,
@@ -86,6 +86,7 @@ export function AdminSidebar() {
         { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
         { title: "Scorecard", url: "/admin/scorecard", icon: Gauge },
         { title: "Module Audit", url: "/admin/module-audit", icon: ClipboardList },
+        { title: "SEO Audit", url: "/admin/seo", icon: Search },
         { title: "Support", url: "/admin/support", icon: LifeBuoy },
       ],
     },
