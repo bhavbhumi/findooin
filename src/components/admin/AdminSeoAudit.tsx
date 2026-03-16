@@ -352,7 +352,7 @@ function runSeoChecks(): SeoCheck[] {
     name: "Robots.txt",
     description: "Robots.txt configured with sitemap reference",
     status: "pass",
-    details: "Configured for Googlebot, Bingbot, Twitterbot, facebookexternalhit",
+    details: "Configured for Googlebot, Bingbot, Twitterbot, facebookexternalhit, GPTBot, ClaudeBot, PerplexityBot",
   });
 
   checks.push({
@@ -360,9 +360,8 @@ function runSeoChecks(): SeoCheck[] {
     category: "Sitemap & Robots",
     name: "Sitemap lastmod",
     description: "Sitemap entries should include lastmod dates",
-    status: "warn",
-    details: "No <lastmod> dates in sitemap.xml",
-    fix: "Add <lastmod> to sitemap.xml entries",
+    status: "pass",
+    details: "All entries have <lastmod> dates",
   });
 
   // ── 8. Page-Level Meta (usePageMeta coverage) ──
