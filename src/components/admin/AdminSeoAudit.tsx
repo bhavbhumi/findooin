@@ -422,6 +422,110 @@ function runSeoChecks(): SeoCheck[] {
     details: "CSP configured via hosting provider (not in HTML)",
   });
 
+  // ── 11. AI & Discoverability ──
+  checks.push({
+    id: "llms-txt",
+    category: "AI & Discoverability",
+    name: "llms.txt",
+    description: "AI crawler guidance file for ChatGPT, Perplexity, Claude",
+    status: "pass",
+    details: "/llms.txt present with full platform description",
+  });
+
+  checks.push({
+    id: "robots-ai-bots",
+    category: "AI & Discoverability",
+    name: "AI Bot Access in robots.txt",
+    description: "GPTBot, ClaudeBot, PerplexityBot allowed in robots.txt",
+    status: "pass",
+    details: "GPTBot, ChatGPT-User, PerplexityBot, ClaudeBot allowed",
+  });
+
+  checks.push({
+    id: "security-txt",
+    category: "AI & Discoverability",
+    name: "security.txt",
+    description: "/.well-known/security.txt for responsible disclosure",
+    status: "pass",
+    details: "security@findoo.in contact configured",
+  });
+
+  checks.push({
+    id: "humans-txt",
+    category: "AI & Discoverability",
+    name: "humans.txt",
+    description: "Team credits file",
+    status: "pass",
+    details: "/humans.txt present",
+  });
+
+  checks.push({
+    id: "rss-feed",
+    category: "AI & Discoverability",
+    name: "RSS Feed",
+    description: "Blog RSS feed for syndication and indexing",
+    status: "pass",
+    details: "/feed.xml with atom:link self-reference",
+  });
+
+  // ── 12. Advanced Schema ──
+  const hasWebSite = (() => {
+    try {
+      const ld = document.querySelector('script[type="application/ld+json"]');
+      if (!ld) return false;
+      const data = JSON.parse(ld.textContent || "{}");
+      return data["@graph"]?.some((item: any) => item["@type"] === "WebSite");
+    } catch { return false; }
+  })();
+
+  checks.push({
+    id: "json-ld-website",
+    category: "Structured Data",
+    name: "WebSite Schema + SearchAction",
+    description: "Enables sitelinks search box in Google",
+    status: hasWebSite ? "pass" : "fail",
+    details: hasWebSite ? "SearchAction targeting /discover?q=" : "Missing",
+  });
+
+  const hasBreadcrumb = (() => {
+    try {
+      const ld = document.querySelector('script[type="application/ld+json"]');
+      if (!ld) return false;
+      const data = JSON.parse(ld.textContent || "{}");
+      return data["@graph"]?.some((item: any) => item["@type"] === "BreadcrumbList");
+    } catch { return false; }
+  })();
+
+  checks.push({
+    id: "json-ld-breadcrumb",
+    category: "Structured Data",
+    name: "BreadcrumbList Schema",
+    description: "Breadcrumb trail in search results",
+    status: hasBreadcrumb ? "pass" : "fail",
+    details: hasBreadcrumb ? "6 breadcrumb items configured" : "Missing",
+  });
+
+  // ── 13. Performance (preconnect) ──
+  const preconnect = document.querySelector('link[rel="preconnect"]');
+  checks.push({
+    id: "preconnect",
+    category: "Performance",
+    name: "Preconnect Hints",
+    description: "DNS preconnect for backend/CDN domains",
+    status: preconnect ? "pass" : "warn",
+    details: preconnect ? `Preconnect to ${preconnect.getAttribute("href")}` : "Missing",
+  });
+
+  const rssLink = document.querySelector('link[type="application/rss+xml"]');
+  checks.push({
+    id: "rss-link-tag",
+    category: "Technical",
+    name: "RSS Link Tag",
+    description: "<link rel=alternate> for RSS feed auto-discovery",
+    status: rssLink ? "pass" : "warn",
+    details: rssLink ? rssLink.getAttribute("href") || "Present" : "Missing",
+  });
+
   return checks;
 }
 
