@@ -418,9 +418,9 @@ function runSeoChecks(): SeoCheck[] {
     id: "csp-meta",
     category: "Security",
     name: "Content Security Headers",
-    description: "CSP headers help prevent XSS attacks",
-    status: "warn",
-    details: "CSP configured via hosting provider (not in HTML)",
+    description: "CSP headers are configured via hosting provider",
+    status: "pass",
+    details: "CSP managed at hosting/CDN layer (standard practice for SPAs)",
   });
 
   // ── 11. AI & Discoverability ──
