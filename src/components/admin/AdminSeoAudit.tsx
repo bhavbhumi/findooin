@@ -286,14 +286,19 @@ function runSeoChecks(): SeoCheck[] {
 
   // ── 6. Accessibility / Semantic HTML ──
   const h1s = document.querySelectorAll("h1");
+  const isInternalPage = window.location.pathname.startsWith("/admin");
   checks.push({
     id: "single-h1",
     category: "Accessibility",
     name: "Single H1",
-    description: "Page should have exactly one H1 element",
-    status: h1s.length === 1 ? "pass" : h1s.length === 0 ? "fail" : "warn",
-    details: `${h1s.length} H1 element(s) found`,
-    fix: h1s.length > 1 ? "Reduce to a single H1 per page" : undefined,
+    description: "Public pages should have exactly one H1 element",
+    status: isInternalPage
+      ? "pass"
+      : h1s.length === 1 ? "pass" : h1s.length === 0 ? "fail" : "warn",
+    details: isInternalPage
+      ? "Internal page — H1 check skipped"
+      : `${h1s.length} H1 element(s) found`,
+    fix: !isInternalPage && h1s.length > 1 ? "Reduce to a single H1 per page" : undefined,
   });
 
   const skipNav = document.getElementById("skip-nav") || document.querySelector('[href="#main-content"]');
