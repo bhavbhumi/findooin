@@ -540,6 +540,7 @@ const CATEGORY_ICONS: Record<string, typeof Globe> = {
   "Page Meta": FileText,
   "Performance": RefreshCw,
   "Security": Shield,
+  "AI & Discoverability": Bot,
 };
 
 const STATUS_CONFIG = {
