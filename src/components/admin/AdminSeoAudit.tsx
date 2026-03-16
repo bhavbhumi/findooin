@@ -46,14 +46,12 @@ const PAGES_WITH_META = [
 const SITEMAP_ROUTES = [
   "/", "/auth", "/install", "/about", "/explore", "/blog", "/contact",
   "/helpdesk", "/quick-links", "/community-guidelines", "/sitemap",
-  "/legal", "/terms", "/privacy", "/feed", "/discover", "/network",
-  "/jobs", "/events",
+  "/legal", "/terms", "/privacy", "/cookies", "/accessibility",
+  "/refund-policy", "/transparency", "/feed", "/discover", "/network",
+  "/jobs", "/events", "/directory", "/developer", "/pitch",
 ];
 
-const MISSING_FROM_SITEMAP = [
-  "/cookies", "/accessibility", "/refund-policy", "/transparency",
-  "/developer", "/pitch", "/directory",
-];
+const MISSING_FROM_SITEMAP: string[] = [];
 
 function runSeoChecks(): SeoCheck[] {
   const checks: SeoCheck[] = [];
