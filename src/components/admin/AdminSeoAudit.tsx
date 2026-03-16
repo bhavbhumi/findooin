@@ -79,13 +79,14 @@ function runSeoChecks(): SeoCheck[] {
   });
 
   const metaKeywords = document.querySelector('meta[name="keywords"]');
+  const keywordsContent = metaKeywords?.getAttribute("content") || "";
   checks.push({
     id: "meta-keywords",
     category: "Meta Tags",
     name: "Meta Keywords",
     description: "Keywords meta tag present (minor ranking signal)",
-    status: metaKeywords?.getAttribute("content") ? "pass" : "warn",
-    details: metaKeywords?.getAttribute("content")?.split(",").length + " keywords" || "Missing",
+    status: keywordsContent ? "pass" : "warn",
+    details: keywordsContent ? `${keywordsContent.split(",").length} keywords` : "Missing",
   });
 
   const canonical = document.querySelector('link[rel="canonical"]');
