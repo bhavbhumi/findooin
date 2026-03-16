@@ -1,0 +1,8 @@
+# FindOO Security Contact
+# https://securitytxt.org/
+
+Contact: mailto:security@findoo.in
+Preferred-Languages: en
+Canonical: https://findoo.in/.well-known/security.txt
+Policy: https://findoo.in/terms
+Expires: 2027-03-16T00:00:00.000Z

@@ -1,0 +1,48 @@
+# FindOO — Financially Social
+> India's first financial network connecting verified Issuers, Intermediaries, and Investors.
+
+## About
+FindOO is a professional financial networking platform built for the Indian BFSI ecosystem. It connects verified financial professionals — Issuers (AMCs, NBFCs, Insurance Companies), Intermediaries (MFDs, RIAs, Insurance Agents, CAs), and Investors — across SEBI, RBI, IRDAI, AMFI & PFRDA regulated ecosystems.
+
+## Core Features
+- **Professional Networking**: Connect with verified financial professionals
+- **Feed & Content**: Share market commentary, research notes, and industry insights
+- **Jobs Board**: Financial-sector specific job listings (Fund Management, Compliance, Wealth Advisory, etc.)
+- **Events**: Webinars, investor meets, AGM/EGM, NFO/IPO launches, earnings calls
+- **Directory**: List and discover financial products (Mutual Funds, Insurance, PMS, AIF, Bonds) and services (Advisory, Compliance, Tax Planning)
+- **Digital Business Cards**: Professional vCard with QR code sharing
+- **Vault**: Secure document storage for financial professionals
+- **Verification System**: Identity verification via SEBI/RBI/IRDAI registration
+
+## User Roles
+- **Issuers**: AMCs, NBFCs, Insurance Companies, Banks
+- **Intermediaries**: Mutual Fund Distributors, Registered Investment Advisors, Insurance Agents, Chartered Accountants
+- **Investors**: Individual and institutional investors
+
+## Regulators Covered
+SEBI, RBI, IRDAI, AMFI, PFRDA, NPS Trust
+
+## Website
+https://findoo.in
+
+## Contact
+https://findoo.in/contact
+
+## Sitemap
+https://findoo.in/sitemap.xml
+
+## Public Pages
+- Homepage: https://findoo.in/
+- About: https://findoo.in/about
+- Explore: https://findoo.in/explore
+- Blog: https://findoo.in/blog
+- Contact: https://findoo.in/contact
+- Help Desk: https://findoo.in/helpdesk
+- Community Guidelines: https://findoo.in/community-guidelines
+- Developer Docs: https://findoo.in/developer
+- Terms of Service: https://findoo.in/terms
+- Privacy Policy: https://findoo.in/privacy
+- Cookie Policy: https://findoo.in/cookies
+- Accessibility: https://findoo.in/accessibility
+- Transparency: https://findoo.in/transparency
+- Refund Policy: https://findoo.in/refund-policy
