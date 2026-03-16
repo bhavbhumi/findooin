@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>FindOO Blog — Financially Social</title>
+    <link>https://findoo.in/blog</link>
+    <description>Insights, analysis, and updates from India's first financial network. Covering mutual funds, insurance, wealth management, compliance, and the BFSI ecosystem.</description>
+    <language>en-in</language>
+    <managingEditor>editorial@findoo.in (FindOO Editorial)</managingEditor>
+    <webMaster>tech@findoo.in (FindOO Tech)</webMaster>
+    <copyright>© 2025 FindOO. All rights reserved.</copyright>
+    <atom:link href="https://findoo.in/feed.xml" rel="self" type="application/rss+xml" />
+    <image>
+      <url>https://findoo.in/icons/icon-512x512.png</url>
+      <title>FindOO Blog</title>
+      <link>https://findoo.in/blog</link>
+    </image>
+    <category>Finance</category>
+    <category>Investing</category>
+    <category>BFSI</category>
+    <!-- Blog posts will be dynamically generated via edge function in production -->
+  </channel>
+</rss>
