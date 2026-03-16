@@ -9,7 +9,7 @@ import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
-  IndianRupee, Server
+  IndianRupee, Server, Search
 } from "lucide-react";
 import {
   Sidebar,
