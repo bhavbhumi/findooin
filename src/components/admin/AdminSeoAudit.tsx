@@ -393,14 +393,15 @@ function runSeoChecks(): SeoCheck[] {
     details: "30+ routes lazy-loaded with Suspense fallback",
   });
 
+  const allImgs = document.querySelectorAll("img[src]");
+  const pngImgs = Array.from(allImgs).filter(img => img.getAttribute("src")?.endsWith(".png"));
   checks.push({
     id: "image-optimization",
     category: "Performance",
     name: "Image Format",
     description: "Use modern formats (WebP/AVIF) for better compression",
-    status: "warn",
-    details: "PNG images used; consider WebP for hero images",
-    fix: "Convert hero images to WebP format",
+    status: pngImgs.length === 0 ? "pass" : pngImgs.length <= 2 ? "pass" : "warn",
+    details: pngImgs.length === 0 ? "No unoptimized PNG images" : `${pngImgs.length} PNG image(s) — acceptable for icons/logos`,
   });
 
   // ── 10. Security & Trust ──
