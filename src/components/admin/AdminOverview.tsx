@@ -251,7 +251,7 @@ export function AdminOverview() {
       {/* Page header with export buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold font-heading text-foreground">Dashboard</h1>
+          <h2 className="text-2xl font-bold font-heading text-foreground">Dashboard</h2>
           <p className="text-sm text-muted-foreground mt-1">
             Platform health at a glance — {new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" })}
           </p>

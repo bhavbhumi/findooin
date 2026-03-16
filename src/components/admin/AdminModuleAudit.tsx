@@ -554,7 +554,7 @@ export function AdminModuleAudit() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold font-heading">Module Audit Report</h1>
+          <h2 className="text-xl sm:text-2xl font-bold font-heading">Module Audit Report</h2>
           <p className="text-sm text-muted-foreground">
             End-to-end feature audit · {overall.total} features across {allModules.length} modules
           </p>
