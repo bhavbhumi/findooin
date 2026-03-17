@@ -239,7 +239,7 @@ const Directory = () => {
             </div>
 
             {/* Browse Tab */}
-            <TabsContent value="browse" className="mt-4 space-y-4">
+            <TabsContent value="browse" className="space-y-4">
               {activeRole === "investor" && (
                 <Alert className="border-primary/20 bg-primary/5">
                   <Info className="h-4 w-4 text-primary" />
