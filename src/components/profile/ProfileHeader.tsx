@@ -220,13 +220,15 @@ export const ProfileHeader = ({
           <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
             {/* Round avatar overlapping banner */}
             <div className="shrink-0 relative z-10 group">
-              <AvatarWithFallback
-                src={profile.avatar_url}
-                initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
-                className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg"
-                textClassName="text-xl sm:text-2xl md:text-3xl"
-                roleColor={primaryRoleConf?.hslVar}
-              />
+              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+                <AvatarWithFallback
+                  src={profile.avatar_url}
+                  initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
+                  className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg"
+                  textClassName="text-xl sm:text-2xl md:text-3xl"
+                  roleColor={primaryRoleConf?.hslVar}
+                />
+              </FlairAvatarWrapper>
               {isOwnProfile && (
                 <button
                   onClick={onEditProfile}
