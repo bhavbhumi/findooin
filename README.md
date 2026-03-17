@@ -134,7 +134,7 @@ src/
 │   ├── feed/            # PostCard, CommentSection, CreatePostComposer, etc.
 │   ├── jobs/            # JobCard, JobDetailSheet, EmployerDashboard, etc.
 │   ├── events/          # EventCard, EventDetailSheet, OrganizerDashboard
-│   ├── directory/       # ListingCard, ListingDetailSheet, CreateListingDialog
+│   ├── directory/       # Showcase: ListingCard, ListingDetailSheet, CreateListingDialog
 │   ├── network/         # NetworkSidebar, InviteDialog
 │   ├── profile/         # ProfileHeader, EditProfileDialog, DigitalCardManager
 │   ├── vault/           # VaultFileCard, VaultUploadDialog
