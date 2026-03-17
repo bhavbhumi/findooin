@@ -107,13 +107,12 @@ const Events = () => {
 
   // My Events: registered events split into upcoming/past
   const myUpcomingEvents = useMemo(() => {
-    if (!myRegistrations || !events) return [];
-    const eventMap = new Map(events.map((e) => [e.id, e]));
+    const eventMap = new Map(myRegEvents.map((e) => [e.id, e]));
     return myRegistrations
       .filter((r) => r.status === "registered" && eventMap.has(r.event_id))
       .map((r) => eventMap.get(r.event_id)!)
       .filter((e) => !isPast(new Date(e.end_time)));
-  }, [myRegistrations, events]);
+  }, [myRegistrations, myRegEvents]);
 
   const myPastEvents = useMemo(() => {
     if (!myRegistrations || !events) return [];
