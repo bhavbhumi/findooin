@@ -1214,6 +1214,57 @@ export type Database = {
         }
         Relationships: []
       }
+      kb_articles: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          excerpt: string
+          helpful_count: number
+          id: string
+          published: boolean
+          read_time_minutes: number
+          slug: string
+          sort_order: number
+          tags: string[] | null
+          title: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          category?: string
+          content?: string
+          created_at?: string
+          excerpt?: string
+          helpful_count?: number
+          id?: string
+          published?: boolean
+          read_time_minutes?: number
+          slug: string
+          sort_order?: number
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          excerpt?: string
+          helpful_count?: number
+          id?: string
+          published?: boolean
+          read_time_minutes?: number
+          slug?: string
+          sort_order?: number
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       listing_enquiries: {
         Row: {
           contact_preference: string | null
