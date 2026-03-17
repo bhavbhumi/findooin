@@ -54,7 +54,7 @@ const sections = [
   },
   {
     title: "11. Children's Privacy",
-    content: `The Platform is not intended for individuals under 18. We do not knowingly collect data from minors. If discovered, such data is promptly deleted. Report concerns to privacy@findoo.in.`,
+    content: `The Platform is not intended for individuals under 18. We do not knowingly collect data from minors. If discovered, such data is promptly deleted. Report concerns to hello@findoo.in.`,
   },
   {
     title: "12. Changes to This Policy",
