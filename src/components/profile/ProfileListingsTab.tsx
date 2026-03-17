@@ -108,7 +108,7 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
                 {isOwnProfile ? "You haven't created any listings yet" : "No listings yet"}
               </p>
               {isOwnProfile && (
-                <Link to="/directory">
+              <Link to="/showcase">
                   <Button size="sm" className="mt-3">
                     <ArrowRight className="h-3 w-3 mr-1" /> Create Your First Listing
                   </Button>
