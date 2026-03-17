@@ -60,7 +60,7 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 ┌─────────────────────────────────────────────────┐
 │                    React SPA                     │
 │  ┌───────────┐  ┌──────────┐  ┌──────────────┐  │
-│  │  36 Pages │  │ 18 Hooks │  │ 120+ Comps   │  │
+│  │  50 Pages │  │ 25 Hooks │  │ 150+ Comps   │  │
 │  │ (Routes)  │  │ (Data)   │  │ (53 UI base) │  │
 │  └─────┬─────┘  └────┬─────┘  └──────┬───────┘  │
 │        │             │               │           │
