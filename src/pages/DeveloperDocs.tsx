@@ -32,7 +32,7 @@ const ArchitectureTab = () => (
 │                                              │
 │  Pages ──▶ Contexts ──▶ UI Components        │
 │              │                               │
-│         Custom Hooks (20+)                   │
+│         Custom Hooks (30+)                   │
 │              │                               │
 │        TanStack React Query                  │
 │              │                               │
@@ -41,12 +41,13 @@ const ArchitectureTab = () => (
                │
    ┌───────────┴───────────┐
    │    Lovable Cloud       │
-   │  ├── PostgreSQL (30+)  │
+   │  ├── PostgreSQL (40+)  │
    │  ├── Auth              │
-   │  ├── Storage (5)       │
-   │  ├── Edge Functions (4)│
+   │  ├── Storage (6)       │
+   │  ├── Edge Functions (7)│
    │  ├── Realtime          │
-   │  └── RLS Policies      │
+   │  ├── RLS Policies      │
+   │  └── DB Functions (25+)│
    └────────────────────────┘`}
         </pre>
       </CardContent>
