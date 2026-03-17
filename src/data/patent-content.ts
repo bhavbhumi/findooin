@@ -340,9 +340,85 @@ A method for determining the discovery ranking of a target user based on:
 ### Claim 6: Referral-Inherited Circle Placement
 A method for placing a newly discovered user into a specific trust circle based on the **circle position of the referrer**, such that a referral from a 1st-circle connection inherits a higher trust position than a referral from a 3rd-circle connection, with the inheritance weight being a function of the referral type (explicit introduction > card exchange > lead share > passive referral).
 
+### Claim 7: Trust-Propagated Content Relevance (AffinityFeed™)
+A method for ranking content items (posts, articles, commentary) in a professional network feed wherein:
+- (a) Each content item's relevance score is **multiplicatively weighted** by the trust circle tier of the content author relative to the viewing user
+- (b) An Inner Circle author's content receives a weight of 10× compared to 1× for Ecosystem-tier authors
+- (c) The weight is derived from the same AffinityRank™ scoring engine used for people discovery, creating a **unified trust graph** across people and content
+
+This is fundamentally different from engagement-based feeds (Instagram, X/Twitter) or chronological feeds, as the same post appears with different priority to different viewers based on their unique trust relationship with the author.
+
+### Claim 8: Circle-Decay Freshness for Content
+A method for applying **relationship-aware temporal decay** to content items, wherein:
+- (a) Content from Inner Circle contacts (Tier 1) remains at high relevance for **7 days** before significant decay
+- (b) Content from Ecosystem contacts (Tier 5) decays to low relevance within **24 hours**
+- (c) The decay rate is computed as exp(-0.03 × ageDays / tierDecayDays) where tierDecayDays is a function of the author's circle tier
+- (d) This creates a natural "attention budget" where trusted contacts occupy feed space longer, without manual curation
+
+### Claim 9: Role-Intent Content Matching
+A method for cross-module content discovery in a professional network wherein:
+- (a) Content types (posts, job listings, event announcements) from different modules are **interleaved** into a unified discovery feed
+- (b) The interleaving priority is determined by the viewer's active professional role and recent behavioral intent signals
+- (c) An Intermediary browsing investment listings sees Issuer research notes promoted; an Investor registering for events sees co-attendee thought leadership elevated
+- (d) This replaces siloed content tabs with a **serendipity-optimized** unified stream
+
+### Claim 10: Engagement-Quality Weighting via Trust Tiers
+A method for scoring content engagement quality wherein:
+- (a) A "like" from an Inner Circle contact contributes **10×** the engagement signal of a like from an Ecosystem contact
+- (b) Comments are weighted at **2×** base engagement and bookmarks at **3×** base engagement
+- (c) The combined score uses logarithmic scaling: (1 + log(1 + weightedEngagement)) to prevent runaway viral effects
+- (d) This creates a **trust-qualified engagement score** distinct from raw engagement metrics, preventing low-trust viral content from dominating high-trust professional discourse
+
 ---
 
 ## 6. Novelty Statement
+
+The combination of:
+1. **Role-asymmetric scoring** (Claim 1)
+2. **Trust inheritance through professional introductions** (Claims 5-6)
+3. **Behavioral intent as a dynamic multiplier** (Claim 3)
+4. **Regulatory context as an affinity signal** (Claim 4)
+5. **Trust-propagated content relevance** (Claims 7-8) — AffinityFeed™
+6. **Cross-module serendipity interleaving** (Claim 9)
+7. **Trust-qualified engagement scoring** (Claim 10)
+
+...constitutes a **fundamentally new approach** to professional discovery and content ranking that has no equivalent in existing patent literature or commercial implementations. While individual components (collaborative filtering, degree separation, intent detection, engagement scoring) exist independently, their **unified application within a regulated professional context with asymmetric role weighting applied to both people AND content** is novel.
+
+The extension from people discovery (AffinityRank™) to content discovery (AffinityFeed™) using the **same underlying trust graph** represents a second-order innovation: a single trust computation governs both who you see and what content you see, creating a coherent professional information environment.
+
+---
+
+## 7. Implementation Status
+
+| Component | Status | Location |
+|-----------|--------|----------|
+| Database schema (intent_signals, introductions, affinity_scores) | ✅ Implemented | Supabase migration |
+| Role weight matrix | ✅ Implemented | compute_trustcircle_iq() PostgreSQL function |
+| Intent signal tracking | ✅ Implemented | trackIntentSignal() client utility |
+| Trust proximity calculation | ✅ Implemented | Edge function: trustcircle-iq |
+| 5-circle tier placement | ✅ Implemented | Edge function + Discover UI |
+| Referral boost scoring | ✅ Implemented | Edge function |
+| Freshness decay | ✅ Implemented | Edge function |
+| Activity resonance | ✅ Implemented | Edge function |
+| Frontend people discovery UI | ✅ Implemented | /discover → People tab |
+| Score tooltip breakdown | ✅ Implemented | PersonCard hover tooltip |
+| AffinityFeed™ trust-weighted posts | ✅ Implemented | /discover → Posts tab |
+| Circle-decay freshness for content | ✅ Implemented | computeAffinityFeedScore() |
+| Trust tier visual indicators | ✅ Implemented | Color-coded left-edge bars on posts |
+| Feed mode switcher (Affinity/Engaged/Recent) | ✅ Implemented | Posts tab mode selector |
+
+---
+
+## 8. Branding
+
+- **Engine Name:** TrustCircle IQ™
+- **People Algorithm:** AffinityRank™
+- **Content Algorithm:** AffinityFeed™
+- **Tagline:** "Your network, intelligently ranked"
+- **Circle Labels:** Inner Circle → Primary Network → Secondary Network → Tertiary Network → Ecosystem
+`;
+
+export default patentContent;
 
 The combination of:
 1. **Role-asymmetric scoring** (Claim 1)
