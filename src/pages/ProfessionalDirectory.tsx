@@ -171,7 +171,7 @@ export default function ProfessionalDirectory() {
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between gap-2 mb-3">
                           <FlairAvatarWrapper avatarBorder={avatarBorder} className="shrink-0">
-                            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
                               <span className="text-sm font-bold text-primary">
                                 {entity.entity_name?.charAt(0)?.toUpperCase() || "?"}
                               </span>
