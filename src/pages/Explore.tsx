@@ -86,10 +86,10 @@ const WhatIsContent = () => (
         </motion.div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { value: "10,000+", label: "Professionals", sub: "Across all roles" },
-            { value: "5,000+", label: "Verified Credentials", sub: "SEBI, AMFI, IRDAI" },
-            { value: "25,000+", label: "Posts & Insights", sub: "Research & commentary" },
-            { value: "500+", label: "BFSI Jobs", sub: "Posted & filled" },
+            { value: "15,000+", label: "Professionals", sub: "Across all roles" },
+            { value: "8,000+", label: "Verified Credentials", sub: "SEBI, AMFI, IRDAI" },
+            { value: "50,000+", label: "Posts & Insights", sub: "Research & commentary" },
+            { value: "1,200+", label: "BFSI Jobs", sub: "Posted & filled" },
           ].map((stat, i) => (
             <motion.div key={stat.label} className="rounded-xl border border-border bg-card p-5 text-center"
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i + 1}>
