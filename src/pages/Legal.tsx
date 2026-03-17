@@ -47,7 +47,7 @@ const termsSections = [
 
 6.2 Platform IP: All intellectual property in the Platform, including its design, code, logos, trademarks ("FindOO" and associated branding), algorithms, databases, and documentation, is the exclusive property of FindOO Solutions LLP or its licensors. No license or right is granted to you other than the limited right to use the Platform as described in these Terms.
 
-6.3 Copyright Claims: If you believe Content on the Platform infringes your copyright, you may submit a notice under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, to our Grievance Officer at hello@findoo.in. Your notice must include identification of the copyrighted work, the infringing material, your contact details, and a statement of good faith belief.
+6.3 Copyright Claims: If you believe Content on the Platform infringes your copyright, you may submit a notice under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, to our Grievance Officer at legal@findoo.in. Your notice must include identification of the copyrighted work, the infringing material, your contact details, and a statement of good faith belief.
 
 6.4 AI & Machine Learning: FindOO may use aggregated, anonymized, or de-identified data derived from Platform usage to improve its services, algorithms, and recommendation systems. No individually identifiable Content will be used for AI model training without explicit opt-in consent from the User.`,
   },
