@@ -79,6 +79,7 @@ const Settings = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) return;
       setUserEmail(session.user.email || "");
+      setCurrentUserId(session.user.id);
       loadSettings(session.user.id);
     });
   }, []);
