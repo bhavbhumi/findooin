@@ -59,9 +59,18 @@ export default function ProfessionalDirectory() {
     },
   });
 
+  // Extract unique cities for filter
+  const cities = useMemo(() => {
+    const set = new Set(entities.map(e => e.city).filter(Boolean));
+    return Array.from(set).sort() as string[];
+  }, [entities]);
+
+  const paginated = entities.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const totalPages = Math.ceil(entities.length / PAGE_SIZE);
+
   // Fetch flair for all claimed user IDs in current page
   const claimedUserIds = useMemo(
-    () => paginated?.filter(e => e.matched_user_id).map(e => e.matched_user_id!) || [],
+    () => paginated.filter(e => e.matched_user_id).map(e => e.matched_user_id!) || [],
     [paginated]
   );
 
@@ -80,15 +89,6 @@ export default function ProfessionalDirectory() {
       return map;
     },
   });
-
-  // Extract unique cities for filter
-  const cities = useMemo(() => {
-    const set = new Set(entities.map(e => e.city).filter(Boolean));
-    return Array.from(set).sort() as string[];
-  }, [entities]);
-
-  const paginated = entities.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const totalPages = Math.ceil(entities.length / PAGE_SIZE);
 
   return (
     <PublicPageLayout>
