@@ -247,7 +247,7 @@ const policiesSections = [
 
 7.2 Appeals: Users may appeal enforcement actions by contacting legal@findoo.in within 30 days of the action. Appeals are reviewed by a different team member than the one who made the original decision. FindOO will respond to appeals within 15 business days.
 
-7.3 Reporting: Users can report violations using the in-app report button on any post, comment, or profile, or by emailing hello@findoo.in. All reports are reviewed within 48 hours.`,
+7.3 Reporting: Users can report violations using the in-app report button on any post, comment, or profile, or by emailing compliance@findoo.in. All reports are reviewed within 48 hours.`,
   },
 ];
 
