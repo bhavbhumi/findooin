@@ -142,7 +142,7 @@ const Profile = () => {
   // Tab privacy
   const { settings: tabPrivacy, updateSettings: updateTabPrivacy } = useTabPrivacy(profile?.id ?? null);
   const isLoggedIn = !!currentUserId;
-  const isConnected = connectionStatus === "connected";
+  const isConnected = connectionStatus.connected === "accepted";
 
   const isOwnProfile = !id || id === currentUserId;
 
