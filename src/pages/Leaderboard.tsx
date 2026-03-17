@@ -80,7 +80,7 @@ function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
       </div>
 
       {/* Avatar with flair */}
-      <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+      <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border}>
         <AvatarWithFallback
           src={entry.profile.avatar_url}
           initials={getInitials(entry.profile.full_name)}

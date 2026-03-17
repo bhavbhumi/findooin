@@ -189,7 +189,7 @@ export default function ProfessionalProfile() {
           <CardContent className="-mt-12 px-6 pb-8">
             {/* Avatar / Initials */}
             <div className="flex items-end gap-4 mb-6">
-              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"} className="shrink-0 relative z-10">
+              <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border} className="shrink-0 relative z-10">
                 <AvatarWithFallback
                   src={profile?.avatar_url}
                   initials={displayName.charAt(0).toUpperCase()}

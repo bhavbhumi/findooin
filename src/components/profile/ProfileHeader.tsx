@@ -225,7 +225,7 @@ export const ProfileHeader = ({
           <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
             {/* Round avatar overlapping banner */}
             <div className="shrink-0 relative z-10 group">
-              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+              <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border}>
                 <AvatarWithFallback
                   src={profile.avatar_url}
                   initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
