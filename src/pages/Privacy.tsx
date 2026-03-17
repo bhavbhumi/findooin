@@ -38,7 +38,7 @@ const sections = [
   },
   {
     title: "7. Your Rights Under Indian Law",
-    content: `Under the DPDP Act, 2023, you have the right to: (a) Access your personal data; (b) Correct inaccurate data; (c) Erase your data (subject to legal retention); (d) Nominate someone to exercise your rights; (e) File grievances with our Grievance Officer or the Data Protection Board of India; (f) Withdraw consent; (g) Data portability in machine-readable format. Contact privacy@findoo.in to exercise these rights (response within 30 days).`,
+    content: `Under the DPDP Act, 2023, you have the right to: (a) Access your personal data; (b) Correct inaccurate data; (c) Erase your data (subject to legal retention); (d) Nominate someone to exercise your rights; (e) File grievances with our Grievance Officer or the Data Protection Board of India; (f) Withdraw consent; (g) Data portability in machine-readable format. Contact hello@findoo.in to exercise these rights (response within 30 days).`,
   },
   {
     title: "8. Cookies & Tracking",
