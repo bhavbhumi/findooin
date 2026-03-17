@@ -205,8 +205,8 @@ const WhyExistsContent = () => (
         <div className="grid md:grid-cols-3 gap-6 mb-16">
           {[
             { icon: Eye, title: "The Trust Gap", desc: "Retail investors can't distinguish genuine advisors from unregistered operators. Misinformation spreads unchecked on generic social platforms." },
-            { icon: Users, title: "Fragmented Network", desc: "Financial professionals operate in silos — WhatsApp groups, closed forums, paid newsletters. No unified, verified platform exists." },
-            { icon: Lightbulb, title: "Knowledge Void", desc: "Quality market insights are scattered. LinkedIn doesn't verify SEBI numbers. Twitter doesn't check AMFI ARNs. Nobody verifies credentials." },
+            { icon: Users, title: "Fragmented Network", desc: "Financial professionals operate in silos — informal chat groups, closed forums, paid newsletters. No unified, verified platform exists." },
+            { icon: Lightbulb, title: "Knowledge Void", desc: "Quality market insights are scattered. Generic platforms don't verify SEBI numbers or AMFI ARNs. Nobody verifies credentials." },
           ].map((item, i) => (
             <motion.div key={item.title} className="rounded-xl border border-border bg-card p-6 text-center"
               initial="hidden" animate="visible" variants={fadeUp} custom={i + 1}>
