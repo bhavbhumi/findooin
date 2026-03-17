@@ -189,7 +189,7 @@ Grievance Officer: [To be appointed]
 FindOO Solutions LLP
 B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
 
-For all inquiries: hello@findoo.in
+For all inquiries: compliance@findoo.in
 
 The Grievance Officer shall acknowledge your complaint within 24 hours and resolve it within 15 days of receipt, or such other period as prescribed by applicable law. If you are unsatisfied with the resolution, you may approach the Data Protection Board of India under the DPDP Act, 2023.`,
   },
