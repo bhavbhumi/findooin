@@ -82,6 +82,8 @@ const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const AccessibilityPage = lazy(() => import("./pages/Accessibility"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const TransparencyPage = lazy(() => import("./pages/Transparency"));
+const ProfessionalDirectory = lazy(() => import("./pages/ProfessionalDirectory"));
+const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
