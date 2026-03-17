@@ -372,7 +372,7 @@ Key tables (60+ total — see `src/integrations/supabase/types.ts` for full sche
 | `listings`             | Directory products/services                |
 | `listing_reviews`      | Directory listing reviews                  |
 | `listing_enquiries`    | Directory listing enquiries                |
-| `vault_files`          | Secure document storage                    |
+| `file_uploads`         | Upload records for all storage buckets     |
 | `notifications`        | In-app notifications                       |
 | `verification_requests`| KYC verification queue                     |
 | `active_sessions`      | Multi-device session tracking              |
@@ -381,7 +381,6 @@ Key tables (60+ total — see `src/integrations/supabase/types.ts` for full sche
 | `reports`              | Content/user reports                       |
 | `endorsements`         | Skill endorsements                         |
 | `card_exchanges`       | Digital card view/save tracking            |
-| `file_uploads`         | Upload records for all storage buckets     |
 | `poll_options`         | Poll answer choices                        |
 | `poll_votes`           | Poll votes                                 |
 | `survey_questions`     | Survey question definitions                |
@@ -389,7 +388,30 @@ Key tables (60+ total — see `src/integrations/supabase/types.ts` for full sche
 | `survey_responses`     | Survey responses                           |
 | `featured_posts`       | User-pinned featured posts                 |
 | `profile_views`        | Profile view tracking                      |
-| `user_settings`        | Privacy and notification preferences       |
+| `profile_tab_privacy`  | Tab-level visibility settings              |
+| `profile_flair`        | Visual customization by XP level           |
+| `education`            | User education history                     |
+| `publications`         | User publications and research             |
+| `recommendations`      | Peer recommendations                       |
+| `user_xp`             | XP totals, levels, streaks                 |
+| `xp_transactions`     | XP earning history                         |
+| `badge_definitions`   | Achievement badge catalog                  |
+| `user_badges`         | Earned badges per user                     |
+| `weekly_challenges`   | Gamification challenges                    |
+| `user_challenge_progress` | Challenge completion tracking          |
+| `referral_links`      | Referral code management                   |
+| `referral_conversions`| Referral conversion tracking               |
+| `social_proof_events` | Level-up and achievement events            |
+| `affinity_scores`     | TrustCircle IQ computed scores             |
+| `intent_signals`      | User intent tracking for ranking           |
+| `introductions`       | Warm introductions between users           |
+| `invitations`         | Admin-managed user invitations             |
+| `registry_entities`   | AMFI/regulatory registry data              |
+| `sales_leads`         | CRM lead pipeline                          |
+| `campaigns`           | Marketing campaign tracking                |
+| `support_tickets`     | User support requests                      |
+| `email_send_log`      | Transactional email delivery log           |
+| `suppressed_emails`   | Bounced/suppressed email list              |
 
 ---
 
