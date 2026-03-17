@@ -157,10 +157,10 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
             <CardContent className="p-8 text-center">
               <MessageSquare className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">No enquiries yet</p>
-              <p className="text-xs text-muted-foreground mt-1">Browse the directory and send enquiries to providers.</p>
-              <Link to="/directory">
+              <p className="text-xs text-muted-foreground mt-1">Browse the showcase and send enquiries to providers.</p>
+              <Link to="/showcase">
                 <Button size="sm" className="mt-3">
-                  <ArrowRight className="h-3 w-3 mr-1" /> Explore Directory
+                  <ArrowRight className="h-3 w-3 mr-1" /> Explore Showcase
                 </Button>
               </Link>
             </CardContent>

@@ -69,7 +69,7 @@ const Directory = () => {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <h1 className="text-xl font-bold font-heading text-foreground">Directory</h1>
+              <h1 className="text-xl font-bold font-heading text-foreground">Showcase</h1>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Discover financial products & professional services
               </p>

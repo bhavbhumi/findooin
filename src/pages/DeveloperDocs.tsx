@@ -78,7 +78,7 @@ const ArchitectureTab = () => (
                 { module: "Network", route: "/network", hooks: "useConnectionActions", folder: "components/network/" },
                 { module: "Jobs", route: "/jobs", hooks: "useJobs (11 exports)", folder: "components/jobs/" },
                 { module: "Events", route: "/events", hooks: "useEvents (9 exports)", folder: "components/events/" },
-                { module: "Directory", route: "/directory", hooks: "useListings (8 exports)", folder: "components/directory/" },
+                { module: "Showcase", route: "/showcase", hooks: "useListings (8 exports)", folder: "components/directory/" },
                 { module: "Vault", route: "/vault", hooks: "useVault", folder: "components/vault/" },
                 { module: "Admin", route: "/admin", hooks: "useAdmin (8 exports)", folder: "components/admin/" },
               ].map((row) => (
