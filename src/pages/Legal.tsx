@@ -112,9 +112,8 @@ const termsSections = [
     content: `For questions regarding these Terms of Service, please contact:
 
 FindOO Solutions LLP
-Email: legal@findoo.in
-Grievance Officer: grievance@findoo.in
-Support: support@findoo.in`,
+B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
+Email: hello@findoo.in`,
   },
 ];
 
