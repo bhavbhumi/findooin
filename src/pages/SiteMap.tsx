@@ -41,6 +41,16 @@ const sitemapData = [
     ],
   },
   {
+    title: "Compare",
+    links: [
+      { label: "vs Social Networks", to: "/compare?tab=social" },
+      { label: "vs Professional Networks", to: "/compare?tab=professional" },
+      { label: "vs Financial Media", to: "/compare?tab=media" },
+      { label: "vs News Terminals", to: "/compare?tab=terminals" },
+      { label: "vs Chat Groups", to: "/compare?tab=chatgroups" },
+    ],
+  },
+  {
     title: "Content",
     links: [
       { label: "Blog", to: "/blog" },
@@ -49,6 +59,12 @@ const sitemapData = [
       { label: "Analysis", to: "/blog?tab=analysis" },
       { label: "Reports", to: "/blog?tab=reports" },
       { label: "Bulletin", to: "/blog?tab=bulletin" },
+    ],
+  },
+  {
+    title: "Directory",
+    links: [
+      { label: "Professional Directory", to: "/professionals" },
     ],
   },
   {
@@ -89,6 +105,9 @@ const sitemapData = [
       { label: "Discover", to: "/discover" },
       { label: "Jobs", to: "/jobs" },
       { label: "Events", to: "/events" },
+      { label: "Showcase", to: "/showcase" },
+      { label: "Bookmarks", to: "/bookmarks" },
+      { label: "Leaderboard", to: "/leaderboard" },
       { label: "My Vault", to: "/vault" },
       { label: "Messages", to: "/messages" },
       { label: "Notifications", to: "/notifications" },

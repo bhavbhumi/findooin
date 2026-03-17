@@ -45,7 +45,7 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 - **Content feed** — Posts, polls, surveys with hashtags and visibility controls
 - **BFSI Job Board** — Category-specific job listings with employer/candidate dashboards
 - **Events** — Webinars, investor meets, AGMs with check-in QR codes
-- **Directory** — Product/service marketplace with reviews and enquiries
+- **Showcase** — Product/service marketplace with reviews, enquiries, and suggestions
 - **Secure Vault** — Private document storage for KYC, tax, certificates
 - **Real-time messaging** — Categorized DMs with typing indicators and read receipts
 - **Digital Business Cards** — Shareable vCard with QR code and lead tracking
@@ -224,8 +224,10 @@ src/
 - Registration with capacity tracking
 - Organizer dashboard + QR check-in system
 
-### 6. Directory (`/directory`)
+### 6. Showcase (`/showcase`)
+- Browse, Suggested, and My Showcase tabs (3-tab architecture)
 - Products (mutual funds, insurance, etc.) + Services (advisory, compliance, etc.)
+- Suggested listings matched by certifications, specializations, and location
 - Reviews + ratings + enquiry system
 - Comparison view
 
@@ -245,18 +247,29 @@ src/
 - Platform: trending hashtags, top posts, activity trends
 - CSV export
 
-### 10. Admin (`/admin`)
+### 10. Bookmarks (`/bookmarks`)
+- Standalone bookmarks page with tabs for Posts, Jobs, and Events
+- Aggregates saved items from across the platform
+
+### 11. Leaderboard (`/leaderboard`)
+- XP-based ranking of active users
+- Streaks, levels, and gamification badges
+
+### 12. Admin (`/admin`)
 - Overview dashboard with platform stats
 - Verification queue (document review + approve/reject)
-- User management
-- Content moderation (reports)
-- Blog CMS
+- User management + Content moderation (reports)
+- Blog CMS + Invitations + Registry + Sales + Campaigns
+- Infrastructure: Monitoring, Scorecard, Module Audit, SEO Audit, Email
+- Cost Report + Scaling Report
 
-### 11. Public Pages
+### 13. Public Pages
 - **Landing** (`/`) — Hero, features overview, social proof
 - **About** (`/about`) — Company, Career, Press tabs
 - **Explore** (`/explore`) — What, Why, How, Who tabs
+- **Compare** (`/compare`) — Side-by-side vs social/professional networks, financial media
 - **Blog** (`/blog`, `/blog/:slug`) — Articles, Analysis, Reports
+- **Professional Directory** (`/professionals`) — Public AMFI-registered professional directory
 - **Contact** (`/contact`) — Ask Us + Visit Us (Google Maps)
 - **Legal** (`/legal`) — Terms, Privacy, Policies, Disclosures
 - **HelpDesk** (`/helpdesk`) — Searchable support articles
@@ -265,6 +278,7 @@ src/
 - **SiteMap** (`/sitemap`) — Full page index
 - **Install** (`/install`) — PWA installation guide
 - **Developer Docs** (`/developer`) — In-app architecture & API reference portal
+- **Pitch Decks** (`/pitch`) — Stakeholder presentations
 - **Cost Report** (`/cost-report`) — Development cost & efficiency analysis (printable)
 
 ---

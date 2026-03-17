@@ -9,10 +9,14 @@ FindOO is a professional financial networking platform built for the Indian BFSI
 - **Feed & Content**: Share market commentary, research notes, and industry insights
 - **Jobs Board**: Financial-sector specific job listings (Fund Management, Compliance, Wealth Advisory, etc.)
 - **Events**: Webinars, investor meets, AGM/EGM, NFO/IPO launches, earnings calls
-- **Directory**: List and discover financial products (Mutual Funds, Insurance, PMS, AIF, Bonds) and services (Advisory, Compliance, Tax Planning)
+- **Showcase**: Discover and list financial products (Mutual Funds, Insurance, PMS, AIF, Bonds) and services (Advisory, Compliance, Tax Planning)
 - **Digital Business Cards**: Professional vCard with QR code sharing
 - **Vault**: Secure document storage for financial professionals
 - **Verification System**: Identity verification via SEBI/RBI/IRDAI registration
+- **Gamification**: XP system, streaks, badges, leaderboard, and weekly challenges
+- **Bookmarks**: Save posts, jobs, and events for later
+- **Professional Directory**: Public directory of AMFI-registered professionals
+- **Compare**: Side-by-side comparisons with social networks, professional networks, and financial media
 
 ## User Roles
 - **Issuers**: AMCs, NBFCs, Insurance Companies, Banks
@@ -35,14 +39,30 @@ https://findoo.in/sitemap.xml
 - Homepage: https://findoo.in/
 - About: https://findoo.in/about
 - Explore: https://findoo.in/explore
+- Compare: https://findoo.in/compare
 - Blog: https://findoo.in/blog
 - Contact: https://findoo.in/contact
+- Professional Directory: https://findoo.in/professionals
 - Help Desk: https://findoo.in/helpdesk
 - Community Guidelines: https://findoo.in/community-guidelines
 - Developer Docs: https://findoo.in/developer
+- Pitch Decks: https://findoo.in/pitch
 - Terms of Service: https://findoo.in/terms
 - Privacy Policy: https://findoo.in/privacy
 - Cookie Policy: https://findoo.in/cookies
 - Accessibility: https://findoo.in/accessibility
 - Transparency: https://findoo.in/transparency
 - Refund Policy: https://findoo.in/refund-policy
+
+## Authenticated Pages
+- Feed: https://findoo.in/feed
+- Network: https://findoo.in/network
+- Jobs: https://findoo.in/jobs
+- Events: https://findoo.in/events
+- Showcase: https://findoo.in/showcase
+- Discover: https://findoo.in/discover
+- Bookmarks: https://findoo.in/bookmarks
+- Leaderboard: https://findoo.in/leaderboard
+- Vault: https://findoo.in/vault
+- Messages: https://findoo.in/messages
+- Settings: https://findoo.in/settings
