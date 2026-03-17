@@ -351,7 +351,7 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 
 ## Database Schema
 
-Key tables (30+ total — see `src/integrations/supabase/types.ts` for full schema):
+Key tables (60+ total — see `src/integrations/supabase/types.ts` for full schema):
 
 | Table                  | Purpose                                    |
 | ---------------------- | ------------------------------------------ |
