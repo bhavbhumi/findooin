@@ -302,7 +302,7 @@ const Directory = () => {
             </TabsContent>
 
             {/* My Showcase Tab */}
-            <TabsContent value="my-showcase" className="mt-4 space-y-4">
+            <TabsContent value="my-showcase" className="space-y-4">
               {canCreate ? (
                 /* Issuer / Intermediary View */
                 <>
