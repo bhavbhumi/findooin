@@ -7,18 +7,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink } from "lucide-react";
+import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink, FileUp, Eye, Globe } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateInvitation } from "@/hooks/useInvitations";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { RegistryImportWizard } from "@/components/admin/RegistryImportWizard";
 
 export default function AdminRegistryPage() {
   const [search, setSearch] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
   const [syncing, setSyncing] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const createInvite = useCreateInvitation();
 
@@ -213,6 +215,14 @@ export default function AdminRegistryPage() {
               </CardDescription>
             </div>
             <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="default"
+                onClick={() => setWizardOpen(true)}
+              >
+                <FileUp className="h-3.5 w-3.5 mr-1.5" />
+                Import Data
+              </Button>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -222,12 +232,12 @@ export default function AdminRegistryPage() {
               />
               <Button
                 size="sm"
-                variant="default"
+                variant="outline"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={importing}
               >
                 <Upload className={`h-3.5 w-3.5 mr-1.5 ${importing ? "animate-spin" : ""}`} />
-                {importing ? "Importing..." : "Import CSV"}
+                {importing ? "Importing..." : "Quick CSV"}
               </Button>
               <Button size="sm" variant="outline" onClick={handleAmfiSync} disabled={syncing}>
                 <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${syncing ? "animate-spin" : ""}`} />
@@ -375,6 +385,12 @@ export default function AdminRegistryPage() {
           )}
         </CardContent>
       </Card>
+
+      <RegistryImportWizard
+        open={wizardOpen}
+        onOpenChange={setWizardOpen}
+        onImportComplete={() => refetch()}
+      />
     </div>
   );
 }

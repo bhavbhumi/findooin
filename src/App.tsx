@@ -82,6 +82,8 @@ const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 const AccessibilityPage = lazy(() => import("./pages/Accessibility"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const TransparencyPage = lazy(() => import("./pages/Transparency"));
+const ProfessionalDirectory = lazy(() => import("./pages/ProfessionalDirectory"));
+const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -140,6 +142,8 @@ const App = () => {
                       <Route path="/cookies" element={<CookiePolicy />} />
                       <Route path="/accessibility" element={<AccessibilityPage />} />
                       <Route path="/refund-policy" element={<RefundPolicy />} />
+                      <Route path="/professionals" element={<ProfessionalDirectory />} />
+                      <Route path="/professional/:registrationNumber" element={<ProfessionalProfile />} />
                       <Route path="/transparency" element={<TransparencyPage />} />
                       <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
