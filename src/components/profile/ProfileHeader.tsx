@@ -82,7 +82,7 @@ function getInitials(name: string) {
 }
 
 export const ProfileHeader = ({
-  profile, roles, stats, isOwnProfile, connectionStatus, follow, connect, unfollow, disconnect, connLoading, onEditProfile, onNavigateToNetwork,
+  profile, roles, stats, isOwnProfile, connectionStatus, follow, connect, unfollow, disconnect, connLoading, onEditProfile, onNavigateToNetwork, canViewNetwork = true,
 }: ProfileHeaderProps) => {
   const navigate = useNavigate();
   const { data: flair } = useProfileFlair(profile.id);
