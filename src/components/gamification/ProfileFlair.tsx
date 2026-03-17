@@ -81,7 +81,7 @@ export function FlairName({ nameEffect, children, className }: FlairNameProps) {
       <span
         className={cn("relative", className)}
         style={{
-          textShadow: "0 0 8px hsl(var(--status-highlight) / 0.4)",
+          textShadow: "0 0 14px hsl(var(--status-highlight) / 0.7)",
         }}
       >
         {children}
