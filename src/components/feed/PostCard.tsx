@@ -91,12 +91,14 @@ export function PostCard({ post }: { post: FeedPost }) {
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
         <Link to={`/profile/${post.author.id}`} className="shrink-0 hover:opacity-90 transition-opacity">
-          <NetworkAvatar
-            src={post.author.avatar_url}
-            initials={getInitials(post.author.full_name)}
-            size="sm"
-            roleColor={roleConf?.hslVar}
-          />
+          <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+            <NetworkAvatar
+              src={post.author.avatar_url}
+              initials={getInitials(post.author.full_name)}
+              size="sm"
+              roleColor={roleConf?.hslVar}
+            />
+          </FlairAvatarWrapper>
         </Link>
 
         <div className="flex-1 min-w-0">
