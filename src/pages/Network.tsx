@@ -226,7 +226,7 @@ const Network = () => {
             </div>
 
             <TabsContent value="connections" className="mt-0 space-y-2">
-              <NetworkUserList users={filterUsers(myConnections)} getInitials={getInitials} emptyMessage="No connections yet. Start building your professional network!" />
+              <NetworkUserList users={filterUsers(myConnections)} getInitials={getInitials} emptyMessage="No connections yet. Start building your professional network!" showMessage />
             </TabsContent>
 
             <TabsContent value="followers" className="mt-0 space-y-2">
