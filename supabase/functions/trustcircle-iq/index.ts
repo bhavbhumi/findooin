@@ -161,11 +161,13 @@ Deno.serve(async (req) => {
       roles: roleMap.get(score.target_id) || [],
     })).filter((r: any) => r.profile !== null);
 
-    // Group by circle
+    // Group by 5 circles
     const grouped = {
       inner_circle: results.filter((r: any) => r.circle_tier === 1),
-      potential: results.filter((r: any) => r.circle_tier === 2),
-      ecosystem: results.filter((r: any) => r.circle_tier === 3),
+      primary_network: results.filter((r: any) => r.circle_tier === 2),
+      secondary_network: results.filter((r: any) => r.circle_tier === 3),
+      tertiary_network: results.filter((r: any) => r.circle_tier === 4),
+      ecosystem: results.filter((r: any) => r.circle_tier === 5),
       total: results.length,
       cached: useCache,
     };
