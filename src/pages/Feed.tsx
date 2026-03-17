@@ -1,14 +1,12 @@
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { useFeedPosts } from "@/hooks/useFeedPosts";
-import { useTrendingPosts } from "@/hooks/useTrendingPosts";
-import { useViralPosts } from "@/hooks/useViralPosts";
+import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { PostCard } from "@/components/feed/PostCard";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { CreatePostComposer } from "@/components/feed/CreatePostComposer";
 import { FeedTabs, type FeedFilter } from "@/components/feed/FeedTabs";
 import { FeedSidebar } from "@/components/feed/FeedSidebar";
 import AppLayout from "@/components/AppLayout";
-import { useState, useCallback, useRef, useEffect, memo } from "react";
+import { useState, useCallback, useRef, useEffect, useMemo, memo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageTransition } from "@/components/PageTransition";
@@ -20,19 +18,34 @@ import { DraftsPanel } from "@/components/feed/DraftsPanel";
 import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EmptyFeedIllustration } from "@/components/illustrations/EmptyStateIllustrations";
-import { MessageSquare, TrendingUp, Zap } from "lucide-react";
+import { MessageSquare, Clock, Sparkles, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTrustCircleIQ, CIRCLE_TIERS, type CircleTier } from "@/hooks/useTrustCircleIQ";
+import { cn } from "@/lib/utils";
 
+/* ── AffinityFeed™ Trust-Weighted Scoring ── */
+const TRUST_WEIGHT_BY_TIER: Record<number, number> = { 1: 10, 2: 6, 3: 3, 4: 1.5, 5: 1 };
+const FRESHNESS_DECAY_DAYS_BY_TIER: Record<number, number> = { 1: 7, 2: 5, 3: 3, 4: 2, 5: 1 };
+
+function computeAffinityFeedScore(post: FeedPost, authorTier: number): number {
+  const trustWeight = TRUST_WEIGHT_BY_TIER[authorTier] || 1;
+  const engagement = post.like_count + (post.comment_count * 2) + (post.bookmark_count * 3);
+  const engagementScore = 1 + Math.log1p(engagement);
+  const ageHours = (Date.now() - new Date(post.created_at).getTime()) / (1000 * 60 * 60);
+  const decayDays = FRESHNESS_DECAY_DAYS_BY_TIER[authorTier] || 1;
+  const freshness = Math.exp(-0.03 * Math.max(0, ageHours / 24) / decayDays);
+  return trustWeight * engagementScore * freshness;
+}
 
 const MemoizedPostCard = memo(PostCard);
 
 const Feed = () => {
   usePageMeta({ title: "Feed", description: "Your personalized financial feed — market commentary, research notes, and insights from verified professionals." });
-  const [filter, setFilter] = useState<FeedFilter>("foryou");
+  const [filter, setFilter] = useState<FeedFilter>("affinity");
   const [feedUserId, setFeedUserId] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [draftToLoad, setDraftToLoad] = useState<PostDraft | null>(null);
 
-  // Mobile sheet for drafts/scheduled from profile dropdown
   const panelParam = searchParams.get("panel");
   const [mobileSheet, setMobileSheet] = useState<"drafts" | "scheduled" | null>(null);
 
@@ -40,7 +53,6 @@ const Feed = () => {
     supabase.auth.getUser().then(({ data }) => setFeedUserId(data.user?.id ?? null));
   }, []);
 
-  // Handle ?panel= URL param for mobile access
   useEffect(() => {
     if (panelParam === "drafts" || panelParam === "scheduled") {
       const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
@@ -52,30 +64,63 @@ const Feed = () => {
   }, [panelParam, setSearchParams]);
 
   const {
-    flatPosts: forYouPosts,
-    isLoading: forYouLoading,
-    error: forYouError,
-    fetchNextPage: fetchNextForYou,
-    hasNextPage: hasNextForYou,
-    isFetchingNextPage: fetchingNextForYou,
+    flatPosts,
+    isLoading: postsLoading,
+    error: postsError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useFeedPosts();
-  const { data: trendingPosts, isLoading: trendingLoading, error: trendingError } = useTrendingPosts();
-  const { data: viralPosts, isLoading: viralLoading, error: viralError } = useViralPosts();
 
-  const visiblePosts = filter === "foryou" ? forYouPosts : filter === "trending" ? trendingPosts : viralPosts;
-  const isLoading = filter === "foryou" ? forYouLoading : filter === "trending" ? trendingLoading : viralLoading;
-  const error = filter === "foryou" ? forYouError : filter === "trending" ? trendingError : viralError;
-  const hasMore = filter === "foryou" ? hasNextForYou : false;
-  const isFetchingMore = filter === "foryou" ? fetchingNextForYou : false;
+  const { data: trustData, isLoading: trustLoading } = useTrustCircleIQ(feedUserId, true);
 
-  // Infinite scroll observer
+  /* ── AffinityFeed™ ranked posts ── */
+  const affinityPosts = useMemo(() => {
+    if (!flatPosts.length) return [];
+
+    const authorTierMap = new Map<string, number>();
+    if (trustData) {
+      ([1, 2, 3, 4, 5] as CircleTier[]).forEach((tier) => {
+        const key = CIRCLE_TIERS[tier].key;
+        trustData[key].forEach((r) => {
+          authorTierMap.set(r.target_id, tier);
+        });
+      });
+    }
+
+    return [...flatPosts]
+      .map((post) => {
+        const tier = authorTierMap.get(post.author.id) || 5;
+        return { post, score: computeAffinityFeedScore(post, tier), tier };
+      })
+      .sort((a, b) => b.score - a.score);
+  }, [flatPosts, trustData]);
+
+  const visiblePosts = filter === "affinity"
+    ? affinityPosts.map((a) => a.post)
+    : flatPosts;
+  const isLoading = postsLoading || (filter === "affinity" && trustLoading);
+  const error = postsError;
+  const hasMore = filter === "recent" ? hasNextPage : false;
+  const isFetchingMore = filter === "recent" ? isFetchingNextPage : false;
+
+  // Build tier lookup for affinity indicator
+  const postTierMap = useMemo(() => {
+    const map = new Map<string, { tier: number; score: number }>();
+    affinityPosts.forEach(({ post, tier, score }) => {
+      map.set(post.id, { tier, score });
+    });
+    return map;
+  }, [affinityPosts]);
+
+  // Infinite scroll observer (only for Recent)
   const observerRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!hasMore || isLoading || isFetchingMore) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && filter === "foryou") {
-          fetchNextForYou();
+        if (entry.isIntersecting && filter === "recent") {
+          fetchNextPage();
         }
       },
       { rootMargin: "300px" }
@@ -83,7 +128,7 @@ const Feed = () => {
     const el = observerRef.current;
     if (el) observer.observe(el);
     return () => { if (el) observer.unobserve(el); };
-  }, [hasMore, isLoading, isFetchingMore, filter, fetchNextForYou]);
+  }, [hasMore, isLoading, isFetchingMore, filter, fetchNextPage]);
 
   const handleLoadDraft = useCallback((draft: PostDraft) => {
     setDraftToLoad(draft);
@@ -92,7 +137,6 @@ const Feed = () => {
     toast.info("Draft loaded — resume editing in composer above");
   }, []);
 
-  // Derive initial sidebar tab from URL param (desktop)
   const initialSidebarTab = panelParam === "drafts" ? "drafts" : panelParam === "scheduled" ? "scheduled" : undefined;
 
   return (
@@ -108,7 +152,16 @@ const Feed = () => {
           </ErrorBoundary>
           <FeedTabs value={filter} onChange={setFilter} />
 
-          {/* Initial loading skeletons */}
+          {/* AffinityFeed™ context bar */}
+          {filter === "affinity" && !isLoading && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border">
+              <Sparkles className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <p className="text-[11px] text-muted-foreground">
+                Ranked by <span className="font-semibold text-foreground">AffinityFeed™</span> — content from your trust network is prioritized by circle proximity
+              </p>
+            </div>
+          )}
+
           {isLoading && (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -126,30 +179,52 @@ const Feed = () => {
           {visiblePosts && visiblePosts.length === 0 && !isLoading && (
             <EmptyState
               illustration={<EmptyFeedIllustration />}
-              icon={filter === "foryou" ? MessageSquare : filter === "trending" ? TrendingUp : Zap}
-              title={filter === "foryou" ? "Your feed is waiting" : filter === "trending" ? "Nothing trending yet" : "No viral posts yet"}
+              icon={filter === "affinity" ? Sparkles : Clock}
+              title={filter === "affinity" ? "Your AffinityFeed™ is waiting" : "No recent posts yet"}
               description={
-                filter === "foryou"
-                  ? "Start following verified professionals to see their market insights, research notes, and commentary here."
-                  : "Check back later — when the community buzzes, you'll see it here."
+                filter === "affinity"
+                  ? "Start following verified professionals to see their market insights ranked by trust proximity."
+                  : "Check back later — new posts from the community will appear here."
               }
-              actionLabel={filter === "foryou" ? "Discover People" : undefined}
-              actionLink={filter === "foryou" ? "/discover" : undefined}
+              actionLabel={filter === "affinity" ? "Discover People" : undefined}
+              actionLink={filter === "affinity" ? "/discover" : undefined}
             />
           )}
 
-          {visiblePosts?.map((post) => (
-            <MemoizedPostCard key={post.id} post={post} />
-          ))}
+          {visiblePosts?.map((post) => {
+            const tierInfo = filter === "affinity" ? postTierMap.get(post.id) : null;
+            return (
+              <div key={post.id} className="relative">
+                {tierInfo && tierInfo.tier <= 3 && (
+                  <div className="absolute -left-1 top-3 z-10">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className={cn(
+                          "w-1.5 h-8 rounded-full",
+                          tierInfo.tier === 1 && "bg-amber-500",
+                          tierInfo.tier === 2 && "bg-primary",
+                          tierInfo.tier === 3 && "bg-intermediary",
+                        )} />
+                      </TooltipTrigger>
+                      <TooltipContent side="left" className="text-[10px]">
+                        {CIRCLE_TIERS[tierInfo.tier as CircleTier].label} · Score {tierInfo.score.toFixed(1)}
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                )}
+                <MemoizedPostCard post={post} />
+              </div>
+            );
+          })}
 
-          {/* Infinite scroll trigger + manual fallback */}
+          {/* Infinite scroll trigger (Recent only) */}
           {hasMore && (
             <>
               <div ref={observerRef} className="h-4" />
               {!isFetchingMore && (
                 <div className="flex justify-center py-4">
                   <button
-                    onClick={() => fetchNextForYou()}
+                    onClick={() => fetchNextPage()}
                     className="px-6 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                   >
                     Load More Posts
@@ -181,7 +256,6 @@ const Feed = () => {
       </div>
       </PageTransition>
 
-      {/* Mobile sheet for Drafts/Scheduled */}
       <Sheet open={!!mobileSheet} onOpenChange={(open) => !open && setMobileSheet(null)}>
         <SheetContent side="bottom" className="max-h-[80vh] overflow-y-auto">
           <SheetHeader>
