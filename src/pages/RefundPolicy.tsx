@@ -58,7 +58,7 @@ const sections = [
   },
   {
     title: "7. Disputes",
-    content: `Billing disputes must be notified within 30 days of the charge date to hello@findoo.in. Failure to dispute within 30 days constitutes acceptance. Disputes are resolved per the mechanism in our Terms of Service.`,
+    content: `Billing disputes must be notified within 30 days of the charge date to legal@findoo.in. Failure to dispute within 30 days constitutes acceptance. Disputes are resolved per the mechanism in our Terms of Service.`,
   },
   {
     title: "8. Contact",
