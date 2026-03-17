@@ -10,9 +10,10 @@ interface ProfileSidebarProps {
   stats: ProfileStats;
   isOwnProfile: boolean;
   onNavigateToNetwork?: () => void;
+  canViewNetwork?: boolean;
 }
 
-export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigateToNetwork }: ProfileSidebarProps) => {
+export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigateToNetwork, canViewNetwork = true }: ProfileSidebarProps) => {
   const hasRegulatoryIds = profile.regulatory_ids && Object.keys(profile.regulatory_ids).length > 0;
   const hasCertifications = profile.certifications && profile.certifications.length > 0;
   const hasSpecializations = profile.specializations && profile.specializations.length > 0;

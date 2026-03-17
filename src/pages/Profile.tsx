@@ -409,6 +409,7 @@ const Profile = () => {
                 stats={stats}
                 isOwnProfile={isOwnProfile}
                 onNavigateToNetwork={() => setActiveTab("network")}
+                canViewNetwork={isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)}
               />
             </div>
           </div>
@@ -441,6 +442,7 @@ const Profile = () => {
                 stats={stats}
                 isOwnProfile={isOwnProfile}
                 onNavigateToNetwork={() => setActiveTab("network")}
+                canViewNetwork={isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)}
               />
             </div>
           </aside>

@@ -383,15 +383,15 @@ export const ProfileHeader = ({
               </span>
             )}
             {profile.location && <span className="text-border hidden sm:inline">·</span>}
-            <button onClick={onNavigateToNetwork} className="hover:text-foreground transition-colors">
+            <button onClick={canViewNetwork ? onNavigateToNetwork : undefined} className={`transition-colors ${canViewNetwork ? "hover:text-foreground cursor-pointer" : "cursor-default"}`}>
               <span className="font-semibold text-card-foreground">{stats.followers}</span> Followers
             </button>
             <span className="text-border">·</span>
-            <button onClick={onNavigateToNetwork} className="hover:text-foreground transition-colors">
+            <button onClick={canViewNetwork ? onNavigateToNetwork : undefined} className={`transition-colors ${canViewNetwork ? "hover:text-foreground cursor-pointer" : "cursor-default"}`}>
               <span className="font-semibold text-card-foreground">{stats.following}</span> Following
             </button>
             <span className="text-border">·</span>
-            <button onClick={onNavigateToNetwork} className="hover:text-foreground transition-colors">
+            <button onClick={canViewNetwork ? onNavigateToNetwork : undefined} className={`transition-colors ${canViewNetwork ? "hover:text-foreground cursor-pointer" : "cursor-default"}`}>
               <span className="font-semibold text-card-foreground">{stats.connections}</span> Connections
             </button>
             <span className="text-border hidden sm:inline">·</span>
