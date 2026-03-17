@@ -43,11 +43,11 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
               sizeClasses[size]
             )}
             style={{
-              background: `linear-gradient(135deg, ${withAlpha(config.color, 1)}, ${withAlpha(config.color, 0.84)})`,
-              borderColor: withAlpha(config.color, 0.7),
+              background: `linear-gradient(135deg, ${withAlpha(config.color, 1)}, ${withAlpha(config.color, 0.96)})`,
+              borderColor: withAlpha(config.color, 1),
               color: "hsl(var(--primary-foreground))",
-              textShadow: "0 1px 2px hsl(0 0% 0% / 0.55)",
-              boxShadow: `0 2px 8px ${withAlpha(config.color, 0.55)}`,
+              textShadow: "0 1px 2px hsl(0 0% 0% / 0.75)",
+              boxShadow: `0 0 0 1px hsl(var(--background)), 0 3px 10px ${withAlpha(config.color, 0.65)}`,
             }}
           >
             <span className="mr-px">{config.icon.length <= 2 ? config.icon : ""}</span>

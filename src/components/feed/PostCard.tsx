@@ -112,7 +112,11 @@ export function PostCard({ post }: { post: FeedPost }) {
               <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
             )}
             {authorXP && authorXP.level > 0 && (
-              <LevelBadge level={authorXP.level} size="sm" />
+              <LevelBadge
+                level={authorXP.level}
+                size="xs"
+                className="[filter:contrast(1.2)_saturate(1.25)_brightness(1.08)]"
+              />
             )}
             {primaryRole && roleConf && (
               <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${roleConf.bgColor}`}>
