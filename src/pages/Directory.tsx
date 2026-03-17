@@ -18,7 +18,7 @@ import { useRole } from "@/contexts/RoleContext";
 const MemoizedDirectorySidebar = memo(DirectorySidebar);
 
 const Directory = () => {
-  usePageMeta({ title: "Directory" });
+  usePageMeta({ title: "Showcase" });
   const { activeRole } = useRole();
 
   const [search, setSearch] = useState("");
