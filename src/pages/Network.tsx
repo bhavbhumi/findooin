@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NetworkUserSkeleton } from "@/components/skeletons/NetworkUserSkeleton";
 import {
   Users, UserPlus, UserCheck, UserMinus, Clock, Search, CheckCircle2,
-  TrendingUp, Sparkles, Send, MessageSquare,
+  Send, MessageSquare,
 } from "lucide-react";
 
 interface NetworkUser {
@@ -41,7 +41,7 @@ const Network = () => {
   const [myFollowers, setMyFollowers] = useState<NetworkUser[]>([]);
   const [pendingIncoming, setPendingIncoming] = useState<{ id: string; user: NetworkUser }[]>([]);
   const [pendingOutgoing, setPendingOutgoing] = useState<{ id: string; user: NetworkUser }[]>([]);
-  const [suggestions, setSuggestions] = useState<NetworkUser[]>([]);
+  
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -76,10 +76,6 @@ const Network = () => {
       .neq("id", userId)
       .limit(50);
 
-    const connectedIds = new Set(userIds);
-    connectedIds.add(userId);
-    const suggestedUsers = (allProfiles || []).filter((p: any) => !connectedIds.has(p.id)).slice(0, 10);
-    allProfiles?.forEach((p: any) => userIds.add(p.id));
 
     const profilesMap: Record<string, NetworkUser> = {};
     (allProfiles || []).forEach((p: any) => { profilesMap[p.id] = p; });
@@ -104,7 +100,6 @@ const Network = () => {
     setPendingOutgoing(
       pendOutRes.data?.map((r: any) => ({ id: r.id, user: profilesMap[r.to_user_id] })).filter((r: any) => r.user) || []
     );
-    setSuggestions(suggestedUsers);
     setLoading(false);
   };
 
@@ -219,9 +214,6 @@ const Network = () => {
                     Pending ({totalPending})
                   </TabsTrigger>
                 )}
-                <TabsTrigger value="suggestions" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
-                  <Sparkles className="h-3.5 w-3.5 mr-1" /> Discover
-                </TabsTrigger>
               </TabsList>
             </div>
 
@@ -285,38 +277,6 @@ const Network = () => {
               </TabsContent>
             )}
 
-            <TabsContent value="suggestions" className="mt-0 space-y-2">
-              {suggestions.length === 0 ? (
-                <div className="rounded-xl border border-border bg-card p-10 text-center">
-                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground text-sm font-medium">No suggestions right now</p>
-                  <p className="text-muted-foreground text-xs mt-1">Check back later as more professionals join the platform.</p>
-                </div>
-              ) : (
-                filterUsers(suggestions).map((user) => (
-                  <div key={user.id} className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
-                    <Link to={`/profile/${user.id}`}>
-                      <NetworkAvatar src={user.avatar_url} initials={getInitials(user.full_name)} size="md" />
-                    </Link>
-                    <div className="flex-1 min-w-0">
-                      <Link to={`/profile/${user.id}`} className="hover:underline">
-                        <p className="text-sm font-semibold text-card-foreground truncate">
-                          {user.display_name || user.full_name}
-                          {user.verification_status === "verified" && <CheckCircle2 className="h-3.5 w-3.5 text-accent inline ml-1" />}
-                        </p>
-                      </Link>
-                      {user.headline && <p className="text-xs text-muted-foreground truncate">{user.headline}</p>}
-                      {user.organization && <p className="text-[10px] text-muted-foreground mt-0.5">{user.organization}</p>}
-                    </div>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link to={`/profile/${user.id}`}>View</Link>
-                    </Button>
-                  </div>
-                ))
-              )}
-            </TabsContent>
           </Tabs>
         )}
           </div>
@@ -329,8 +289,8 @@ const Network = () => {
                 followersCount={myFollowers.length}
                 followingCount={myFollowing.length}
                 pendingCount={pendingIncoming.length + pendingOutgoing.length}
-                suggestions={suggestions}
-                allUsers={[...myConnections, ...myFollowing, ...myFollowers, ...suggestions]}
+                suggestions={[]}
+                allUsers={[...myConnections, ...myFollowing, ...myFollowers]}
                 getInitials={getInitials}
                 onStatClick={(tab) => setActiveTab(tab)}
               />
