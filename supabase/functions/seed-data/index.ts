@@ -88,6 +88,11 @@ Deno.serve(async (req) => {
     await supabaseAdmin.from("profile_views").delete().in("viewer_id", allUsers);
     await supabaseAdmin.from("profile_views").delete().in("profile_id", allUsers);
 
+    // Cleanup registry entities (seeded ones)
+    await supabaseAdmin.from("registry_entities").delete().eq("source", "amfi").ilike("entity_name", "%SEED%").then(() => {});
+    await supabaseAdmin.from("registry_entities").delete().in("matched_user_id", allUsers);
+    await supabaseAdmin.from("registry_entities").delete().eq("source_id", "seed");
+
     // Delete survey_options & survey_questions via posts
     const { data: existingPosts } = await supabaseAdmin.from("posts").select("id").in("author_id", allUsers);
     const existingPostIds = (existingPosts || []).map(p => p.id);
