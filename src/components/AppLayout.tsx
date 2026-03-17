@@ -65,6 +65,7 @@ export default function AppLayout({
       </ErrorBoundary>
       <ScrollToTop />
       <LevelUpModal />
+      <SocialProofToasts />
     </div>
   );
 }
