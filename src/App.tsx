@@ -85,6 +85,11 @@ const TransparencyPage = lazy(() => import("./pages/Transparency"));
 const ProfessionalDirectory = lazy(() => import("./pages/ProfessionalDirectory"));
 const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const FindooVsSocialNetwork = lazy(() => import("./pages/compare/FindooVsSocialNetwork"));
+const FindooVsProfessionalNetwork = lazy(() => import("./pages/compare/FindooVsProfessionalNetwork"));
+const FindooVsFinancialMedia = lazy(() => import("./pages/compare/FindooVsFinancialMedia"));
+const FindooVsNewsTerminals = lazy(() => import("./pages/compare/FindooVsNewsTerminals"));
+const FindooVsWhatsAppGroups = lazy(() => import("./pages/compare/FindooVsWhatsAppGroups"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
