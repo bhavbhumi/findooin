@@ -12,6 +12,8 @@ export interface KBArticle {
   content: string;
   excerpt: string;
   category: string;
+  category_slug: string;
+  subcategory: string;
   tags: string[];
   read_time_minutes: number;
   published: boolean;

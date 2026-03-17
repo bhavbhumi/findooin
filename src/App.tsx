@@ -45,7 +45,8 @@ const CommunityGuidelines = lazy(() => import("./pages/CommunityGuidelines"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Explore = lazy(() => import("./pages/Explore"));
-const HelpDesk = lazy(() => import("./pages/HelpDesk"));
+const HelpDesk = lazy(() => import("./pages/Support"));
+const SupportCategory = lazy(() => import("./pages/SupportCategory"));
 const QuickLinks = lazy(() => import("./pages/QuickLinks"));
 const Legal = lazy(() => import("./pages/Legal"));
 const SiteMap = lazy(() => import("./pages/SiteMap"));
@@ -141,6 +142,8 @@ const App = () => {
                       <Route path="/privacy" element={<Privacy />} />
                       <Route path="/explore" element={<Explore />} />
                       <Route path="/helpdesk" element={<HelpDesk />} />
+                      <Route path="/support" element={<HelpDesk />} />
+                      <Route path="/support/:categorySlug" element={<SupportCategory />} />
                       <Route path="/quick-links" element={<QuickLinks />} />
                       <Route path="/legal" element={<Legal />} />
                       <Route path="/sitemap" element={<SiteMap />} />
