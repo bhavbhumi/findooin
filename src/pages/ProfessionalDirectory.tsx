@@ -59,6 +59,28 @@ export default function ProfessionalDirectory() {
     },
   });
 
+  // Fetch flair for all claimed user IDs in current page
+  const claimedUserIds = useMemo(
+    () => paginated?.filter(e => e.matched_user_id).map(e => e.matched_user_id!) || [],
+    [paginated]
+  );
+
+  const { data: flairMap = {} } = useQuery({
+    queryKey: ["directory-flair", claimedUserIds],
+    enabled: claimedUserIds.length > 0,
+    staleTime: 10 * 60 * 1000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profile_flair")
+        .select("user_id, avatar_border, name_effect")
+        .in("user_id", claimedUserIds);
+      if (error) throw error;
+      const map: Record<string, { avatar_border: string; name_effect: string }> = {};
+      data?.forEach(f => { map[f.user_id] = f; });
+      return map;
+    },
+  });
+
   // Extract unique cities for filter
   const cities = useMemo(() => {
     const set = new Set(entities.map(e => e.city).filter(Boolean));
