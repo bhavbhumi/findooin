@@ -147,11 +147,7 @@ const App = () => {
                       <Route path="/professionals" element={<ProfessionalDirectory />} />
                       <Route path="/professional/:registrationNumber" element={<ProfessionalProfile />} />
                       <Route path="/transparency" element={<TransparencyPage />} />
-                      <Route path="/compare/social-networks" element={<FindooVsSocialNetwork />} />
-                      <Route path="/compare/professional-networks" element={<FindooVsProfessionalNetwork />} />
-                      <Route path="/compare/financial-media" element={<FindooVsFinancialMedia />} />
-                      <Route path="/compare/news-terminals" element={<FindooVsNewsTerminals />} />
-                      <Route path="/compare/whatsapp-groups" element={<FindooVsWhatsAppGroups />} />
+                      <Route path="/compare" element={<ComparePage />} />
                       <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
                       <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
