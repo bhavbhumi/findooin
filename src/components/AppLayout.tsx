@@ -14,6 +14,8 @@ import AppNavbar from "@/components/AppNavbar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
+import { useLoginStreak } from "@/hooks/useGamification";
+import { LevelUpModal } from "@/components/gamification/LevelUpModal";
 
 interface AppLayoutProps {
   children: ReactNode;
