@@ -62,11 +62,11 @@ function parseCSV(text: string): { headers: string[]; rows: Record<string, strin
 
 function parseJSON(text: string): { headers: string[]; rows: Record<string, string>[] } {
   const parsed = JSON.parse(text);
-  const arr = Array.isArray(parsed) ? parsed : parsed.data || parsed.records || parsed.results || [parsed];
+  const arr: Record<string, unknown>[] = Array.isArray(parsed) ? parsed : (parsed.data || parsed.records || parsed.results || [parsed]);
   if (arr.length === 0) return { headers: [], rows: [] };
 
-  const headers = [...new Set(arr.flatMap((r: any) => Object.keys(r)))];
-  const rows = arr.map((r: any) => {
+  const headers: string[] = [...new Set(arr.flatMap((r) => Object.keys(r)))];
+  const rows = arr.map((r) => {
     const record: Record<string, string> = {};
     headers.forEach(h => { record[h] = r[h] != null ? String(r[h]) : ""; });
     return record;
