@@ -27,11 +27,32 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
   const config = getLevelConfig(level);
 
   const withAlpha = (color: string, alpha: number) => {
-    if (color.startsWith("hsl(") && color.endsWith(")")) {
-      return `hsl(${color.slice(4, -1)} / ${alpha})`;
+    const match = color.match(/^hsl\((.*)\)$/i);
+    if (!match) return color;
+
+    const inner = match[1].trim();
+
+    if (inner.includes(",")) {
+      const [h, s, l] = inner.split(",").map((part) => part.trim());
+      return `hsla(${h}, ${s}, ${l}, ${alpha})`;
     }
-    return color;
+
+    const base = inner.replace(/\s*\/\s*[\d.]+%?\s*$/, "");
+    return `hsl(${base} / ${alpha})`;
   };
+
+  const getLightness = (color: string) => {
+    const commaSyntax = color.match(/^hsl\(\s*[\d.]+(?:deg)?\s*,\s*[\d.]+%\s*,\s*([\d.]+)%\s*\)$/i);
+    if (commaSyntax) return Number(commaSyntax[1]);
+
+    const spaceSyntax = color.match(/^hsl\(\s*[\d.]+(?:deg)?\s+[\d.]+%\s+([\d.]+)%/i);
+    return spaceSyntax ? Number(spaceSyntax[1]) : 50;
+  };
+
+  const textColor = getLightness(config.color) >= 52 ? "hsl(222 47% 11%)" : "hsl(0 0% 100%)";
+  const textShadow = textColor === "hsl(0 0% 100%)"
+    ? "0 1px 2px hsl(0 0% 0% / 0.65)"
+    : "0 1px 1px hsl(0 0% 100% / 0.35)";
 
   return (
     <Tooltip>
@@ -43,10 +64,10 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
               sizeClasses[size]
             )}
             style={{
-              background: `linear-gradient(135deg, ${withAlpha(config.color, 1)}, ${withAlpha(config.color, 0.96)})`,
-              borderColor: withAlpha(config.color, 1),
-              color: "hsl(var(--primary-foreground))",
-              textShadow: "0 1px 2px hsl(0 0% 0% / 0.75)",
+              background: `linear-gradient(135deg, ${withAlpha(config.color, 1)}, ${withAlpha(config.color, 0.94)})`,
+              borderColor: withAlpha(config.color, 0.98),
+              color: textColor,
+              textShadow,
               boxShadow: `0 0 0 1px hsl(var(--background)), 0 3px 10px ${withAlpha(config.color, 0.65)}`,
             }}
           >
