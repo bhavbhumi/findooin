@@ -177,9 +177,8 @@ export default function ProfessionalDirectory() {
               {paginated.map((entity) => {
                 const isClaimed = !!entity.matched_user_id;
                 const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
-                const avatarBorder = flair?.avatar_border || "none";
-                const nameEffect = flair?.name_effect || "none";
                 const level = isClaimed && entity.matched_user_id ? xpMap[entity.matched_user_id] : 0;
+                const resolvedFlair = resolveProfileFlair(flair, level);
                 return (
                   <Link
                     key={entity.id}

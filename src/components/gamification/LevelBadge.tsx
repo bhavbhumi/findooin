@@ -61,7 +61,7 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
         <span className={cn("inline-flex items-center gap-1 shrink-0", className)}>
           <span
             className={cn(
-              "inline-flex items-center justify-center rounded-full font-extrabold border-2 leading-none shadow-lg",
+              "inline-flex items-center justify-center rounded-full font-extrabold border-2 leading-none shadow-lg tracking-tight",
               sizeClasses[size]
             )}
             style={{
@@ -72,6 +72,7 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
               boxShadow: `0 0 0 1.5px hsl(var(--background)), 0 2px 8px ${withAlpha(config.color, 0.5)}, inset 0 1px 0 ${withAlpha("hsl(0, 0%, 100%)", 0.25)}`,
             }}
           >
+            <span className="mr-0.5">{config.icon}</span>
             {level}
           </span>
           {showLabel && (

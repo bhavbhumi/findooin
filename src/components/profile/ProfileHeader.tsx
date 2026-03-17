@@ -86,6 +86,7 @@ export const ProfileHeader = ({
   const navigate = useNavigate();
   const { data: flair } = useProfileFlair(profile.id);
   const { data: userXP } = useUserXP(profile.id);
+  const resolvedFlair = resolveProfileFlair(flair, userXP?.level);
   const primaryRole = roles[0]?.role;
   const primaryRoleConf = primaryRole ? ROLE_CONFIG[primaryRole] : null;
   const bannerGradient = primaryRoleConf?.bannerGradient || "from-primary/15 via-primary/8 to-transparent";

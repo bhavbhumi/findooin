@@ -73,6 +73,7 @@ export default function ProfessionalProfile() {
 
   const { data: flair } = useProfileFlair(entity?.matched_user_id || undefined);
   const { data: userXP } = useUserXP(entity?.matched_user_id || undefined);
+  const resolvedFlair = resolveProfileFlair(flair, userXP?.level);
 
   const isClaimed = !!entity?.matched_user_id;
   const displayName = profile?.display_name || profile?.full_name || entity?.entity_name || "";

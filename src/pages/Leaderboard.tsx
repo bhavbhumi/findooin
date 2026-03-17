@@ -59,6 +59,7 @@ function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
   const isTop3 = rank <= 3;
   const RankIcon = isTop3 ? RANK_ICONS[rank - 1] : null;
   const { data: flair } = useProfileFlair(entry.user_id);
+  const resolvedFlair = resolveProfileFlair(flair, entry.level);
 
   return (
     <Link
