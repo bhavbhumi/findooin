@@ -54,10 +54,12 @@ const Discover = () => {
   const [locationFilter, setLocationFilter] = useState<string>("");
   const [mainTab, setMainTab] = useState<"people" | "posts">((searchParams.get("tab") as any) || "people");
   const [activeCircle, setActiveCircle] = useState<CircleTier | "all">("all");
-  const [postFeedMode, setPostFeedMode] = useState<"affinity" | "recent" | "engagement">("affinity");
+  const [postFeedMode, setPostFeedMode] = useState<"trending" | "viral" | "recent">("trending");
 
   const { activeRole } = useRole();
-  const { flatPosts: allPosts, isLoading: loadingPosts } = useFeedPosts();
+  const { data: trendingPosts, isLoading: loadingTrending } = useTrendingPosts();
+  const { data: viralPosts, isLoading: loadingViral } = useViralPosts();
+  const { flatPosts: recentPosts, isLoading: loadingRecent } = useFeedPosts();
   const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, true);
 
   useEffect(() => {
