@@ -40,6 +40,8 @@ The system produces a personalized, contextual discovery feed where the same tar
 | Facebook | Social graph + engagement signals | Consumer-oriented, no regulatory awareness |
 | Xing | Industry matching | Static categorization, no behavioral intent |
 | Shaadi.com (matrimonial) | Preference matching | Two-sided but only for one use case |
+| X/Twitter | Engagement-based feed ranking | Viral content dominates regardless of trust relationship |
+| Instagram | Engagement + recency | No professional context, no role awareness |
 
 ### 3.2 Gap in Prior Art
 
@@ -49,6 +51,7 @@ No existing discovery system combines:
 - **Behavioral intent overlay** (platform actions reveal what the user is seeking)
 - **Regulation-aware affinity scoring** (shared SEBI/AMFI/IRDAI context)
 - **Lead sharing as a discovery signal** (B2B prospecting within professional networks)
+- **Trust-weighted content ranking** (same post ranked differently based on viewer-author trust relationship)
 
 ---
 
@@ -89,7 +92,7 @@ Every user exists within a five-tier discovery framework relative to every other
 └───────────────────────────────────────────────────────────┘
 \`\`\`
 
-### 4.2 The AffinityRank™ Formula
+### 4.2 The AffinityRank™ Formula (People Discovery)
 
 \`\`\`
 AffinityScore(viewer, target) =
@@ -168,7 +171,7 @@ TrustProximity(viewer, target) =
 - Different regulatory domains: 0.2
 
 **MutualConnectionDensity:**
-- \`min(mutual_connections / 10, 1.0)\` — caps at 10 mutuals
+- min(mutual_connections / 10, 1.0) — caps at 10 mutuals
 
 ---
 
@@ -183,7 +186,7 @@ ActivityResonance(viewer, target) =
 \`\`\`
 
 - **HashtagOverlap:** Jaccard similarity of top-20 used hashtags
-- **EventCoAttendance:** \`min(shared_events / 3, 1.0)\`
+- **EventCoAttendance:** min(shared_events / 3, 1.0)
 - **ContentEngagement:** Has viewer liked/commented on target's posts? Binary 0/1
 - **SpecializationMatch:** Jaccard similarity of specialization arrays
 
@@ -196,7 +199,7 @@ FreshnessDecay(days_since_last_signal) =
     e^(-0.05 × days)
 \`\`\`
 
-Where \`days\` = days since the most recent interaction signal (post, login, event attendance, card exchange).
+Where days = days since the most recent interaction signal (post, login, event attendance, card exchange).
 
 | Days Inactive | Decay Factor |
 |--------------|-------------|
@@ -317,6 +320,60 @@ When a referral converts (connection accepted, enquiry made), the referrer's fut
 
 ---
 
+### 4.5 The AffinityFeed™ Formula (Content Discovery)
+
+AffinityFeed™ extends the trust graph from people to content. Instead of ranking posts by recency or raw engagement (like every existing platform), AffinityFeed™ scores each post based on **who wrote it** relative to the viewer.
+
+\`\`\`
+AffinityFeedScore(viewer, post) =
+    TrustWeight(authorCircleTier)
+  × EngagementQuality(post)
+  × CircleDecayFreshness(post.age, authorCircleTier)
+\`\`\`
+
+#### 4.5.1 TrustWeight — Circle-Based Content Priority
+
+| Author's Circle Tier (relative to viewer) | Trust Weight |
+|------------------------------------------|-------------|
+| Tier 1 — Inner Circle | 10× |
+| Tier 2 — Primary Network | 6× |
+| Tier 3 — Secondary Network | 3× |
+| Tier 4 — Tertiary Network | 1.5× |
+| Tier 5 — Ecosystem | 1× (baseline) |
+
+**Key Insight:** A routine update from your Inner Circle advisor is scored **10× higher** than a viral post from a stranger. This inverts the engagement-farming incentive that plagues consumer social media.
+
+#### 4.5.2 EngagementQuality — Weighted Interaction Scoring
+
+\`\`\`
+EngagementQuality(post) = 1 + log(1 + weightedEngagement)
+
+where weightedEngagement =
+    likes × 1
+  + comments × 2
+  + bookmarks × 3
+\`\`\`
+
+The logarithmic scaling prevents viral posts from overwhelming trust-weighted content. A post with 1,000 likes (score ~7.9) only beats a trust-weighted Inner Circle post (base 10) if the viewer has no trust relationship with the viral author.
+
+#### 4.5.3 CircleDecayFreshness — Relationship-Aware Temporal Decay
+
+\`\`\`
+CircleDecayFreshness(ageDays, tier) = e^(-0.03 × ageDays / tierDecayDays)
+\`\`\`
+
+| Author's Circle Tier | Decay Half-Life | Effective Visibility Window |
+|----------------------|----------------|---------------------------|
+| Tier 1 — Inner Circle | 7 days | ~21 days before significant drop |
+| Tier 2 — Primary Network | 5 days | ~15 days |
+| Tier 3 — Secondary Network | 3 days | ~9 days |
+| Tier 4 — Tertiary Network | 2 days | ~6 days |
+| Tier 5 — Ecosystem | 1 day | ~3 days |
+
+**Result:** A post from your Inner Circle stays in your feed 7× longer than an equivalent Ecosystem post. This creates a natural "attention budget" — trusted contacts occupy mindshare proportionally.
+
+---
+
 ## 5. Claims
 
 ### Claim 1: Asymmetric Role-Directed Discovery
@@ -340,6 +397,35 @@ A method for determining the discovery ranking of a target user based on:
 ### Claim 6: Referral-Inherited Circle Placement
 A method for placing a newly discovered user into a specific trust circle based on the **circle position of the referrer**, such that a referral from a 1st-circle connection inherits a higher trust position than a referral from a 3rd-circle connection, with the inheritance weight being a function of the referral type (explicit introduction > card exchange > lead share > passive referral).
 
+### Claim 7: Trust-Propagated Content Relevance (AffinityFeed™)
+A method for ranking content items (posts, articles, commentary) in a professional network feed wherein:
+- (a) Each content item's relevance score is **multiplicatively weighted** by the trust circle tier of the content author relative to the viewing user
+- (b) An Inner Circle author's content receives a weight of 10× compared to 1× for Ecosystem-tier authors
+- (c) The weight is derived from the same AffinityRank™ scoring engine used for people discovery, creating a **unified trust graph** across people and content
+
+This is fundamentally different from engagement-based feeds (Instagram, X/Twitter) or chronological feeds, as the same post appears with different priority to different viewers based on their unique trust relationship with the author.
+
+### Claim 8: Circle-Decay Freshness for Content
+A method for applying **relationship-aware temporal decay** to content items, wherein:
+- (a) Content from Inner Circle contacts (Tier 1) remains at high relevance for **7 days** before significant decay
+- (b) Content from Ecosystem contacts (Tier 5) decays to low relevance within **24 hours**
+- (c) The decay rate is computed as exp(-0.03 × ageDays / tierDecayDays) where tierDecayDays is a function of the author's circle tier
+- (d) This creates a natural "attention budget" where trusted contacts occupy feed space longer, without manual curation
+
+### Claim 9: Role-Intent Content Matching
+A method for cross-module content discovery in a professional network wherein:
+- (a) Content types (posts, job listings, event announcements) from different modules are **interleaved** into a unified discovery feed
+- (b) The interleaving priority is determined by the viewer's active professional role and recent behavioral intent signals
+- (c) An Intermediary browsing investment listings sees Issuer research notes promoted; an Investor registering for events sees co-attendee thought leadership elevated
+- (d) This replaces siloed content tabs with a **serendipity-optimized** unified stream
+
+### Claim 10: Engagement-Quality Weighting via Trust Tiers
+A method for scoring content engagement quality wherein:
+- (a) A "like" from an Inner Circle contact contributes **10×** the engagement signal of a like from an Ecosystem contact
+- (b) Comments are weighted at **2×** base engagement and bookmarks at **3×** base engagement
+- (c) The combined score uses logarithmic scaling: (1 + log(1 + weightedEngagement)) to prevent runaway viral effects
+- (d) This creates a **trust-qualified engagement score** distinct from raw engagement metrics, preventing low-trust viral content from dominating high-trust professional discourse
+
 ---
 
 ## 6. Novelty Statement
@@ -349,8 +435,13 @@ The combination of:
 2. **Trust inheritance through professional introductions** (Claims 5-6)
 3. **Behavioral intent as a dynamic multiplier** (Claim 3)
 4. **Regulatory context as an affinity signal** (Claim 4)
+5. **Trust-propagated content relevance** (Claims 7-8) — AffinityFeed™
+6. **Cross-module serendipity interleaving** (Claim 9)
+7. **Trust-qualified engagement scoring** (Claim 10)
 
-...constitutes a **fundamentally new approach** to professional discovery that has no equivalent in existing patent literature or commercial implementations. While individual components (collaborative filtering, degree separation, intent detection) exist independently, their **unified application within a regulated professional context with asymmetric role weighting** is novel.
+...constitutes a **fundamentally new approach** to professional discovery and content ranking that has no equivalent in existing patent literature or commercial implementations. While individual components (collaborative filtering, degree separation, intent detection, engagement scoring) exist independently, their **unified application within a regulated professional context with asymmetric role weighting applied to both people AND content** is novel.
+
+The extension from people discovery (AffinityRank™) to content discovery (AffinityFeed™) using the **same underlying trust graph** represents a second-order innovation: a single trust computation governs both who you see and what content you see, creating a coherent professional information environment.
 
 ---
 
@@ -366,15 +457,20 @@ The combination of:
 | Referral boost scoring | ✅ Implemented | Edge function |
 | Freshness decay | ✅ Implemented | Edge function |
 | Activity resonance | ✅ Implemented | Edge function |
-| Frontend discovery UI | ✅ Implemented | /discover with 5 horizontal tabs |
+| Frontend people discovery UI | ✅ Implemented | /discover → People tab (AffinityRank™) |
 | Score tooltip breakdown | ✅ Implemented | PersonCard hover tooltip |
+| AffinityFeed™ trust-weighted posts | ✅ Implemented | /discover → Posts tab |
+| Circle-decay freshness for content | ✅ Implemented | computeAffinityFeedScore() |
+| Trust tier visual indicators | ✅ Implemented | Color-coded left-edge bars on posts |
+| Feed mode switcher (Affinity/Engaged/Recent) | ✅ Implemented | Posts tab mode selector |
 
 ---
 
 ## 8. Branding
 
 - **Engine Name:** TrustCircle IQ™
-- **Algorithm Name:** AffinityRank™
+- **People Algorithm:** AffinityRank™
+- **Content Algorithm:** AffinityFeed™
 - **Tagline:** "Your network, intelligently ranked"
 - **Circle Labels:** Inner Circle → Primary Network → Secondary Network → Tertiary Network → Ecosystem
 `;
