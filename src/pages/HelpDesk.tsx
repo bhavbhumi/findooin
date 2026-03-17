@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, MessageCircle, ShieldCheck, UserCog, CreditCard, FileText, Settings, ChevronRight, Mail, Phone, Clock, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
+import { CreateTicketDialog } from "@/components/support/CreateTicketDialog";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
