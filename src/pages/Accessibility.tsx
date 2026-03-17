@@ -34,7 +34,7 @@ const sections = [
     title: "6. Accessibility Feedback",
     content: `We welcome your feedback on the accessibility of FindOO. If you encounter any accessibility barriers or have suggestions for improvement, please contact us:
 
-Email: hello@findoo.in
+Email: compliance@findoo.in
 Subject line: Accessibility Feedback — [Brief Description]
 
 When reporting an issue, please include: (a) the page or feature URL; (b) a description of the problem; (c) the assistive technology you are using; (d) your browser and operating system; and (e) any screenshots or recordings.

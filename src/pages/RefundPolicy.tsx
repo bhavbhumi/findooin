@@ -63,7 +63,7 @@ const sections = [
   {
     title: "8. Contact",
     content: `For billing inquiries, refund requests, or cancellation assistance:
-Email: hello@findoo.in
+Email: legal@findoo.in
 
 FindOO Solutions LLP
 Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,

@@ -63,7 +63,7 @@ We notify affected users of data requests unless prohibited by law or court orde
 Grievance Officer: [To be appointed]
 Compliance Officer: [To be appointed]
 
-For all inquiries: hello@findoo.in
+For all inquiries: compliance@findoo.in
 
 FindOO Solutions LLP
 Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
