@@ -966,6 +966,42 @@ Deno.serve(async (req) => {
     }
     if (listingEnquiries.length) await supabaseAdmin.from("listing_enquiries").insert(listingEnquiries);
 
+    // ===== SEED REGISTRY ENTITIES (Professional Directory) =====
+    const registryEntities = [
+      // Claimed profiles (linked to existing seeded users)
+      { entity_name: "Rajesh Kumar", registration_number: "ARN-112345", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Pune", state: "Maharashtra", status: "active", is_public: true, matched_user_id: rajesh, claimed_at: new Date().toISOString() },
+      { entity_name: "Priya Sharma", registration_number: "ARN-223456", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Mumbai", state: "Maharashtra", status: "active", is_public: true, matched_user_id: priya, claimed_at: new Date().toISOString() },
+      { entity_name: "Anita Desai", registration_number: "INA000006789", registration_category: "Investment Adviser", entity_type: "individual", source: "sebi", source_id: "seed", city: "Bengaluru", state: "Karnataka", status: "active", is_public: true, matched_user_id: anita, claimed_at: new Date().toISOString() },
+      { entity_name: "Meera Reddy", registration_number: "INH000007890", registration_category: "Research Analyst", entity_type: "individual", source: "sebi", source_id: "seed", city: "Hyderabad", state: "Telangana", status: "active", is_public: true, matched_user_id: meera, claimed_at: new Date().toISOString() },
+
+      // Unclaimed AMFI distributors across India
+      { entity_name: "Suresh Balakrishnan", registration_number: "ARN-334567", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Chennai", state: "Tamil Nadu", status: "active", is_public: true, contact_email: "suresh.b@example.com" },
+      { entity_name: "Kavita Nair", registration_number: "ARN-445678", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Kochi", state: "Kerala", status: "active", is_public: true },
+      { entity_name: "Deepak Agarwal", registration_number: "ARN-556789", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Kolkata", state: "West Bengal", status: "active", is_public: true },
+      { entity_name: "Sunita Rao Financial Services", registration_number: "ARN-667890", registration_category: "Mutual Fund Distributor", entity_type: "corporate", source: "amfi", source_id: "seed", city: "Bengaluru", state: "Karnataka", status: "active", is_public: true },
+      { entity_name: "Amit Verma", registration_number: "ARN-778901", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Jaipur", state: "Rajasthan", status: "active", is_public: true },
+      { entity_name: "Neha Gupta", registration_number: "ARN-889012", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Lucknow", state: "Uttar Pradesh", status: "active", is_public: true },
+      { entity_name: "Ramesh Iyer", registration_number: "ARN-990123", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Nagpur", state: "Maharashtra", status: "active", is_public: true },
+      { entity_name: "Pooja Saxena Wealth Advisory", registration_number: "ARN-101234", registration_category: "Mutual Fund Distributor", entity_type: "corporate", source: "amfi", source_id: "seed", city: "New Delhi", state: "Delhi", status: "active", is_public: true },
+      { entity_name: "Vivek Choudhary", registration_number: "ARN-112346", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Indore", state: "Madhya Pradesh", status: "active", is_public: true },
+      { entity_name: "Sanjay Mishra", registration_number: "ARN-123457", registration_category: "Mutual Fund Distributor", entity_type: "individual", source: "amfi", source_id: "seed", city: "Patna", state: "Bihar", status: "active", is_public: true },
+
+      // Unclaimed SEBI registered professionals
+      { entity_name: "Lakshmi Venkatesh", registration_number: "INA000008901", registration_category: "Investment Adviser", entity_type: "individual", source: "sebi", source_id: "seed", city: "Chennai", state: "Tamil Nadu", status: "active", is_public: true },
+      { entity_name: "Rajan Kapoor & Associates", registration_number: "INA000009012", registration_category: "Investment Adviser", entity_type: "corporate", source: "sebi", source_id: "seed", city: "Mumbai", state: "Maharashtra", status: "active", is_public: true },
+      { entity_name: "Harish Menon", registration_number: "INH000001234", registration_category: "Research Analyst", entity_type: "individual", source: "sebi", source_id: "seed", city: "Pune", state: "Maharashtra", status: "active", is_public: true },
+      { entity_name: "Shreya Jain", registration_number: "INP000005678", registration_category: "Portfolio Manager", entity_type: "individual", source: "sebi", source_id: "seed", city: "Mumbai", state: "Maharashtra", status: "active", is_public: true },
+      { entity_name: "GrowthCap Advisors Pvt Ltd", registration_number: "INP000006789", registration_category: "Portfolio Manager", entity_type: "corporate", source: "sebi", source_id: "seed", city: "Gurugram", state: "Haryana", status: "active", is_public: true },
+      { entity_name: "Manish Bhatt", registration_number: "INZ000007890", registration_category: "Stock Broker", entity_type: "individual", source: "sebi", source_id: "seed", city: "Ahmedabad", state: "Gujarat", status: "active", is_public: true },
+
+      // A few manual/imported entries
+      { entity_name: "Vikram Singh", registration_number: "MAN-VS-001", registration_category: "Infrastructure Finance Specialist", entity_type: "individual", source: "manual", source_id: "seed", city: "New Delhi", state: "Delhi", status: "active", is_public: true, matched_user_id: vikram, claimed_at: new Date().toISOString() },
+      { entity_name: "Sneha Patel", registration_number: "MAN-SP-002", registration_category: "Compliance Consultant", entity_type: "individual", source: "manual", source_id: "seed", city: "Ahmedabad", state: "Gujarat", status: "active", is_public: true, matched_user_id: sneha, claimed_at: new Date().toISOString() },
+    ];
+
+    const { data: seededRegistry, error: regError } = await supabaseAdmin.from("registry_entities").insert(registryEntities).select("id");
+    if (regError) throw new Error(`Registry seed failed: ${regError.message}`);
+
     return new Response(JSON.stringify({
       success: true,
       posts: insertedPosts.length,
@@ -990,6 +1026,7 @@ Deno.serve(async (req) => {
       listings: seededListings.length,
       listing_reviews: listingReviews.length,
       listing_enquiries: listingEnquiries.length,
+      registry_entities: (seededRegistry || []).length,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
