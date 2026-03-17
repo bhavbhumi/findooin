@@ -139,6 +139,18 @@ const AppNavbar = () => {
               </Link>
             </Button>
 
+            {/* Streak indicator */}
+            {xp && xp.current_streak > 0 && (
+              <StreakIndicator streak={xp.current_streak} multiplier={xp.streak_multiplier} />
+            )}
+
+            {/* Leaderboard */}
+            <Button variant="ghost" size="icon" className="text-muted-foreground hidden sm:inline-flex" asChild aria-label="Leaderboard">
+              <Link to="/leaderboard">
+                <Trophy className="h-5 w-5" />
+              </Link>
+            </Button>
+
             {/* Messages icon */}
             <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Messages">
               <Link to="/messages">
