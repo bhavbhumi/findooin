@@ -142,6 +142,8 @@ const App = () => {
                       <Route path="/privacy" element={<Privacy />} />
                       <Route path="/explore" element={<Explore />} />
                       <Route path="/helpdesk" element={<HelpDesk />} />
+                      <Route path="/support" element={<HelpDesk />} />
+                      <Route path="/support/:categorySlug" element={<SupportCategory />} />
                       <Route path="/quick-links" element={<QuickLinks />} />
                       <Route path="/legal" element={<Legal />} />
                       <Route path="/sitemap" element={<SiteMap />} />
