@@ -366,6 +366,8 @@ const Profile = () => {
                 isOwnProfile={isOwnProfile}
               />
               <GamificationProfileCard userId={profile.id} />
+              {isOwnProfile && <WeeklyChallenges userId={profile.id} />}
+              {isOwnProfile && <ReferralCard userId={profile.id} />}
               <MemoizedProfileSidebar
                 profile={profile}
                 roles={roles}
