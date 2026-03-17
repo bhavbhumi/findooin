@@ -138,7 +138,12 @@ src/
 │   ├── network/         # NetworkSidebar, InviteDialog
 │   ├── profile/         # ProfileHeader, EditProfileDialog, DigitalCardManager
 │   ├── vault/           # VaultFileCard, VaultUploadDialog
-│   ├── admin/           # AdminOverview, VerificationQueue, ContentModeration
+│   ├── admin/           # AdminOverview, VerificationQueue, ContentModeration (20+ files)
+│   ├── gamification/    # XP, badges, streaks, challenges, referral (10 files)
+│   ├── landing/         # CosmicNetworkVisualization, ValueSection, Testimonials
+│   ├── compare/         # ComparisonPage
+│   ├── blog/            # BlogPollWidget, BlogSurveyWidget
+│   ├── pitch/           # PresentationMode, SlideRenderer
 │   ├── discover/        # DiscoverSidebar
 │   ├── AppLayout.tsx    # Shared layout wrapper with navbar + session heartbeat
 │   ├── AppNavbar.tsx    # Main navigation bar (desktop + mobile bottom nav)
