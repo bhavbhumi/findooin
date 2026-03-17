@@ -284,6 +284,52 @@ const Settings = () => {
             {renderSettingRow(Eye, "Show phone on profile", "Allow others to see your phone number", settings.show_phone, (v) => updateSetting("show_phone", v))}
           </section>
 
+          {/* Tab Privacy */}
+          <section className="rounded-xl border border-border bg-card p-5">
+            <div className="flex items-center gap-2 mb-1">
+              <Eye className="h-4 w-4 text-foreground" />
+              <h2 className="text-base font-semibold font-heading text-foreground">Profile Tab Visibility</h2>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4">Control who can see specific tabs on your profile.</p>
+
+            {([
+              { key: "activity_visibility" as const, icon: Activity, label: "Activity", desc: "Your activity timeline and interactions" },
+              { key: "network_visibility" as const, icon: Users, label: "Network", desc: "Your connections, followers, and following" },
+              { key: "vault_visibility" as const, icon: FolderLock, label: "Vault", desc: "Your uploaded documents and files" },
+            ]).map(({ key, icon: Icon, label, desc }, idx) => (
+              <div key={key}>
+                {idx > 0 && <Separator className="my-3" />}
+                <div className="flex items-center justify-between py-2">
+                  <div className="flex items-start gap-3">
+                    <Icon className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+                    </div>
+                  </div>
+                  <Select
+                    value={tabPrivacy[key]}
+                    onValueChange={(v) => {
+                      const updated = { ...tabPrivacy, [key]: v as TabVisibility };
+                      updateTabPrivacy(updated).then(() => {
+                        import("sonner").then(({ toast }) => toast.success(`${label} visibility updated`));
+                      });
+                    }}
+                  >
+                    <SelectTrigger className="w-[160px] h-9 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(Object.entries(visibilityLabels) as [TabVisibility, string][]).map(([value, lbl]) => (
+                        <SelectItem key={value} value={value} className="text-xs">{lbl}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            ))}
+          </section>
+
           {/* Save */}
           <Button onClick={saveSettings} disabled={saving} className="w-full">
             {saving ? "Saving..." : "Save Settings"}
