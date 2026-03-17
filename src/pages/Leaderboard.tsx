@@ -9,6 +9,7 @@ import { Trophy, Medal, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { PageTransition } from "@/components/PageTransition";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 
 function getInitials(name: string) {
   return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
@@ -58,6 +59,7 @@ function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
   const isTop3 = rank <= 3;
   const RankIcon = isTop3 ? RANK_ICONS[rank - 1] : null;
   const { data: flair } = useProfileFlair(entry.user_id);
+  const resolvedFlair = resolveProfileFlair(flair, entry.level);
 
   return (
     <Link
@@ -78,7 +80,7 @@ function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
       </div>
 
       {/* Avatar with flair */}
-      <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+      <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border}>
         <AvatarWithFallback
           src={entry.profile.avatar_url}
           initials={getInitials(entry.profile.full_name)}
@@ -90,7 +92,7 @@ function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className="text-sm font-semibold text-card-foreground truncate">
-            <FlairName nameEffect={flair?.name_effect || "none"}>
+            <FlairName nameEffect={resolvedFlair.name_effect}>
               {entry.profile.display_name || entry.profile.full_name}
             </FlairName>
           </span>

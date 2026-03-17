@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -72,6 +73,7 @@ export default function ProfessionalProfile() {
 
   const { data: flair } = useProfileFlair(entity?.matched_user_id || undefined);
   const { data: userXP } = useUserXP(entity?.matched_user_id || undefined);
+  const resolvedFlair = resolveProfileFlair(flair, userXP?.level);
 
   const isClaimed = !!entity?.matched_user_id;
   const displayName = profile?.display_name || profile?.full_name || entity?.entity_name || "";
@@ -187,7 +189,7 @@ export default function ProfessionalProfile() {
           <CardContent className="-mt-12 px-6 pb-8">
             {/* Avatar / Initials */}
             <div className="flex items-end gap-4 mb-6">
-              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"} className="shrink-0 relative z-10">
+              <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border} className="shrink-0 relative z-10">
                 <AvatarWithFallback
                   src={profile?.avatar_url}
                   initials={displayName.charAt(0).toUpperCase()}
@@ -198,7 +200,7 @@ export default function ProfessionalProfile() {
               <div className="min-w-0 pb-1">
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
-                    <FlairName nameEffect={flair?.name_effect || "none"}>
+                    <FlairName nameEffect={resolvedFlair.name_effect}>
                       {displayName}
                     </FlairName>
                   </h1>

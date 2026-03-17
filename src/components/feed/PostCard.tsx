@@ -29,6 +29,7 @@ import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { FlairName, FlairAvatarWrapper } from "@/components/gamification/ProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-status-info/10 text-status-info" },
@@ -65,6 +66,7 @@ export function PostCard({ post }: { post: FeedPost }) {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const { data: authorXP } = useUserXP(post.author.id);
   const { data: flair } = useProfileFlair(post.author.id);
+  const resolvedFlair = resolveProfileFlair(flair, authorXP?.level);
   const [reportOpen, setReportOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
@@ -91,7 +93,7 @@ export function PostCard({ post }: { post: FeedPost }) {
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
         <Link to={`/profile/${post.author.id}`} className="shrink-0 hover:opacity-90 transition-opacity">
-          <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+          <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border}>
             <NetworkAvatar
               src={post.author.avatar_url}
               initials={getInitials(post.author.full_name)}
@@ -104,7 +106,7 @@ export function PostCard({ post }: { post: FeedPost }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <Link to={`/profile/${post.author.id}`} className="font-semibold text-card-foreground text-sm truncate hover:underline">
-              <FlairName nameEffect={flair?.name_effect || "none"}>
+              <FlairName nameEffect={resolvedFlair.name_effect}>
                 {post.author.display_name || post.author.full_name}
               </FlairName>
             </Link>

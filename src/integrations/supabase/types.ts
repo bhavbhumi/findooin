@@ -2721,6 +2721,14 @@ export type Database = {
           read_ct: number
         }[]
       }
+      resolve_flair_from_level: {
+        Args: { p_level: number }
+        Returns: {
+          avatar_border: string
+          name_effect: string
+          profile_theme: string
+        }[]
+      }
       track_challenge_progress: {
         Args: { p_action: string; p_user_id: string }
         Returns: undefined

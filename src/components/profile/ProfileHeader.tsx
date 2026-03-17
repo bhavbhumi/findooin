@@ -23,6 +23,7 @@ import { FlairAvatarWrapper, FlairName } from "@/components/gamification/Profile
 import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 
 interface ProfileHeaderProps {
   profile: ProfileData;
@@ -85,6 +86,7 @@ export const ProfileHeader = ({
   const navigate = useNavigate();
   const { data: flair } = useProfileFlair(profile.id);
   const { data: userXP } = useUserXP(profile.id);
+  const resolvedFlair = resolveProfileFlair(flair, userXP?.level);
   const primaryRole = roles[0]?.role;
   const primaryRoleConf = primaryRole ? ROLE_CONFIG[primaryRole] : null;
   const bannerGradient = primaryRoleConf?.bannerGradient || "from-primary/15 via-primary/8 to-transparent";
@@ -223,7 +225,7 @@ export const ProfileHeader = ({
           <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
             {/* Round avatar overlapping banner */}
             <div className="shrink-0 relative z-10 group">
-              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+              <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border}>
                 <AvatarWithFallback
                   src={profile.avatar_url}
                   initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
@@ -247,7 +249,7 @@ export const ProfileHeader = ({
             <div className="flex-1 min-w-0 pb-1">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <h1 className="text-base sm:text-lg md:text-xl font-bold font-heading text-card-foreground leading-tight break-words">
-                  <FlairName nameEffect={flair?.name_effect || "none"}>
+                  <FlairName nameEffect={resolvedFlair.name_effect}>
                     {primaryName}
                   </FlairName>
                 </h1>

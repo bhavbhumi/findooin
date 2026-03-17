@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
 import { LevelBadge } from "@/components/gamification/LevelBadge";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 import {
   Search, Shield, MapPin, CheckCircle2, Clock, ArrowRight,
   Users, ChevronLeft, ChevronRight
@@ -176,9 +177,8 @@ export default function ProfessionalDirectory() {
               {paginated.map((entity) => {
                 const isClaimed = !!entity.matched_user_id;
                 const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
-                const avatarBorder = flair?.avatar_border || "none";
-                const nameEffect = flair?.name_effect || "none";
                 const level = isClaimed && entity.matched_user_id ? xpMap[entity.matched_user_id] : 0;
+                const resolvedFlair = resolveProfileFlair(flair, level);
                 return (
                   <Link
                     key={entity.id}
@@ -188,7 +188,7 @@ export default function ProfessionalDirectory() {
                     <Card className="h-full hover:shadow-md transition-all hover:border-primary/20 group-hover:bg-muted/30">
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between gap-2 mb-3">
-                          <FlairAvatarWrapper avatarBorder={avatarBorder} className="shrink-0">
+                          <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border} className="shrink-0">
                             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
                               <span className="text-sm font-bold text-primary">
                                 {entity.entity_name?.charAt(0)?.toUpperCase() || "?"}
@@ -208,7 +208,7 @@ export default function ProfessionalDirectory() {
                           </div>
                         </div>
                         <h3 className="text-sm font-semibold truncate mb-1 group-hover:text-primary transition-colors">
-                          <FlairName nameEffect={nameEffect}>
+                          <FlairName nameEffect={resolvedFlair.name_effect}>
                             {entity.entity_name}
                           </FlairName>
                         </h3>
