@@ -418,7 +418,7 @@ The extension from people discovery (AffinityRank™) to content discovery (Affi
 - **Circle Labels:** Inner Circle → Primary Network → Secondary Network → Tertiary Network → Ecosystem
 `;
 
-1. **Role-asymmetric scoring** (Claim 1)
+export default patentContent;
 2. **Trust inheritance through professional introductions** (Claims 5-6)
 3. **Behavioral intent as a dynamic multiplier** (Claim 3)
 4. **Regulatory context as an affinity signal** (Claim 4)
