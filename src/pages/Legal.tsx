@@ -19,7 +19,7 @@ const tabs = ["Terms", "Privacy", "Policies", "Cookie Policy", "Accessibility", 
 const termsSections = [
   {
     title: "1. Introduction & Acceptance",
-    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you", "your") and FindOO Solutions LLP ("FindOO", "we", "us", "our"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office in Mumbai, Maharashtra, India. By accessing or using the FindOO platform, mobile application, and related services (collectively, the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform. These Terms supersede any prior agreements between you and FindOO regarding your use of the Platform.`,
+    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you", "your") and FindOO Solutions LLP ("FindOO", "we", "us", "our"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office at B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India. By accessing or using the FindOO platform, mobile application, and related services (collectively, the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform. These Terms supersede any prior agreements between you and FindOO regarding your use of the Platform.`,
   },
   {
     title: "2. Definitions",
