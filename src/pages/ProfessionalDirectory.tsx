@@ -178,6 +178,7 @@ export default function ProfessionalDirectory() {
                 const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
                 const avatarBorder = flair?.avatar_border || "none";
                 const nameEffect = flair?.name_effect || "none";
+                const level = isClaimed && entity.matched_user_id ? xpMap[entity.matched_user_id] : 0;
                 return (
                   <Link
                     key={entity.id}
@@ -194,7 +195,8 @@ export default function ProfessionalDirectory() {
                               </span>
                             </div>
                           </FlairAvatarWrapper>
-                          <div className="flex gap-1">
+                          <div className="flex items-center gap-1">
+                            {level > 0 && <LevelBadge level={level} size="xs" />}
                             <Badge variant="outline" className="text-[8px] uppercase">
                               {entity.source}
                             </Badge>
