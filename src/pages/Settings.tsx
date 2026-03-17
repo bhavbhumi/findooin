@@ -17,9 +17,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Bell, Mail, Shield, Eye, LogOut, Trash2, User, Lock, Palette,
   Heart, MessageCircle, UserPlus, Users, MessageSquare, Loader2,
+  Activity, Network, FolderLock,
 } from "lucide-react";
+import { useTabPrivacy, visibilityLabels, type TabVisibility, type TabPrivacySettings } from "@/hooks/useTabPrivacy";
 
 interface UserSettings {
   email_notifications: boolean;
