@@ -13,17 +13,10 @@ export function FeedTabs({ value, onChange }: FeedTabsProps) {
   return (
     <Tabs value={value} onValueChange={(v) => onChange(v as FeedFilter)} className="mb-4">
       <TabsList className="w-full grid grid-cols-2 bg-secondary/50 h-9">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <TabsTrigger value="affinity" className="text-xs font-medium gap-1 data-[state=active]:bg-card data-[state=active]:shadow-sm">
-              <Sparkles className="h-3 w-3" />
-              AffinityFeed™
-            </TabsTrigger>
-          </TooltipTrigger>
-          <TooltipContent className="text-xs max-w-[220px]">
-            Posts ranked by trust proximity — content from your inner circles stays relevant longer
-          </TooltipContent>
-        </Tooltip>
+        <TabsTrigger value="affinity" className="text-xs font-medium gap-1 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+          <Sparkles className="h-3 w-3" />
+          AffinityFeed™
+        </TabsTrigger>
         <TabsTrigger value="recent" className="text-xs font-medium gap-1 data-[state=active]:bg-card data-[state=active]:shadow-sm">
           <Clock className="h-3 w-3" />
           Recent
