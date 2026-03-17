@@ -4,9 +4,9 @@ import { Users, MessageCircle, Heart, TrendingUp, Shield, Award, Briefcase, Targ
 export const socialNetworkData: ComparisonData = {
   heroTitle: "FindOO vs Social Networks",
   heroSubtitle: "Why India's financial professionals need more than likes and followers",
-  heroDescription: "Social networks like Facebook, Instagram, and Twitter were built for entertainment and personal connections. FindOO is purpose-built for India's ₹400 Lakh Crore financial ecosystem — where trust, compliance, and professional credibility matter more than viral content.",
+  heroDescription: "Generic social networks were built for entertainment and personal connections. FindOO is purpose-built for India's ₹400 Lakh Crore financial ecosystem — where trust, compliance, and professional credibility matter more than viral content.",
   competitor: "Social Networks",
-  competitorExamples: "Facebook, Instagram, Twitter/X",
+  competitorExamples: "General-purpose social media platforms",
   stats: [
     { label: "Financial professionals in India", value: "6L+", description: "Advisors, distributors, analysts & planners" },
     { label: "AUM managed by intermediaries", value: "₹400L Cr", description: "Assets under management across MFs, insurance & securities" },

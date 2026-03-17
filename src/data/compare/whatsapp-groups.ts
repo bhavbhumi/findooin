@@ -2,13 +2,13 @@ import { ComparisonData } from "@/components/compare/ComparisonPage";
 import { Shield, Search, FileText, Users, MessageCircle, Award, Eye, Layers } from "lucide-react";
 
 export const whatsappGroupsData: ComparisonData = {
-  heroTitle: "FindOO vs WhatsApp & Telegram Groups",
+  heroTitle: "FindOO vs Informal Chat Groups",
   heroSubtitle: "From unverified tips to verified professionals",
-  heroDescription: "WhatsApp and Telegram groups have become the informal backbone of India's financial advisory world — MFD groups, insurance advisor circles, and stock tip channels. But they're unregulated, unverifiable, and unsearchable. FindOO brings structure, trust, and professionalism to the conversations that matter.",
-  competitor: "WhatsApp & Telegram Groups",
-  competitorExamples: "MFD WhatsApp groups, Stock tip channels, Insurance advisor circles",
+  heroDescription: "Informal messaging groups have become the backbone of India's financial advisory world — MFD groups, insurance advisor circles, and stock tip channels. But they're unregulated, unverifiable, and unsearchable. FindOO brings structure, trust, and professionalism to the conversations that matter.",
+  competitor: "Informal Chat Groups",
+  competitorExamples: "Financial advisory messaging groups and tip channels",
   stats: [
-    { label: "Financial WhatsApp groups in India", value: "50K+", description: "Estimated MFD, IFA, and advisor groups — untracked and unregulated" },
+    { label: "Financial chat groups in India", value: "50K+", description: "Estimated MFD, IFA, and advisor groups — untracked and unregulated" },
     { label: "Average messages per day in active groups", value: "200+", description: "Mostly forwards, good-morning images, and unverified tips" },
     { label: "Searchable knowledge retained", value: "0%", description: "Messages disappear in the scroll — no archive, no discovery" },
     { label: "Identity verification", value: "None", description: "Anyone can join, anyone can claim expertise" },
@@ -23,6 +23,6 @@ export const whatsappGroupsData: ComparisonData = {
     { icon: Eye, feature: "Privacy & Compliance", findoo: "Granular privacy controls, audit trails, content moderation", competitor: "Phone number exposed to all group members, no content moderation", findooHas: true, competitorHas: false },
     { icon: Award, feature: "Professional Recognition", findoo: "XP, badges, leaderboard — your contributions are tracked and rewarded", competitor: "No recognition system — top contributors are invisible", findooHas: true, competitorHas: false },
   ],
-  verdict: { title: "WhatsApp groups are conversations. FindOO is a professional ecosystem.", description: "The knowledge shared in financial WhatsApp groups is valuable — but it's trapped in an ephemeral, unstructured, unverifiable format. FindOO preserves that knowledge, verifies the people sharing it, and adds the professional infrastructure that messaging apps were never designed to provide. Keep your WhatsApp groups — and elevate your professional presence on FindOO." },
-  cta: { title: "Your expertise deserves more than a WhatsApp forward.", subtitle: "Build a verified professional identity where your knowledge is preserved, discovered, and rewarded." },
+  verdict: { title: "Chat groups are conversations. FindOO is a professional ecosystem.", description: "The knowledge shared in financial chat groups is valuable — but it's trapped in an ephemeral, unstructured, unverifiable format. FindOO preserves that knowledge, verifies the people sharing it, and adds the professional infrastructure that messaging apps were never designed to provide." },
+  cta: { title: "Your expertise deserves more than a forwarded message.", subtitle: "Build a verified professional identity where your knowledge is preserved, discovered, and rewarded." },
 };

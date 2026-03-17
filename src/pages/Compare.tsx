@@ -24,15 +24,15 @@ const tabs = [
   { key: "professional", label: "vs Professional Networks", data: professionalNetworkData },
   { key: "media", label: "vs Financial Media", data: financialMediaData },
   { key: "terminals", label: "vs News Terminals", data: newsTerminalsData },
-  { key: "whatsapp", label: "vs WhatsApp Groups", data: whatsappGroupsData },
+  { key: "chatgroups", label: "vs Chat Groups", data: whatsappGroupsData },
 ];
 
 const metaMap: Record<string, { title: string; description: string }> = {
-  social: { title: "FindOO vs Social Networks — Why Financial Professionals Need a Dedicated Network", description: "Compare FindOO with Facebook, Instagram & Twitter. Discover why India's financial professionals choose a purpose-built network." },
-  professional: { title: "FindOO vs LinkedIn — Industry-Specific Networking for Finance", description: "Compare FindOO with LinkedIn. See why SEBI-registered advisors and MFDs prefer a dedicated financial network." },
-  media: { title: "FindOO vs Moneycontrol & ET Markets — From Reader to Professional", description: "Compare FindOO with financial media portals. See why professionals choose active networking over passive consumption." },
-  terminals: { title: "FindOO vs Bloomberg Terminal — Professional Networking for Every Budget", description: "Compare FindOO with Bloomberg and Refinitiv. A free financial network for the 99% excluded by terminal pricing." },
-  whatsapp: { title: "FindOO vs WhatsApp Groups — From Unverified Tips to Verified Professionals", description: "Compare FindOO with financial WhatsApp & Telegram groups. Verified networking beats informal chats." },
+  social: { title: "FindOO vs Social Networks — Why Financial Professionals Need a Dedicated Network", description: "Compare FindOO with general social networks. Discover why India's financial professionals choose a purpose-built network." },
+  professional: { title: "FindOO vs Professional Networks — Industry-Specific Networking for Finance", description: "Compare FindOO with generic professional networks. See why SEBI-registered advisors and MFDs prefer a dedicated financial network." },
+  media: { title: "FindOO vs Financial Media Portals — From Reader to Professional", description: "Compare FindOO with financial media portals. See why professionals choose active networking over passive consumption." },
+  terminals: { title: "FindOO vs Data Terminals — Professional Networking for Every Budget", description: "Compare FindOO with premium data terminals. A free financial network for the 99% excluded by terminal pricing." },
+  chatgroups: { title: "FindOO vs Informal Chat Groups — From Unverified Tips to Verified Professionals", description: "Compare FindOO with informal financial chat groups. Verified networking beats unstructured conversations." },
 };
 
 const Compare = () => {
