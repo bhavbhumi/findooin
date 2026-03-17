@@ -1,5 +1,6 @@
 import { memo } from "react";
-import { Star, Eye, MessageCircle, MapPin, BadgeCheck, TrendingUp, Shield, Package, Wrench } from "lucide-react";
+import { Star, Eye, MessageCircle, MapPin, BadgeCheck, TrendingUp, Package, Wrench } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Listing } from "@/hooks/useListings";
@@ -22,20 +23,16 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
   const isVerified = listing.owner?.verification_status === "verified";
 
   return (
-    <div
-      className={`rounded-xl border bg-card overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group hover:bg-card/80 hover:backdrop-blur-sm ${
-        isComparing ? "border-primary ring-2 ring-primary/20" : "border-border hover:border-primary/15"
+    <Card
+      className={`group cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-border hover:border-primary/20 hover:bg-card/80 hover:backdrop-blur-sm ${
+        isComparing ? "ring-2 ring-primary/20 border-primary" : ""
       }`}
       onClick={() => onSelect(listing)}
       role="button"
       tabIndex={0}
-      aria-label={`Listing: ${listing.title}`}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(listing); } }}
     >
-      {/* Header stripe */}
-      <div className={`h-1.5 ${listing.listing_type === "product" ? "bg-primary" : "bg-accent"}`} />
-
-      <div className="p-4 space-y-3">
+      <CardContent className="p-4 space-y-3">
         {/* Type + Category */}
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="text-[10px] gap-1">
@@ -126,7 +123,7 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
             {isComparing ? "Remove from Compare" : "Add to Compare"}
           </Button>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 });
