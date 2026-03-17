@@ -218,9 +218,6 @@ const Network = () => {
                     Pending ({totalPending})
                   </TabsTrigger>
                 )}
-                <TabsTrigger value="suggestions" className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-sm font-medium whitespace-nowrap px-3 sm:px-4">
-                  <Sparkles className="h-3.5 w-3.5 mr-1" /> Discover
-                </TabsTrigger>
               </TabsList>
             </div>
 
