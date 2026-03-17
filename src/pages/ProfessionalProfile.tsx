@@ -196,11 +196,16 @@ export default function ProfessionalProfile() {
                 />
               </FlairAvatarWrapper>
               <div className="min-w-0 pb-1">
-                <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
-                  <FlairName nameEffect={flair?.name_effect || "none"}>
-                    {displayName}
-                  </FlairName>
-                </h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
+                    <FlairName nameEffect={flair?.name_effect || "none"}>
+                      {displayName}
+                    </FlairName>
+                  </h1>
+                  {userXP && userXP.level > 0 && (
+                    <LevelBadge level={userXP.level} size="sm" showLabel />
+                  )}
+                </div>
                 {(profile?.headline || entity.registration_category) && (
                   <p className="text-sm text-muted-foreground truncate">
                     {profile?.headline || entity.registration_category}
