@@ -1,0 +1,64 @@
+/// <reference types="npm:@types/react@18.3.1" />
+
+import * as React from 'npm:react@18.3.1'
+
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Img,
+  Preview,
+  Text,
+} from 'npm:@react-email/components@0.0.22'
+
+interface ConnectionAcceptedEmailProps {
+  recipientName: string
+  acceptorName: string
+  siteUrl: string
+}
+
+const logoUrl = 'https://qvzvhmuosxdaqxwyokpg.supabase.co/storage/v1/object/public/email-assets/findoo-logo.png'
+
+export const ConnectionAcceptedEmail = ({ recipientName, acceptorName, siteUrl }: ConnectionAcceptedEmailProps) => (
+  <Html lang="en" dir="ltr">
+    <Head />
+    <Preview>{acceptorName} accepted your connection request on FindOO</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Heading style={h1}>You're now connected!</Heading>
+        <Text style={text}>
+          Hi {recipientName}, great news — <strong>{acceptorName}</strong> accepted
+          your connection request. You can now message each other and see
+          each other's updates in your feed.
+        </Text>
+        <Button style={button} href={siteUrl + '/network'}>
+          View Your Network
+        </Button>
+        <Text style={footer}>
+          You're receiving this because you have connection notifications enabled on FindOO.
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+)
+
+export default ConnectionAcceptedEmail
+
+const main = { backgroundColor: '#ffffff', fontFamily: "'DM Sans', Arial, sans-serif" }
+const container = { padding: '32px 28px' }
+const logo = { margin: '0 0 24px' }
+const h1 = { fontSize: '22px', fontWeight: 'bold' as const, color: '#151535', margin: '0 0 20px' }
+const text = { fontSize: '14px', color: '#676d7a', lineHeight: '1.6', margin: '0 0 16px' }
+const button = {
+  backgroundColor: '#00008A',
+  color: '#ffffff',
+  fontSize: '14px',
+  borderRadius: '10px',
+  padding: '12px 24px',
+  textDecoration: 'none',
+}
+const footer = { fontSize: '12px', color: '#999999', margin: '32px 0 0' }
