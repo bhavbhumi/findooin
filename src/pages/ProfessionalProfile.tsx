@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
+import { useUserXP } from "@/hooks/useGamification";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
+import { LevelBadge } from "@/components/gamification/LevelBadge";
 import {
   Shield, MapPin, Building2, Hash, UserCheck, Users,
   ArrowRight, CheckCircle2, Clock, Eye, Briefcase
