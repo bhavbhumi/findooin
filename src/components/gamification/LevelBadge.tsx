@@ -49,10 +49,11 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
     return spaceSyntax ? Number(spaceSyntax[1]) : 50;
   };
 
-  const textColor = getLightness(config.color) >= 52 ? "hsl(222 47% 11%)" : "hsl(0 0% 100%)";
-  const textShadow = textColor === "hsl(0 0% 100%)"
-    ? "0 1px 2px hsl(0 0% 0% / 0.65)"
-    : "0 1px 1px hsl(0 0% 100% / 0.35)";
+  const isLight = getLightness(config.color) >= 52;
+  const textColor = isLight ? "hsl(222 47% 11%)" : "hsl(0 0% 100%)";
+  const textShadow = isLight
+    ? "0 1px 1px hsl(0 0% 100% / 0.4)"
+    : "0 1px 2px hsl(0 0% 0% / 0.7)";
 
   return (
     <Tooltip>
@@ -60,18 +61,17 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
         <span className={cn("inline-flex items-center gap-1 shrink-0", className)}>
           <span
             className={cn(
-              "inline-flex items-center justify-center rounded-full font-bold border-2 leading-none ring-1 ring-background/80",
+              "inline-flex items-center justify-center rounded-full font-extrabold border-2 leading-none shadow-lg",
               sizeClasses[size]
             )}
             style={{
-              background: `linear-gradient(135deg, ${withAlpha(config.color, 1)}, ${withAlpha(config.color, 0.94)})`,
-              borderColor: withAlpha(config.color, 0.98),
+              background: `linear-gradient(145deg, ${config.color}, ${withAlpha(config.color, 0.85)})`,
+              borderColor: withAlpha(config.color, 0.9),
               color: textColor,
               textShadow,
-              boxShadow: `0 0 0 1px hsl(var(--background)), 0 3px 10px ${withAlpha(config.color, 0.65)}`,
+              boxShadow: `0 0 0 1.5px hsl(var(--background)), 0 2px 8px ${withAlpha(config.color, 0.5)}, inset 0 1px 0 ${withAlpha("hsl(0, 0%, 100%)", 0.25)}`,
             }}
           >
-            <span className="mr-px">{config.icon.length <= 2 ? config.icon : ""}</span>
             {level}
           </span>
           {showLabel && (
