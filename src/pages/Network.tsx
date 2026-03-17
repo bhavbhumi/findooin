@@ -343,7 +343,7 @@ const Network = () => {
   );
 };
 
-const NetworkUserList = memo(({ users, getInitials, emptyMessage }: { users: NetworkUser[]; getInitials: (n: string) => string; emptyMessage: string }) => {
+const NetworkUserList = memo(({ users, getInitials, emptyMessage, showMessage = false }: { users: NetworkUser[]; getInitials: (n: string) => string; emptyMessage: string; showMessage?: boolean }) => {
   if (users.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card p-10 text-center">
@@ -372,9 +372,18 @@ const NetworkUserList = memo(({ users, getInitials, emptyMessage }: { users: Net
             {user.headline && <p className="text-xs text-muted-foreground truncate">{user.headline}</p>}
             {user.organization && <p className="text-[10px] text-muted-foreground mt-0.5">{user.organization}</p>}
           </div>
-          <Button variant="outline" size="sm" asChild>
-            <Link to={`/profile/${user.id}`}>View</Link>
-          </Button>
+          <div className="flex items-center gap-1.5">
+            {showMessage && (
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" asChild title="Message">
+                <Link to={`/messages?user=${user.id}`}>
+                  <MessageSquare className="h-4 w-4" />
+                </Link>
+              </Button>
+            )}
+            <Button variant="outline" size="sm" asChild>
+              <Link to={`/profile/${user.id}`}>View</Link>
+            </Button>
+          </div>
         </div>
       ))}
     </>
