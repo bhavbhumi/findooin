@@ -58,12 +58,12 @@ const sections = [
   },
   {
     title: "7. Disputes",
-    content: `Billing disputes must be notified within 30 days of the charge date to hello@findoo.in. Failure to dispute within 30 days constitutes acceptance. Disputes are resolved per the mechanism in our Terms of Service.`,
+    content: `Billing disputes must be notified within 30 days of the charge date to legal@findoo.in. Failure to dispute within 30 days constitutes acceptance. Disputes are resolved per the mechanism in our Terms of Service.`,
   },
   {
     title: "8. Contact",
     content: `For billing inquiries, refund requests, or cancellation assistance:
-Email: hello@findoo.in
+Email: legal@findoo.in
 
 FindOO Solutions LLP
 Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
