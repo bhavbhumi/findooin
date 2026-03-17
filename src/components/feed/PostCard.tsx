@@ -102,7 +102,9 @@ export function PostCard({ post }: { post: FeedPost }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <Link to={`/profile/${post.author.id}`} className="font-semibold text-card-foreground text-sm truncate hover:underline">
-              {post.author.display_name || post.author.full_name}
+              <FlairName nameEffect={flair?.name_effect || "none"}>
+                {post.author.display_name || post.author.full_name}
+              </FlairName>
             </Link>
             {post.author.verification_status === "verified" && (
               <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
