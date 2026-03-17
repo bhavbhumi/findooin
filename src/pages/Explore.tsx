@@ -329,7 +329,9 @@ const roleFeatures = {
       { module: "Jobs", icon: Briefcase, can: ["Browse all active jobs", "Apply with resume & cover note", "Track applications via Candidate Dashboard"], cant: ["Post jobs or access Employer Dashboard"] },
       { module: "Events", icon: Calendar, can: ["Browse & register for events", "Attend webinars and investor meets"], cant: ["Create or organize events"] },
       { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
-      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card"], cant: [] },
+      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card & QR code", "vCard download support"], cant: [] },
+      { module: "Gamification", icon: Trophy, can: ["Earn XP from posts, connections & events", "Unlock badges & climb the leaderboard", "Complete weekly challenges for bonus XP"], cant: [] },
+      { module: "Privacy & Flair", icon: EyeOff, can: ["Control Activity, Network & Vault tab visibility", "Choose audience: Everyone, Logged-in, Connections or Only Me"], cant: ["Customize profile flair (avatar borders, name effects)"] },
     ],
   },
   intermediary: {
