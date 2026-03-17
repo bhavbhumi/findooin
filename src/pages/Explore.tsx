@@ -6,7 +6,7 @@ import {
   ArrowRight, Zap, Globe, Lock, BarChart3, Building2, UserCheck,
   Handshake, Eye, MessageSquare, Briefcase, Calendar, Award,
   Bell, FileText, Landmark, Settings, FolderOpen, CreditCard, User,
-  XCircle, Package, Wrench, LayoutDashboard
+  XCircle, Package, Wrench, LayoutDashboard, Trophy, Sparkles, EyeOff
 } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
@@ -329,7 +329,9 @@ const roleFeatures = {
       { module: "Jobs", icon: Briefcase, can: ["Browse all active jobs", "Apply with resume & cover note", "Track applications via Candidate Dashboard"], cant: ["Post jobs or access Employer Dashboard"] },
       { module: "Events", icon: Calendar, can: ["Browse & register for events", "Attend webinars and investor meets"], cant: ["Create or organize events"] },
       { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
-      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card"], cant: [] },
+      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card & QR code", "vCard download support"], cant: [] },
+      { module: "Gamification", icon: Trophy, can: ["Earn XP from posts, connections & events", "Unlock badges & climb the leaderboard", "Complete weekly challenges for bonus XP"], cant: [] },
+      { module: "Privacy & Flair", icon: EyeOff, can: ["Control Activity, Network & Vault tab visibility", "Choose audience: Everyone, Logged-in, Connections or Only Me"], cant: ["Customize profile flair (avatar borders, name effects)"] },
     ],
   },
   intermediary: {
@@ -345,7 +347,9 @@ const roleFeatures = {
       { module: "Jobs", icon: Briefcase, can: ["Post jobs & access Employer Dashboard", "Apply for jobs as Individual (Candidate Dashboard)", "Browse & save jobs"], cant: [] },
       { module: "Events", icon: Calendar, can: ["Create & organize events", "Manage registrations & speakers", "Access Organizer Dashboard"], cant: [] },
       { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
-      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card"], cant: [] },
+      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card & QR code", "vCard download support"], cant: [] },
+      { module: "Gamification", icon: Trophy, can: ["Earn XP from posts, connections & events", "Unlock badges & climb the leaderboard", "Complete weekly challenges for bonus XP", "Streak multipliers for daily activity"], cant: [] },
+      { module: "Privacy & Flair", icon: EyeOff, can: ["Control Activity, Network & Vault tab visibility", "Customize avatar borders & name effects", "Choose profile themes & flair"], cant: [] },
     ],
   },
   issuer: {
@@ -361,7 +365,9 @@ const roleFeatures = {
       { module: "Jobs", icon: Briefcase, can: ["Post jobs & access Employer Dashboard", "Browse & save jobs"], cant: ["Candidate Dashboard (Individual accounts only)"] },
       { module: "Events", icon: Calendar, can: ["Create & organize events", "Manage registrations & speakers", "Access Organizer Dashboard"], cant: [] },
       { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
-      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card"], cant: [] },
+      { module: "Vault & Card", icon: FolderOpen, can: ["Store documents securely", "Share digital business card & QR code", "vCard download support"], cant: [] },
+      { module: "Gamification", icon: Trophy, can: ["Earn XP from posts, connections & events", "Unlock badges & climb the leaderboard", "Complete weekly challenges for bonus XP", "Streak multipliers for daily activity"], cant: [] },
+      { module: "Privacy & Flair", icon: EyeOff, can: ["Control Activity, Network & Vault tab visibility", "Customize avatar borders & name effects", "Choose profile themes & flair"], cant: [] },
     ],
   },
 };
@@ -548,8 +554,10 @@ const WhoIsItForContent = () => (
                 "List financial products in the Showcase",
                 "Post BFSI jobs and access Employer Dashboard",
                 "Organize events, webinars & investor meets",
+                "Earn XP, badges & climb the leaderboard",
+                "Control profile tab privacy & customize flair",
               ],
-              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Showcase, and host a virtual launch event — all from one platform.",
+              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Showcase, host a virtual launch event, and track engagement via gamification — all from one platform.",
             },
             {
               icon: UserCheck,
@@ -563,8 +571,10 @@ const WhoIsItForContent = () => (
                 "List professional services in the Showcase",
                 "Apply for jobs AND post jobs (dual access)",
                 "Create polls, surveys & research notes",
+                "Earn XP, unlock badges & weekly challenges",
+                "Granular tab privacy & profile flair customization",
               ],
-              scenario: "A SEBI-registered RIA can publish research notes, list advisory services, apply for wealth management roles, and connect with verified AMC representatives.",
+              scenario: "A SEBI-registered RIA can publish research notes, list advisory services, apply for wealth management roles, earn XP for engagement, customize their profile flair, and connect with verified AMC representatives.",
             },
             {
               icon: BarChart3,
@@ -578,8 +588,10 @@ const WhoIsItForContent = () => (
                 "Browse & compare products and services",
                 "Apply for BFSI career opportunities",
                 "Access curated market insights & research",
+                "Earn XP & badges through engagement",
+                "Control who sees your Activity & Network tabs",
               ],
-              scenario: "An HNI looking for a PMS advisor can browse verified intermediaries, compare their credentials, check endorsements, and enquire directly — knowing every profile is credential-checked.",
+              scenario: "An HNI looking for a PMS advisor can browse verified intermediaries, compare their credentials, check endorsements, enquire directly, and manage their own profile privacy — knowing every profile is credential-checked.",
             },
           ].map((item, i) => (
             <motion.div key={item.role} className={`rounded-xl border bg-card p-6 flex flex-col ${item.bgColor}`}
