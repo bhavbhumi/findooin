@@ -90,6 +90,16 @@ const footerLinkSections = [
     ],
   },
   {
+    title: "Compare",
+    links: [
+      { label: "FindOO vs Social Networks", to: "/compare/social-networks" },
+      { label: "FindOO vs Professional Networks", to: "/compare/professional-networks" },
+      { label: "FindOO vs Financial Media", to: "/compare/financial-media" },
+      { label: "FindOO vs News Terminals", to: "/compare/news-terminals" },
+      { label: "FindOO vs WhatsApp Groups", to: "/compare/whatsapp-groups" },
+    ],
+  },
+  {
     title: "Support",
     links: [
       { label: "Contact Us", to: "/contact" },
@@ -297,7 +307,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       {/* ── Footer ── */}
       <footer className="border-t border-primary/10 bg-primary/[0.04]">
         <div className="container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
             {/* Column 1: FindOO brand */}
             <div>
               <div className="flex items-center gap-2 mb-1">

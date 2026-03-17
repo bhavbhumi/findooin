@@ -85,6 +85,11 @@ const TransparencyPage = lazy(() => import("./pages/Transparency"));
 const ProfessionalDirectory = lazy(() => import("./pages/ProfessionalDirectory"));
 const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const FindooVsSocialNetwork = lazy(() => import("./pages/compare/FindooVsSocialNetwork"));
+const FindooVsProfessionalNetwork = lazy(() => import("./pages/compare/FindooVsProfessionalNetwork"));
+const FindooVsFinancialMedia = lazy(() => import("./pages/compare/FindooVsFinancialMedia"));
+const FindooVsNewsTerminals = lazy(() => import("./pages/compare/FindooVsNewsTerminals"));
+const FindooVsWhatsAppGroups = lazy(() => import("./pages/compare/FindooVsWhatsAppGroups"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -146,6 +151,11 @@ const App = () => {
                       <Route path="/professionals" element={<ProfessionalDirectory />} />
                       <Route path="/professional/:registrationNumber" element={<ProfessionalProfile />} />
                       <Route path="/transparency" element={<TransparencyPage />} />
+                      <Route path="/compare/social-networks" element={<FindooVsSocialNetwork />} />
+                      <Route path="/compare/professional-networks" element={<FindooVsProfessionalNetwork />} />
+                      <Route path="/compare/financial-media" element={<FindooVsFinancialMedia />} />
+                      <Route path="/compare/news-terminals" element={<FindooVsNewsTerminals />} />
+                      <Route path="/compare/whatsapp-groups" element={<FindooVsWhatsAppGroups />} />
                       <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
                       <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
