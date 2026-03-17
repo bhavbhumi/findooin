@@ -49,6 +49,7 @@ const linkGroups = [
     links: [
       { icon: Users, label: "Professional Directory", to: "/professionals", desc: "Browse AMFI-registered professionals" },
     ],
+  },
   {
     title: "Support",
     links: [
