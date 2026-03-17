@@ -23,6 +23,7 @@ import { FlairAvatarWrapper, FlairName } from "@/components/gamification/Profile
 import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 
 interface ProfileHeaderProps {
   profile: ProfileData;

@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
 import { LevelBadge } from "@/components/gamification/LevelBadge";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 import {
   Search, Shield, MapPin, CheckCircle2, Clock, ArrowRight,
   Users, ChevronLeft, ChevronRight

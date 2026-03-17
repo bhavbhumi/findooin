@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

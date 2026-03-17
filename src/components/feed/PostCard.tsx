@@ -29,6 +29,7 @@ import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { FlairName, FlairAvatarWrapper } from "@/components/gamification/ProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-status-info/10 text-status-info" },

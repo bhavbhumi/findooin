@@ -9,6 +9,7 @@ import { Trophy, Medal, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { PageTransition } from "@/components/PageTransition";
+import { resolveProfileFlair } from "@/lib/profile-flair";
 
 function getInitials(name: string) {
   return name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);

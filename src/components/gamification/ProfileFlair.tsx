@@ -65,9 +65,10 @@ export function FlairName({ nameEffect, children, className }: FlairNameProps) {
       <span
         className={cn("relative inline-block bg-clip-text text-transparent font-semibold", className)}
         style={{
-          backgroundImage: "linear-gradient(90deg, hsl(var(--gold)), hsl(46, 80%, 65%), hsl(var(--gold)))",
-          backgroundSize: "200% auto",
-          animation: "shimmer 2.5s linear infinite",
+          backgroundImage: "linear-gradient(90deg, hsl(var(--gold)), hsl(46 94% 58%), hsl(var(--gold)))",
+          backgroundSize: "220% auto",
+          animation: "shimmer 1.8s linear infinite",
+          textShadow: "0 0 12px hsl(var(--gold) / 0.35)",
         }}
       >
         {children}
