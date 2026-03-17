@@ -115,7 +115,6 @@ export function PostCard({ post }: { post: FeedPost }) {
               <LevelBadge
                 level={authorXP.level}
                 size="xs"
-                className="[filter:contrast(1.2)_saturate(1.25)_brightness(1.08)]"
               />
             )}
             {primaryRole && roleConf && (
