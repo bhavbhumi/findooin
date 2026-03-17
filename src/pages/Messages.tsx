@@ -61,6 +61,7 @@ type ConvFilter = "all" | "unread";
 const Messages = () => {
   usePageMeta({ title: "Messages" });
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { activeRole } = useRole();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
