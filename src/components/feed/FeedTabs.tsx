@@ -1,6 +1,8 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Sparkles, Clock } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export type FeedFilter = "foryou" | "trending" | "viral";
+export type FeedFilter = "affinity" | "recent";
 
 interface FeedTabsProps {
   value: FeedFilter;
@@ -10,15 +12,21 @@ interface FeedTabsProps {
 export function FeedTabs({ value, onChange }: FeedTabsProps) {
   return (
     <Tabs value={value} onValueChange={(v) => onChange(v as FeedFilter)} className="mb-4">
-      <TabsList className="w-full grid grid-cols-3 bg-secondary/50 h-9">
-        <TabsTrigger value="foryou" className="text-xs font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm">
-          For You
-        </TabsTrigger>
-        <TabsTrigger value="trending" className="text-xs font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm">
-          Trending
-        </TabsTrigger>
-        <TabsTrigger value="viral" className="text-xs font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm">
-          Viral
+      <TabsList className="w-full grid grid-cols-2 bg-secondary/50 h-9">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <TabsTrigger value="affinity" className="text-xs font-medium gap-1 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+              <Sparkles className="h-3 w-3" />
+              AffinityFeed™
+            </TabsTrigger>
+          </TooltipTrigger>
+          <TooltipContent className="text-xs max-w-[220px]">
+            Posts ranked by trust proximity — content from your inner circles stays relevant longer
+          </TooltipContent>
+        </Tooltip>
+        <TabsTrigger value="recent" className="text-xs font-medium gap-1 data-[state=active]:bg-card data-[state=active]:shadow-sm">
+          <Clock className="h-3 w-3" />
+          Recent
         </TabsTrigger>
       </TabsList>
     </Tabs>
