@@ -109,4 +109,5 @@ function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
         </span>
       </div>
     </Link>
+  );
 }
