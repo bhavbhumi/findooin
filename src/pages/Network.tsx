@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NetworkUserSkeleton } from "@/components/skeletons/NetworkUserSkeleton";
 import {
   Users, UserPlus, UserCheck, UserMinus, Clock, Search, CheckCircle2,
-  TrendingUp, Sparkles, Send, MessageSquare,
+  Send, MessageSquare,
 } from "lucide-react";
 
 interface NetworkUser {
