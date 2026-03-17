@@ -91,6 +91,22 @@ export default function ProfessionalDirectory() {
     },
   });
 
+  const { data: xpMap = {} } = useQuery({
+    queryKey: ["directory-xp", claimedUserIds],
+    enabled: claimedUserIds.length > 0,
+    staleTime: 10 * 60 * 1000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_xp")
+        .select("user_id, level")
+        .in("user_id", claimedUserIds);
+      if (error) throw error;
+      const map: Record<string, number> = {};
+      data?.forEach(x => { map[x.user_id] = x.level; });
+      return map;
+    },
+  });
+
   return (
     <PublicPageLayout>
       <PageHero
