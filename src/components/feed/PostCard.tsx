@@ -26,7 +26,7 @@ import { CommentSection } from "@/components/feed/CommentSection";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { UserCheck } from "lucide-react";
 import { LevelBadge } from "@/components/gamification/LevelBadge";
-import { FlairName } from "@/components/gamification/ProfileFlair";
+import { FlairName, FlairAvatarWrapper } from "@/components/gamification/ProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
 

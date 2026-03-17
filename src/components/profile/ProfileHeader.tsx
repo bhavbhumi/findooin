@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
+import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
+import { useProfileFlair } from "@/hooks/useProfileFlair";
 
 interface ProfileHeaderProps {
   profile: ProfileData;
