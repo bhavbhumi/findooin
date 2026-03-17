@@ -64,6 +64,7 @@ function getInitials(name: string) {
 export function PostCard({ post }: { post: FeedPost }) {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const { data: authorXP } = useUserXP(post.author.id);
+  const { data: flair } = useProfileFlair(post.author.id);
   const [reportOpen, setReportOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
