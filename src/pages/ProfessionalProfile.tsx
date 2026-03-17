@@ -153,17 +153,23 @@ export default function ProfessionalProfile() {
           <CardContent className="-mt-10 px-6 pb-8">
             {/* Avatar / Initials */}
             <div className="flex items-end gap-4 mb-6">
-              <div className="h-20 w-20 rounded-2xl bg-primary/10 border-4 border-background flex items-center justify-center shrink-0">
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt={displayName} className="h-full w-full rounded-xl object-cover" />
-                ) : (
-                  <span className="text-2xl font-bold text-primary">
-                    {displayName.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
+              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"} className="shrink-0">
+                <div className="h-20 w-20 rounded-2xl bg-primary/10 border-4 border-background flex items-center justify-center">
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt={displayName} className="h-full w-full rounded-xl object-cover" />
+                  ) : (
+                    <span className="text-2xl font-bold text-primary">
+                      {displayName.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+              </FlairAvatarWrapper>
               <div className="min-w-0 pb-1">
-                <h1 className="text-xl md:text-2xl font-bold font-heading truncate">{displayName}</h1>
+                <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
+                  <FlairName nameEffect={flair?.name_effect || "none"}>
+                    {displayName}
+                  </FlairName>
+                </h1>
                 {(profile?.headline || entity.registration_category) && (
                   <p className="text-sm text-muted-foreground truncate">
                     {profile?.headline || entity.registration_category}
