@@ -207,7 +207,7 @@ const Discover = () => {
               <TabsTrigger value="posts" className="gap-1.5 text-sm">
                 <FileText className="h-4 w-4" />
                 Posts
-                {affinityRankedPosts.length > 0 && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{affinityRankedPosts.length}</span>}
+                {discoverPosts.length > 0 && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{discoverPosts.length}</span>}
               </TabsTrigger>
             </TabsList>
           </Tabs>
