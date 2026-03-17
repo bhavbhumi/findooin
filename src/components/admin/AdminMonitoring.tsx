@@ -24,7 +24,7 @@ import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
-import { format, subDays, subHours, startOfDay, differenceInMinutes } from "date-fns";
+import { format, subDays } from "date-fns";
 
 const CHART_COLORS = [
   "hsl(var(--primary))",
@@ -91,40 +91,15 @@ function useGrowthMetrics() {
   return useQuery({
     queryKey: ["admin-monitoring-growth"],
     queryFn: async () => {
-      const now = new Date();
-      const days: { date: string; users: number; posts: number; messages: number; jobs: number }[] = [];
-
-      // Get data for last 14 days
-      for (let i = 13; i >= 0; i--) {
-        const dayStart = startOfDay(subDays(now, i));
-        const dayEnd = startOfDay(subDays(now, i - 1));
-
-        const [
-          { count: newUsers },
-          { count: newPosts },
-          { count: newMessages },
-          { count: newJobs },
-        ] = await Promise.all([
-          supabase.from("profiles").select("*", { count: "exact", head: true })
-            .gte("created_at", dayStart.toISOString()).lt("created_at", dayEnd.toISOString()),
-          supabase.from("posts").select("*", { count: "exact", head: true })
-            .gte("created_at", dayStart.toISOString()).lt("created_at", dayEnd.toISOString()),
-          supabase.from("messages").select("*", { count: "exact", head: true })
-            .gte("created_at", dayStart.toISOString()).lt("created_at", dayEnd.toISOString()),
-          supabase.from("jobs").select("*", { count: "exact", head: true })
-            .gte("created_at", dayStart.toISOString()).lt("created_at", dayEnd.toISOString()),
-        ]);
-
-        days.push({
-          date: format(dayStart, "MMM dd"),
-          users: newUsers || 0,
-          posts: newPosts || 0,
-          messages: newMessages || 0,
-          jobs: newJobs || 0,
-        });
-      }
-
-      return days;
+      const { data, error } = await supabase.rpc("get_growth_metrics", { p_days: 14 });
+      if (error || !data) return [];
+      return (data as any[]).map((d: any) => ({
+        date: d.date_label,
+        users: d.users,
+        posts: d.posts,
+        messages: d.messages,
+        jobs: d.jobs,
+      }));
     },
     staleTime: 60_000,
   });
