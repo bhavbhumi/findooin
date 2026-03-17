@@ -9,7 +9,7 @@
 
 ## 1. Title of Invention
 
-**"AffinityRank™: A Role-Asymmetric, Intent-Aware, Trust-Propagating Discovery Algorithm for Regulated Professional Networks"**
+**"TrustCircle IQ™: A Role-Asymmetric, Intent-Aware, Trust-Propagating Discovery Algorithm for Regulated Professional Networks"**
 
 ---
 
