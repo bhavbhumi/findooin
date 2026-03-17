@@ -503,7 +503,7 @@ These metrics will be published on a quarterly basis.`,
   },
   {
     title: "8. Appeals & Outcomes",
-    content: `FindOO provides an appeals process for all moderation actions: (a) Users may appeal via hello@findoo.in within 30 days of any enforcement action; (b) Appeals are reviewed by a different moderator than the one who made the original decision; (c) Appeal decisions are communicated within 15 business days.
+    content: `FindOO provides an appeals process for all moderation actions: (a) Users may appeal via legal@findoo.in within 30 days of any enforcement action; (b) Appeals are reviewed by a different moderator than the one who made the original decision; (c) Appeal decisions are communicated within 15 business days.
 
 Appeal outcome categories tracked: (a) Action upheld — original moderation decision confirmed; (b) Action modified — enforcement reduced (e.g., suspension shortened, content restored with warning); (c) Action reversed — original decision overturned and content/account fully restored; (d) Under review — appeal pending additional investigation.`,
   },
