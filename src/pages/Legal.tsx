@@ -459,9 +459,10 @@ const transparencyReportSections = [
     content: `FindOO operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000, and complies with: (a) Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 — including due diligence obligations, grievance redressal mechanisms, and content moderation standards; (b) Digital Personal Data Protection Act, 2023 — data processing, consent management, and data principal rights; (c) SEBI regulations — monitoring financial content for compliance with market integrity rules; (d) Consumer Protection Act, 2019 — fair practices in platform services.
 
 Key Compliance Officers:
-• Grievance Officer: grievance@findoo.in (responds within 24 hours, resolves within 15 days)
-• Chief Compliance Officer: compliance@findoo.in
-• Nodal Contact Person: nodal@findoo.in (24×7 availability for law enforcement coordination)`,
+• Grievance Officer: [To be appointed] (responds within 24 hours, resolves within 15 days)
+• Chief Compliance Officer: [To be appointed]
+• Nodal Contact Person: [To be appointed] (24×7 availability for law enforcement coordination)
+For all inquiries: hello@findoo.in`,
   },
   {
     title: "3. Content Moderation Overview",
