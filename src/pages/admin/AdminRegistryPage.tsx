@@ -385,6 +385,12 @@ export default function AdminRegistryPage() {
           )}
         </CardContent>
       </Card>
+
+      <RegistryImportWizard
+        open={wizardOpen}
+        onOpenChange={setWizardOpen}
+        onImportComplete={() => refetch()}
+      />
     </div>
   );
 }
