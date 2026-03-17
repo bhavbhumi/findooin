@@ -129,7 +129,8 @@ const HelpDesk = () => {
               Our support team is available to assist you with any questions or concerns.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button asChild>
+              <CreateTicketDialog />
+              <Button variant="outline" asChild>
                 <Link to="/contact">Contact Support</Link>
               </Button>
               <Button variant="outline" asChild>
