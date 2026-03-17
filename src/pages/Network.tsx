@@ -293,8 +293,8 @@ const Network = () => {
                 followersCount={myFollowers.length}
                 followingCount={myFollowing.length}
                 pendingCount={pendingIncoming.length + pendingOutgoing.length}
-                suggestions={suggestions}
-                allUsers={[...myConnections, ...myFollowing, ...myFollowers, ...suggestions]}
+                suggestions={[]}
+                allUsers={[...myConnections, ...myFollowing, ...myFollowers]}
                 getInitials={getInitials}
                 onStatClick={(tab) => setActiveTab(tab)}
               />
