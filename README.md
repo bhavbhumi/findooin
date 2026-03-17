@@ -45,7 +45,7 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 - **Content feed** — Posts, polls, surveys with hashtags and visibility controls
 - **BFSI Job Board** — Category-specific job listings with employer/candidate dashboards
 - **Events** — Webinars, investor meets, AGMs with check-in QR codes
-- **Directory** — Product/service marketplace with reviews and enquiries
+- **Showcase** — Product/service marketplace with reviews, enquiries, and suggestions
 - **Secure Vault** — Private document storage for KYC, tax, certificates
 - **Real-time messaging** — Categorized DMs with typing indicators and read receipts
 - **Digital Business Cards** — Shareable vCard with QR code and lead tracking
