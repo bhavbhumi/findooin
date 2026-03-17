@@ -436,7 +436,7 @@ const ApiReferenceTab = () => (
         </CardContent>
       </Card>
 
-      {/* Showcase, Vault, Network, Notification, Admin, Utility */}
+      {/* Showcase, Vault, Network, Gamification, Privacy, Notification, Admin, Utility */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Other Hooks</CardTitle>
@@ -466,6 +466,32 @@ const ApiReferenceTab = () => (
               { name: "connectionStatus", type: "{ following, connected }", desc: "Current relationship state" },
               { name: "follow/unfollow/connect/disconnect", type: "() => Promise<void>", desc: "Mutation actions" },
             ]}
+          />
+          <HookDoc
+            name="useTabPrivacy(userId)"
+            file="src/hooks/useTabPrivacy.ts"
+            desc="Per-tab visibility settings for Activity, Network & Vault tabs. Supports Everyone, Logged-in, Connections, Only Me."
+            returns={[
+              { name: "settings", type: "TabPrivacySettings", desc: "Current visibility settings per tab" },
+              { name: "updateSettings", type: "(settings) => Promise<void>", desc: "Upsert new visibility settings" },
+              { name: "isSaving", type: "boolean", desc: "Mutation pending state" },
+            ]}
+          />
+          <HookDoc
+            name="useGamification(userId)"
+            file="src/hooks/useGamification.ts"
+            desc="XP, level, streak, badges, weekly challenges — full gamification state for a user."
+            returns={[
+              { name: "xpData", type: "UserXP", desc: "Total XP, level, streak, multiplier" },
+              { name: "badges", type: "UserBadge[]", desc: "Earned badges with definitions" },
+              { name: "challenges", type: "ChallengeProgress[]", desc: "Weekly challenge progress" },
+            ]}
+          />
+          <HookDoc
+            name="useProfileFlair(userId)"
+            file="src/hooks/useProfileFlair.ts"
+            desc="Profile flair (avatar border, name effect, theme) auto-assigned at Level 3+."
+            returns={[{ name: "flair", type: "ProfileFlair", desc: "Current flair settings (border, effect, theme)" }]}
           />
           <HookDoc
             name="useNotifications()"
