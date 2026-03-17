@@ -104,7 +104,6 @@ const Network = () => {
     setPendingOutgoing(
       pendOutRes.data?.map((r: any) => ({ id: r.id, user: profilesMap[r.to_user_id] })).filter((r: any) => r.user) || []
     );
-    setSuggestions(suggestedUsers);
     setLoading(false);
   };
 
