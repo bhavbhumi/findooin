@@ -432,16 +432,13 @@ const ApiReferenceTab = () => (
         </CardContent>
       </Card>
 
-      {/* Directory, Vault, Network, Notification, Admin, Utility */}
+      {/* Showcase, Vault, Network, Notification, Admin, Utility */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Other Hooks</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
+...
           <HookDoc
             name="useListings(filters?)"
             file="src/hooks/useListings.ts"
-            desc="Directory listings with owner profiles. 8 exports including reviews and enquiries."
+            desc="Showcase listings with owner profiles. 8 exports including reviews and enquiries."
             returns={[{ name: "data", type: "Listing[]", desc: "Filtered listings" }]}
           />
           <HookDoc

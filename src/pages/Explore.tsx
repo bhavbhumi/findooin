@@ -539,11 +539,10 @@ const WhoIsItForContent = () => (
               subTypes: ["Asset Management Companies (AMCs)", "Insurance Companies", "NBFCs & Banks", "Fund Houses & PMS Providers"],
               features: [
                 "Distribute announcements to verified audiences",
-                "List financial products in the Directory",
-                "Post BFSI jobs and access Employer Dashboard",
-                "Organize events, webinars & investor meets",
+                "List financial products in the Showcase",
+...
               ],
-              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Directory, and host a virtual launch event — all from one platform.",
+              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Showcase, and host a virtual launch event — all from one platform.",
             },
             {
               icon: UserCheck,
@@ -554,7 +553,7 @@ const WhoIsItForContent = () => (
               subTypes: ["Mutual Fund Distributors (MFDs)", "Registered Investment Advisors (RIAs)", "Insurance Agents & Brokers", "Sub-Brokers & Authorized Persons"],
               features: [
                 "Showcase SEBI/AMFI/IRDAI credentials",
-                "List professional services in the Directory",
+                "List professional services in the Showcase",
                 "Apply for jobs AND post jobs (dual access)",
                 "Create polls, surveys & research notes",
               ],
