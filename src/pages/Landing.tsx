@@ -207,7 +207,7 @@ const Landing = () => {
                   animate={{ opacity: 0.15 }}
                   transition={{ delay: 0.8, duration: 1.5 }}
                 />
-                <Sparkles count={4} />
+                <Sparkles />
               </div>
             </motion.div>
           </div>
