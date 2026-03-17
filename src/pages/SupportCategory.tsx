@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-  Search, BookOpen, ChevronRight, ChevronDown, ChevronUp, Clock, ThumbsUp,
+  Search, BookOpen, ChevronRight, ChevronDown, ChevronUp, Clock, ThumbsUp, Eye,
   ArrowLeft, Send, Phone, Download, ExternalLink
 } from "lucide-react";
 import { Link, useParams, useSearchParams, useNavigate } from "react-router-dom";
