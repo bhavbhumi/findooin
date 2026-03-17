@@ -1,6 +1,6 @@
 /**
  * useTrustCircleIQ — Hook for the TrustCircle IQ™ discovery engine.
- * Calls the edge function and returns scored, circle-grouped results.
+ * Calls the edge function and returns scored, 5-circle-grouped results.
  */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,17 +36,31 @@ export interface TrustCircleResult {
 
 export interface TrustCircleData {
   inner_circle: TrustCircleResult[];
-  potential: TrustCircleResult[];
+  primary_network: TrustCircleResult[];
+  secondary_network: TrustCircleResult[];
+  tertiary_network: TrustCircleResult[];
   ecosystem: TrustCircleResult[];
   total: number;
   cached: boolean;
 }
 
+/** Circle tier key type */
+export type CircleTier = 1 | 2 | 3 | 4 | 5;
+
+/** Circle configuration with network-based naming */
+export const CIRCLE_TIERS: Record<CircleTier, { key: keyof Omit<TrustCircleData, 'total' | 'cached'>; label: string; shortLabel: string; description: string }> = {
+  1: { key: "inner_circle", label: "Inner Circle", shortLabel: "Inner", description: "Direct trust — your strongest professional relationships" },
+  2: { key: "primary_network", label: "Primary Network", shortLabel: "Primary", description: "High-affinity connections ready for business" },
+  3: { key: "secondary_network", label: "Secondary Network", shortLabel: "Secondary", description: "Warm prospects and mutual connections" },
+  4: { key: "tertiary_network", label: "Tertiary Network", shortLabel: "Tertiary", description: "Shared interests, geography, or certifications" },
+  5: { key: "ecosystem", label: "Ecosystem", shortLabel: "Ecosystem", description: "Verified professionals across the platform" },
+};
+
 export function useTrustCircleIQ(userId: string | null, enabled = true) {
   return useQuery<TrustCircleData>({
     queryKey: ["trustcircle-iq", userId],
     enabled: !!userId && enabled,
-    staleTime: 30 * 60 * 1000, // 30 min client-side cache
+    staleTime: 30 * 60 * 1000,
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke("trustcircle-iq", {
         method: "GET",
@@ -60,7 +74,6 @@ export function useTrustCircleIQ(userId: string | null, enabled = true) {
 
 /**
  * Track an intent signal for the TrustCircle IQ™ engine.
- * Call this from listing views, searches, event registrations, etc.
  */
 export async function trackIntentSignal(
   signalType: string,
