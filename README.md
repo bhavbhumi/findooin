@@ -117,7 +117,7 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 | Storage      | Supabase Storage (via edge function)            |
 | Realtime     | Supabase Realtime (messages, typing indicators) |
 | QR Codes     | qrcode.react                                   |
-| Testing      | Vitest + React Testing Library (16 test files)  |
+| Testing      | Vitest + React Testing Library (16 test files + setup)  |
 | Sanitization | DOMPurify (XSS protection)                     |
 
 ---
