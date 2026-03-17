@@ -34,7 +34,7 @@ const Messages = lazy(() => import("./pages/Messages"));
 const Settings = lazy(() => import("./pages/Settings"));
 const Jobs = lazy(() => import("./pages/Jobs"));
 const Events = lazy(() => import("./pages/Events"));
-const Directory = lazy(() => import("./pages/Directory"));
+const Showcase = lazy(() => import("./pages/Directory"));
 
 // Public pages (lazy loaded)
 const Blog = lazy(() => import("./pages/Blog"));
