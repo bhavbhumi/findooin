@@ -26,7 +26,9 @@ import { CommentSection } from "@/components/feed/CommentSection";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { UserCheck } from "lucide-react";
 import { LevelBadge } from "@/components/gamification/LevelBadge";
+import { FlairName } from "@/components/gamification/ProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
+import { useProfileFlair } from "@/hooks/useProfileFlair";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-status-info/10 text-status-info" },
