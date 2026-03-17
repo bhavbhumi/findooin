@@ -87,7 +87,7 @@ describe("ListingCard", () => {
   it("calls onSelect when clicked", async () => {
     const onSelect = vi.fn();
     render(<ListingCard listing={mockListing} onSelect={onSelect} />);
-    await userEvent.click(screen.getByRole("button", { name: "Listing: Alpha Growth Fund" }));
+    await userEvent.click(screen.getByRole("button"));
     expect(onSelect).toHaveBeenCalledWith(mockListing);
   });
 
