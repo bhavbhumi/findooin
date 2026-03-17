@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, X, ArrowRight, Sparkles, LucideIcon } from "lucide-react";
-import { PageHero } from "@/components/PageHero";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.08, duration: 0.45, ease: "easeOut" as const },
+  }),
+};
 
 interface ComparisonFeature {
   icon: LucideIcon;
@@ -33,14 +41,24 @@ export interface ComparisonData {
 
 export function ComparisonPage({ data }: { data: ComparisonData }) {
   return (
-    <div className="min-h-screen">
-      {/* Hero */}
-      <PageHero
-        breadcrumb="Compare"
-        title={data.heroTitle}
-        subtitle={data.heroSubtitle}
-        variant="hexagons"
-      />
+    <div>
+      {/* Section Header */}
+      <section className="py-12">
+        <div className="container max-w-4xl text-center">
+          <motion.h2 className="text-2xl md:text-3xl font-bold font-heading text-foreground mb-3" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
+            {data.heroTitle}
+          </motion.h2>
+          <motion.p className="text-base text-primary font-medium mb-4" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
+            {data.heroSubtitle}
+          </motion.p>
+          <motion.p className="text-muted-foreground leading-relaxed" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
+            {data.heroDescription}
+          </motion.p>
+          <motion.p className="text-sm text-muted-foreground mt-2" initial="hidden" animate="visible" variants={fadeUp} custom={3}>
+            Compared with: <span className="font-medium text-foreground">{data.competitorExamples}</span>
+          </motion.p>
+        </div>
+      </section>
 
       {/* Description */}
       <section className="container py-10">
