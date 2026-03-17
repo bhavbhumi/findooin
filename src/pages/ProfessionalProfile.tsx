@@ -6,11 +6,13 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useProfileFlair } from "@/hooks/useProfileFlair";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
 import {
   Shield, MapPin, Building2, Hash, UserCheck, Users,
   ArrowRight, CheckCircle2, Clock, Eye, Briefcase
