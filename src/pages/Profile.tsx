@@ -120,12 +120,170 @@ const Profile = () => {
   const initialTab = searchParams.get("tab");
   const normalizedInitialTab = initialTab === "directory" ? "showcase" : initialTab;
   const [activeTab, setActiveTab] = useState(normalizedInitialTab || "about");
-...
+  const [endorsementCount, setEndorsementCount] = useState(0);
+  const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
+  const { refreshRoles } = useRole();
+
+  const isOwnProfile = !id || id === currentUserId;
+
+  // Query user posts directly instead of loading all feed posts
+  const { data: userPosts, isLoading: postsLoading } = useUserPosts(profile?.id);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) return;
+      setCurrentUserId(session.user.id);
+      const targetId = id || session.user.id;
+      loadProfile(targetId);
+
+      if (id && id !== session.user.id) {
+        supabase.from("profile_views").insert(
+          { profile_id: id, viewer_id: session.user.id }
+        ).then(() => {});
+      }
+    });
+  }, [id]);
+
+  const loadProfile = async (targetId: string) => {
+    setLoading(true);
+    const [profileRes, rolesRes, followersRes, followingRes, connectionsRes, postsRes, endorseRes] = await Promise.all([
+      supabase.from("profiles").select("*").eq("id", targetId).single(),
+      supabase.from("user_roles").select("role, sub_type").eq("user_id", targetId),
+      supabase.from("connections").select("id", { count: "exact", head: true }).eq("to_user_id", targetId).eq("connection_type", "follow"),
+      supabase.from("connections").select("id", { count: "exact", head: true }).eq("from_user_id", targetId).eq("connection_type", "follow"),
+      supabase.from("connections").select("id", { count: "exact", head: true }).or(`from_user_id.eq.${targetId},to_user_id.eq.${targetId}`).eq("connection_type", "connect").eq("status", "accepted"),
+      supabase.from("posts").select("id", { count: "exact", head: true }).eq("author_id", targetId),
+      supabase.from("endorsements").select("id", { count: "exact", head: true }).eq("endorsed_user_id", targetId),
+    ]);
+    if (profileRes.data) {
+      const d = profileRes.data as any;
+      setProfile({
+        id: d.id, full_name: d.full_name, display_name: d.display_name,
+        user_type: d.user_type, bio: d.bio, avatar_url: d.avatar_url,
+        banner_url: d.banner_url ?? null, verification_status: d.verification_status,
+        created_at: d.created_at, headline: d.headline ?? null, location: d.location ?? null,
+        organization: d.organization ?? null, designation: d.designation ?? null,
+        website: d.website ?? null, experience_years: d.experience_years ?? null,
+        specializations: d.specializations ?? null, regulatory_ids: d.regulatory_ids ?? null,
+        social_links: d.social_links ?? null, languages: d.languages ?? null,
+        certifications: d.certifications ?? null,
+      });
+    }
+    if (rolesRes.data) setRoles(rolesRes.data);
+    setStats({
+      followers: followersRes.count ?? 0, following: followingRes.count ?? 0,
+      connections: connectionsRes.count ?? 0, posts: postsRes.count ?? 0,
+    });
+    setEndorsementCount(endorseRes.count ?? 0);
+    setLoading(false);
+  };
+
+  const handleProfileSaved = () => {
+    const targetId = id || currentUserId;
+    if (targetId) loadProfile(targetId);
+  };
+
+  const handleRolesChanged = () => {
+    const targetId = id || currentUserId;
+    if (targetId) loadProfile(targetId);
+    refreshRoles();
+  };
+
+  const tabTriggerClass = "rounded-lg text-sm font-medium whitespace-nowrap px-4 sm:px-6 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground";
+
+  return (
+    <AppLayout maxWidth="max-w-6xl">
+      {!isOwnProfile && !loading && (
+        <Button variant="ghost" size="sm" className="text-muted-foreground mb-3" onClick={() => navigate(-1)}>
+          <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
+        </Button>
+      )}
+
+      {loading ? (
+        <FindooLoader text="Loading profile..." />
+      ) : profile ? (
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+          {/* Main Content */}
+          <div className="min-w-0">
+            <ErrorBoundary fallbackTitle="Error loading profile header">
+              <ProfileHeader
+                profile={profile}
+                roles={roles}
+                stats={stats}
+                isOwnProfile={isOwnProfile}
+                connectionStatus={connectionStatus}
+                follow={follow}
+                unfollow={unfollow}
+                connect={connect}
+                disconnect={disconnect}
+                connLoading={connLoading}
+                onEditProfile={() => setEditOpen(true)}
+                onNavigateToNetwork={() => setActiveTab("network")}
+              />
+            </ErrorBoundary>
+
+            {/* Featured Content — below header, above tabs */}
+            <FeaturedContent profileId={profile.id} isOwnProfile={isOwnProfile} />
+
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
+              <div className="overflow-x-auto -mx-1 px-1 mb-4 scrollbar-hide">
+                <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
+                  <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
+                  <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
+                  <TabsTrigger value="activity" className={tabTriggerClass}>Activity</TabsTrigger>
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
                   <TabsTrigger value="showcase" className={tabTriggerClass}>
                     <Store className="h-3.5 w-3.5 mr-1" /> Showcase
                   </TabsTrigger>
-...
+                  {isOwnProfile && (
+                    <TabsTrigger value="vault" className={tabTriggerClass}>
+                      <FolderLock className="h-3.5 w-3.5 mr-1" /> Vault
+                    </TabsTrigger>
+                  )}
+                  <TabsTrigger value="digital-card" className={tabTriggerClass}>
+                    <CreditCard className="h-3.5 w-3.5 mr-1" /> Digital Card
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="about" className="mt-0">
+                <ProfileAbout
+                  profile={profile}
+                  roles={roles}
+                  isOwnProfile={isOwnProfile}
+                  onRolesChanged={handleRolesChanged}
+                  currentUserId={currentUserId}
+                />
+              </TabsContent>
+
+              <TabsContent value="network" className="mt-0">
+                <ProfileNetwork profileId={profile.id} isOwnProfile={isOwnProfile} currentUserId={currentUserId} />
+              </TabsContent>
+
+              <TabsContent value="activity" className="mt-0">
+                <ActivityTimeline profileId={profile.id} isOwnProfile={isOwnProfile} />
+              </TabsContent>
+
+              <TabsContent value="posts" className="space-y-4 mt-0">
+                {postsLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => <PostCardSkeleton key={i} />)}
+                  </div>
+                ) : !userPosts?.length ? (
+                  <div className="rounded-xl border border-border bg-card p-10 text-center">
+                    <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                      <Edit3 className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <p className="text-muted-foreground text-sm font-medium">No posts yet</p>
+                    <p className="text-muted-foreground text-xs mt-1">
+                      {isOwnProfile ? "Share your first insight with the community." : "This user hasn't posted yet."}
+                    </p>
+                  </div>
+                ) : (
+                  userPosts.map((post) => <MemoizedPostCard key={post.id} post={post} />)
+                )}
+              </TabsContent>
+
               <TabsContent value="showcase" className="mt-0">
                 <ProfileListingsTab profileId={profile.id} isOwnProfile={isOwnProfile} roles={roles} />
               </TabsContent>
