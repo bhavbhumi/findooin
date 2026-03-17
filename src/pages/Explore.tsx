@@ -125,7 +125,7 @@ const WhatIsContent = () => (
             { feature: "Free for Individuals", linkedin: true, whatsapp: true, terminal: false, findoo: true },
             { feature: "Job Board (BFSI)", linkedin: false, whatsapp: false, terminal: false, findoo: true },
             { feature: "Event Management", linkedin: true, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Product & Service Directory", linkedin: false, whatsapp: false, terminal: true, findoo: true },
+            { feature: "Product & Service Showcase", linkedin: false, whatsapp: false, terminal: true, findoo: true },
           ].map((row, i) => (
             <motion.div key={row.feature} className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] text-center text-xs border-b border-border last:border-0"
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.3}>
