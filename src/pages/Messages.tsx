@@ -88,6 +88,17 @@ const Messages = () => {
     });
   }, []);
 
+  // Auto-open conversation from ?user= URL param
+  const targetUserParam = searchParams.get("user");
+  const hasAutoOpened = useRef(false);
+
+  useEffect(() => {
+    if (targetUserParam && currentUserId && !loading && !hasAutoOpened.current) {
+      hasAutoOpened.current = true;
+      openConversation(targetUserParam);
+    }
+  }, [targetUserParam, currentUserId, loading]);
+
   // Realtime for new messages
   useEffect(() => {
     if (!currentUserId) return;
