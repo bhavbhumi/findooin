@@ -1,12 +1,21 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store, Bookmark } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store, Bookmark, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 import { cn } from "@/lib/utils";
 import { useIsAdmin } from "@/hooks/useAdmin";
+import { StreakIndicator } from "@/components/gamification/StreakIndicator";
+import { useUserXP } from "@/hooks/useGamification";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
