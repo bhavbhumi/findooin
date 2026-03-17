@@ -76,10 +76,6 @@ const Network = () => {
       .neq("id", userId)
       .limit(50);
 
-    const connectedIds = new Set(userIds);
-    connectedIds.add(userId);
-    const suggestedUsers = (allProfiles || []).filter((p: any) => !connectedIds.has(p.id)).slice(0, 10);
-    allProfiles?.forEach((p: any) => userIds.add(p.id));
 
     const profilesMap: Record<string, NetworkUser> = {};
     (allProfiles || []).forEach((p: any) => { profilesMap[p.id] = p; });
