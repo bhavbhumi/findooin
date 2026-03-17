@@ -18,7 +18,7 @@ import AppLayout from "@/components/AppLayout";
 import { PersonCardSkeleton } from "@/components/skeletons/PersonCardSkeleton";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { PostCard } from "@/components/feed/PostCard";
-import { useFeedPosts } from "@/hooks/useFeedPosts";
+import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { DiscoverSidebar, saveRecentSearch } from "@/components/discover/DiscoverSidebar";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { cn } from "@/lib/utils";
@@ -40,6 +40,20 @@ const CIRCLE_VISUALS: Record<CircleTier, { icon: typeof Shield; color: string; r
   5: { icon: Eye, color: "text-muted-foreground", ringColor: "ring-muted-foreground/20", bgAccent: "bg-muted/50" },
 };
 
+/* ── AffinityFeed™ Trust-Weighted Scoring ── */
+const TRUST_WEIGHT_BY_TIER: Record<number, number> = { 1: 10, 2: 6, 3: 3, 4: 1.5, 5: 1 };
+const FRESHNESS_DECAY_DAYS_BY_TIER: Record<number, number> = { 1: 7, 2: 5, 3: 3, 4: 2, 5: 1 };
+
+function computeAffinityFeedScore(post: FeedPost, authorTier: number): number {
+  const trustWeight = TRUST_WEIGHT_BY_TIER[authorTier] || 1;
+  const engagement = post.like_count + (post.comment_count * 2) + (post.bookmark_count * 3);
+  const engagementScore = 1 + Math.log1p(engagement);
+  const ageHours = (Date.now() - new Date(post.created_at).getTime()) / (1000 * 60 * 60);
+  const decayDays = FRESHNESS_DECAY_DAYS_BY_TIER[authorTier] || 1;
+  const freshness = Math.exp(-0.03 * Math.max(0, ageHours / 24) / decayDays);
+  return trustWeight * engagementScore * freshness;
+}
+
 /* ── Discover Page ── */
 const Discover = () => {
   usePageMeta({ title: "Discover · TrustCircle IQ™", description: "AI-powered discovery of verified financial professionals ranked by trust, role affinity, and intent." });
@@ -48,12 +62,13 @@ const Discover = () => {
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
   const [locationFilter, setLocationFilter] = useState<string>("");
-  const [mainTab, setMainTab] = useState<"trustcircle" | "posts">((searchParams.get("tab") as any) || "trustcircle");
+  const [mainTab, setMainTab] = useState<"people" | "posts">((searchParams.get("tab") as any) || "people");
   const [activeCircle, setActiveCircle] = useState<CircleTier | "all">("all");
+  const [postFeedMode, setPostFeedMode] = useState<"affinity" | "recent" | "engagement">("affinity");
 
   const { activeRole } = useRole();
   const { flatPosts: allPosts, isLoading: loadingPosts } = useFeedPosts();
-  const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, mainTab === "trustcircle");
+  const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
