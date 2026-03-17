@@ -61,15 +61,15 @@ export function LevelBadge({ level, size = "sm", showLabel = false, className }:
         <span className={cn("inline-flex items-center gap-1 shrink-0", className)}>
           <span
             className={cn(
-              "inline-flex items-center justify-center rounded-full font-extrabold border-2 leading-none shadow-lg tracking-tight",
+              "inline-flex items-center justify-center rounded-full font-bold border leading-none tracking-tight",
               sizeClasses[size]
             )}
             style={{
-              background: `linear-gradient(145deg, ${config.color}, ${withAlpha(config.color, 0.85)})`,
-              borderColor: withAlpha(config.color, 0.9),
+              background: `linear-gradient(145deg, ${config.color}, ${withAlpha(config.color, 0.9)})`,
+              borderColor: withAlpha(config.color, 0.6),
               color: textColor,
               textShadow,
-              boxShadow: `0 0 0 1.5px hsl(var(--background)), 0 2px 8px ${withAlpha(config.color, 0.5)}, inset 0 1px 0 ${withAlpha("hsl(0, 0%, 100%)", 0.25)}`,
+              boxShadow: `0 0 0 1px hsl(var(--background)), 0 1px 4px ${withAlpha(config.color, 0.3)}`,
             }}
           >
             <span className="mr-0.5">{config.icon}</span>
