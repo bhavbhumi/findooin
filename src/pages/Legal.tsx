@@ -113,7 +113,7 @@ const termsSections = [
 
 FindOO Solutions LLP
 B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
-Email: hello@findoo.in`,
+Email: legal@findoo.in`,
   },
 ];
 
