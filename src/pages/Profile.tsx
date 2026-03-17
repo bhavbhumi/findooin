@@ -29,6 +29,21 @@ import { useQuery } from "@tanstack/react-query";
 import { GamificationProfileCard } from "@/components/gamification/GamificationProfileCard";
 import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
 import { ReferralCard } from "@/components/gamification/ReferralCard";
+import { useTabPrivacy, canViewTab, visibilityLabels, type TabVisibility } from "@/hooks/useTabPrivacy";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Lock } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 
 const MemoizedPostCard = memo(PostCard);
