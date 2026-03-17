@@ -62,11 +62,15 @@ const sections = [
   },
   {
     title: "13. Grievance Officer & Contact",
-    content: `Grievance Officer: grievance@findoo.in (acknowledged within 24 hours, resolved within 15 days)
-Data Protection Officer: privacy@findoo.in
-Support: support@findoo.in
+    content: `In compliance with the IT (Intermediary Guidelines) Rules, 2021 and the DPDP Act, 2023, FindOO has appointed a Grievance Officer:
 
-If unsatisfied with resolution, you may approach the Data Protection Board of India under the DPDP Act, 2023.`,
+Grievance Officer: [To be appointed]
+FindOO Solutions LLP
+B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
+
+For all inquiries: hello@findoo.in
+
+The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days. If unsatisfied with resolution, you may approach the Data Protection Board of India under the DPDP Act, 2023.`,
   },
 ];
 

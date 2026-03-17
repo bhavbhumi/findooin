@@ -50,7 +50,7 @@ Important: Disabling strictly necessary cookies may prevent you from signing in,
   },
   {
     title: "8. Updates to This Cookie Policy",
-    content: `We may update this Cookie Policy periodically. Material changes will be communicated via in-app notification. The "Last Updated" date will be revised accordingly. For questions about cookies, contact: privacy@findoo.in.`,
+    content: `We may update this Cookie Policy periodically. Material changes will be communicated via in-app notification. The "Last Updated" date will be revised accordingly. For questions about cookies, contact: hello@findoo.in.`,
   },
 ];
 

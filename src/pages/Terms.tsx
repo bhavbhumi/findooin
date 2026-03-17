@@ -54,7 +54,10 @@ const sections = [
   },
   {
     title: "11. Contact",
-    content: `Legal: legal@findoo.in | Grievance Officer: grievance@findoo.in | Support: support@findoo.in`,
+    content: `FindOO Solutions LLP
+Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
+
+For all inquiries: hello@findoo.in`,
   },
 ];
 
