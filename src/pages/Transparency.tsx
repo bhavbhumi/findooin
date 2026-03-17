@@ -59,12 +59,14 @@ We notify affected users of data requests unless prohibited by law or court orde
   },
   {
     title: "8. Contact",
-    content: `Nodal Contact Person: nodal@findoo.in
-Grievance Officer: grievance@findoo.in
-Compliance Team: compliance@findoo.in
+    content: `Nodal Contact Person: [To be appointed]
+Grievance Officer: [To be appointed]
+Compliance Officer: [To be appointed]
+
+For all inquiries: hello@findoo.in
 
 FindOO Solutions LLP
-Registered Office: Mumbai, Maharashtra, India`,
+Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
   },
 ];
 

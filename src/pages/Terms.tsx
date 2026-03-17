@@ -14,7 +14,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Introduction & Acceptance",
-    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User") and FindOO Solutions LLP ("FindOO"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office in Mumbai, Maharashtra, India. By accessing or using the FindOO platform and related services (the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform.`,
+    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User") and FindOO Solutions LLP ("FindOO"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office at B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India. By accessing or using the FindOO platform and related services (the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform.`,
   },
   {
     title: "2. Eligibility",
@@ -54,7 +54,10 @@ const sections = [
   },
   {
     title: "11. Contact",
-    content: `Legal: legal@findoo.in | Grievance Officer: grievance@findoo.in | Support: support@findoo.in`,
+    content: `FindOO Solutions LLP
+Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
+
+For all inquiries: hello@findoo.in`,
   },
 ];
 

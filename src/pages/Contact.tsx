@@ -32,11 +32,11 @@ const offices = [
   {
     city: "Mumbai",
     label: "Head Office",
-    address: "Mumbai, Maharashtra, India",
+    address: "B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064",
     phone: "+91 999 999 9999",
-    email: "mumbai@findoo.in",
+    email: "hello@findoo.in",
     hours: "Mon–Sat, 9:00 AM – 6:00 PM IST",
-    mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241317.14571!2d72.7410!3d19.0826!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c6306644edc1%3A0x5da4ed8f8d648c69!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1",
+    mapUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3768.8!2d72.8456!3d19.1868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b6f5aa35c0a1%3A0x1!2sMalad%20West%2C%20Mumbai!5e0!3m2!1sen!2sin!4v1",
   },
 ];
 
@@ -170,7 +170,7 @@ const Contact = () => {
                   <h4 className="text-sm font-bold font-heading text-card-foreground">Email Us</h4>
                   <p className="text-xs text-muted-foreground mt-1 mb-3">Available Mon–Sat, 9 AM to 6 PM.</p>
                   <Button variant="outline" size="sm" className="w-full" asChild>
-                    <a href="mailto:support@findoo.in">support@findoo.in</a>
+                    <a href="mailto:hello@findoo.in">hello@findoo.in</a>
                   </Button>
                 </div>
 

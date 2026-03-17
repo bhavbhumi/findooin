@@ -19,7 +19,7 @@ const tabs = ["Terms", "Privacy", "Policies", "Cookie Policy", "Accessibility", 
 const termsSections = [
   {
     title: "1. Introduction & Acceptance",
-    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you", "your") and FindOO Solutions LLP ("FindOO", "we", "us", "our"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office in Mumbai, Maharashtra, India. By accessing or using the FindOO platform, mobile application, and related services (collectively, the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform. These Terms supersede any prior agreements between you and FindOO regarding your use of the Platform.`,
+    content: `These Terms of Service ("Terms") constitute a legally binding agreement between you ("User", "you", "your") and FindOO Solutions LLP ("FindOO", "we", "us", "our"), a limited liability partnership incorporated under the Limited Liability Partnership Act, 2008, with its registered office at B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India. By accessing or using the FindOO platform, mobile application, and related services (collectively, the "Platform"), you agree to be bound by these Terms, our Privacy Policy, Community Guidelines, and all applicable policies. If you do not agree, you must not access or use the Platform. These Terms supersede any prior agreements between you and FindOO regarding your use of the Platform.`,
   },
   {
     title: "2. Definitions",
@@ -35,7 +35,7 @@ const termsSections = [
 
 4.2 Verification: Issuers and Intermediaries are required to submit regulatory credentials (including but not limited to SEBI registration certificates, AMFI ARN numbers, IRDAI license numbers, RBI registration details, or PFRDA POP/NPS registrations) for verification. FindOO verifies credentials against publicly available regulatory databases and records. Verification confirms registration status at the time of verification only and does not constitute an endorsement of competence, conduct, or future compliance. FindOO may periodically re-verify credentials and may revoke verified status if a User's registration is found to be lapsed, suspended, or revoked by the relevant regulator.
 
-4.3 Account Security: You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account. You must immediately notify FindOO at security@findoo.in of any unauthorized access or suspected breach. FindOO shall not be liable for any loss arising from unauthorized use of your account where such use was not attributable to FindOO's negligence.`,
+4.3 Account Security: You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account. You must immediately notify FindOO at hello@findoo.in of any unauthorized access or suspected breach. FindOO shall not be liable for any loss arising from unauthorized use of your account where such use was not attributable to FindOO's negligence.`,
   },
   {
     title: "5. User Conduct & Acceptable Use",
@@ -47,7 +47,7 @@ const termsSections = [
 
 6.2 Platform IP: All intellectual property in the Platform, including its design, code, logos, trademarks ("FindOO" and associated branding), algorithms, databases, and documentation, is the exclusive property of FindOO Solutions LLP or its licensors. No license or right is granted to you other than the limited right to use the Platform as described in these Terms.
 
-6.3 Copyright Claims: If you believe Content on the Platform infringes your copyright, you may submit a notice under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, to our Grievance Officer at grievance@findoo.in. Your notice must include identification of the copyrighted work, the infringing material, your contact details, and a statement of good faith belief.
+6.3 Copyright Claims: If you believe Content on the Platform infringes your copyright, you may submit a notice under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, to our Grievance Officer at hello@findoo.in. Your notice must include identification of the copyrighted work, the infringing material, your contact details, and a statement of good faith belief.
 
 6.4 AI & Machine Learning: FindOO may use aggregated, anonymized, or de-identified data derived from Platform usage to improve its services, algorithms, and recommendation systems. No individually identifiable Content will be used for AI model training without explicit opt-in consent from the User.`,
   },
@@ -77,7 +77,7 @@ const termsSections = [
   },
   {
     title: "13. Termination & Suspension",
-    content: `13.1 By You: You may terminate your account at any time through your account settings or by contacting support@findoo.in. Upon termination, your right to use the Platform ceases immediately.
+    content: `13.1 By You: You may terminate your account at any time through your account settings or by contacting hello@findoo.in. Upon termination, your right to use the Platform ceases immediately.
 
 13.2 By FindOO: FindOO may suspend, restrict, or terminate your account at any time, with or without notice, for: (a) violation of these Terms or Community Guidelines; (b) provision of false or misleading information; (c) lapse, suspension, or revocation of your regulatory registration; (d) engagement in activities harmful to the Platform or its Users; (e) prolonged inactivity (accounts inactive for over 24 months); or (f) any other reason at FindOO's reasonable discretion.
 
@@ -91,7 +91,7 @@ const termsSections = [
 
 14.3 Jurisdiction: Subject to the arbitration clause above, the courts of Mumbai, Maharashtra shall have exclusive jurisdiction over any disputes arising from these Terms.
 
-14.4 Grievance Redressal: In compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, FindOO has appointed a Grievance Officer. Complaints and grievances may be addressed to: Grievance Officer, FindOO Solutions LLP, Email: grievance@findoo.in. The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days of receipt, or such other period as prescribed by applicable law.`,
+14.4 Grievance Redressal: In compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, FindOO has appointed a Grievance Officer. Complaints and grievances may be addressed to: Grievance Officer, FindOO Solutions LLP, B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064. Email: hello@findoo.in. The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days of receipt, or such other period as prescribed by applicable law.`,
   },
   {
     title: "15. General Provisions",
@@ -112,9 +112,8 @@ const termsSections = [
     content: `For questions regarding these Terms of Service, please contact:
 
 FindOO Solutions LLP
-Email: legal@findoo.in
-Grievance Officer: grievance@findoo.in
-Support: support@findoo.in`,
+B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
+Email: hello@findoo.in`,
   },
 ];
 
@@ -160,7 +159,7 @@ const privacySections = [
   },
   {
     title: "7. Your Rights Under Indian Law",
-    content: `Under the DPDP Act, 2023, and other applicable Indian laws, you have the following rights: (a) Right to Access: obtain confirmation of whether your personal data is being processed and access such data; (b) Right to Correction: request correction of inaccurate or misleading personal data; (c) Right to Erasure: request deletion of your personal data (subject to legal retention requirements); (d) Right to Nominate: appoint a nominee to exercise your data rights in case of your death or incapacity; (e) Right to Grievance Redressal: file complaints with our Grievance Officer or, if unresolved, with the Data Protection Board of India established under the DPDP Act; (f) Right to Withdraw Consent: withdraw previously given consent for data processing; and (g) Right to Data Portability: request your data in a structured, commonly used, machine-readable format. To exercise any of these rights, contact us at privacy@findoo.in. We will respond to your request within 30 days or such period as prescribed by applicable law.`,
+    content: `Under the DPDP Act, 2023, and other applicable Indian laws, you have the following rights: (a) Right to Access: obtain confirmation of whether your personal data is being processed and access such data; (b) Right to Correction: request correction of inaccurate or misleading personal data; (c) Right to Erasure: request deletion of your personal data (subject to legal retention requirements); (d) Right to Nominate: appoint a nominee to exercise your data rights in case of your death or incapacity; (e) Right to Grievance Redressal: file complaints with our Grievance Officer or, if unresolved, with the Data Protection Board of India established under the DPDP Act; (f) Right to Withdraw Consent: withdraw previously given consent for data processing; and (g) Right to Data Portability: request your data in a structured, commonly used, machine-readable format. To exercise any of these rights, contact us at hello@findoo.in. We will respond to your request within 30 days or such period as prescribed by applicable law.`,
   },
   {
     title: "8. Cookies & Tracking Technologies",
@@ -176,7 +175,7 @@ const privacySections = [
   },
   {
     title: "11. Children's Privacy",
-    content: `The Platform is not intended for individuals under 18 years of age. We do not knowingly collect personal data from minors. If we become aware that we have inadvertently collected personal data from a person under 18, we will take steps to delete such data promptly. If you believe a minor has provided us with personal data, please contact us at privacy@findoo.in.`,
+    content: `The Platform is not intended for individuals under 18 years of age. We do not knowingly collect personal data from minors. If we become aware that we have inadvertently collected personal data from a person under 18, we will take steps to delete such data promptly. If you believe a minor has provided us with personal data, please contact us at hello@findoo.in.`,
   },
   {
     title: "12. Changes to This Policy",
@@ -186,13 +185,11 @@ const privacySections = [
     title: "13. Grievance Officer & Contact",
     content: `In accordance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and the DPDP Act, 2023, FindOO has appointed a Grievance Officer:
 
-Grievance Officer
+Grievance Officer: [To be appointed]
 FindOO Solutions LLP
-Email: grievance@findoo.in
+B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
 
-For privacy-related inquiries, data access requests, or concerns:
-Data Protection Officer: privacy@findoo.in
-General Support: support@findoo.in
+For all inquiries: hello@findoo.in
 
 The Grievance Officer shall acknowledge your complaint within 24 hours and resolve it within 15 days of receipt, or such other period as prescribed by applicable law. If you are unsatisfied with the resolution, you may approach the Data Protection Board of India under the DPDP Act, 2023.`,
   },
@@ -220,7 +217,7 @@ const policiesSections = [
     title: "4. Intellectual Property Policy",
     content: `4.1 Respect for IP Rights: Users must respect intellectual property rights. Content that infringes on copyrights, trademarks, trade secrets, or proprietary information will be removed upon valid notice.
 
-4.2 DMCA-Equivalent Process: FindOO follows the takedown procedures prescribed under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021. To report IP infringement, contact grievance@findoo.in with: (a) identification of the copyrighted/trademarked work; (b) URL or description of the infringing material; (c) your contact details; (d) a good faith statement that the use is unauthorized; and (e) a statement under penalty of perjury that the information is accurate and you are authorized to act on behalf of the rights holder.
+4.2 DMCA-Equivalent Process: FindOO follows the takedown procedures prescribed under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021. To report IP infringement, contact hello@findoo.in with: (a) identification of the copyrighted/trademarked work; (b) URL or description of the infringing material; (c) your contact details; (d) a good faith statement that the use is unauthorized; and (e) a statement under penalty of perjury that the information is accurate and you are authorized to act on behalf of the rights holder.
 
 4.3 Repeat Infringers: Accounts that are subject to three or more valid IP infringement notices will be permanently terminated.`,
   },
@@ -248,9 +245,9 @@ const policiesSections = [
     title: "7. Enforcement & Appeals",
     content: `7.1 Graduated Enforcement: FindOO employs a graduated enforcement approach: (a) Warning — for first-time minor violations; (b) Content Removal — for Content that violates policies; (c) Feature Restriction — temporary restriction of posting, messaging, or other features; (d) Temporary Suspension — account suspension for 7-30 days for repeated or serious violations; (e) Permanent Termination — for severe violations, persistent re-offenses, or activities posing legal or safety risks.
 
-7.2 Appeals: Users may appeal enforcement actions by contacting appeals@findoo.in within 30 days of the action. Appeals are reviewed by a different team member than the one who made the original decision. FindOO will respond to appeals within 15 business days.
+7.2 Appeals: Users may appeal enforcement actions by contacting hello@findoo.in within 30 days of the action. Appeals are reviewed by a different team member than the one who made the original decision. FindOO will respond to appeals within 15 business days.
 
-7.3 Reporting: Users can report violations using the in-app report button on any post, comment, or profile, or by emailing moderation@findoo.in. All reports are reviewed within 48 hours.`,
+7.3 Reporting: Users can report violations using the in-app report button on any post, comment, or profile, or by emailing hello@findoo.in. All reports are reviewed within 48 hours.`,
   },
 ];
 
@@ -342,7 +339,7 @@ Important: Disabling strictly necessary cookies may prevent you from signing in,
   },
   {
     title: "8. Updates to This Cookie Policy",
-    content: `We may update this Cookie Policy periodically. Material changes will be communicated via in-app notification. The "Last Updated" date will be revised accordingly. For questions about cookies, contact: privacy@findoo.in.`,
+    content: `We may update this Cookie Policy periodically. Material changes will be communicated via in-app notification. The "Last Updated" date will be revised accordingly. For questions about cookies, contact: hello@findoo.in.`,
   },
 ];
 
@@ -372,7 +369,7 @@ const accessibilitySections = [
     title: "6. Accessibility Feedback",
     content: `We welcome your feedback on the accessibility of FindOO. If you encounter any accessibility barriers or have suggestions for improvement, please contact us:
 
-Email: accessibility@findoo.in
+Email: hello@findoo.in
 Subject line: Accessibility Feedback — [Brief Description]
 
 When reporting an issue, please include: (a) the page or feature URL; (b) a description of the problem; (c) the assistive technology you are using (if applicable); (d) your browser and operating system; and (e) any screenshots or recordings that illustrate the issue.
@@ -405,7 +402,7 @@ const refundPolicySections = [
   },
   {
     title: "3. Cancellation Policy",
-    content: `3.1 How to Cancel: You may cancel your subscription at any time through: (a) Account Settings → Subscription → Cancel Plan; or (b) by contacting billing@findoo.in.
+    content: `3.1 How to Cancel: You may cancel your subscription at any time through: (a) Account Settings → Subscription → Cancel Plan; or (b) by contacting hello@findoo.in.
 
 3.2 Effect of Cancellation: Upon cancellation, your premium features remain active until the end of the current billing period. After the billing period expires, your account reverts to the free tier. No additional charges will be applied after cancellation.
 
@@ -419,13 +416,13 @@ const refundPolicySections = [
 
 4.3 Monthly Subscriptions: Monthly subscriptions cancelled after the 7-day cooling-off period are not eligible for refunds. The subscription will remain active until the end of the current monthly billing cycle.
 
-4.4 Refunds for Service Issues: If you experience a material service outage or deficiency that substantially impairs your ability to use paid features for more than 72 consecutive hours, you may request a pro-rated refund or credit for the affected period by contacting billing@findoo.in.
+4.4 Refunds for Service Issues: If you experience a material service outage or deficiency that substantially impairs your ability to use paid features for more than 72 consecutive hours, you may request a pro-rated refund or credit for the affected period by contacting hello@findoo.in.
 
 4.5 Non-Refundable Items: The following are non-refundable: (a) one-time purchases (promoted listings, sponsored content) once the promotion has been delivered or is live; (b) features consumed in full during the billing period; (c) subscriptions purchased using promotional codes or discounts (unless otherwise stated in the promotion terms).`,
   },
   {
     title: "5. Refund Process",
-    content: `5.1 How to Request: Submit a refund request via: (a) Account Settings → Billing → Request Refund; or (b) emailing billing@findoo.in with your account email, subscription details, and reason for the request.
+    content: `5.1 How to Request: Submit a refund request via: (a) Account Settings → Billing → Request Refund; or (b) emailing hello@findoo.in with your account email, subscription details, and reason for the request.
 
 5.2 Processing Time: Refund requests are reviewed within 5 business days. Approved refunds are processed within 7–10 business days.
 
@@ -439,16 +436,15 @@ const refundPolicySections = [
   },
   {
     title: "7. Disputes",
-    content: `If you disagree with a billing charge, you must notify FindOO within 30 days of the charge date by emailing billing@findoo.in. Failure to dispute a charge within 30 days constitutes acceptance of the charge. Billing disputes will be resolved in accordance with the Dispute Resolution mechanism outlined in our Terms of Service.`,
+    content: `If you disagree with a billing charge, you must notify FindOO within 30 days of the charge date by emailing hello@findoo.in. Failure to dispute a charge within 30 days constitutes acceptance of the charge. Billing disputes will be resolved in accordance with the Dispute Resolution mechanism outlined in our Terms of Service.`,
   },
   {
     title: "8. Contact",
     content: `For billing inquiries, refund requests, or cancellation assistance:
-Email: billing@findoo.in
-Support: support@findoo.in
+Email: hello@findoo.in
 
 FindOO Solutions LLP
-Registered Office: Mumbai, Maharashtra, India`,
+Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
   },
 ];
 
@@ -463,9 +459,10 @@ const transparencyReportSections = [
     content: `FindOO operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000, and complies with: (a) Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021 — including due diligence obligations, grievance redressal mechanisms, and content moderation standards; (b) Digital Personal Data Protection Act, 2023 — data processing, consent management, and data principal rights; (c) SEBI regulations — monitoring financial content for compliance with market integrity rules; (d) Consumer Protection Act, 2019 — fair practices in platform services.
 
 Key Compliance Officers:
-• Grievance Officer: grievance@findoo.in (responds within 24 hours, resolves within 15 days)
-• Chief Compliance Officer: compliance@findoo.in
-• Nodal Contact Person: nodal@findoo.in (24×7 availability for law enforcement coordination)`,
+• Grievance Officer: [To be appointed] (responds within 24 hours, resolves within 15 days)
+• Chief Compliance Officer: [To be appointed]
+• Nodal Contact Person: [To be appointed] (24×7 availability for law enforcement coordination)
+For all inquiries: hello@findoo.in`,
   },
   {
     title: "3. Content Moderation Overview",
@@ -506,7 +503,7 @@ These metrics will be published on a quarterly basis.`,
   },
   {
     title: "8. Appeals & Outcomes",
-    content: `FindOO provides an appeals process for all moderation actions: (a) Users may appeal via appeals@findoo.in within 30 days of any enforcement action; (b) Appeals are reviewed by a different moderator than the one who made the original decision; (c) Appeal decisions are communicated within 15 business days.
+    content: `FindOO provides an appeals process for all moderation actions: (a) Users may appeal via hello@findoo.in within 30 days of any enforcement action; (b) Appeals are reviewed by a different moderator than the one who made the original decision; (c) Appeal decisions are communicated within 15 business days.
 
 Appeal outcome categories tracked: (a) Action upheld — original moderation decision confirmed; (b) Action modified — enforcement reduced (e.g., suspension shortened, content restored with warning); (c) Action reversed — original decision overturned and content/account fully restored; (d) Under review — appeal pending additional investigation.`,
   },
@@ -517,11 +514,10 @@ Appeal outcome categories tracked: (a) Action upheld — original moderation dec
 All reports are accessible via the Platform at /legal (Transparency tab).
 
 For questions about this report:
-Email: transparency@findoo.in
-Compliance: compliance@findoo.in
+Email: hello@findoo.in
 
 FindOO Solutions LLP
-Registered Office: Mumbai, Maharashtra, India`,
+Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
   },
 ];
 

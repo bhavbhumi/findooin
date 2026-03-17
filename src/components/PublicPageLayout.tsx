@@ -306,8 +306,11 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               <p className="text-[10px] font-medium text-muted-foreground tracking-[0.15em] uppercase mb-3">
                 Financially Social
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-3">
+              <p className="text-xs text-muted-foreground leading-relaxed mb-1">
                 CIN : AAA-7870
+              </p>
+              <p className="text-[10px] text-muted-foreground leading-relaxed mb-3">
+                B/201 Hemu Classic Premises CS Ltd, S V Road, Malad West, Mumbai 400064
               </p>
               <div className="w-full h-20 rounded-lg bg-muted/50 border border-border flex items-center justify-center overflow-hidden">
                 <img

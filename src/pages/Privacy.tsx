@@ -38,7 +38,7 @@ const sections = [
   },
   {
     title: "7. Your Rights Under Indian Law",
-    content: `Under the DPDP Act, 2023, you have the right to: (a) Access your personal data; (b) Correct inaccurate data; (c) Erase your data (subject to legal retention); (d) Nominate someone to exercise your rights; (e) File grievances with our Grievance Officer or the Data Protection Board of India; (f) Withdraw consent; (g) Data portability in machine-readable format. Contact privacy@findoo.in to exercise these rights (response within 30 days).`,
+    content: `Under the DPDP Act, 2023, you have the right to: (a) Access your personal data; (b) Correct inaccurate data; (c) Erase your data (subject to legal retention); (d) Nominate someone to exercise your rights; (e) File grievances with our Grievance Officer or the Data Protection Board of India; (f) Withdraw consent; (g) Data portability in machine-readable format. Contact hello@findoo.in to exercise these rights (response within 30 days).`,
   },
   {
     title: "8. Cookies & Tracking",
@@ -54,7 +54,7 @@ const sections = [
   },
   {
     title: "11. Children's Privacy",
-    content: `The Platform is not intended for individuals under 18. We do not knowingly collect data from minors. If discovered, such data is promptly deleted. Report concerns to privacy@findoo.in.`,
+    content: `The Platform is not intended for individuals under 18. We do not knowingly collect data from minors. If discovered, such data is promptly deleted. Report concerns to hello@findoo.in.`,
   },
   {
     title: "12. Changes to This Policy",
@@ -62,11 +62,15 @@ const sections = [
   },
   {
     title: "13. Grievance Officer & Contact",
-    content: `Grievance Officer: grievance@findoo.in (acknowledged within 24 hours, resolved within 15 days)
-Data Protection Officer: privacy@findoo.in
-Support: support@findoo.in
+    content: `In compliance with the IT (Intermediary Guidelines) Rules, 2021 and the DPDP Act, 2023, FindOO has appointed a Grievance Officer:
 
-If unsatisfied with resolution, you may approach the Data Protection Board of India under the DPDP Act, 2023.`,
+Grievance Officer: [To be appointed]
+FindOO Solutions LLP
+B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
+
+For all inquiries: hello@findoo.in
+
+The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days. If unsatisfied with resolution, you may approach the Data Protection Board of India under the DPDP Act, 2023.`,
   },
 ];
 
