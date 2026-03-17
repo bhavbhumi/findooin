@@ -96,7 +96,7 @@ const footerLinkSections = [
       { label: "vs Professional Networks", to: "/compare?tab=professional" },
       { label: "vs Financial Media", to: "/compare?tab=media" },
       { label: "vs News Terminals", to: "/compare?tab=terminals" },
-      { label: "vs WhatsApp Groups", to: "/compare?tab=whatsapp" },
+      { label: "vs Chat Groups", to: "/compare?tab=chatgroups" },
     ],
   },
   {

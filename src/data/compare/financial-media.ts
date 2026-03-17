@@ -4,11 +4,11 @@ import { Newspaper, Users, MessageCircle, Shield, Layers, Award, TrendingUp, Eye
 export const financialMediaData: ComparisonData = {
   heroTitle: "FindOO vs Financial Media Portals",
   heroSubtitle: "Media portals inform. FindOO connects and empowers.",
-  heroDescription: "Financial media portals like Moneycontrol, ET Markets, and Value Research deliver news and data to millions. But they're built for passive consumption — you read, you leave. FindOO transforms financial professionals from content consumers into active participants in India's financial ecosystem.",
+  heroDescription: "Financial media portals deliver news and data to millions. But they're built for passive consumption — you read, you leave. FindOO transforms financial professionals from content consumers into active participants in India's financial ecosystem.",
   competitor: "Financial Media Portals",
-  competitorExamples: "Moneycontrol, ET Markets, Value Research, Morningstar India",
+  competitorExamples: "Online financial news and market data portals",
   stats: [
-    { label: "Monthly visitors on top portals", value: "15Cr+", description: "Moneycontrol + ET Markets combined monthly traffic" },
+    { label: "Monthly visitors on top portals", value: "15Cr+", description: "Combined monthly traffic across leading financial media sites" },
     { label: "Professionals who can create content", value: "0%", description: "Media portals are one-way — editorial teams publish, you consume" },
     { label: "Average session duration", value: "3 min", description: "Quick scan of headlines, then exit — no community engagement" },
     { label: "Networking opportunities", value: "Zero", description: "No profiles, connections, or professional identity" },
@@ -23,6 +23,6 @@ export const financialMediaData: ComparisonData = {
     { icon: Award, feature: "Professional Growth", findoo: "XP, badges, weekly challenges — gamified learning and engagement", competitor: "No growth tracking or professional development features", findooHas: true, competitorHas: false },
     { icon: Eye, feature: "Privacy Controls", findoo: "Choose who sees your activity, network, and documents", competitor: "Tracking cookies, data harvesting for ad targeting", findooHas: true, competitorHas: false },
   ],
-  verdict: { title: "Media portals give you headlines. FindOO gives you a professional platform.", description: "On Moneycontrol, you're a pageview. On FindOO, you're a verified professional with a reputation, connections, and business opportunities. The shift from passive consumption to active participation is what separates a media portal from a financial network." },
+  verdict: { title: "Media portals give you headlines. FindOO gives you a professional platform.", description: "On media portals, you're a pageview. On FindOO, you're a verified professional with a reputation, connections, and business opportunities. The shift from passive consumption to active participation is what separates a media portal from a financial network." },
   cta: { title: "Stop being a pageview. Start being a professional.", subtitle: "Build your financial identity where your expertise gets recognized, not just your clicks." },
 };
