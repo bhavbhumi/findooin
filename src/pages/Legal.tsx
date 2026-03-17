@@ -245,9 +245,9 @@ const policiesSections = [
     title: "7. Enforcement & Appeals",
     content: `7.1 Graduated Enforcement: FindOO employs a graduated enforcement approach: (a) Warning — for first-time minor violations; (b) Content Removal — for Content that violates policies; (c) Feature Restriction — temporary restriction of posting, messaging, or other features; (d) Temporary Suspension — account suspension for 7-30 days for repeated or serious violations; (e) Permanent Termination — for severe violations, persistent re-offenses, or activities posing legal or safety risks.
 
-7.2 Appeals: Users may appeal enforcement actions by contacting appeals@findoo.in within 30 days of the action. Appeals are reviewed by a different team member than the one who made the original decision. FindOO will respond to appeals within 15 business days.
+7.2 Appeals: Users may appeal enforcement actions by contacting hello@findoo.in within 30 days of the action. Appeals are reviewed by a different team member than the one who made the original decision. FindOO will respond to appeals within 15 business days.
 
-7.3 Reporting: Users can report violations using the in-app report button on any post, comment, or profile, or by emailing moderation@findoo.in. All reports are reviewed within 48 hours.`,
+7.3 Reporting: Users can report violations using the in-app report button on any post, comment, or profile, or by emailing hello@findoo.in. All reports are reviewed within 48 hours.`,
   },
 ];
 
