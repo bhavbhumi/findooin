@@ -55,7 +55,7 @@ const Directory = () => {
   return (
     <AppLayout maxWidth="max-w-6xl">
       {/* Mobile filter drawer */}
-      <MobileFilterDrawer title="Directory Filters">
+      <MobileFilterDrawer title="Showcase Filters">
         <DirectorySidebar
           selectedType={selectedType}
           selectedCategory={selectedCategory}
