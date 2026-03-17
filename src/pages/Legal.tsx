@@ -416,7 +416,7 @@ const refundPolicySections = [
 
 4.3 Monthly Subscriptions: Monthly subscriptions cancelled after the 7-day cooling-off period are not eligible for refunds. The subscription will remain active until the end of the current monthly billing cycle.
 
-4.4 Refunds for Service Issues: If you experience a material service outage or deficiency that substantially impairs your ability to use paid features for more than 72 consecutive hours, you may request a pro-rated refund or credit for the affected period by contacting hello@findoo.in.
+4.4 Refunds for Service Issues: If you experience a material service outage or deficiency that substantially impairs your ability to use paid features for more than 72 consecutive hours, you may request a pro-rated refund or credit for the affected period by contacting legal@findoo.in.
 
 4.5 Non-Refundable Items: The following are non-refundable: (a) one-time purchases (promoted listings, sponsored content) once the promotion has been delivered or is live; (b) features consumed in full during the billing period; (c) subscriptions purchased using promotional codes or discounts (unless otherwise stated in the promotion terms).`,
   },
