@@ -40,6 +40,7 @@ const AppNavbar = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) return;
       const uid = session.user.id;
+      setCurrentUserId(uid);
 
       // Load initial count
       supabase
