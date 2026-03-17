@@ -82,6 +82,14 @@ export const FeedSidebar = memo(function FeedSidebar({ userId, onLoadDraft, init
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Gamification widgets below tabs */}
+      {userId && (
+        <div className="space-y-3 mt-4">
+          <WeeklyChallenges userId={userId} />
+          <ReferralCard userId={userId} />
+        </div>
+      )}
     </div>
   );
 });
