@@ -118,58 +118,25 @@ const Discover = () => {
     return Array.from(locs).sort();
   }, [trustData]);
 
-  /* ── AffinityFeed™ Ranked Posts ── */
-  const affinityRankedPosts = useMemo(() => {
-    if (!allPosts.length) return [];
+  /* ── Discover Posts: Exploration modes (Trending / Viral / Recent) ── */
+  const discoverPosts = useMemo(() => {
+    const raw = postFeedMode === "trending" ? (trendingPosts || [])
+      : postFeedMode === "viral" ? (viralPosts || [])
+      : recentPosts;
 
-    // Build author→tier map from trust data
-    const authorTierMap = new Map<string, number>();
-    if (trustData) {
-      ([1, 2, 3, 4, 5] as CircleTier[]).forEach((tier) => {
-        const key = CIRCLE_TIERS[tier].key;
-        trustData[key].forEach((r) => {
-          authorTierMap.set(r.target_id, tier);
-        });
-      });
-    }
+    if (!search.trim()) return raw.slice(0, 30);
 
-    // Filter by search if needed
-    let posts = allPosts;
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      posts = allPosts.filter((p) =>
-        p.content.toLowerCase().includes(q) ||
-        p.hashtags?.some((h) => h.toLowerCase().includes(q)) ||
-        (p.author.display_name || p.author.full_name).toLowerCase().includes(q)
-      );
-    }
+    const q = search.toLowerCase();
+    return raw.filter((p) =>
+      p.content.toLowerCase().includes(q) ||
+      p.hashtags?.some((h) => h.toLowerCase().includes(q)) ||
+      (p.author.display_name || p.author.full_name).toLowerCase().includes(q)
+    ).slice(0, 30);
+  }, [trendingPosts, viralPosts, recentPosts, search, postFeedMode]);
 
-    // Score and sort based on selected mode
-    if (postFeedMode === "affinity") {
-      return [...posts]
-        .map((post) => {
-          const tier = authorTierMap.get(post.author.id) || 5;
-          return { post, score: computeAffinityFeedScore(post, tier), tier };
-        })
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 30);
-    } else if (postFeedMode === "engagement") {
-      return [...posts]
-        .map((post) => ({
-          post,
-          score: post.like_count + post.comment_count * 2 + post.bookmark_count * 3,
-          tier: authorTierMap.get(post.author.id) || 5,
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 30);
-    } else {
-      return posts.slice(0, 30).map((post) => ({
-        post,
-        score: 0,
-        tier: authorTierMap.get(post.author.id) || 5,
-      }));
-    }
-  }, [allPosts, trustData, search, postFeedMode]);
+  const postsLoading = postFeedMode === "trending" ? loadingTrending
+    : postFeedMode === "viral" ? loadingViral
+    : loadingRecent;
 
   const hasActiveFilters = !!roleFilter || !!locationFilter;
 
