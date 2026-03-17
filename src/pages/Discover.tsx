@@ -371,15 +371,15 @@ const Discover = () => {
             </>
           )}
 
-          {/* Posts Tab (AffinityFeed™) */}
+          {/* Posts Tab — Exploration: Trending / Viral / Recent */}
           {mainTab === "posts" && (
             <>
-              {/* AffinityFeed™ Mode Selector */}
+              {/* Mode Selector */}
               <div className="flex items-center gap-2 mb-4 flex-wrap">
                 <div className="flex items-center gap-1 bg-secondary/50 rounded-lg p-0.5">
                   {([
-                    { key: "affinity" as const, label: "AffinityFeed™", icon: Sparkles },
-                    { key: "engagement" as const, label: "Top Engaged", icon: TrendingUp },
+                    { key: "trending" as const, label: "Trending", icon: TrendingUp },
+                    { key: "viral" as const, label: "Viral", icon: Zap },
                     { key: "recent" as const, label: "Recent", icon: RefreshCw },
                   ]).map(({ key, label, icon: Icon }) => (
                     <button
@@ -397,61 +397,39 @@ const Discover = () => {
                     </button>
                   ))}
                 </div>
-                {postFeedMode === "affinity" && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground ml-auto">
-                        <Info className="h-3 w-3" />
-                        Trust-weighted ranking
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent className="text-xs max-w-[260px]">
-                      <p className="font-semibold mb-1">AffinityFeed™ Algorithm</p>
-                      <p className="text-muted-foreground">Posts are ranked by the author's trust circle tier, engagement quality, and freshness. Inner Circle content stays relevant 7× longer than Ecosystem posts.</p>
-                    </TooltipContent>
-                  </Tooltip>
-                )}
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground ml-auto">
+                      <Info className="h-3 w-3" />
+                      {postFeedMode === "trending" ? "Top hashtags, 7 days" : postFeedMode === "viral" ? "Highest engagement" : "Latest posts"}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="text-xs max-w-[260px]">
+                    {postFeedMode === "trending" && <p>Posts containing the most-used hashtags from the past 7 days across the entire ecosystem.</p>}
+                    {postFeedMode === "viral" && <p>Posts ranked by engagement score (likes + comments × 2) — discover what the whole community is buzzing about.</p>}
+                    {postFeedMode === "recent" && <p>Newest posts from the entire community, unfiltered.</p>}
+                  </TooltipContent>
+                </Tooltip>
               </div>
 
-              {/* Role context for AffinityFeed */}
-              {postFeedMode === "affinity" && (
-                <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-muted/30 border border-border">
-                  <Sparkles className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                  <p className="text-[11px] text-muted-foreground">
-                    Posts ranked by <span className="font-semibold text-foreground">AffinityFeed™</span> — content from your trust network is prioritized based on circle proximity
-                  </p>
-                </div>
-              )}
+              {/* Exploration context */}
+              <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-muted/30 border border-border">
+                <Globe className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <p className="text-[11px] text-muted-foreground">
+                  Exploring the <span className="font-semibold text-foreground">broader ecosystem</span> — for trust-weighted content from your network, visit your <a href="/feed" className="text-primary underline underline-offset-2 font-medium">Feed</a>
+                </p>
+              </div>
 
-              {(loadingPosts || loadingTrust) ? (
+              {postsLoading ? (
                 <div className="space-y-4">
                   {[1, 2, 3].map((i) => <PostCardSkeleton key={i} />)}
                 </div>
-              ) : affinityRankedPosts.length === 0 ? (
+              ) : discoverPosts.length === 0 ? (
                 <EmptyState icon={FileText} text="No posts found. Try a different search or check back later." />
               ) : (
                 <div className="space-y-3">
-                  {affinityRankedPosts.map(({ post, tier, score }) => (
-                    <div key={post.id} className="relative">
-                      {postFeedMode === "affinity" && tier <= 3 && (
-                        <div className="absolute -left-1 top-3 z-10">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className={cn(
-                                "w-1.5 h-8 rounded-full",
-                                tier === 1 && "bg-amber-500",
-                                tier === 2 && "bg-primary",
-                                tier === 3 && "bg-intermediary",
-                              )} />
-                            </TooltipTrigger>
-                            <TooltipContent side="left" className="text-[10px]">
-                              {CIRCLE_TIERS[tier as CircleTier].label} · Score {score.toFixed(1)}
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      )}
-                      <PostCard post={post} />
-                    </div>
+                  {discoverPosts.map((post) => (
+                    <PostCard key={post.id} post={post} />
                   ))}
                 </div>
               )}
