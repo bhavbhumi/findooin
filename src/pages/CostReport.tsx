@@ -93,7 +93,7 @@ const CostReport = () => {
               <li>Job board with full pipeline</li>
               <li>Events with check-in system</li>
               <li>Real-time messaging</li>
-              <li>Business directory with reviews</li>
+              <li>Product & service showcase with reviews</li>
               <li>Document vault with sharing</li>
               <li>Digital business cards (vCard)</li>
             </ul>
