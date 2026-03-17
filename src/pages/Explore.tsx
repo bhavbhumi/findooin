@@ -554,8 +554,10 @@ const WhoIsItForContent = () => (
                 "List financial products in the Showcase",
                 "Post BFSI jobs and access Employer Dashboard",
                 "Organize events, webinars & investor meets",
+                "Earn XP, badges & climb the leaderboard",
+                "Control profile tab privacy & customize flair",
               ],
-              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Showcase, and host a virtual launch event — all from one platform.",
+              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Showcase, host a virtual launch event, and track engagement via gamification — all from one platform.",
             },
             {
               icon: UserCheck,
