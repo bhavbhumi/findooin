@@ -31,7 +31,9 @@ const AppNavbar = () => {
   const location = useLocation();
   const { availableRoles, activeRole, setActiveRole, loaded } = useRole();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const { data: isAdmin } = useIsAdmin();
+  const { data: xp } = useUserXP(currentUserId || undefined);
   useEffect(() => {
     let channel: any;
 
