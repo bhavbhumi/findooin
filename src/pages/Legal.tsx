@@ -175,7 +175,7 @@ const privacySections = [
   },
   {
     title: "11. Children's Privacy",
-    content: `The Platform is not intended for individuals under 18 years of age. We do not knowingly collect personal data from minors. If we become aware that we have inadvertently collected personal data from a person under 18, we will take steps to delete such data promptly. If you believe a minor has provided us with personal data, please contact us at hello@findoo.in.`,
+    content: `The Platform is not intended for individuals under 18 years of age. We do not knowingly collect personal data from minors. If we become aware that we have inadvertently collected personal data from a person under 18, we will take steps to delete such data promptly. If you believe a minor has provided us with personal data, please contact us at compliance@findoo.in.`,
   },
   {
     title: "12. Changes to This Policy",
