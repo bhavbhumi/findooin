@@ -32,6 +32,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   "/admin/cost-report": "Cost Report",
   "/admin/scaling-report": "Scaling Report",
   "/admin/email": "Email",
+  "/admin/patent": "TrustCircle IQ™ Patent",
 };
 
 export default function Admin() {

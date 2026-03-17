@@ -81,6 +81,12 @@ export function AdminSidebar() {
       ],
     },
     {
+      label: "Platform",
+      items: [
+        { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText },
+      ],
+    },
+    {
       label: "Infrastructure",
       items: [
         { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
