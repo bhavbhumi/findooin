@@ -50,11 +50,24 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    setTimeout(() => {
-      toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
-      setSubmitting(false);
-      (e.target as HTMLFormElement).reset();
-    }, 800);
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const subject = formData.get("subject") as string || "General inquiry";
+
+    // Send confirmation email (fire and forget)
+    supabase.functions.invoke("send-transactional-email", {
+      body: {
+        type: "contact-confirmation",
+        to: email,
+        data: { recipientName: name, subject },
+      },
+    }).catch(() => {});
+
+    toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
+    setSubmitting(false);
+    form.reset();
   };
 
   return (
