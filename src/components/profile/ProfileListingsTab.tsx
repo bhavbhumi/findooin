@@ -145,9 +145,9 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
             <h3 className="font-semibold text-sm">My Enquiries</h3>
             <Badge variant="secondary" className="text-[10px]">{enquiries.length}</Badge>
           </div>
-          <Link to="/directory">
+          <Link to="/showcase">
             <Button variant="outline" size="sm">
-              <ExternalLink className="h-3 w-3 mr-1.5" /> Browse Directory
+              <ExternalLink className="h-3 w-3 mr-1.5" /> Browse Showcase
             </Button>
           </Link>
         </div>
