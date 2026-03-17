@@ -73,14 +73,16 @@ const ArchitectureTab = () => (
             </thead>
             <tbody className="divide-y divide-border">
               {[
-                { module: "Feed", route: "/feed", hooks: "useFeedPosts, usePostInteractions, useDrafts, useScheduledPosts", folder: "components/feed/" },
-                { module: "Profile", route: "/profile", hooks: "useConnectionActions, usePostInteractions", folder: "components/profile/" },
+                { module: "Feed", route: "/feed", hooks: "useFeedPosts, usePostInteractions, useDrafts, useScheduledPosts, useTrendingHashtags, useViralPosts", folder: "components/feed/" },
+                { module: "Profile", route: "/profile", hooks: "useConnectionActions, usePostInteractions, useTabPrivacy, useProfileFlair", folder: "components/profile/" },
                 { module: "Network", route: "/network", hooks: "useConnectionActions", folder: "components/network/" },
                 { module: "Jobs", route: "/jobs", hooks: "useJobs (11 exports)", folder: "components/jobs/" },
                 { module: "Events", route: "/events", hooks: "useEvents (9 exports)", folder: "components/events/" },
                 { module: "Showcase", route: "/showcase", hooks: "useListings (8 exports)", folder: "components/directory/" },
                 { module: "Vault", route: "/vault", hooks: "useVault", folder: "components/vault/" },
-                { module: "Admin", route: "/admin", hooks: "useAdmin (8 exports)", folder: "components/admin/" },
+                { module: "Gamification", route: "/leaderboard", hooks: "useGamification, useProfileFlair", folder: "components/gamification/" },
+                { module: "Blog", route: "/blog", hooks: "useBlogPosts, useBlogInteractions", folder: "components/blog/" },
+                { module: "Admin", route: "/admin", hooks: "useAdmin (8 exports), useInvitations", folder: "components/admin/" },
               ].map((row) => (
                 <tr key={row.module} className="hover:bg-muted/30 transition-colors">
                   <td className="py-2.5 px-3 font-medium text-foreground">{row.module}</td>
