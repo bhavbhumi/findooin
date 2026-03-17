@@ -20,7 +20,9 @@ import {
 import { toast } from "sonner";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
+import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
+import { useUserXP } from "@/hooks/useGamification";
 
 interface ProfileHeaderProps {
   profile: ProfileData;
