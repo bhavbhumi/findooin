@@ -26,21 +26,28 @@ const labelSizeClasses = {
 export function LevelBadge({ level, size = "sm", showLabel = false, className }: LevelBadgeProps) {
   const config = getLevelConfig(level);
 
+  const withAlpha = (color: string, alpha: number) => {
+    if (color.startsWith("hsl(") && color.endsWith(")")) {
+      return `hsl(${color.slice(4, -1)} / ${alpha})`;
+    }
+    return color;
+  };
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
         <span className={cn("inline-flex items-center gap-1 shrink-0", className)}>
           <span
             className={cn(
-              "inline-flex items-center justify-center rounded-full font-bold border-2 shadow-sm leading-none",
+              "inline-flex items-center justify-center rounded-full font-bold border-2 leading-none ring-1 ring-background/80",
               sizeClasses[size]
             )}
             style={{
-              background: `linear-gradient(135deg, ${config.color}, ${config.color}cc)`,
-              borderColor: `${config.color}66`,
-              color: "white",
-              textShadow: "0 1px 2px rgba(0,0,0,0.4)",
-              boxShadow: `0 1px 4px ${config.color}40`,
+              background: `linear-gradient(135deg, ${withAlpha(config.color, 1)}, ${withAlpha(config.color, 0.84)})`,
+              borderColor: withAlpha(config.color, 0.7),
+              color: "hsl(var(--primary-foreground))",
+              textShadow: "0 1px 2px hsl(0 0% 0% / 0.55)",
+              boxShadow: `0 2px 8px ${withAlpha(config.color, 0.55)}`,
             }}
           >
             <span className="mr-px">{config.icon.length <= 2 ? config.icon : ""}</span>
