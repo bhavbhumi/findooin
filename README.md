@@ -171,9 +171,16 @@ src/
 │   ├── useBlogPosts.ts  # Public blog content
 │   ├── useAdmin.ts      # Admin role check + management hooks
 │   ├── usePageMeta.ts   # Dynamic <title> and meta tags
+│   ├── useGamification.ts # XP, streaks, badges, leaderboard, challenges
+│   ├── useInvitations.ts # Admin invitation pipeline management
+│   ├── useProfileFlair.ts # Profile visual customization by level
+│   ├── useTabPrivacy.ts   # Profile tab visibility settings
+│   ├── useTrustCircleIQ.ts # Affinity scoring & network ranking
+│   ├── useOfflineDetector.tsx # Offline status detection
+│   ├── useBlogInteractions.ts # Blog poll/survey interactions
 │   ├── use-mobile.tsx   # Mobile viewport detection
 │   └── use-toast.ts     # Toast notification hook
-├── lib/                 # 8 utility modules
+├── lib/                 # 11 utility modules
 │   ├── utils.ts         # cn() utility (clsx + tailwind-merge)
 │   ├── role-config.ts   # Role labels, icons, colors, CSS vars
 │   ├── session-manager.ts # Multi-device session management (max 3)
