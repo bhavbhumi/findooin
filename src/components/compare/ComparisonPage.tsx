@@ -36,6 +36,7 @@ export function ComparisonPage({ data }: { data: ComparisonData }) {
     <div className="min-h-screen">
       {/* Hero */}
       <PageHero
+        breadcrumb="Compare"
         title={data.heroTitle}
         subtitle={data.heroSubtitle}
         variant="hexagons"
