@@ -155,15 +155,18 @@ const WhatIsContent = () => (
         </motion.p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { icon: MessageSquare, title: "Verified Feed", desc: "Market commentary, research notes, polls & surveys from verified professionals", status: "live" },
+            { icon: MessageSquare, title: "Verified Feed", desc: "Market commentary, research notes, polls & surveys from verified professionals with drafts & scheduling", status: "live" },
             { icon: Users, title: "Trust Network", desc: "Follow, connect & build your financial circle with credential-checked professionals", status: "live" },
-            { icon: Briefcase, title: "BFSI Job Board", desc: "India's only BFSI-specific job board with employer dashboards & market insights", status: "live" },
+            { icon: Briefcase, title: "BFSI Job Board", desc: "India's only BFSI-specific job board with employer dashboards, applicant tracking & market insights", status: "live" },
             { icon: Shield, title: "Verification Engine", desc: "Upload regulatory credentials, earn trust badges visible across the network", status: "live" },
-            { icon: Bell, title: "Smart Notifications", desc: "Stay updated on connections, interactions, and verification status changes", status: "live" },
-            { icon: FileText, title: "Content Types", desc: "Articles, announcements, expert finds, requirements & query posts", status: "live" },
-            { icon: Calendar, title: "Events & Webinars", desc: "Investor meets, AGMs, industry webinars within the regulated ecosystem", status: "live" },
-            { icon: Award, title: "Premium Features", desc: "Advanced analytics, priority visibility & enhanced tools for professionals", status: "coming" },
-            { icon: Settings, title: "API Verification", desc: "Automated SEBI/RBI/IRDAI lookups for instant credential verification", status: "coming" },
+            { icon: Bell, title: "Smart Notifications", desc: "Real-time updates on connections, interactions, verification & role changes via Realtime", status: "live" },
+            { icon: FileText, title: "Rich Content Types", desc: "Articles, announcements, expert finds, requirements, query posts, polls & surveys", status: "live" },
+            { icon: Calendar, title: "Events & Webinars", desc: "Create, discover & manage events with speakers, check-in QR codes & organizer dashboards", status: "live" },
+            { icon: Award, title: "Gamification & XP", desc: "5-tier progression, streak multipliers, weekly challenges, badges, leaderboard & profile flair", status: "live" },
+            { icon: Eye, title: "Profile Tab Privacy", desc: "Granular visibility controls for Activity, Network & Vault tabs — visible to Everyone, Logged-in, Connections or Only Me", status: "live" },
+            { icon: FolderOpen, title: "Vault & Digital Card", desc: "Secure document storage with share links, vCard downloads & QR-enabled digital business cards", status: "live" },
+            { icon: Package, title: "Product & Service Showcase", desc: "List, compare & enquire about financial products & professional services with reviews & ratings", status: "live" },
+            { icon: Settings, title: "API Verification", desc: "Automated SEBI/RBI/IRDAI lookups for instant credential verification at scale", status: "coming" },
           ].map((item, i) => (
             <motion.div key={item.title} className="rounded-xl border border-border bg-card p-5 relative"
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i + 1}>
