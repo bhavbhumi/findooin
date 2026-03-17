@@ -41,7 +41,9 @@ const Events = () => {
     mode: mode !== "all" ? mode : undefined,
   });
 
-  const { data: myRegistrations, isLoading: regsLoading } = useMyRegistrations();
+  const { data: myRegsData, isLoading: regsLoading } = useMyRegistrations();
+  const myRegistrations = myRegsData?.registrations || [];
+  const myRegEvents = myRegsData?.events || [];
 
   const registerMutation = useRegisterForEvent();
   const cancelMutation = useCancelRegistration();
