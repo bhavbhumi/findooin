@@ -249,15 +249,32 @@ const Profile = () => {
               <div className="overflow-x-auto -mx-1 px-1 mb-4 scrollbar-hide">
                 <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
                   <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
-                  <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
-                  <TabsTrigger value="activity" className={tabTriggerClass}>Activity</TabsTrigger>
+                  {(isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
+                    <TabsTrigger value="network" className={tabTriggerClass}>
+                      Network
+                      {isOwnProfile && tabPrivacy.network_visibility !== "everyone" && (
+                        <Lock className="h-3 w-3 ml-1 text-muted-foreground" />
+                      )}
+                    </TabsTrigger>
+                  )}
+                  {(isOwnProfile || canViewTab(tabPrivacy.activity_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
+                    <TabsTrigger value="activity" className={tabTriggerClass}>
+                      Activity
+                      {isOwnProfile && tabPrivacy.activity_visibility !== "everyone" && (
+                        <Lock className="h-3 w-3 ml-1 text-muted-foreground" />
+                      )}
+                    </TabsTrigger>
+                  )}
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
                   <TabsTrigger value="showcase" className={tabTriggerClass}>
                     <Store className="h-3.5 w-3.5 mr-1" /> Showcase
                   </TabsTrigger>
-                  {isOwnProfile && (
+                  {(isOwnProfile || canViewTab(tabPrivacy.vault_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
                     <TabsTrigger value="vault" className={tabTriggerClass}>
                       <FolderLock className="h-3.5 w-3.5 mr-1" /> Vault
+                      {isOwnProfile && tabPrivacy.vault_visibility !== "only_me" && tabPrivacy.vault_visibility !== "everyone" && (
+                        <Lock className="h-3 w-3 ml-1 text-muted-foreground" />
+                      )}
                     </TabsTrigger>
                   )}
                   <TabsTrigger value="digital-card" className={tabTriggerClass}>
@@ -265,6 +282,33 @@ const Profile = () => {
                   </TabsTrigger>
                 </TabsList>
               </div>
+
+              {/* Inline privacy quick-toggle for own profile */}
+              {isOwnProfile && ["activity", "network", "vault"].includes(activeTab) && (
+                <div className="flex items-center gap-2 mb-4 px-1">
+                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Visible to:</span>
+                  <Select
+                    value={tabPrivacy[`${activeTab}_visibility` as keyof typeof tabPrivacy]}
+                    onValueChange={(v) => {
+                      const key = `${activeTab}_visibility` as keyof typeof tabPrivacy;
+                      const updated = { ...tabPrivacy, [key]: v as TabVisibility };
+                      updateTabPrivacy(updated).then(() => {
+                        import("sonner").then(({ toast }) => toast.success("Visibility updated"));
+                      });
+                    }}
+                  >
+                    <SelectTrigger className="w-[150px] h-7 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(Object.entries(visibilityLabels) as [TabVisibility, string][]).map(([value, lbl]) => (
+                        <SelectItem key={value} value={value} className="text-xs">{lbl}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
               <TabsContent value="about" className="mt-0">
                 <ProfileAbout
