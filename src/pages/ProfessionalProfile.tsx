@@ -6,11 +6,13 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useProfileFlair } from "@/hooks/useProfileFlair";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
 import {
   Shield, MapPin, Building2, Hash, UserCheck, Users,
   ArrowRight, CheckCircle2, Clock, Eye, Briefcase
@@ -64,6 +66,8 @@ export default function ProfessionalProfile() {
     },
     enabled: !!entity?.matched_user_id,
   });
+
+  const { data: flair } = useProfileFlair(entity?.matched_user_id || undefined);
 
   const isClaimed = !!entity?.matched_user_id;
   const displayName = profile?.display_name || profile?.full_name || entity?.entity_name || "";
@@ -149,17 +153,23 @@ export default function ProfessionalProfile() {
           <CardContent className="-mt-10 px-6 pb-8">
             {/* Avatar / Initials */}
             <div className="flex items-end gap-4 mb-6">
-              <div className="h-20 w-20 rounded-2xl bg-primary/10 border-4 border-background flex items-center justify-center shrink-0">
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt={displayName} className="h-full w-full rounded-xl object-cover" />
-                ) : (
-                  <span className="text-2xl font-bold text-primary">
-                    {displayName.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
+              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"} className="shrink-0">
+                <div className="h-20 w-20 rounded-2xl bg-primary/10 border-4 border-background flex items-center justify-center">
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt={displayName} className="h-full w-full rounded-xl object-cover" />
+                  ) : (
+                    <span className="text-2xl font-bold text-primary">
+                      {displayName.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+              </FlairAvatarWrapper>
               <div className="min-w-0 pb-1">
-                <h1 className="text-xl md:text-2xl font-bold font-heading truncate">{displayName}</h1>
+                <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
+                  <FlairName nameEffect={flair?.name_effect || "none"}>
+                    {displayName}
+                  </FlairName>
+                </h1>
                 {(profile?.headline || entity.registration_category) && (
                   <p className="text-sm text-muted-foreground truncate">
                     {profile?.headline || entity.registration_category}
