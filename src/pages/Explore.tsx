@@ -6,7 +6,7 @@ import {
   ArrowRight, Zap, Globe, Lock, BarChart3, Building2, UserCheck,
   Handshake, Eye, MessageSquare, Briefcase, Calendar, Award,
   Bell, FileText, Landmark, Settings, FolderOpen, CreditCard, User,
-  XCircle, Package, Wrench, LayoutDashboard, Eye
+  XCircle, Package, Wrench, LayoutDashboard
 } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
