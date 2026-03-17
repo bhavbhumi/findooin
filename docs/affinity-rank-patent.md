@@ -1,4 +1,4 @@
-# AffinityRank™ — Intent-Aware Professional Trust Discovery Engine
+# TrustCircle IQ™ — Intent-Aware Professional Trust Discovery Engine
 
 **Provisional Patent Document**  
 **Applicant:** FindOO (India)  
