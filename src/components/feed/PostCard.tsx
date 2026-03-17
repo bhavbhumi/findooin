@@ -25,6 +25,8 @@ import { ReportDialog } from "@/components/feed/ReportDialog";
 import { CommentSection } from "@/components/feed/CommentSection";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { UserCheck } from "lucide-react";
+import { LevelBadge } from "@/components/gamification/LevelBadge";
+import { useUserXP } from "@/hooks/useGamification";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-status-info/10 text-status-info" },
@@ -58,8 +60,9 @@ function getInitials(name: string) {
 
 
 export function PostCard({ post }: { post: FeedPost }) {
-  const [reportOpen, setReportOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const { data: authorXP } = useUserXP(post.author.id);
+  const [reportOpen, setReportOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
   const primaryRole = post.roles[0];
@@ -100,6 +103,9 @@ export function PostCard({ post }: { post: FeedPost }) {
             </Link>
             {post.author.verification_status === "verified" && (
               <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
+            )}
+            {authorXP && authorXP.level > 1 && (
+              <LevelBadge level={authorXP.level} size="xs" />
             )}
             {primaryRole && roleConf && (
               <span className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${roleConf.bgColor}`}>

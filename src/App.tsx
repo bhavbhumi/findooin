@@ -84,6 +84,7 @@ const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const TransparencyPage = lazy(() => import("./pages/Transparency"));
 const ProfessionalDirectory = lazy(() => import("./pages/ProfessionalDirectory"));
 const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -189,6 +190,7 @@ const App = () => {
                       <Route path="/jobs" element={<ProtectedRoute><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/directory" element={<ProtectedRoute><RouteErrorBoundary routeName="Directory"><Directory /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/leaderboard" element={<ProtectedRoute><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/vault" element={<ProtectedRoute><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>

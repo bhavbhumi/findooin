@@ -74,6 +74,57 @@ export type Database = {
         }
         Relationships: []
       }
+      badge_definitions: {
+        Row: {
+          category: string
+          created_at: string
+          criteria_field: string | null
+          criteria_type: string
+          criteria_value: number
+          description: string
+          icon_name: string
+          id: string
+          is_active: boolean
+          name: string
+          slug: string
+          sort_order: number
+          tier: string
+          xp_reward: number
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          criteria_field?: string | null
+          criteria_type?: string
+          criteria_value?: number
+          description?: string
+          icon_name?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          slug: string
+          sort_order?: number
+          tier?: string
+          xp_reward?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          criteria_field?: string | null
+          criteria_type?: string
+          criteria_value?: number
+          description?: string
+          icon_name?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string
+          sort_order?: number
+          tier?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       blog_poll_options: {
         Row: {
           blog_post_id: string
@@ -2060,6 +2111,76 @@ export type Database = {
           },
         ]
       }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          is_pinned: boolean
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          is_pinned?: boolean
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          is_pinned?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badge_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_challenge_progress: {
+        Row: {
+          challenge_id: string
+          completed_at: string | null
+          created_at: string
+          current_count: number
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string | null
+          created_at?: string
+          current_count?: number
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string | null
+          created_at?: string
+          current_count?: number
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenge_progress_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "weekly_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -2124,6 +2245,51 @@ export type Database = {
           profile_visibility?: string
           show_email?: boolean
           show_phone?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_xp: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_active_date: string | null
+          last_post_date: string | null
+          level: number
+          longest_streak: number
+          post_streak: number
+          streak_multiplier: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_active_date?: string | null
+          last_post_date?: string | null
+          level?: number
+          longest_streak?: number
+          post_streak?: number
+          streak_multiplier?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_active_date?: string | null
+          last_post_date?: string | null
+          level?: number
+          longest_streak?: number
+          post_streak?: number
+          streak_multiplier?: number
+          total_xp?: number
           updated_at?: string
           user_id?: string
         }
@@ -2237,6 +2403,45 @@ export type Database = {
         }
         Relationships: []
       }
+      weekly_challenges: {
+        Row: {
+          action_type: string
+          created_at: string
+          description: string
+          ends_at: string
+          id: string
+          is_active: boolean
+          starts_at: string
+          target_count: number
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          action_type: string
+          created_at?: string
+          description?: string
+          ends_at: string
+          id?: string
+          is_active?: boolean
+          starts_at?: string
+          target_count?: number
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          action_type?: string
+          created_at?: string
+          description?: string
+          ends_at?: string
+          id?: string
+          is_active?: boolean
+          starts_at?: string
+          target_count?: number
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       work_experiences: {
         Row: {
           company: string
@@ -2285,11 +2490,54 @@ export type Database = {
         }
         Relationships: []
       }
+      xp_transactions: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          multiplier: number
+          source_id: string | null
+          source_type: string | null
+          user_id: string
+          xp_amount: number
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          multiplier?: number
+          source_id?: string | null
+          source_type?: string | null
+          user_id: string
+          xp_amount: number
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          multiplier?: number
+          source_id?: string | null
+          source_type?: string | null
+          user_id?: string
+          xp_amount?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      award_xp: {
+        Args: {
+          p_action: string
+          p_source_id?: string
+          p_source_type?: string
+          p_user_id: string
+          p_xp_amount: number
+        }
+        Returns: number
+      }
       check_rate_limit: {
         Args: {
           p_action: string
@@ -2332,6 +2580,10 @@ export type Database = {
         Args: { p_limit?: number; p_offset?: number }
         Returns: Json
       }
+      get_leaderboard: {
+        Args: { p_limit?: number; p_offset?: number }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -2356,6 +2608,7 @@ export type Database = {
           read_ct: number
         }[]
       }
+      update_login_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "issuer" | "intermediary" | "investor" | "admin"

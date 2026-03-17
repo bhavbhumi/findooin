@@ -14,6 +14,8 @@ import AppNavbar from "@/components/AppNavbar";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
+import { useLoginStreak } from "@/hooks/useGamification";
+import { LevelUpModal } from "@/components/gamification/LevelUpModal";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -44,6 +46,9 @@ export default function AppLayout({
     return () => clearInterval(interval);
   }, []);
 
+  // Update login streak
+  useLoginStreak();
+
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       {showNavbar && <AppNavbar />}
@@ -58,6 +63,7 @@ export default function AppLayout({
         )}
       </ErrorBoundary>
       <ScrollToTop />
+      <LevelUpModal />
     </div>
   );
 }

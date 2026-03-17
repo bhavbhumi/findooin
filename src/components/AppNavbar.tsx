@@ -1,12 +1,14 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store, Bookmark } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store, Bookmark, Trophy } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 import { cn } from "@/lib/utils";
 import { useIsAdmin } from "@/hooks/useAdmin";
+import { StreakIndicator } from "@/components/gamification/StreakIndicator";
+import { useUserXP } from "@/hooks/useGamification";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 
 import { ROLE_CONFIG as SHARED_ROLE_CONFIG } from "@/lib/role-config";
 
@@ -28,13 +31,16 @@ const AppNavbar = () => {
   const location = useLocation();
   const { availableRoles, activeRole, setActiveRole, loaded } = useRole();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const { data: isAdmin } = useIsAdmin();
+  const { data: xp } = useUserXP(currentUserId || undefined);
   useEffect(() => {
     let channel: any;
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) return;
       const uid = session.user.id;
+      setCurrentUserId(uid);
 
       // Load initial count
       supabase
@@ -130,6 +136,18 @@ const AppNavbar = () => {
               <Link to="/discover">
                 <Compass className="h-4 w-4 lg:mr-1.5" />
                 <span className="hidden lg:inline">Discover</span>
+              </Link>
+            </Button>
+
+            {/* Streak indicator */}
+            {xp && xp.current_streak > 0 && (
+              <StreakIndicator streak={xp.current_streak} multiplier={xp.streak_multiplier} />
+            )}
+
+            {/* Leaderboard */}
+            <Button variant="ghost" size="icon" className="text-muted-foreground hidden sm:inline-flex" asChild aria-label="Leaderboard">
+              <Link to="/leaderboard">
+                <Trophy className="h-5 w-5" />
               </Link>
             </Button>
 
