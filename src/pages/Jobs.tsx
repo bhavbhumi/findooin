@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Plus, Briefcase, Building2, LayoutDashboard } from "lucide-react";
+import { Search, Plus, Briefcase, Sparkles, FolderOpen } from "lucide-react";
 import { useJobs, useSavedJobs, useToggleSaveJob, useMyApplications } from "@/hooks/useJobs";
 import { useRole } from "@/contexts/RoleContext";
 import { JobCard, CATEGORY_LABELS } from "@/components/jobs/JobCard";
@@ -46,7 +46,7 @@ const Jobs = () => {
     queryKey: ["profile-type", userId],
     enabled: !!userId,
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("user_type").eq("id", userId!).maybeSingle();
+      const { data } = await supabase.from("profiles").select("user_type, certifications, specializations, experience_years, location").eq("id", userId!).maybeSingle();
       return data;
     },
   });
@@ -55,21 +55,50 @@ const Jobs = () => {
 
   const appliedJobIds = new Set(myApps?.map((a) => a.job_id) || []);
   const canPostJobs = activeRole === "issuer" || activeRole === "intermediary" || activeRole === "admin";
+  const showCandidateView = isIndividual || activeRole === "investor";
+
+  // Suggested jobs: match by skills/certs/location
+  const suggestedJobs = (() => {
+    if (!jobs || !userProfile) return [];
+    const userSkills = new Set([
+      ...(userProfile.certifications || []),
+      ...(userProfile.specializations || []),
+    ].map((s: string) => s.toLowerCase()));
+
+    if (userSkills.size === 0 && !userProfile.location) return [];
+
+    return jobs
+      .map((job) => {
+        let score = 0;
+        const jobSkills = [...(job.skills_required || []), ...(job.certifications_preferred || [])].map((s) => s.toLowerCase());
+        if (jobSkills.length > 0 && userSkills.size > 0) {
+          const matched = jobSkills.filter((s) => userSkills.has(s)).length;
+          score += Math.round((matched / jobSkills.length) * 50);
+        }
+        if (job.experience_min != null || job.experience_max != null) {
+          const exp = userProfile.experience_years || 0;
+          if (exp >= (job.experience_min || 0) && exp <= (job.experience_max || 99)) score += 30;
+          else if (exp >= (job.experience_min || 0) - 2) score += 15;
+        }
+        if (job.location && userProfile.location) {
+          if (job.location.toLowerCase().includes(userProfile.location.toLowerCase()) || job.is_remote) score += 20;
+        }
+        return { job, score };
+      })
+      .filter((j) => j.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((j) => j.job);
+  })();
 
   const handleCategoryClick = (cat: string) => setCategory(cat);
   const handleLocationClick = (loc: string) => setSearch(loc);
 
   return (
     <AppLayout maxWidth="max-w-6xl">
-      {/* Mobile filter drawer */}
       <MobileFilterDrawer title="Jobs Filters & Insights">
-        <JobsSidebar
-          onCategoryClick={handleCategoryClick}
-          onLocationClick={handleLocationClick}
-        />
+        <JobsSidebar onCategoryClick={handleCategoryClick} onLocationClick={handleLocationClick} />
       </MobileFilterDrawer>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
-        {/* Main Column */}
         <div className="min-w-0">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -79,8 +108,7 @@ const Jobs = () => {
             </div>
             {canPostJobs && (
               <Button onClick={() => setShowPostJob(true)} className="gap-1.5">
-                <Plus className="h-4 w-4" />
-                Post Job
+                <Plus className="h-4 w-4" /> Post Job
               </Button>
             )}
           </div>
@@ -89,24 +117,20 @@ const Jobs = () => {
             <div className="overflow-x-auto -mx-1 px-1 scrollbar-hide">
               <TabsList className="inline-flex w-max sm:w-auto bg-muted/50">
                 <TabsTrigger value="browse" className="gap-1.5 whitespace-nowrap">
-                  <Briefcase className="h-3.5 w-3.5" />
-                  Browse Jobs
+                  <Briefcase className="h-3.5 w-3.5" /> Browse
                 </TabsTrigger>
-                {(isIndividual || activeRole === "investor") && (
-                  <TabsTrigger value="dashboard" className="gap-1.5 whitespace-nowrap">
-                    <LayoutDashboard className="h-3.5 w-3.5" />
-                    My Dashboard
+                {showCandidateView && (
+                  <TabsTrigger value="suggested" className="gap-1.5 whitespace-nowrap">
+                    <Sparkles className="h-3.5 w-3.5" /> Suggested
                   </TabsTrigger>
                 )}
-                {canPostJobs && (
-                  <TabsTrigger value="employer" className="gap-1.5 whitespace-nowrap">
-                    <Building2 className="h-3.5 w-3.5" />
-                    Employer Dashboard
-                  </TabsTrigger>
-                )}
+                <TabsTrigger value="my-jobs" className="gap-1.5 whitespace-nowrap">
+                  <FolderOpen className="h-3.5 w-3.5" /> My Jobs
+                </TabsTrigger>
               </TabsList>
             </div>
 
+            {/* ─── Browse Tab ─── */}
             <TabsContent value="browse" className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1 min-w-0">
@@ -125,13 +149,13 @@ const Jobs = () => {
                   </Select>
                   <Select value={jobType} onValueChange={setJobType}>
                     <SelectTrigger className="w-full sm:w-[140px]"><SelectValue placeholder="Type" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="full_time">Full-Time</SelectItem>
-                    <SelectItem value="part_time">Part-Time</SelectItem>
-                    <SelectItem value="contract">Contract</SelectItem>
-                    <SelectItem value="internship">Internship</SelectItem>
-                    <SelectItem value="freelance">Freelance</SelectItem>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="full_time">Full-Time</SelectItem>
+                      <SelectItem value="part_time">Part-Time</SelectItem>
+                      <SelectItem value="contract">Contract</SelectItem>
+                      <SelectItem value="internship">Internship</SelectItem>
+                      <SelectItem value="freelance">Freelance</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -165,31 +189,72 @@ const Jobs = () => {
               )}
             </TabsContent>
 
-            {(isIndividual || activeRole === "investor") && (
-              <TabsContent value="dashboard">
-                <CandidateDashboard onSelectJob={setSelectedJob} />
+            {/* ─── Suggested Tab ─── */}
+            {showCandidateView && (
+              <TabsContent value="suggested" className="space-y-4">
+                {isLoading ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map((i) => <JobCardSkeleton key={i} />)}
+                  </div>
+                ) : suggestedJobs.length === 0 ? (
+                  <EmptyState
+                    illustration={<EmptyJobsIllustration />}
+                    icon={Sparkles}
+                    title="No suggested jobs yet"
+                    description="Complete your profile with skills, certifications, and location to get personalized job matches."
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    {suggestedJobs.map((job) => (
+                      <JobCard
+                        key={job.id}
+                        job={job}
+                        isSaved={savedJobIds?.includes(job.id)}
+                        onToggleSave={() => toggleSave.mutate({ jobId: job.id, saved: savedJobIds?.includes(job.id) || false })}
+                        onClick={() => setSelectedJob(job)}
+                      />
+                    ))}
+                  </div>
+                )}
               </TabsContent>
             )}
 
-            {canPostJobs && (
-              <TabsContent value="employer">
-                <EmployerDashboard />
-              </TabsContent>
-            )}
+            {/* ─── My Jobs Tab ─── */}
+            <TabsContent value="my-jobs" className="space-y-6">
+              {/* Employer view: posted jobs + applicants */}
+              {canPostJobs && (
+                <div>
+                  <h3 className="font-heading font-semibold text-sm mb-3 text-foreground">Posted Jobs & Applicants</h3>
+                  <EmployerDashboard />
+                </div>
+              )}
+
+              {/* Candidate view: applications + dashboard */}
+              {showCandidateView && (
+                <div>
+                  {canPostJobs && <div className="border-t border-border my-4" />}
+                  <CandidateDashboard onSelectJob={setSelectedJob} />
+                </div>
+              )}
+
+              {/* Fallback for users who are neither */}
+              {!canPostJobs && !showCandidateView && (
+                <EmptyState
+                  icon={FolderOpen}
+                  title="No activity yet"
+                  description="Browse jobs or post a listing to see your activity here."
+                />
+              )}
+            </TabsContent>
           </Tabs>
         </div>
 
-        {/* Sidebar — desktop sticky, mobile drawer */}
         <aside className="hidden lg:block">
           <div className="sticky top-20">
-            <MemoizedJobsSidebar
-              onCategoryClick={handleCategoryClick}
-              onLocationClick={handleLocationClick}
-            />
+            <MemoizedJobsSidebar onCategoryClick={handleCategoryClick} onLocationClick={handleLocationClick} />
           </div>
         </aside>
       </div>
-
 
       <JobDetailSheet
         job={selectedJob}
