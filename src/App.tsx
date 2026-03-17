@@ -36,8 +36,8 @@ const Jobs = lazy(() => import("./pages/Jobs"));
 const Events = lazy(() => import("./pages/Events"));
 const Directory = lazy(() => import("./pages/Directory"));
 
-// Public pages
-import Blog from "./pages/Blog";
+// Public pages (lazy loaded)
+const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -82,7 +82,16 @@ const AccessibilityPage = lazy(() => import("./pages/Accessibility"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const TransparencyPage = lazy(() => import("./pages/Transparency"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,      // 5 min — avoid refetching on every mount
+      gcTime: 15 * 60 * 1000,         // 15 min garbage collection
+      refetchOnWindowFocus: false,    // prevent unnecessary refetches
+      retry: 1,                        // single retry on failure
+    },
+  },
+});
 
 const LazyFallback = () => (
   <div className="min-h-screen flex items-center justify-center">
