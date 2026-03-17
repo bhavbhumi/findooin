@@ -193,12 +193,12 @@ const Directory = () => {
         />
       </MobileFilterDrawer>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
-        <div className="min-w-0 space-y-4">
+        <div className="min-w-0">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-xl font-bold font-heading text-foreground">Showcase</h1>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <h1 className="text-2xl font-heading font-bold text-foreground">Showcase</h1>
+              <p className="text-sm text-muted-foreground">
                 Discover financial products & professional services
               </p>
             </div>
@@ -207,7 +207,7 @@ const Directory = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-1.5 text-xs"
+                  className="gap-1.5"
                   onClick={() => setShowCompare(!showCompare)}
                 >
                   <GitCompare className="h-3.5 w-3.5" />
@@ -215,29 +215,31 @@ const Directory = () => {
                 </Button>
               )}
               {canCreate && (
-                <Button size="sm" className="gap-1.5 text-xs" onClick={() => setCreateOpen(true)}>
-                  <Plus className="h-3.5 w-3.5" /> Create Listing
+                <Button className="gap-1.5" onClick={() => setCreateOpen(true)}>
+                  <Plus className="h-4 w-4" /> Create Listing
                 </Button>
               )}
             </div>
           </div>
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
-              <TabsTrigger value="browse" className="gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                <LayoutList className="h-3.5 w-3.5" /> Browse
-              </TabsTrigger>
-              <TabsTrigger value="suggested" className="gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                <Sparkles className="h-3.5 w-3.5" /> Suggested
-              </TabsTrigger>
-              <TabsTrigger value="my-showcase" className="gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                <User className="h-3.5 w-3.5" /> My Showcase
-              </TabsTrigger>
-            </TabsList>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <div className="overflow-x-auto -mx-1 px-1 scrollbar-hide">
+              <TabsList className="inline-flex w-max sm:w-auto bg-muted/50">
+                <TabsTrigger value="browse" className="gap-1.5 whitespace-nowrap">
+                  <LayoutList className="h-3.5 w-3.5" /> Browse
+                </TabsTrigger>
+                <TabsTrigger value="suggested" className="gap-1.5 whitespace-nowrap">
+                  <Sparkles className="h-3.5 w-3.5" /> Suggested
+                </TabsTrigger>
+                <TabsTrigger value="my-showcase" className="gap-1.5 whitespace-nowrap">
+                  <User className="h-3.5 w-3.5" /> My Showcase
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Browse Tab */}
-            <TabsContent value="browse" className="mt-4 space-y-4">
+            <TabsContent value="browse" className="space-y-4">
               {activeRole === "investor" && (
                 <Alert className="border-primary/20 bg-primary/5">
                   <Info className="h-4 w-4 text-primary" />
@@ -283,7 +285,7 @@ const Directory = () => {
             </TabsContent>
 
             {/* Suggested Tab */}
-            <TabsContent value="suggested" className="mt-4 space-y-4">
+            <TabsContent value="suggested" className="space-y-4">
               <Alert className="border-accent/20 bg-accent/5">
                 <Sparkles className="h-4 w-4 text-accent-foreground" />
                 <AlertDescription className="text-xs text-muted-foreground">
@@ -300,7 +302,7 @@ const Directory = () => {
             </TabsContent>
 
             {/* My Showcase Tab */}
-            <TabsContent value="my-showcase" className="mt-4 space-y-4">
+            <TabsContent value="my-showcase" className="space-y-4">
               {canCreate ? (
                 /* Issuer / Intermediary View */
                 <>
