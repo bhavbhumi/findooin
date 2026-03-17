@@ -153,15 +153,17 @@ const ArchitectureTab = () => (
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">30+ tables organized across 6 domains with RLS policies on every table.</p>
+        <p className="text-sm text-muted-foreground">40+ tables organized across 8 domains with RLS policies on every table.</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {[
-            { domain: "User", tables: "profiles, user_roles, active_sessions, user_settings, verification_requests, profile_views, endorsements, card_exchanges" },
+            { domain: "User", tables: "profiles, user_roles, active_sessions, user_settings, profile_views, endorsements, card_exchanges, profile_tab_privacy, profile_flair" },
             { domain: "Content", tables: "posts, comments, post_interactions, poll_options, poll_votes, survey_questions, survey_options, survey_responses, featured_posts, post_drafts" },
             { domain: "Jobs", tables: "jobs, job_applications, saved_jobs" },
             { domain: "Events", tables: "events, event_registrations, event_speakers" },
             { domain: "Showcase", tables: "listings, listing_reviews, listing_enquiries" },
-            { domain: "Platform", tables: "messages, notifications, connections, reports, blog_posts, file_uploads, vault_files" },
+            { domain: "Gamification", tables: "user_xp, xp_transactions, badge_definitions, user_badges, weekly_challenges, user_challenge_progress, social_proof_events, referral_links, referral_conversions" },
+            { domain: "Blog", tables: "blog_posts, blog_poll_options, blog_poll_votes, blog_survey_questions, blog_survey_options, blog_survey_responses" },
+            { domain: "Platform", tables: "messages, notifications, connections, reports, file_uploads, invitations, registry_entities, campaigns, sales_leads, support_tickets" },
           ].map((d) => (
             <div key={d.domain} className="border border-border rounded-lg p-3">
               <h4 className="text-sm font-semibold text-foreground mb-1">{d.domain}</h4>
