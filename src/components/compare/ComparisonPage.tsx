@@ -101,7 +101,7 @@ export function ComparisonPage({ data }: { data: ComparisonData }) {
                   <td className="p-4">
                     <div className="flex items-start gap-2">
                       {f.findooHas ? (
-                        <Check className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <Check className="h-4 w-4 text-chart-2 shrink-0 mt-0.5" />
                       ) : (
                         <X className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
                       )}
@@ -111,7 +111,7 @@ export function ComparisonPage({ data }: { data: ComparisonData }) {
                   <td className="p-4">
                     <div className="flex items-start gap-2">
                       {f.competitorHas ? (
-                        <Check className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <Check className="h-4 w-4 text-chart-2 shrink-0 mt-0.5" />
                       ) : (
                         <X className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
                       )}
