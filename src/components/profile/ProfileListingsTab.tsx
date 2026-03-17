@@ -85,9 +85,9 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
             <Badge variant="secondary" className="text-[10px]">{listings.length} total</Badge>
           </div>
           {isOwnProfile && (
-            <Link to="/directory">
+            <Link to="/showcase">
               <Button variant="outline" size="sm">
-                <ExternalLink className="h-3 w-3 mr-1.5" /> Go to Directory
+                <ExternalLink className="h-3 w-3 mr-1.5" /> Go to Showcase
               </Button>
             </Link>
           )}
@@ -108,7 +108,7 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
                 {isOwnProfile ? "You haven't created any listings yet" : "No listings yet"}
               </p>
               {isOwnProfile && (
-                <Link to="/directory">
+              <Link to="/showcase">
                   <Button size="sm" className="mt-3">
                     <ArrowRight className="h-3 w-3 mr-1" /> Create Your First Listing
                   </Button>
@@ -125,7 +125,7 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
         )}
 
         {listings.length > 5 && (
-          <Link to="/directory">
+          <Link to="/showcase">
             <Button variant="outline" className="w-full" size="sm">
               <ExternalLink className="h-3 w-3 mr-1.5" /> View All ({listings.length} listings)
             </Button>
@@ -145,9 +145,9 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
             <h3 className="font-semibold text-sm">My Enquiries</h3>
             <Badge variant="secondary" className="text-[10px]">{enquiries.length}</Badge>
           </div>
-          <Link to="/directory">
+          <Link to="/showcase">
             <Button variant="outline" size="sm">
-              <ExternalLink className="h-3 w-3 mr-1.5" /> Browse Directory
+              <ExternalLink className="h-3 w-3 mr-1.5" /> Browse Showcase
             </Button>
           </Link>
         </div>
@@ -157,10 +157,10 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
             <CardContent className="p-8 text-center">
               <MessageSquare className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">No enquiries yet</p>
-              <p className="text-xs text-muted-foreground mt-1">Browse the directory and send enquiries to providers.</p>
-              <Link to="/directory">
+              <p className="text-xs text-muted-foreground mt-1">Browse the showcase and send enquiries to providers.</p>
+              <Link to="/showcase">
                 <Button size="sm" className="mt-3">
-                  <ArrowRight className="h-3 w-3 mr-1" /> Explore Directory
+                  <ArrowRight className="h-3 w-3 mr-1" /> Explore Showcase
                 </Button>
               </Link>
             </CardContent>

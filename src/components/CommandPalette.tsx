@@ -24,7 +24,7 @@ const NAVIGATION_ITEMS = [
   { label: "Network", icon: Users, path: "/network", group: "Navigate" },
   { label: "Jobs", icon: Briefcase, path: "/jobs", group: "Navigate" },
   { label: "Events", icon: Calendar, path: "/events", group: "Navigate" },
-  { label: "Directory", icon: Globe, path: "/directory", group: "Navigate" },
+  { label: "Showcase", icon: Globe, path: "/showcase", group: "Navigate" },
   { label: "Messages", icon: MessageSquare, path: "/messages", group: "Navigate" },
   { label: "Notifications", icon: Bell, path: "/notifications", group: "Navigate" },
   { label: "Discover", icon: Compass, path: "/discover", group: "Navigate" },

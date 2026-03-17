@@ -92,7 +92,7 @@ export const DirectorySidebar = ({
           <h3 className="text-xs font-semibold font-heading text-card-foreground uppercase tracking-wider">Popular</h3>
         </div>
         <div className="p-4 space-y-2">
-          <p className="text-[10px] text-muted-foreground">Top categories by listings and reviews will appear here as the directory grows.</p>
+          <p className="text-[10px] text-muted-foreground">Top categories by listings and reviews will appear here as the showcase grows.</p>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ import { useRole } from "@/contexts/RoleContext";
 const MemoizedDirectorySidebar = memo(DirectorySidebar);
 
 const Directory = () => {
-  usePageMeta({ title: "Directory" });
+  usePageMeta({ title: "Showcase" });
   const { activeRole } = useRole();
 
   const [search, setSearch] = useState("");
@@ -55,7 +55,7 @@ const Directory = () => {
   return (
     <AppLayout maxWidth="max-w-6xl">
       {/* Mobile filter drawer */}
-      <MobileFilterDrawer title="Directory Filters">
+      <MobileFilterDrawer title="Showcase Filters">
         <DirectorySidebar
           selectedType={selectedType}
           selectedCategory={selectedCategory}
@@ -69,7 +69,7 @@ const Directory = () => {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <h1 className="text-xl font-bold font-heading text-foreground">Directory</h1>
+              <h1 className="text-xl font-bold font-heading text-foreground">Showcase</h1>
               <p className="text-xs text-muted-foreground mt-0.5">
                 Discover financial products & professional services
               </p>

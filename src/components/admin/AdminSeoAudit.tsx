@@ -48,7 +48,7 @@ const SITEMAP_ROUTES = [
   "/helpdesk", "/quick-links", "/community-guidelines", "/sitemap",
   "/legal", "/terms", "/privacy", "/cookies", "/accessibility",
   "/refund-policy", "/transparency", "/feed", "/discover", "/network",
-  "/jobs", "/events", "/directory", "/developer", "/pitch",
+  "/jobs", "/events", "/showcase", "/developer", "/pitch",
 ];
 
 const MISSING_FROM_SITEMAP: string[] = [];
