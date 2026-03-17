@@ -41,6 +41,54 @@ export type Database = {
         }
         Relationships: []
       }
+      affinity_scores: {
+        Row: {
+          activity_resonance: number | null
+          affinity_score: number
+          circle_tier: number
+          computed_at: string | null
+          freshness_decay: number | null
+          id: string
+          intent_multiplier: number | null
+          referral_boost: number | null
+          referral_source: string | null
+          role_weight: number | null
+          target_id: string
+          trust_proximity: number | null
+          viewer_id: string
+        }
+        Insert: {
+          activity_resonance?: number | null
+          affinity_score?: number
+          circle_tier?: number
+          computed_at?: string | null
+          freshness_decay?: number | null
+          id?: string
+          intent_multiplier?: number | null
+          referral_boost?: number | null
+          referral_source?: string | null
+          role_weight?: number | null
+          target_id: string
+          trust_proximity?: number | null
+          viewer_id: string
+        }
+        Update: {
+          activity_resonance?: number | null
+          affinity_score?: number
+          circle_tier?: number
+          computed_at?: string | null
+          freshness_decay?: number | null
+          id?: string
+          intent_multiplier?: number | null
+          referral_boost?: number | null
+          referral_source?: string | null
+          role_weight?: number | null
+          target_id?: string
+          trust_proximity?: number | null
+          viewer_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -904,6 +952,66 @@ export type Database = {
           id?: string
           public_url?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      intent_signals: {
+        Row: {
+          created_at: string | null
+          id: string
+          signal_data: Json | null
+          signal_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          signal_data?: Json | null
+          signal_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          signal_data?: Json | null
+          signal_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      introductions: {
+        Row: {
+          acted_at: string | null
+          created_at: string | null
+          id: string
+          introduced_user_id: string
+          introducer_id: string
+          introduction_type: string
+          message: string | null
+          status: string | null
+          target_user_id: string
+        }
+        Insert: {
+          acted_at?: string | null
+          created_at?: string | null
+          id?: string
+          introduced_user_id: string
+          introducer_id: string
+          introduction_type?: string
+          message?: string | null
+          status?: string | null
+          target_user_id: string
+        }
+        Update: {
+          acted_at?: string | null
+          created_at?: string | null
+          id?: string
+          introduced_user_id?: string
+          introducer_id?: string
+          introduction_type?: string
+          message?: string | null
+          status?: string | null
+          target_user_id?: string
         }
         Relationships: []
       }
@@ -2688,7 +2796,23 @@ export type Database = {
         }
         Returns: boolean
       }
+      cleanup_old_intent_signals: { Args: never; Returns: undefined }
       cleanup_stale_sessions: { Args: never; Returns: undefined }
+      compute_trustcircle_iq: {
+        Args: { p_limit?: number; p_viewer_id: string }
+        Returns: {
+          activity_resonance: number
+          affinity_score: number
+          circle_tier: number
+          freshness_decay: number
+          intent_multiplier: number
+          referral_boost: number
+          referral_source: string
+          role_weight: number
+          target_id: string
+          trust_proximity: number
+        }[]
+      }
       create_notification: {
         Args: {
           p_actor_id: string

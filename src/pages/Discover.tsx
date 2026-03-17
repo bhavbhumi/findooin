@@ -8,8 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   CheckCircle2, Search, Users, FileText, TrendingUp, MapPin, Building2, X,
+  Shield, CircleDot, Sparkles, Eye, Zap, UserPlus, ArrowRight,
+  RefreshCw, Info,
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { PersonCardSkeleton } from "@/components/skeletons/PersonCardSkeleton";
@@ -19,109 +22,114 @@ import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { DiscoverSidebar, saveRecentSearch } from "@/components/discover/DiscoverSidebar";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { cn } from "@/lib/utils";
+import { useTrustCircleIQ, type TrustCircleResult } from "@/hooks/useTrustCircleIQ";
+import { useRole } from "@/contexts/RoleContext";
 
 const MemoizedDiscoverSidebar = memo(DiscoverSidebar);
-
-/* ── Types ── */
-interface DiscoverUser {
-  id: string;
-  full_name: string;
-  display_name: string | null;
-  user_type: string;
-  bio: string | null;
-  headline: string | null;
-  organization: string | null;
-  location: string | null;
-  avatar_url: string | null;
-  verification_status: string;
-  specializations: string[] | null;
-  roles: { role: string; sub_type: string | null }[];
-}
 
 function getInitials(name: string) {
   return name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2);
 }
 
+/* ── Circle Config ── */
+const CIRCLE_CONFIG = {
+  1: {
+    title: "Your Inner Circle",
+    subtitle: "High-trust connections and referred professionals",
+    icon: Shield,
+    color: "text-amber-500",
+    bgColor: "bg-amber-500/10 border-amber-500/20",
+    ringColor: "ring-amber-500/30",
+    gradient: "from-amber-500/5 to-transparent",
+  },
+  2: {
+    title: "Potential Connections",
+    subtitle: "2nd-degree network and complementary professionals",
+    icon: UserPlus,
+    color: "text-primary",
+    bgColor: "bg-primary/10 border-primary/20",
+    ringColor: "ring-primary/30",
+    gradient: "from-primary/5 to-transparent",
+  },
+  3: {
+    title: "Explore Ecosystem",
+    subtitle: "Verified professionals across the network",
+    icon: Eye,
+    color: "text-muted-foreground",
+    bgColor: "bg-muted/50 border-border",
+    ringColor: "ring-muted-foreground/20",
+    gradient: "from-muted/30 to-transparent",
+  },
+} as const;
+
 /* ── Discover Page ── */
 const Discover = () => {
-  usePageMeta({ title: "Discover", description: "Browse and discover verified financial professionals across India." });
+  usePageMeta({ title: "Discover · TrustCircle IQ™", description: "AI-powered discovery of verified financial professionals ranked by trust, role affinity, and intent." });
   const [searchParams] = useSearchParams();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [users, setUsers] = useState<DiscoverUser[]>([]);
-  const [loadingUsers, setLoadingUsers] = useState(true);
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
   const [locationFilter, setLocationFilter] = useState<string>("");
-  const [activeTab, setActiveTab] = useState<"people" | "posts">((searchParams.get("tab") as "people" | "posts") || "people");
+  const [activeTab, setActiveTab] = useState<"trustcircle" | "posts">((searchParams.get("tab") as any) || "trustcircle");
+  const [collapsedCircles, setCollapsedCircles] = useState<Record<number, boolean>>({});
 
+  const { activeRole } = useRole();
   const { flatPosts: allPosts, isLoading: loadingPosts } = useFeedPosts();
+  const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, activeTab === "trustcircle");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) return;
-      setCurrentUserId(session.user.id);
-      loadUsers(session.user.id);
+      if (session) setCurrentUserId(session.user.id);
     });
   }, []);
 
-  const loadUsers = async (currentUserId: string) => {
-    setLoadingUsers(true);
-    const [profilesRes, rolesRes] = await Promise.all([
-      supabase.from("profiles").select("id, full_name, display_name, user_type, bio, headline, organization, location, avatar_url, verification_status, specializations").neq("id", currentUserId),
-      supabase.from("user_roles").select("*"),
-    ]);
+  /* ── Filtered Trust Circle results ── */
+  const filteredCircles = useMemo(() => {
+    if (!trustData) return { inner_circle: [], potential: [], ecosystem: [] };
 
-    const roleMap = new Map<string, { role: string; sub_type: string | null }[]>();
-    rolesRes.data?.forEach((r) => {
-      if (!roleMap.has(r.user_id)) roleMap.set(r.user_id, []);
-      roleMap.get(r.user_id)!.push({ role: r.role, sub_type: r.sub_type });
-    });
+    const filterResults = (results: TrustCircleResult[]) => {
+      return results.filter((r) => {
+        const q = search.toLowerCase();
+        const p = r.profile;
+        const nameMatch = !q ||
+          (p.display_name || p.full_name).toLowerCase().includes(q) ||
+          (p.headline || "").toLowerCase().includes(q) ||
+          (p.organization || "").toLowerCase().includes(q) ||
+          (p.specializations || []).some((s) => s.toLowerCase().includes(q));
+        const roleMatch = !roleFilter || r.roles.some((role) => role.role === roleFilter);
+        const locMatch = !locationFilter || p.location === locationFilter;
+        return nameMatch && roleMatch && locMatch;
+      });
+    };
 
-    const mapped: DiscoverUser[] = (profilesRes.data || []).map((p) => ({
-      ...p,
-      roles: roleMap.get(p.id) || [],
-    }));
-    setUsers(mapped);
-    setLoadingUsers(false);
-  };
+    return {
+      inner_circle: filterResults(trustData.inner_circle),
+      potential: filterResults(trustData.potential),
+      ecosystem: filterResults(trustData.ecosystem),
+    };
+  }, [trustData, search, roleFilter, locationFilter]);
 
-  /* ── Unique locations for filter ── */
+  /* ── Unique locations ── */
   const uniqueLocations = useMemo(() => {
+    if (!trustData) return [];
+    const all = [...trustData.inner_circle, ...trustData.potential, ...trustData.ecosystem];
     const locs = new Set<string>();
-    users.forEach((u) => { if (u.location) locs.add(u.location); });
+    all.forEach((r) => { if (r.profile.location) locs.add(r.profile.location); });
     return Array.from(locs).sort();
-  }, [users]);
-
-  /* ── Filtered People ── */
-  const filteredPeople = useMemo(() => {
-    return users.filter((u) => {
-      const q = search.toLowerCase();
-      const nameMatch =
-        (u.display_name || u.full_name).toLowerCase().includes(q) ||
-        (u.headline || "").toLowerCase().includes(q) ||
-        (u.organization || "").toLowerCase().includes(q) ||
-        (u.bio || "").toLowerCase().includes(q) ||
-        (u.specializations || []).some((s) => s.toLowerCase().includes(q));
-      const roleMatch = !roleFilter || u.roles.some((r) => r.role === roleFilter);
-      const locMatch = !locationFilter || u.location === locationFilter;
-      return nameMatch && roleMatch && locMatch;
-    });
-  }, [users, search, roleFilter, locationFilter]);
+  }, [trustData]);
 
   /* ── Filtered Posts ── */
   const filteredPosts = useMemo(() => {
     if (!search.trim()) return allPosts.slice(0, 20);
     const q = search.toLowerCase();
-    return allPosts.filter((p) => {
-      const contentMatch = p.content.toLowerCase().includes(q);
-      const hashtagMatch = p.hashtags?.some((h) => h.toLowerCase().includes(q));
-      const authorMatch = (p.author.display_name || p.author.full_name).toLowerCase().includes(q);
-      return contentMatch || hashtagMatch || authorMatch;
-    });
+    return allPosts.filter((p) =>
+      p.content.toLowerCase().includes(q) ||
+      p.hashtags?.some((h) => h.toLowerCase().includes(q)) ||
+      (p.author.display_name || p.author.full_name).toLowerCase().includes(q)
+    );
   }, [allPosts, search]);
 
-  const peopleCount = filteredPeople.length;
-  const postsCount = filteredPosts.length;
+  const totalPeople = (filteredCircles.inner_circle.length + filteredCircles.potential.length + filteredCircles.ecosystem.length);
   const hasActiveFilters = !!roleFilter || !!locationFilter;
 
   const handleSearch = useCallback((query: string) => {
@@ -146,6 +154,10 @@ const Discover = () => {
     setSearch("");
   };
 
+  const toggleCircle = (tier: number) => {
+    setCollapsedCircles((prev) => ({ ...prev, [tier]: !prev[tier] }));
+  };
+
   return (
     <AppLayout maxWidth="max-w-6xl">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
@@ -153,15 +165,23 @@ const Discover = () => {
         <div>
           {/* Header */}
           <div className="mb-5">
-            <h1 className="text-2xl font-bold font-heading text-foreground">Discover</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">Find people, posts, and insights across the network</p>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold font-heading text-foreground">Discover</h1>
+              <Badge variant="secondary" className="text-[10px] gap-1 font-mono">
+                <Zap className="h-2.5 w-2.5" />
+                TrustCircle IQ™
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Professionals ranked by trust affinity, role relevance, and behavioral intent
+            </p>
           </div>
 
           {/* Search */}
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={activeTab === "people" ? "Search by name, headline, specialization, org…" : "Search posts by content, hashtag, author…"}
+              placeholder={activeTab === "trustcircle" ? "Search by name, headline, specialization, org…" : "Search posts by content, hashtag, author…"}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onBlur={() => { if (search.trim()) saveRecentSearch(search.trim()); }}
@@ -178,27 +198,26 @@ const Discover = () => {
           </div>
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "people" | "posts")} className="mb-4">
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "trustcircle" | "posts")} className="mb-4">
             <TabsList className="w-full grid grid-cols-2 h-10">
-              <TabsTrigger value="people" className="gap-1.5 text-sm">
-                <Users className="h-4 w-4" />
-                People
-                {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{peopleCount}</span>}
+              <TabsTrigger value="trustcircle" className="gap-1.5 text-sm">
+                <Sparkles className="h-4 w-4" />
+                TrustCircle
+                {trustData && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{totalPeople}</span>}
               </TabsTrigger>
               <TabsTrigger value="posts" className="gap-1.5 text-sm">
                 <FileText className="h-4 w-4" />
                 Posts
-                {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{postsCount}</span>}
+                {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{filteredPosts.length}</span>}
               </TabsTrigger>
             </TabsList>
           </Tabs>
 
-          {/* People Tab */}
-          {activeTab === "people" && (
+          {/* TrustCircle Tab */}
+          {activeTab === "trustcircle" && (
             <>
               {/* Filters row */}
               <div className="flex items-center gap-2 mb-4 flex-wrap">
-                {/* Role filters */}
                 {["investor", "intermediary", "issuer"].map((r) => {
                   const conf = ROLE_CONFIG[r];
                   const Icon = conf?.icon;
@@ -216,7 +235,6 @@ const Discover = () => {
                   );
                 })}
 
-                {/* Location filter */}
                 {uniqueLocations.length > 0 && (
                   <Select value={locationFilter} onValueChange={(v) => setLocationFilter(v === "all" ? "" : v)}>
                     <SelectTrigger className="h-8 w-[150px] text-xs">
@@ -237,19 +255,90 @@ const Discover = () => {
                     <X className="h-3 w-3" /> Clear
                   </Button>
                 )}
+
+                <div className="ml-auto">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => refetch()}
+                        disabled={isFetching}
+                        className="text-xs gap-1 text-muted-foreground"
+                      >
+                        <RefreshCw className={cn("h-3 w-3", isFetching && "animate-spin")} />
+                        {trustData?.cached ? "Cached" : "Fresh"}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Refresh TrustCircle IQ™ scores</TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
 
-              {loadingUsers ? (
+              {/* Active role context */}
+              <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-muted/30 border border-border">
+                <Info className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <p className="text-[11px] text-muted-foreground">
+                  Viewing as <span className="font-semibold text-foreground capitalize">{activeRole}</span> — results are personalized to your role, connections, and activity
+                </p>
+              </div>
+
+              {loadingTrust ? (
                 <div className="space-y-3">
-                  {[1, 2, 3, 4, 5].map((i) => <PersonCardSkeleton key={i} />)}
+                  {[1, 2, 3, 4, 5, 6].map((i) => <PersonCardSkeleton key={i} />)}
                 </div>
-              ) : filteredPeople.length === 0 ? (
-                <EmptyState icon={Users} text="No people found" />
+              ) : !trustData || totalPeople === 0 ? (
+                <EmptyState icon={Users} text="No professionals found. Try adjusting your filters or complete your profile for better matches." />
               ) : (
-                <div className="space-y-3">
-                  {filteredPeople.map((user) => (
-                    <PersonCard key={user.id} user={user} />
-                  ))}
+                <div className="space-y-6">
+                  {/* Circle Sections */}
+                  {([1, 2, 3] as const).map((tier) => {
+                    const config = CIRCLE_CONFIG[tier];
+                    const results = tier === 1 ? filteredCircles.inner_circle
+                      : tier === 2 ? filteredCircles.potential
+                      : filteredCircles.ecosystem;
+
+                    if (results.length === 0) return null;
+
+                    const Icon = config.icon;
+                    const isCollapsed = collapsedCircles[tier];
+
+                    return (
+                      <div key={tier} className="space-y-2">
+                        {/* Section Header */}
+                        <button
+                          onClick={() => toggleCircle(tier)}
+                          className={cn(
+                            "w-full flex items-center gap-3 p-3 rounded-xl border transition-colors",
+                            config.bgColor,
+                            "hover:shadow-sm"
+                          )}
+                        >
+                          <div className={cn("p-1.5 rounded-lg", config.bgColor)}>
+                            <Icon className={cn("h-4 w-4", config.color)} />
+                          </div>
+                          <div className="text-left flex-1 min-w-0">
+                            <h3 className="text-sm font-semibold text-card-foreground">{config.title}</h3>
+                            <p className="text-[11px] text-muted-foreground">{config.subtitle}</p>
+                          </div>
+                          <Badge variant="secondary" className="text-[10px] shrink-0">{results.length}</Badge>
+                          <ArrowRight className={cn(
+                            "h-4 w-4 text-muted-foreground transition-transform",
+                            isCollapsed ? "" : "rotate-90"
+                          )} />
+                        </button>
+
+                        {/* Cards */}
+                        {!isCollapsed && (
+                          <div className="space-y-2 pl-2">
+                            {results.map((result) => (
+                              <TrustCircleCard key={result.target_id} result={result} circleTier={tier} />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </>
@@ -294,20 +383,28 @@ const Discover = () => {
   );
 };
 
-/* ── Enhanced Person Card ── */
-function PersonCard({ user }: { user: DiscoverUser }) {
+/* ── TrustCircle Person Card ── */
+function TrustCircleCard({ result, circleTier }: { result: TrustCircleResult; circleTier: number }) {
+  const { profile: user, roles, referral_source, affinity_score } = result;
+  const config = CIRCLE_CONFIG[circleTier as keyof typeof CIRCLE_CONFIG];
+
   return (
     <Link
-      to={`/profile/${user.id}`}
-      className="block rounded-xl border border-border bg-card p-4 hover:shadow-md transition-shadow"
+      to={`/profile/${result.target_id}`}
+      className={cn(
+        "block rounded-xl border border-border bg-card p-4 hover:shadow-md transition-all",
+        "hover:border-primary/20"
+      )}
     >
       <div className="flex items-center gap-3">
-        <NetworkAvatar
-          src={user.avatar_url}
-          initials={getInitials(user.full_name)}
-          size="md"
-          roleColor={user.roles[0] ? ROLE_CONFIG[user.roles[0].role]?.hslVar : undefined}
-        />
+        <div className={cn("ring-2 rounded-full", config.ringColor)}>
+          <NetworkAvatar
+            src={user.avatar_url}
+            initials={getInitials(user.full_name)}
+            size="md"
+            roleColor={roles[0] ? ROLE_CONFIG[roles[0].role]?.hslVar : undefined}
+          />
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="font-semibold text-card-foreground text-sm truncate">
@@ -316,17 +413,38 @@ function PersonCard({ user }: { user: DiscoverUser }) {
             {user.verification_status === "verified" && (
               <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
             )}
+            {/* Affinity score indicator */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="ml-auto text-[9px] font-mono text-muted-foreground/50 shrink-0">
+                  {(affinity_score * 100).toFixed(0)}%
+                </span>
+              </TooltipTrigger>
+              <TooltipContent className="text-xs max-w-[200px]">
+                <p className="font-semibold mb-1">TrustCircle IQ™ Score</p>
+                <div className="space-y-0.5 text-[10px]">
+                  <div className="flex justify-between"><span>Role Affinity</span><span>{(result.role_weight * 100).toFixed(0)}%</span></div>
+                  <div className="flex justify-between"><span>Intent Match</span><span>{result.intent_multiplier.toFixed(1)}×</span></div>
+                  <div className="flex justify-between"><span>Trust Proximity</span><span>{(result.trust_proximity * 100).toFixed(0)}%</span></div>
+                  <div className="flex justify-between"><span>Activity Resonance</span><span>{(result.activity_resonance * 100).toFixed(0)}%</span></div>
+                  <div className="flex justify-between"><span>Freshness</span><span>{(result.freshness_decay * 100).toFixed(0)}%</span></div>
+                  {result.referral_boost > 0 && (
+                    <div className="flex justify-between text-amber-500"><span>Referral Boost</span><span>+{(result.referral_boost * 100).toFixed(0)}%</span></div>
+                  )}
+                </div>
+              </TooltipContent>
+            </Tooltip>
           </div>
           {user.headline && (
             <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{user.headline}</p>
           )}
           {/* Metadata row */}
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            {user.roles.map((r, i) => {
+            {roles.map((r, i) => {
               const conf = ROLE_CONFIG[r.role];
               const Icon = conf?.icon;
               return (
-                <span key={i} className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full ${conf?.bgColor || ""}`}>
+                <span key={i} className={cn("inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full", conf?.bgColor || "")}>
                   {Icon && <Icon className="h-2.5 w-2.5" />}
                   {r.sub_type || r.role}
                 </span>
@@ -345,17 +463,25 @@ function PersonCard({ user }: { user: DiscoverUser }) {
               </span>
             )}
           </div>
-          {/* Specializations */}
-          {user.specializations && user.specializations.length > 0 && (
-            <div className="flex gap-1 mt-1.5 flex-wrap">
-              {user.specializations.slice(0, 3).map((s) => (
-                <Badge key={s} variant="secondary" className="text-[9px] px-1.5 py-0">{s}</Badge>
-              ))}
-              {user.specializations.length > 3 && (
-                <Badge variant="secondary" className="text-[9px] px-1.5 py-0">+{user.specializations.length - 3}</Badge>
-              )}
-            </div>
-          )}
+          {/* Context labels */}
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+            {referral_source && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                <Sparkles className="h-2.5 w-2.5" />
+                {referral_source}
+              </span>
+            )}
+            {user.specializations && user.specializations.length > 0 && (
+              <>
+                {user.specializations.slice(0, 3).map((s) => (
+                  <Badge key={s} variant="secondary" className="text-[9px] px-1.5 py-0">{s}</Badge>
+                ))}
+                {user.specializations.length > 3 && (
+                  <Badge variant="secondary" className="text-[9px] px-1.5 py-0">+{user.specializations.length - 3}</Badge>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </Link>
