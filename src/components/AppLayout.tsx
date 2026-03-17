@@ -16,6 +16,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { AppBreadcrumbs } from "@/components/AppBreadcrumbs";
 import { useLoginStreak } from "@/hooks/useGamification";
 import { LevelUpModal } from "@/components/gamification/LevelUpModal";
+import { SocialProofToasts } from "@/components/gamification/SocialProofToasts";
 
 interface AppLayoutProps {
   children: ReactNode;
