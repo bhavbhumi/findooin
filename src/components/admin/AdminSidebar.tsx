@@ -91,6 +91,12 @@ export function AdminSidebar() {
       ],
     },
     {
+      label: "Communications",
+      items: [
+        { title: "Email", url: "/admin/email", icon: Mail },
+      ],
+    },
+    {
       label: "Coming Soon",
       items: [
         { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true },
