@@ -239,6 +239,7 @@ const Profile = () => {
                 connLoading={connLoading}
                 onEditProfile={() => setEditOpen(true)}
                 onNavigateToNetwork={() => setActiveTab("network")}
+                canViewNetwork={isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)}
               />
             </ErrorBoundary>
 
