@@ -189,11 +189,18 @@ src/
 │   ├── throttle.ts      # Generic throttle utility for action guards
 │   ├── vcard.ts         # vCard (.vcf) generation and download
 │   └── web-vitals.ts    # Core Web Vitals (LCP, CLS, FID) monitoring
+│   ├── gamification.ts  # Level thresholds, XP calculations
+│   ├── profile-flair.ts # Flair configuration by level
+│   ├── error-tracker.ts # Client-side error tracking utility
+│   └── web-vitals.ts    # Core Web Vitals (LCP, CLS, FID) monitoring
 ├── data/
 │   ├── certifications.ts # BFSI certification options
 │   ├── languages.ts     # Indian language options
-│   └── locations.ts     # Indian city/state options
-├── pages/               # 36 route-level page components (lazy-loaded)
+│   ├── locations.ts     # Indian city/state options
+│   ├── compare/         # Comparison data (5 category files)
+│   ├── pitchDecks.tsx   # Pitch deck slide content
+│   └── patent-content.ts # Patent documentation
+├── pages/               # 50 route-level page components (+ 18 admin sub-routes, lazy-loaded)
 ├── integrations/
 │   └── supabase/        # Auto-generated client + types (DO NOT EDIT)
 ├── test/                # 16 test files (unit + integration)
