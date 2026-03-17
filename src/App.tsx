@@ -87,6 +87,7 @@ const ProfessionalDirectory = lazy(() => import("./pages/ProfessionalDirectory")
 const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const ComparePage = lazy(() => import("./pages/Compare"));
+const Bookmarks = lazy(() => import("./pages/Bookmarks"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -195,6 +196,7 @@ const App = () => {
                       <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/showcase" element={<ProtectedRoute><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/leaderboard" element={<ProtectedRoute><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/bookmarks" element={<ProtectedRoute><RouteErrorBoundary routeName="Bookmarks"><Bookmarks /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/vault" element={<ProtectedRoute><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>

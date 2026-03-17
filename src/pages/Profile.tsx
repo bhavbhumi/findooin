@@ -353,11 +353,6 @@ const Profile = () => {
                 <ProfileListingsTab profileId={profile.id} isOwnProfile={isOwnProfile} roles={roles} />
               </TabsContent>
 
-              {isOwnProfile && (
-                <TabsContent value="bookmarks" className="space-y-4 mt-0">
-                  <BookmarkedPosts currentUserId={currentUserId} />
-                </TabsContent>
-              )}
 
               {profile && (isOwnProfile || canViewTab(tabPrivacy.vault_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
                 <TabsContent value="vault" className="mt-0">
