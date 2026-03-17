@@ -60,15 +60,8 @@ export function ComparisonPage({ data }: { data: ComparisonData }) {
         </div>
       </section>
 
-      {/* Description */}
-      <section className="container py-10">
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-center leading-relaxed">
-          {data.heroDescription}
-        </p>
-        <p className="text-sm text-muted-foreground text-center mt-2">
-          Compared with: <span className="font-medium text-foreground">{data.competitorExamples}</span>
-        </p>
-      </section>
+
+
 
       {/* Stats */}
       <section className="container pb-12">
