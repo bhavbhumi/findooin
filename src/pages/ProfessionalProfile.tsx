@@ -147,22 +147,49 @@ export default function ProfessionalProfile() {
 
         {/* Main Card */}
         <Card className="overflow-hidden">
-          {/* Header gradient */}
-          <div className="h-20 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent" />
+          {/* Animated banner like full profile */}
+          <div className="h-28 sm:h-36 relative overflow-hidden">
+            <div className="absolute inset-0" style={{
+              background: `linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--gold)) 50%, hsl(var(--accent)) 100%)`,
+              backgroundSize: "300% 300%",
+              animation: "gradientShift 8s ease infinite",
+              opacity: 0.25,
+            }} />
+            <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+            <div className="absolute inset-0 opacity-[0.04]" style={{
+              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, currentColor 10px, currentColor 10.5px),
+                repeating-linear-gradient(-45deg, transparent, transparent 10px, currentColor 10px, currentColor 10.5px)`,
+            }} />
+            {/* Floating dots */}
+            <div className="absolute inset-0 overflow-hidden">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute rounded-full opacity-20"
+                  style={{
+                    width: `${18 + i * 7}px`,
+                    height: `${18 + i * 7}px`,
+                    background: 'hsl(var(--primary))',
+                    left: `${10 + i * 18}%`,
+                    top: `${20 + (i % 3) * 25}%`,
+                    animation: `float ${3 + i * 0.5}s ease-in-out infinite alternate`,
+                    animationDelay: `${i * 0.3}s`,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
 
-          <CardContent className="-mt-10 px-6 pb-8">
+          <CardContent className="-mt-12 px-6 pb-8">
             {/* Avatar / Initials */}
             <div className="flex items-end gap-4 mb-6">
-              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"} className="shrink-0">
-                <div className="h-20 w-20 rounded-2xl bg-primary/10 border-4 border-background flex items-center justify-center">
-                  {profile?.avatar_url ? (
-                    <img src={profile.avatar_url} alt={displayName} className="h-full w-full rounded-xl object-cover" />
-                  ) : (
-                    <span className="text-2xl font-bold text-primary">
-                      {displayName.charAt(0).toUpperCase()}
-                    </span>
-                  )}
-                </div>
+              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"} className="shrink-0 relative z-10">
+                <AvatarWithFallback
+                  src={profile?.avatar_url}
+                  initials={displayName.charAt(0).toUpperCase()}
+                  className="h-20 w-20 rounded-full overflow-hidden border-[3px] border-card shadow-lg"
+                  textClassName="text-2xl"
+                />
               </FlairAvatarWrapper>
               <div className="min-w-0 pb-1">
                 <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
