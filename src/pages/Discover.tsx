@@ -42,19 +42,7 @@ const CIRCLE_VISUALS: Record<CircleTier, { icon: typeof Shield; color: string; r
   5: { icon: Eye, color: "text-muted-foreground", ringColor: "ring-muted-foreground/20", bgAccent: "bg-muted/50" },
 };
 
-/* ── AffinityFeed™ Trust-Weighted Scoring ── */
-const TRUST_WEIGHT_BY_TIER: Record<number, number> = { 1: 10, 2: 6, 3: 3, 4: 1.5, 5: 1 };
-const FRESHNESS_DECAY_DAYS_BY_TIER: Record<number, number> = { 1: 7, 2: 5, 3: 3, 4: 2, 5: 1 };
-
-function computeAffinityFeedScore(post: FeedPost, authorTier: number): number {
-  const trustWeight = TRUST_WEIGHT_BY_TIER[authorTier] || 1;
-  const engagement = post.like_count + (post.comment_count * 2) + (post.bookmark_count * 3);
-  const engagementScore = 1 + Math.log1p(engagement);
-  const ageHours = (Date.now() - new Date(post.created_at).getTime()) / (1000 * 60 * 60);
-  const decayDays = FRESHNESS_DECAY_DAYS_BY_TIER[authorTier] || 1;
-  const freshness = Math.exp(-0.03 * Math.max(0, ageHours / 24) / decayDays);
-  return trustWeight * engagementScore * freshness;
-}
+/* AffinityFeed™ scoring moved to Feed page — Discover uses exploration modes */
 
 /* ── Discover Page ── */
 const Discover = () => {
