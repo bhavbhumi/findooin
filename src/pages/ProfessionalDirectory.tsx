@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
+import { LevelBadge } from "@/components/gamification/LevelBadge";
 import {
   Search, Shield, MapPin, CheckCircle2, Clock, ArrowRight,
   Users, ChevronLeft, ChevronRight
@@ -86,6 +87,22 @@ export default function ProfessionalDirectory() {
       if (error) throw error;
       const map: Record<string, { avatar_border: string; name_effect: string }> = {};
       data?.forEach(f => { map[f.user_id] = f; });
+      return map;
+    },
+  });
+
+  const { data: xpMap = {} } = useQuery({
+    queryKey: ["directory-xp", claimedUserIds],
+    enabled: claimedUserIds.length > 0,
+    staleTime: 10 * 60 * 1000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_xp")
+        .select("user_id, level")
+        .in("user_id", claimedUserIds);
+      if (error) throw error;
+      const map: Record<string, number> = {};
+      data?.forEach(x => { map[x.user_id] = x.level; });
       return map;
     },
   });
@@ -161,6 +178,7 @@ export default function ProfessionalDirectory() {
                 const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
                 const avatarBorder = flair?.avatar_border || "none";
                 const nameEffect = flair?.name_effect || "none";
+                const level = isClaimed && entity.matched_user_id ? xpMap[entity.matched_user_id] : 0;
                 return (
                   <Link
                     key={entity.id}
@@ -177,7 +195,8 @@ export default function ProfessionalDirectory() {
                               </span>
                             </div>
                           </FlairAvatarWrapper>
-                          <div className="flex gap-1">
+                          <div className="flex items-center gap-1">
+                            {level > 0 && <LevelBadge level={level} size="xs" />}
                             <Badge variant="outline" className="text-[8px] uppercase">
                               {entity.source}
                             </Badge>

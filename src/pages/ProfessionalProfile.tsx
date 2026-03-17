@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
+import { useUserXP } from "@/hooks/useGamification";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
+import { LevelBadge } from "@/components/gamification/LevelBadge";
 import {
   Shield, MapPin, Building2, Hash, UserCheck, Users,
   ArrowRight, CheckCircle2, Clock, Eye, Briefcase
@@ -69,6 +71,7 @@ export default function ProfessionalProfile() {
   });
 
   const { data: flair } = useProfileFlair(entity?.matched_user_id || undefined);
+  const { data: userXP } = useUserXP(entity?.matched_user_id || undefined);
 
   const isClaimed = !!entity?.matched_user_id;
   const displayName = profile?.display_name || profile?.full_name || entity?.entity_name || "";
@@ -193,11 +196,16 @@ export default function ProfessionalProfile() {
                 />
               </FlairAvatarWrapper>
               <div className="min-w-0 pb-1">
-                <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
-                  <FlairName nameEffect={flair?.name_effect || "none"}>
-                    {displayName}
-                  </FlairName>
-                </h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
+                    <FlairName nameEffect={flair?.name_effect || "none"}>
+                      {displayName}
+                    </FlairName>
+                  </h1>
+                  {userXP && userXP.level > 0 && (
+                    <LevelBadge level={userXP.level} size="sm" showLabel />
+                  )}
+                </div>
                 {(profile?.headline || entity.registration_category) && (
                   <p className="text-sm text-muted-foreground truncate">
                     {profile?.headline || entity.registration_category}

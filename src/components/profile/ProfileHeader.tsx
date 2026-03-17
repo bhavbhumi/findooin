@@ -20,7 +20,9 @@ import {
 import { toast } from "sonner";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
+import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { useProfileFlair } from "@/hooks/useProfileFlair";
+import { useUserXP } from "@/hooks/useGamification";
 
 interface ProfileHeaderProps {
   profile: ProfileData;
@@ -82,6 +84,7 @@ export const ProfileHeader = ({
 }: ProfileHeaderProps) => {
   const navigate = useNavigate();
   const { data: flair } = useProfileFlair(profile.id);
+  const { data: userXP } = useUserXP(profile.id);
   const primaryRole = roles[0]?.role;
   const primaryRoleConf = primaryRole ? ROLE_CONFIG[primaryRole] : null;
   const bannerGradient = primaryRoleConf?.bannerGradient || "from-primary/15 via-primary/8 to-transparent";
@@ -248,6 +251,9 @@ export const ProfileHeader = ({
                     {primaryName}
                   </FlairName>
                 </h1>
+                {userXP && userXP.level > 0 && (
+                  <LevelBadge level={userXP.level} size="sm" showLabel />
+                )}
                 {profile.verification_status === "verified" && (
                   <span className="inline-flex items-center gap-0.5 text-accent">
                     <ShieldCheck className="h-3.5 w-3.5" />
