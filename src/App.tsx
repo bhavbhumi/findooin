@@ -36,8 +36,8 @@ const Jobs = lazy(() => import("./pages/Jobs"));
 const Events = lazy(() => import("./pages/Events"));
 const Directory = lazy(() => import("./pages/Directory"));
 
-// Public pages
-import Blog from "./pages/Blog";
+// Public pages (lazy loaded)
+const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
