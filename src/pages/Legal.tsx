@@ -514,11 +514,10 @@ Appeal outcome categories tracked: (a) Action upheld — original moderation dec
 All reports are accessible via the Platform at /legal (Transparency tab).
 
 For questions about this report:
-Email: transparency@findoo.in
-Compliance: compliance@findoo.in
+Email: hello@findoo.in
 
 FindOO Solutions LLP
-Registered Office: Mumbai, Maharashtra, India`,
+Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
   },
 ];
 
