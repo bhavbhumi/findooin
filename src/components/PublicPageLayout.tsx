@@ -90,6 +90,16 @@ const footerLinkSections = [
     ],
   },
   {
+    title: "Compare",
+    links: [
+      { label: "FindOO vs Social Networks", to: "/compare/social-networks" },
+      { label: "FindOO vs Professional Networks", to: "/compare/professional-networks" },
+      { label: "FindOO vs Financial Media", to: "/compare/financial-media" },
+      { label: "FindOO vs News Terminals", to: "/compare/news-terminals" },
+      { label: "FindOO vs WhatsApp Groups", to: "/compare/whatsapp-groups" },
+    ],
+  },
+  {
     title: "Support",
     links: [
       { label: "Contact Us", to: "/contact" },
