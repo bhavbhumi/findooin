@@ -422,7 +422,7 @@ const refundPolicySections = [
   },
   {
     title: "5. Refund Process",
-    content: `5.1 How to Request: Submit a refund request via: (a) Account Settings → Billing → Request Refund; or (b) emailing billing@findoo.in with your account email, subscription details, and reason for the request.
+    content: `5.1 How to Request: Submit a refund request via: (a) Account Settings → Billing → Request Refund; or (b) emailing hello@findoo.in with your account email, subscription details, and reason for the request.
 
 5.2 Processing Time: Refund requests are reviewed within 5 business days. Approved refunds are processed within 7–10 business days.
 
