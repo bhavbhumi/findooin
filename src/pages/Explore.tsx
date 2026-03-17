@@ -540,7 +540,8 @@ const WhoIsItForContent = () => (
               features: [
                 "Distribute announcements to verified audiences",
                 "List financial products in the Showcase",
-...
+                "Post BFSI jobs and access Employer Dashboard",
+                "Organize events, webinars & investor meets",
               ],
               scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Showcase, and host a virtual launch event — all from one platform.",
             },

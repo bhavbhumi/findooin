@@ -434,7 +434,10 @@ const ApiReferenceTab = () => (
 
       {/* Showcase, Vault, Network, Notification, Admin, Utility */}
       <Card>
-...
+        <CardHeader>
+          <CardTitle className="text-lg">Other Hooks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <HookDoc
             name="useListings(filters?)"
             file="src/hooks/useListings.ts"
