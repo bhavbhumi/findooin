@@ -217,7 +217,7 @@ const policiesSections = [
     title: "4. Intellectual Property Policy",
     content: `4.1 Respect for IP Rights: Users must respect intellectual property rights. Content that infringes on copyrights, trademarks, trade secrets, or proprietary information will be removed upon valid notice.
 
-4.2 DMCA-Equivalent Process: FindOO follows the takedown procedures prescribed under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021. To report IP infringement, contact hello@findoo.in with: (a) identification of the copyrighted/trademarked work; (b) URL or description of the infringing material; (c) your contact details; (d) a good faith statement that the use is unauthorized; and (e) a statement under penalty of perjury that the information is accurate and you are authorized to act on behalf of the rights holder.
+4.2 DMCA-Equivalent Process: FindOO follows the takedown procedures prescribed under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021. To report IP infringement, contact legal@findoo.in with: (a) identification of the copyrighted/trademarked work; (b) URL or description of the infringing material; (c) your contact details; (d) a good faith statement that the use is unauthorized; and (e) a statement under penalty of perjury that the information is accurate and you are authorized to act on behalf of the rights holder.
 
 4.3 Repeat Infringers: Accounts that are subject to three or more valid IP infringement notices will be permanently terminated.`,
   },
