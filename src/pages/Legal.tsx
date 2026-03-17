@@ -91,7 +91,7 @@ const termsSections = [
 
 14.3 Jurisdiction: Subject to the arbitration clause above, the courts of Mumbai, Maharashtra shall have exclusive jurisdiction over any disputes arising from these Terms.
 
-14.4 Grievance Redressal: In compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, FindOO has appointed a Grievance Officer. Complaints and grievances may be addressed to: Grievance Officer, FindOO Solutions LLP, B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064. Email: hello@findoo.in. The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days of receipt, or such other period as prescribed by applicable law.`,
+14.4 Grievance Redressal: In compliance with the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, FindOO has appointed a Grievance Officer. Complaints and grievances may be addressed to: Grievance Officer, FindOO Solutions LLP, B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064. Email: compliance@findoo.in. The Grievance Officer shall acknowledge complaints within 24 hours and resolve them within 15 days of receipt, or such other period as prescribed by applicable law.`,
   },
   {
     title: "15. General Provisions",
