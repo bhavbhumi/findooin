@@ -345,7 +345,7 @@ export const ProfileHeader = ({
                   className={`h-9 w-9 ${isMutualConnection ? "text-foreground" : "text-muted-foreground opacity-50 cursor-not-allowed"}`}
                   disabled={!isMutualConnection}
                   title={isMutualConnection ? "Send message" : "You must be connected to message"}
-                  onClick={() => isMutualConnection && navigate("/messages")}
+                  onClick={() => isMutualConnection && navigate(`/messages?user=${profile.id}`)}
                 >
                   <MessageSquare className="h-4 w-4" />
                 </Button>

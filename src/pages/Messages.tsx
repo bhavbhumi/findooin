@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeText } from "@/lib/sanitize";
 import { useRole } from "@/contexts/RoleContext";
@@ -61,6 +61,7 @@ type ConvFilter = "all" | "unread";
 const Messages = () => {
   usePageMeta({ title: "Messages" });
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { activeRole } = useRole();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -86,6 +87,17 @@ const Messages = () => {
       loadConversations(session.user.id);
     });
   }, []);
+
+  // Auto-open conversation from ?user= URL param
+  const targetUserParam = searchParams.get("user");
+  const hasAutoOpened = useRef(false);
+
+  useEffect(() => {
+    if (targetUserParam && currentUserId && !loading && !hasAutoOpened.current) {
+      hasAutoOpened.current = true;
+      openConversation(targetUserParam);
+    }
+  }, [targetUserParam, currentUserId, loading]);
 
   // Realtime for new messages
   useEffect(() => {
@@ -204,8 +216,24 @@ const Messages = () => {
   const openConversation = async (userId: string) => {
     if (!currentUserId) return;
     setSelectedUserId(userId);
+    // Clear the URL param once we open a conversation
+    if (searchParams.has("user")) {
+      setSearchParams({}, { replace: true });
+    }
     const conv = conversations.find((c) => c.user_id === userId);
-    setSelectedProfile(conv ? { full_name: conv.full_name, display_name: conv.display_name, avatar_url: conv.avatar_url } : null);
+    if (!conv) {
+      // New conversation — fetch profile directly
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("full_name, display_name, avatar_url")
+        .eq("id", userId)
+        .single();
+      if (profileData) {
+        setSelectedProfile({ full_name: profileData.full_name, display_name: profileData.display_name, avatar_url: profileData.avatar_url });
+      }
+    } else {
+      setSelectedProfile({ full_name: conv.full_name, display_name: conv.display_name, avatar_url: conv.avatar_url });
+    }
 
     // Fetch recipient's roles to determine allowed message categories
     const { data: rolesData } = await supabase
