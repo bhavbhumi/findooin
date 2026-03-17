@@ -101,19 +101,10 @@ describe("RouteErrorBoundary", () => {
   });
 });
 
-describe("Web Vitals Module", () => {
-  it("exports initWebVitals and getVitalsLog", async () => {
-    const mod = await import("@/lib/web-vitals");
-    expect(mod.initWebVitals).toBeDefined();
-    expect(mod.getVitalsLog).toBeDefined();
-    expect(typeof mod.initWebVitals).toBe("function");
-    expect(typeof mod.getVitalsLog).toBe("function");
-  });
-
-  it("getVitalsLog returns an array", async () => {
-    const { getVitalsLog } = await import("@/lib/web-vitals");
-    const log = getVitalsLog();
-    expect(Array.isArray(log)).toBe(true);
+describe("Error Tracker Module", () => {
+  it("error-tracker module is loaded", async () => {
+    const mod = await import("@/lib/error-tracker");
+    expect(mod.errorTracker).toBeDefined();
   });
 });
 
