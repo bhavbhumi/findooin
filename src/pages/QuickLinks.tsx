@@ -37,6 +37,19 @@ const linkGroups = [
     ],
   },
   {
+    title: "Compare",
+    links: [
+      { icon: TrendingUp, label: "vs Social Networks", to: "/compare?tab=social", desc: "How FindOO differs from social media" },
+      { icon: Users, label: "vs Professional Networks", to: "/compare?tab=professional", desc: "Compare with LinkedIn and peers" },
+      { icon: Globe, label: "vs Financial Media", to: "/compare?tab=media", desc: "Compare with financial media platforms" },
+    ],
+  },
+  {
+    title: "Directory",
+    links: [
+      { icon: Users, label: "Professional Directory", to: "/professionals", desc: "Browse AMFI-registered professionals" },
+    ],
+  {
     title: "Support",
     links: [
       { icon: Phone, label: "Contact Us", to: "/contact", desc: "Get in touch with our team" },
