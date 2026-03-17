@@ -67,6 +67,8 @@ export default function ProfessionalProfile() {
     enabled: !!entity?.matched_user_id,
   });
 
+  const { data: flair } = useProfileFlair(entity?.matched_user_id || undefined);
+
   const isClaimed = !!entity?.matched_user_id;
   const displayName = profile?.display_name || profile?.full_name || entity?.entity_name || "";
   const sourceLabel = entity?.source?.toUpperCase() || "Registry";
