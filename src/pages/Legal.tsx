@@ -402,7 +402,7 @@ const refundPolicySections = [
   },
   {
     title: "3. Cancellation Policy",
-    content: `3.1 How to Cancel: You may cancel your subscription at any time through: (a) Account Settings → Subscription → Cancel Plan; or (b) by contacting hello@findoo.in.
+    content: `3.1 How to Cancel: You may cancel your subscription at any time through: (a) Account Settings → Subscription → Cancel Plan; or (b) by contacting legal@findoo.in.
 
 3.2 Effect of Cancellation: Upon cancellation, your premium features remain active until the end of the current billing period. After the billing period expires, your account reverts to the free tier. No additional charges will be applied after cancellation.
 
