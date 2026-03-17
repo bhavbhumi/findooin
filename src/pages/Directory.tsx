@@ -223,18 +223,20 @@ const Directory = () => {
           </div>
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
-              <TabsTrigger value="browse" className="gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                <LayoutList className="h-3.5 w-3.5" /> Browse
-              </TabsTrigger>
-              <TabsTrigger value="suggested" className="gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                <Sparkles className="h-3.5 w-3.5" /> Suggested
-              </TabsTrigger>
-              <TabsTrigger value="my-showcase" className="gap-1.5 text-xs rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                <User className="h-3.5 w-3.5" /> My Showcase
-              </TabsTrigger>
-            </TabsList>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+            <div className="overflow-x-auto -mx-1 px-1 scrollbar-hide">
+              <TabsList className="inline-flex w-max sm:w-auto bg-muted/50">
+                <TabsTrigger value="browse" className="gap-1.5 whitespace-nowrap">
+                  <LayoutList className="h-3.5 w-3.5" /> Browse
+                </TabsTrigger>
+                <TabsTrigger value="suggested" className="gap-1.5 whitespace-nowrap">
+                  <Sparkles className="h-3.5 w-3.5" /> Suggested
+                </TabsTrigger>
+                <TabsTrigger value="my-showcase" className="gap-1.5 whitespace-nowrap">
+                  <User className="h-3.5 w-3.5" /> My Showcase
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Browse Tab */}
             <TabsContent value="browse" className="mt-4 space-y-4">
