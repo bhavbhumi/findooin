@@ -53,29 +53,37 @@ No existing discovery system combines:
 
 ### 4.1 Core Concept: Trust Circles
 
-Every user exists within a three-tier discovery framework relative to every other user:
+Every user exists within a five-tier discovery framework relative to every other user:
 
 ```
-┌─────────────────────────────────────────────┐
-│                                             │
-│   ┌─────────────────────────────────────┐   │
-│   │                                     │   │
-│   │   ┌─────────────────────────────┐   │   │
-│   │   │                             │   │   │
-│   │   │     1ST CIRCLE              │   │   │
-│   │   │  Direct Trust (Score > 0.7) │   │   │
-│   │   │                             │   │   │
-│   │   └─────────────────────────────┘   │   │
-│   │                                     │   │
-│   │        2ND CIRCLE                   │   │
-│   │     Potential (Score 0.4–0.7)       │   │
-│   │                                     │   │
-│   └─────────────────────────────────────┘   │
-│                                             │
-│            3RD CIRCLE                       │
-│         Ecosystem (Score 0.15–0.4)          │
-│                                             │
-└─────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────┐
+│                                                           │
+│  ┌─────────────────────────────────────────────────────┐  │
+│  │                                                     │  │
+│  │  ┌───────────────────────────────────────────────┐  │  │
+│  │  │                                               │  │  │
+│  │  │  ┌─────────────────────────────────────────┐  │  │  │
+│  │  │  │                                         │  │  │  │
+│  │  │  │  ┌─────────────────────────────────┐    │  │  │  │
+│  │  │  │  │  1ST: INNER CIRCLE (Score > 0.8)│    │  │  │  │
+│  │  │  │  │  Direct trust + referred by 1st │    │  │  │  │
+│  │  │  │  └─────────────────────────────────┘    │  │  │  │
+│  │  │  │                                         │  │  │  │
+│  │  │  │  2ND: PRIMARY NETWORK (0.6–0.8)         │  │  │  │
+│  │  │  │  High-affinity + strong 2nd degree      │  │  │  │
+│  │  │  └─────────────────────────────────────────┘  │  │  │
+│  │  │                                               │  │  │
+│  │  │  3RD: SECONDARY NETWORK (0.4–0.6)             │  │  │
+│  │  │  Warm prospects + event co-attendees           │  │  │
+│  │  └───────────────────────────────────────────────┘  │  │
+│  │                                                     │  │
+│  │  4TH: TERTIARY NETWORK (0.2–0.4)                   │  │
+│  │  Same geography/certs + content engagers            │  │
+│  └─────────────────────────────────────────────────────┘  │
+│                                                           │
+│  5TH: ECOSYSTEM (0.1–0.2)                                 │
+│  All verified/active professionals on the platform         │
+└───────────────────────────────────────────────────────────┘
 ```
 
 ### 4.2 The AffinityRank™ Formula
