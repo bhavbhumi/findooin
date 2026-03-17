@@ -12,7 +12,7 @@
 | ----- | ----------- |
 | [Architecture](docs/architecture.md) | System overview, module map, context graph, data flow patterns, DB function map |
 | [API Reference](docs/api-reference.md) | All 18+ hooks documented with params, return types, and usage examples |
-| [Edge Functions](docs/edge-functions.md) | 4 backend functions with request/response schemas and auth requirements |
+| [Edge Functions](docs/edge-functions.md) | 9 backend functions with request/response schemas and auth requirements |
 | [Getting Started](docs/getting-started.md) | Setup, folder conventions, design system, testing, and PR checklist |
 
 ---
