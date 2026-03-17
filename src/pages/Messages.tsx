@@ -205,6 +205,10 @@ const Messages = () => {
   const openConversation = async (userId: string) => {
     if (!currentUserId) return;
     setSelectedUserId(userId);
+    // Clear the URL param once we open a conversation
+    if (searchParams.has("user")) {
+      setSearchParams({}, { replace: true });
+    }
     const conv = conversations.find((c) => c.user_id === userId);
     setSelectedProfile(conv ? { full_name: conv.full_name, display_name: conv.display_name, avatar_url: conv.avatar_url } : null);
 
