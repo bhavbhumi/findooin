@@ -77,7 +77,7 @@ const termsSections = [
   },
   {
     title: "13. Termination & Suspension",
-    content: `13.1 By You: You may terminate your account at any time through your account settings or by contacting hello@findoo.in. Upon termination, your right to use the Platform ceases immediately.
+    content: `13.1 By You: You may terminate your account at any time through your account settings or by contacting legal@findoo.in. Upon termination, your right to use the Platform ceases immediately.
 
 13.2 By FindOO: FindOO may suspend, restrict, or terminate your account at any time, with or without notice, for: (a) violation of these Terms or Community Guidelines; (b) provision of false or misleading information; (c) lapse, suspension, or revocation of your regulatory registration; (d) engagement in activities harmful to the Platform or its Users; (e) prolonged inactivity (accounts inactive for over 24 months); or (f) any other reason at FindOO's reasonable discretion.
 
