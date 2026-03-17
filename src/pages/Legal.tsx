@@ -436,16 +436,15 @@ const refundPolicySections = [
   },
   {
     title: "7. Disputes",
-    content: `If you disagree with a billing charge, you must notify FindOO within 30 days of the charge date by emailing billing@findoo.in. Failure to dispute a charge within 30 days constitutes acceptance of the charge. Billing disputes will be resolved in accordance with the Dispute Resolution mechanism outlined in our Terms of Service.`,
+    content: `If you disagree with a billing charge, you must notify FindOO within 30 days of the charge date by emailing hello@findoo.in. Failure to dispute a charge within 30 days constitutes acceptance of the charge. Billing disputes will be resolved in accordance with the Dispute Resolution mechanism outlined in our Terms of Service.`,
   },
   {
     title: "8. Contact",
     content: `For billing inquiries, refund requests, or cancellation assistance:
-Email: billing@findoo.in
-Support: support@findoo.in
+Email: hello@findoo.in
 
 FindOO Solutions LLP
-Registered Office: Mumbai, Maharashtra, India`,
+Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
   },
 ];
 
