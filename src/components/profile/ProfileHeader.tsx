@@ -251,6 +251,9 @@ export const ProfileHeader = ({
                     {primaryName}
                   </FlairName>
                 </h1>
+                {userXP && userXP.level > 0 && (
+                  <LevelBadge level={userXP.level} size="sm" showLabel />
+                )}
                 {profile.verification_status === "verified" && (
                   <span className="inline-flex items-center gap-0.5 text-accent">
                     <ShieldCheck className="h-3.5 w-3.5" />
