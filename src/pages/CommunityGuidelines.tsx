@@ -25,8 +25,8 @@ const rules = [
   { letter: "6", icon: Ban, title: "No Solicitation", description: "Direct solicitation of clients, unsolicited investment tips, cold outreach via DMs, or promotional content disguised as organic posts is not allowed. Paid endorsements must be clearly disclosed." },
   { letter: "7", icon: Eye, title: "Respect Privacy", description: "Do not share private messages, personal contact details, or confidential information of other Users without their consent. Screenshots of private conversations must not be redistributed without permission." },
   { letter: "8", icon: FileCheck, title: "Disclose Conflicts", description: "If you have a financial interest in a product, security, or company you are discussing, disclose it clearly. Transparency about conflicts of interest builds trust in the community." },
-  { letter: "9", icon: Users, title: "Protect the Community", description: "Report violations using the in-app report button or email moderation@findoo.in. Do not engage with or amplify harmful content. Help us maintain a safe, professional environment for all financial professionals." },
-  { letter: "10", icon: Gavel, title: "Accept Accountability", description: "Violations result in graduated enforcement: warnings, content removal, feature restrictions, temporary suspension, or permanent termination. Appeals can be submitted to appeals@findoo.in within 30 days." },
+  { letter: "9", icon: Users, title: "Protect the Community", description: "Report violations using the in-app report button or email hello@findoo.in. Do not engage with or amplify harmful content. Help us maintain a safe, professional environment for all financial professionals." },
+  { letter: "10", icon: Gavel, title: "Accept Accountability", description: "Violations result in graduated enforcement: warnings, content removal, feature restrictions, temporary suspension, or permanent termination. Appeals can be submitted to hello@findoo.in within 30 days." },
 ];
 
 const faqs = [
