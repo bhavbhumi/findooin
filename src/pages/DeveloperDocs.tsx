@@ -32,7 +32,7 @@ const ArchitectureTab = () => (
 │                                              │
 │  Pages ──▶ Contexts ──▶ UI Components        │
 │              │                               │
-│         Custom Hooks (20+)                   │
+│         Custom Hooks (30+)                   │
 │              │                               │
 │        TanStack React Query                  │
 │              │                               │
@@ -41,12 +41,13 @@ const ArchitectureTab = () => (
                │
    ┌───────────┴───────────┐
    │    Lovable Cloud       │
-   │  ├── PostgreSQL (30+)  │
+   │  ├── PostgreSQL (40+)  │
    │  ├── Auth              │
-   │  ├── Storage (5)       │
-   │  ├── Edge Functions (4)│
+   │  ├── Storage (6)       │
+   │  ├── Edge Functions (7)│
    │  ├── Realtime          │
-   │  └── RLS Policies      │
+   │  ├── RLS Policies      │
+   │  └── DB Functions (25+)│
    └────────────────────────┘`}
         </pre>
       </CardContent>
@@ -73,14 +74,16 @@ const ArchitectureTab = () => (
             </thead>
             <tbody className="divide-y divide-border">
               {[
-                { module: "Feed", route: "/feed", hooks: "useFeedPosts, usePostInteractions, useDrafts, useScheduledPosts", folder: "components/feed/" },
-                { module: "Profile", route: "/profile", hooks: "useConnectionActions, usePostInteractions", folder: "components/profile/" },
+                { module: "Feed", route: "/feed", hooks: "useFeedPosts, usePostInteractions, useDrafts, useScheduledPosts, useTrendingHashtags, useViralPosts", folder: "components/feed/" },
+                { module: "Profile", route: "/profile", hooks: "useConnectionActions, usePostInteractions, useTabPrivacy, useProfileFlair", folder: "components/profile/" },
                 { module: "Network", route: "/network", hooks: "useConnectionActions", folder: "components/network/" },
                 { module: "Jobs", route: "/jobs", hooks: "useJobs (11 exports)", folder: "components/jobs/" },
                 { module: "Events", route: "/events", hooks: "useEvents (9 exports)", folder: "components/events/" },
                 { module: "Showcase", route: "/showcase", hooks: "useListings (8 exports)", folder: "components/directory/" },
                 { module: "Vault", route: "/vault", hooks: "useVault", folder: "components/vault/" },
-                { module: "Admin", route: "/admin", hooks: "useAdmin (8 exports)", folder: "components/admin/" },
+                { module: "Gamification", route: "/leaderboard", hooks: "useGamification, useProfileFlair", folder: "components/gamification/" },
+                { module: "Blog", route: "/blog", hooks: "useBlogPosts, useBlogInteractions", folder: "components/blog/" },
+                { module: "Admin", route: "/admin", hooks: "useAdmin (8 exports), useInvitations", folder: "components/admin/" },
               ].map((row) => (
                 <tr key={row.module} className="hover:bg-muted/30 transition-colors">
                   <td className="py-2.5 px-3 font-medium text-foreground">{row.module}</td>
@@ -151,15 +154,17 @@ const ArchitectureTab = () => (
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">30+ tables organized across 6 domains with RLS policies on every table.</p>
+        <p className="text-sm text-muted-foreground">40+ tables organized across 8 domains with RLS policies on every table.</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {[
-            { domain: "User", tables: "profiles, user_roles, active_sessions, user_settings, verification_requests, profile_views, endorsements, card_exchanges" },
+            { domain: "User", tables: "profiles, user_roles, active_sessions, user_settings, profile_views, endorsements, card_exchanges, profile_tab_privacy, profile_flair" },
             { domain: "Content", tables: "posts, comments, post_interactions, poll_options, poll_votes, survey_questions, survey_options, survey_responses, featured_posts, post_drafts" },
             { domain: "Jobs", tables: "jobs, job_applications, saved_jobs" },
             { domain: "Events", tables: "events, event_registrations, event_speakers" },
             { domain: "Showcase", tables: "listings, listing_reviews, listing_enquiries" },
-            { domain: "Platform", tables: "messages, notifications, connections, reports, blog_posts, file_uploads, vault_files" },
+            { domain: "Gamification", tables: "user_xp, xp_transactions, badge_definitions, user_badges, weekly_challenges, user_challenge_progress, social_proof_events, referral_links, referral_conversions" },
+            { domain: "Blog", tables: "blog_posts, blog_poll_options, blog_poll_votes, blog_survey_questions, blog_survey_options, blog_survey_responses" },
+            { domain: "Platform", tables: "messages, notifications, connections, reports, file_uploads, invitations, registry_entities, campaigns, sales_leads, support_tickets" },
           ].map((d) => (
             <div key={d.domain} className="border border-border rounded-lg p-3">
               <h4 className="text-sm font-semibold text-foreground mb-1">{d.domain}</h4>
@@ -432,7 +437,7 @@ const ApiReferenceTab = () => (
         </CardContent>
       </Card>
 
-      {/* Showcase, Vault, Network, Notification, Admin, Utility */}
+      {/* Showcase, Vault, Network, Gamification, Privacy, Notification, Admin, Utility */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Other Hooks</CardTitle>
@@ -462,6 +467,32 @@ const ApiReferenceTab = () => (
               { name: "connectionStatus", type: "{ following, connected }", desc: "Current relationship state" },
               { name: "follow/unfollow/connect/disconnect", type: "() => Promise<void>", desc: "Mutation actions" },
             ]}
+          />
+          <HookDoc
+            name="useTabPrivacy(userId)"
+            file="src/hooks/useTabPrivacy.ts"
+            desc="Per-tab visibility settings for Activity, Network & Vault tabs. Supports Everyone, Logged-in, Connections, Only Me."
+            returns={[
+              { name: "settings", type: "TabPrivacySettings", desc: "Current visibility settings per tab" },
+              { name: "updateSettings", type: "(settings) => Promise<void>", desc: "Upsert new visibility settings" },
+              { name: "isSaving", type: "boolean", desc: "Mutation pending state" },
+            ]}
+          />
+          <HookDoc
+            name="useGamification(userId)"
+            file="src/hooks/useGamification.ts"
+            desc="XP, level, streak, badges, weekly challenges — full gamification state for a user."
+            returns={[
+              { name: "xpData", type: "UserXP", desc: "Total XP, level, streak, multiplier" },
+              { name: "badges", type: "UserBadge[]", desc: "Earned badges with definitions" },
+              { name: "challenges", type: "ChallengeProgress[]", desc: "Weekly challenge progress" },
+            ]}
+          />
+          <HookDoc
+            name="useProfileFlair(userId)"
+            file="src/hooks/useProfileFlair.ts"
+            desc="Profile flair (avatar border, name effect, theme) auto-assigned at Level 3+."
+            returns={[{ name: "flair", type: "ProfileFlair", desc: "Current flair settings (border, effect, theme)" }]}
           />
           <HookDoc
             name="useNotifications()"
@@ -497,8 +528,12 @@ const ApiReferenceTab = () => (
           {[
             { name: "src/lib/storage.ts", exports: "validateFile(), uploadFile(), deleteFile()", desc: "File upload via upload-file edge function with client-side validation." },
             { name: "src/lib/session-manager.ts", exports: "registerSession(), removeSession(), touchSession()", desc: "Multi-device session management (max 3 concurrent). Heartbeat every 5min." },
+            { name: "src/lib/gamification.ts", exports: "LEVEL_CONFIG, getLevelConfig(), getXPProgress(), TIER_COLORS, BADGE_CATEGORY_LABELS", desc: "Gamification constants: 5-tier level config, XP thresholds, badge categories & tier colors." },
+            { name: "src/lib/profile-flair.ts", exports: "getFlairStyles(), getNameEffectClass(), getBorderClass()", desc: "Profile flair rendering: avatar borders (fire/diamond/legendary), name effects (glow/shimmer)." },
             { name: "src/lib/role-config.ts", exports: "ROLE_CONFIG, getRoleIcon(), getRoleBadgeClasses()", desc: "Role metadata: labels, icons, colors, CSS variables." },
             { name: "src/lib/vcard.ts", exports: "generateVCard(), downloadVCard()", desc: "vCard (.vcf) generation for digital business cards." },
+            { name: "src/lib/sanitize.ts", exports: "sanitizeText(), sanitizeHtml()", desc: "Input sanitization for user-generated content to prevent XSS." },
+            { name: "src/lib/throttle.ts", exports: "throttle()", desc: "Generic throttle utility for rate-limiting client-side operations." },
           ].map((mod) => (
             <div key={mod.name} className="space-y-1 p-3 rounded-lg bg-muted/30">
               <code className="text-xs font-semibold text-foreground">{mod.name}</code>

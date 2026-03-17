@@ -43,38 +43,50 @@ const platformFeatures = [
   {
     icon: MessageSquare,
     title: "Verified Feed",
-    desc: "Market commentary, research notes & insights — from verified professionals, not anonymous accounts.",
+    desc: "Market commentary, research notes, polls & surveys — from verified professionals with drafts, scheduling & post analytics.",
     status: "live",
   },
   {
     icon: Users,
     title: "Trust Network",
-    desc: "Connect with credential-verified professionals. Follow, connect, and build your financial circle.",
+    desc: "Connect with credential-verified professionals. Follow, connect, message — with granular tab privacy controls.",
     status: "live",
   },
   {
     icon: Briefcase,
     title: "BFSI Job Board",
-    desc: "India's only BFSI-focused job board with verified employers, role-based dashboards & market insights.",
+    desc: "India's only BFSI-focused job board with role-based dashboards, applicant tracking & employer insights.",
     status: "live",
   },
   {
     icon: Shield,
     title: "Verification Engine",
-    desc: "Upload your regulatory credentials. Get verified. Earn a trust badge that signals credibility network-wide.",
+    desc: "Upload regulatory credentials. Get verified against SEBI, RBI, IRDAI, AMFI & PFRDA databases. Earn a trust badge.",
     status: "live",
   },
   {
     icon: Calendar,
     title: "Events & Webinars",
-    desc: "Investor meets, AGM listings, industry webinars — discover and host events within the regulated ecosystem.",
+    desc: "Investor meets, AGMs, industry webinars — discover, host & manage events with check-in, speakers & organizer dashboards.",
     status: "live",
   },
   {
     icon: Award,
-    title: "Premium Features",
-    desc: "Advanced analytics, priority visibility, and enhanced tools for serious financial professionals.",
-    status: "coming",
+    title: "Gamification & XP",
+    desc: "Earn XP for every action, level up through 5 tiers, unlock profile flair, complete weekly challenges & climb the leaderboard.",
+    status: "live",
+  },
+  {
+    icon: Globe,
+    title: "Product & Service Showcase",
+    desc: "List financial products or professional services with reviews, comparisons, enquiry workflows & lead capture.",
+    status: "live",
+  },
+  {
+    icon: Lock,
+    title: "Vault & Digital Card",
+    desc: "Secure document storage with share links, vCard downloads & QR-powered digital business cards for networking.",
+    status: "live",
   },
 ];
 

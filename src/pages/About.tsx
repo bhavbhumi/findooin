@@ -162,9 +162,9 @@ const About = () => {
                 </div>
                 <div className="grid sm:grid-cols-3 gap-6 text-center">
                   {[
-                    { stat: "10Cr+", label: "Demat accounts in India" },
-                    { stat: "44,000+", label: "AMFI-registered distributors" },
-                    { stat: "0", label: "Financial networks that exist" },
+                    { stat: "15Cr+", label: "Demat accounts in India" },
+                    { stat: "50,000+", label: "SEBI-registered intermediaries" },
+                    { stat: "0", label: "Financial networks that existed" },
                   ].map((item) => (
                     <div key={item.label}>
                       <p className="text-2xl font-bold font-heading text-primary">{item.stat}</p>
