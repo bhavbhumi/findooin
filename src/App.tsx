@@ -82,7 +82,16 @@ const AccessibilityPage = lazy(() => import("./pages/Accessibility"));
 const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
 const TransparencyPage = lazy(() => import("./pages/Transparency"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,      // 5 min — avoid refetching on every mount
+      gcTime: 15 * 60 * 1000,         // 15 min garbage collection
+      refetchOnWindowFocus: false,    // prevent unnecessary refetches
+      retry: 1,                        // single retry on failure
+    },
+  },
+});
 
 const LazyFallback = () => (
   <div className="min-h-screen flex items-center justify-center">
