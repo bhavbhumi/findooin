@@ -63,6 +63,7 @@ export default function AppLayout({
         )}
       </ErrorBoundary>
       <ScrollToTop />
+      <LevelUpModal />
     </div>
   );
 }
