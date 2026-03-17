@@ -26,6 +26,7 @@ import { ProfileCompletenessRing } from "@/components/profile/ProfileCompletenes
 import { MutualConnections } from "@/components/profile/MutualConnections";
 import { TrustScoreBadge } from "@/components/profile/TrustScoreBadge";
 import { useQuery } from "@tanstack/react-query";
+import { GamificationProfileCard } from "@/components/gamification/GamificationProfileCard";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 
 const MemoizedPostCard = memo(PostCard);
