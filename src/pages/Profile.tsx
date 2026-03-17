@@ -358,7 +358,7 @@ const Profile = () => {
                 </TabsContent>
               )}
 
-              {isOwnProfile && profile && (
+              {profile && (isOwnProfile || canViewTab(tabPrivacy.vault_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
                 <TabsContent value="vault" className="mt-0">
                   <VaultProfileTab profileId={profile.id} />
                 </TabsContent>
