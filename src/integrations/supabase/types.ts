@@ -1217,6 +1217,7 @@ export type Database = {
       kb_articles: {
         Row: {
           category: string
+          category_slug: string
           content: string
           created_at: string
           excerpt: string
@@ -1226,6 +1227,7 @@ export type Database = {
           read_time_minutes: number
           slug: string
           sort_order: number
+          subcategory: string
           tags: string[] | null
           title: string
           updated_at: string
@@ -1233,6 +1235,7 @@ export type Database = {
         }
         Insert: {
           category?: string
+          category_slug?: string
           content?: string
           created_at?: string
           excerpt?: string
@@ -1242,6 +1245,7 @@ export type Database = {
           read_time_minutes?: number
           slug: string
           sort_order?: number
+          subcategory?: string
           tags?: string[] | null
           title: string
           updated_at?: string
@@ -1249,6 +1253,7 @@ export type Database = {
         }
         Update: {
           category?: string
+          category_slug?: string
           content?: string
           created_at?: string
           excerpt?: string
@@ -1258,6 +1263,7 @@ export type Database = {
           read_time_minutes?: number
           slug?: string
           sort_order?: number
+          subcategory?: string
           tags?: string[] | null
           title?: string
           updated_at?: string
