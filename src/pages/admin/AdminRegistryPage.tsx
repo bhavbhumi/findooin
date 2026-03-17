@@ -20,6 +20,7 @@ export default function AdminRegistryPage() {
   const [sourceFilter, setSourceFilter] = useState("all");
   const [syncing, setSyncing] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [wizardOpen, setWizardOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const createInvite = useCreateInvitation();
 
