@@ -571,8 +571,10 @@ const WhoIsItForContent = () => (
                 "List professional services in the Showcase",
                 "Apply for jobs AND post jobs (dual access)",
                 "Create polls, surveys & research notes",
+                "Earn XP, unlock badges & weekly challenges",
+                "Granular tab privacy & profile flair customization",
               ],
-              scenario: "A SEBI-registered RIA can publish research notes, list advisory services, apply for wealth management roles, and connect with verified AMC representatives.",
+              scenario: "A SEBI-registered RIA can publish research notes, list advisory services, apply for wealth management roles, earn XP for engagement, customize their profile flair, and connect with verified AMC representatives.",
             },
             {
               icon: BarChart3,
