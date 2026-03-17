@@ -18,7 +18,7 @@ import AppLayout from "@/components/AppLayout";
 import { PersonCardSkeleton } from "@/components/skeletons/PersonCardSkeleton";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { PostCard } from "@/components/feed/PostCard";
-import { useFeedPosts } from "@/hooks/useFeedPosts";
+import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
 import { DiscoverSidebar, saveRecentSearch } from "@/components/discover/DiscoverSidebar";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { cn } from "@/lib/utils";
@@ -40,6 +40,20 @@ const CIRCLE_VISUALS: Record<CircleTier, { icon: typeof Shield; color: string; r
   5: { icon: Eye, color: "text-muted-foreground", ringColor: "ring-muted-foreground/20", bgAccent: "bg-muted/50" },
 };
 
+/* ── AffinityFeed™ Trust-Weighted Scoring ── */
+const TRUST_WEIGHT_BY_TIER: Record<number, number> = { 1: 10, 2: 6, 3: 3, 4: 1.5, 5: 1 };
+const FRESHNESS_DECAY_DAYS_BY_TIER: Record<number, number> = { 1: 7, 2: 5, 3: 3, 4: 2, 5: 1 };
+
+function computeAffinityFeedScore(post: FeedPost, authorTier: number): number {
+  const trustWeight = TRUST_WEIGHT_BY_TIER[authorTier] || 1;
+  const engagement = post.like_count + (post.comment_count * 2) + (post.bookmark_count * 3);
+  const engagementScore = 1 + Math.log1p(engagement);
+  const ageHours = (Date.now() - new Date(post.created_at).getTime()) / (1000 * 60 * 60);
+  const decayDays = FRESHNESS_DECAY_DAYS_BY_TIER[authorTier] || 1;
+  const freshness = Math.exp(-0.03 * Math.max(0, ageHours / 24) / decayDays);
+  return trustWeight * engagementScore * freshness;
+}
+
 /* ── Discover Page ── */
 const Discover = () => {
   usePageMeta({ title: "Discover · TrustCircle IQ™", description: "AI-powered discovery of verified financial professionals ranked by trust, role affinity, and intent." });
@@ -48,12 +62,13 @@ const Discover = () => {
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [roleFilter, setRoleFilter] = useState<string | null>(null);
   const [locationFilter, setLocationFilter] = useState<string>("");
-  const [mainTab, setMainTab] = useState<"trustcircle" | "posts">((searchParams.get("tab") as any) || "trustcircle");
+  const [mainTab, setMainTab] = useState<"people" | "posts">((searchParams.get("tab") as any) || "people");
   const [activeCircle, setActiveCircle] = useState<CircleTier | "all">("all");
+  const [postFeedMode, setPostFeedMode] = useState<"affinity" | "recent" | "engagement">("affinity");
 
   const { activeRole } = useRole();
   const { flatPosts: allPosts, isLoading: loadingPosts } = useFeedPosts();
-  const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, mainTab === "trustcircle");
+  const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -111,16 +126,58 @@ const Discover = () => {
     return Array.from(locs).sort();
   }, [trustData]);
 
-  /* ── Filtered Posts ── */
-  const filteredPosts = useMemo(() => {
-    if (!search.trim()) return allPosts.slice(0, 20);
-    const q = search.toLowerCase();
-    return allPosts.filter((p) =>
-      p.content.toLowerCase().includes(q) ||
-      p.hashtags?.some((h) => h.toLowerCase().includes(q)) ||
-      (p.author.display_name || p.author.full_name).toLowerCase().includes(q)
-    );
-  }, [allPosts, search]);
+  /* ── AffinityFeed™ Ranked Posts ── */
+  const affinityRankedPosts = useMemo(() => {
+    if (!allPosts.length) return [];
+
+    // Build author→tier map from trust data
+    const authorTierMap = new Map<string, number>();
+    if (trustData) {
+      ([1, 2, 3, 4, 5] as CircleTier[]).forEach((tier) => {
+        const key = CIRCLE_TIERS[tier].key;
+        trustData[key].forEach((r) => {
+          authorTierMap.set(r.target_id, tier);
+        });
+      });
+    }
+
+    // Filter by search if needed
+    let posts = allPosts;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      posts = allPosts.filter((p) =>
+        p.content.toLowerCase().includes(q) ||
+        p.hashtags?.some((h) => h.toLowerCase().includes(q)) ||
+        (p.author.display_name || p.author.full_name).toLowerCase().includes(q)
+      );
+    }
+
+    // Score and sort based on selected mode
+    if (postFeedMode === "affinity") {
+      return [...posts]
+        .map((post) => {
+          const tier = authorTierMap.get(post.author.id) || 5;
+          return { post, score: computeAffinityFeedScore(post, tier), tier };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 30);
+    } else if (postFeedMode === "engagement") {
+      return [...posts]
+        .map((post) => ({
+          post,
+          score: post.like_count + post.comment_count * 2 + post.bookmark_count * 3,
+          tier: authorTierMap.get(post.author.id) || 5,
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 30);
+    } else {
+      return posts.slice(0, 30).map((post) => ({
+        post,
+        score: 0,
+        tier: authorTierMap.get(post.author.id) || 5,
+      }));
+    }
+  }, [allPosts, trustData, search, postFeedMode]);
 
   const hasActiveFilters = !!roleFilter || !!locationFilter;
 
@@ -164,7 +221,7 @@ const Discover = () => {
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={mainTab === "trustcircle" ? "Search by name, headline, specialization, org…" : "Search posts by content, hashtag, author…"}
+              placeholder={mainTab === "people" ? "Search by name, headline, specialization, org…" : "Search posts by content, hashtag, author…"}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onBlur={() => { if (search.trim()) saveRecentSearch(search.trim()); }}
@@ -180,24 +237,24 @@ const Discover = () => {
             )}
           </div>
 
-          {/* Main Tabs: TrustCircle / Posts */}
-          <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as "trustcircle" | "posts")} className="mb-4">
+          {/* Main Tabs: People (AffinityRank™) / Posts (AffinityFeed™) */}
+          <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as "people" | "posts")} className="mb-4">
             <TabsList className="w-full grid grid-cols-2 h-10">
-              <TabsTrigger value="trustcircle" className="gap-1.5 text-sm">
-                <Sparkles className="h-4 w-4" />
-                TrustCircle
+              <TabsTrigger value="people" className="gap-1.5 text-sm">
+                <Users className="h-4 w-4" />
+                People
                 {trustData && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{circleCounts.all}</span>}
               </TabsTrigger>
               <TabsTrigger value="posts" className="gap-1.5 text-sm">
                 <FileText className="h-4 w-4" />
                 Posts
-                {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{filteredPosts.length}</span>}
+                {affinityRankedPosts.length > 0 && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{affinityRankedPosts.length}</span>}
               </TabsTrigger>
             </TabsList>
           </Tabs>
 
-          {/* TrustCircle Tab */}
-          {mainTab === "trustcircle" && (
+          {/* People Tab (AffinityRank™) */}
+          {mainTab === "people" && (
             <>
               {/* Circle Tabs — Horizontal */}
               <div className="mb-4 overflow-x-auto scrollbar-hide">
@@ -355,24 +412,87 @@ const Discover = () => {
             </>
           )}
 
-          {/* Posts Tab */}
+          {/* Posts Tab (AffinityFeed™) */}
           {mainTab === "posts" && (
             <>
-              {loadingPosts ? (
+              {/* AffinityFeed™ Mode Selector */}
+              <div className="flex items-center gap-2 mb-4 flex-wrap">
+                <div className="flex items-center gap-1 bg-secondary/50 rounded-lg p-0.5">
+                  {([
+                    { key: "affinity" as const, label: "AffinityFeed™", icon: Sparkles },
+                    { key: "engagement" as const, label: "Top Engaged", icon: TrendingUp },
+                    { key: "recent" as const, label: "Recent", icon: RefreshCw },
+                  ]).map(({ key, label, icon: Icon }) => (
+                    <button
+                      key={key}
+                      onClick={() => setPostFeedMode(key)}
+                      className={cn(
+                        "flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all",
+                        postFeedMode === key
+                          ? "bg-card shadow-sm text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      <Icon className="h-3 w-3" />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {postFeedMode === "affinity" && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground ml-auto">
+                        <Info className="h-3 w-3" />
+                        Trust-weighted ranking
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-xs max-w-[260px]">
+                      <p className="font-semibold mb-1">AffinityFeed™ Algorithm</p>
+                      <p className="text-muted-foreground">Posts are ranked by the author's trust circle tier, engagement quality, and freshness. Inner Circle content stays relevant 7× longer than Ecosystem posts.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </div>
+
+              {/* Role context for AffinityFeed */}
+              {postFeedMode === "affinity" && (
+                <div className="flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-muted/30 border border-border">
+                  <Sparkles className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <p className="text-[11px] text-muted-foreground">
+                    Posts ranked by <span className="font-semibold text-foreground">AffinityFeed™</span> — content from your trust network is prioritized based on circle proximity
+                  </p>
+                </div>
+              )}
+
+              {(loadingPosts || loadingTrust) ? (
                 <div className="space-y-4">
                   {[1, 2, 3].map((i) => <PostCardSkeleton key={i} />)}
                 </div>
-              ) : filteredPosts.length === 0 ? (
-                <EmptyState icon={FileText} text="No posts found" />
+              ) : affinityRankedPosts.length === 0 ? (
+                <EmptyState icon={FileText} text="No posts found. Try a different search or check back later." />
               ) : (
-                <div className="space-y-4">
-                  {!search.trim() && (
-                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                      <TrendingUp className="h-3.5 w-3.5" /> Showing recent posts — search to find specific content
-                    </p>
-                  )}
-                  {filteredPosts.map((post) => (
-                    <PostCard key={post.id} post={post} />
+                <div className="space-y-3">
+                  {affinityRankedPosts.map(({ post, tier, score }) => (
+                    <div key={post.id} className="relative">
+                      {postFeedMode === "affinity" && tier <= 3 && (
+                        <div className="absolute -left-1 top-3 z-10">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className={cn(
+                                "w-1.5 h-8 rounded-full",
+                                tier === 1 && "bg-amber-500",
+                                tier === 2 && "bg-primary",
+                                tier === 3 && "bg-intermediary",
+                              )} />
+                            </TooltipTrigger>
+                            <TooltipContent side="left" className="text-[10px]">
+                              {CIRCLE_TIERS[tier as CircleTier].label} · Score {score.toFixed(1)}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      )}
+                      <PostCard post={post} />
+                    </div>
                   ))}
                 </div>
               )}
