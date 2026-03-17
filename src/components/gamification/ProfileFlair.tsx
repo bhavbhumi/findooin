@@ -13,8 +13,8 @@ interface FlairAvatarWrapperProps {
 
 const borderStyles: Record<string, string> = {
   none: "",
-  fire: "ring-2 ring-offset-2 ring-offset-background ring-[hsl(var(--gold))] animate-pulse",
-  diamond: "ring-2 ring-offset-2 ring-offset-background ring-[hsl(var(--status-highlight))]",
+  fire: "ring-[3px] ring-offset-2 ring-offset-background ring-[hsl(var(--gold))] animate-pulse",
+  diamond: "ring-[3px] ring-offset-2 ring-offset-background ring-[hsl(var(--status-highlight))]",
   legendary: "ring-[3px] ring-offset-2 ring-offset-background ring-[hsl(var(--gold))]",
 };
 
@@ -23,22 +23,31 @@ export function FlairAvatarWrapper({ avatarBorder, children, className }: FlairA
     return (
       <div className={cn("relative", className)}>
         <motion.div
-          className="absolute -inset-1 rounded-full opacity-60"
+          className="absolute -inset-1.5 rounded-full opacity-95"
           style={{
-            background: "conic-gradient(from 0deg, hsl(var(--gold)), hsl(var(--status-highlight)), hsl(var(--gold)), hsl(var(--investor)), hsl(var(--gold)))",
+            background: "conic-gradient(from 0deg, hsl(var(--gold)), hsl(var(--status-highlight)), hsl(var(--investor)), hsl(var(--primary)), hsl(var(--gold)))",
           }}
           animate={{ rotate: 360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 2.8, repeat: Infinity, ease: "linear" }}
         />
-        <div className="relative rounded-full bg-background p-[2px]">
+        <div
+          className="relative rounded-full bg-background p-[3px]"
+          style={{ boxShadow: "0 0 0 2px hsl(var(--background)), 0 0 18px hsl(var(--gold) / 0.55)" }}
+        >
           {children}
         </div>
       </div>
     );
   }
 
+  const borderGlow = avatarBorder === "fire"
+    ? "0 0 0 2px hsl(var(--background)), 0 0 16px hsl(var(--gold) / 0.5)"
+    : avatarBorder === "diamond"
+      ? "0 0 0 2px hsl(var(--background)), 0 0 16px hsl(var(--status-highlight) / 0.55)"
+      : undefined;
+
   return (
-    <div className={cn(borderStyles[avatarBorder] || "", "rounded-full", className)}>
+    <div className={cn(borderStyles[avatarBorder] || "", "rounded-full", className)} style={borderGlow ? { boxShadow: borderGlow } : undefined}>
       {children}
     </div>
   );
