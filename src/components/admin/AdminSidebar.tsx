@@ -87,13 +87,19 @@ export function AdminSidebar() {
       ],
     },
     {
+      label: "Support",
+      items: [
+        { title: "Tickets", url: "/admin/support", icon: LifeBuoy },
+        { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen },
+      ],
+    },
+    {
       label: "Infrastructure",
       items: [
         { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
         { title: "Scorecard", url: "/admin/scorecard", icon: Gauge },
         { title: "Module Audit", url: "/admin/module-audit", icon: ClipboardList },
         { title: "SEO Audit", url: "/admin/seo", icon: Search },
-        { title: "Support", url: "/admin/support", icon: LifeBuoy },
       ],
     },
     {
