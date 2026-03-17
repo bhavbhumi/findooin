@@ -85,9 +85,9 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
             <Badge variant="secondary" className="text-[10px]">{listings.length} total</Badge>
           </div>
           {isOwnProfile && (
-            <Link to="/directory">
+            <Link to="/showcase">
               <Button variant="outline" size="sm">
-                <ExternalLink className="h-3 w-3 mr-1.5" /> Go to Directory
+                <ExternalLink className="h-3 w-3 mr-1.5" /> Go to Showcase
               </Button>
             </Link>
           )}
