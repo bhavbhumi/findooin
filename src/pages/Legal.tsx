@@ -35,7 +35,7 @@ const termsSections = [
 
 4.2 Verification: Issuers and Intermediaries are required to submit regulatory credentials (including but not limited to SEBI registration certificates, AMFI ARN numbers, IRDAI license numbers, RBI registration details, or PFRDA POP/NPS registrations) for verification. FindOO verifies credentials against publicly available regulatory databases and records. Verification confirms registration status at the time of verification only and does not constitute an endorsement of competence, conduct, or future compliance. FindOO may periodically re-verify credentials and may revoke verified status if a User's registration is found to be lapsed, suspended, or revoked by the relevant regulator.
 
-4.3 Account Security: You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account. You must immediately notify FindOO at hello@findoo.in of any unauthorized access or suspected breach. FindOO shall not be liable for any loss arising from unauthorized use of your account where such use was not attributable to FindOO's negligence.`,
+4.3 Account Security: You are responsible for maintaining the confidentiality of your login credentials and for all activities that occur under your account. You must immediately notify FindOO at legal@findoo.in of any unauthorized access or suspected breach. FindOO shall not be liable for any loss arising from unauthorized use of your account where such use was not attributable to FindOO's negligence.`,
   },
   {
     title: "5. User Conduct & Acceptable Use",
