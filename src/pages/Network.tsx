@@ -41,7 +41,7 @@ const Network = () => {
   const [myFollowers, setMyFollowers] = useState<NetworkUser[]>([]);
   const [pendingIncoming, setPendingIncoming] = useState<{ id: string; user: NetworkUser }[]>([]);
   const [pendingOutgoing, setPendingOutgoing] = useState<{ id: string; user: NetworkUser }[]>([]);
-  const [suggestions, setSuggestions] = useState<NetworkUser[]>([]);
+  
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
