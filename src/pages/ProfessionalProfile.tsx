@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
 import {
   Shield, MapPin, Building2, Hash, UserCheck, Users,
