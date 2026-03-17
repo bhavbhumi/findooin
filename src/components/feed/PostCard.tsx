@@ -106,7 +106,7 @@ export function PostCard({ post }: { post: FeedPost }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <Link to={`/profile/${post.author.id}`} className="font-semibold text-card-foreground text-sm truncate hover:underline">
-              <FlairName nameEffect={flair?.name_effect || "none"}>
+              <FlairName nameEffect={resolvedFlair.name_effect}>
                 {post.author.display_name || post.author.full_name}
               </FlairName>
             </Link>

@@ -200,7 +200,7 @@ export default function ProfessionalProfile() {
               <div className="min-w-0 pb-1">
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl md:text-2xl font-bold font-heading truncate">
-                    <FlairName nameEffect={flair?.name_effect || "none"}>
+                    <FlairName nameEffect={resolvedFlair.name_effect}>
                       {displayName}
                     </FlairName>
                   </h1>

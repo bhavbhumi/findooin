@@ -92,7 +92,7 @@ function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
           <span className="text-sm font-semibold text-card-foreground truncate">
-            <FlairName nameEffect={flair?.name_effect || "none"}>
+            <FlairName nameEffect={resolvedFlair.name_effect}>
               {entry.profile.display_name || entry.profile.full_name}
             </FlairName>
           </span>

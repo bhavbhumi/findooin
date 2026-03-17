@@ -208,7 +208,7 @@ export default function ProfessionalDirectory() {
                           </div>
                         </div>
                         <h3 className="text-sm font-semibold truncate mb-1 group-hover:text-primary transition-colors">
-                          <FlairName nameEffect={nameEffect}>
+                          <FlairName nameEffect={resolvedFlair.name_effect}>
                             {entity.entity_name}
                           </FlairName>
                         </h3>
