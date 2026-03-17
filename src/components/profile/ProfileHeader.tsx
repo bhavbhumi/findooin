@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
+import { FlairAvatarWrapper, FlairName } from "@/components/gamification/ProfileFlair";
+import { useProfileFlair } from "@/hooks/useProfileFlair";
 
 interface ProfileHeaderProps {
   profile: ProfileData;
@@ -79,6 +81,7 @@ export const ProfileHeader = ({
   profile, roles, stats, isOwnProfile, connectionStatus, follow, connect, unfollow, disconnect, connLoading, onEditProfile, onNavigateToNetwork,
 }: ProfileHeaderProps) => {
   const navigate = useNavigate();
+  const { data: flair } = useProfileFlair(profile.id);
   const primaryRole = roles[0]?.role;
   const primaryRoleConf = primaryRole ? ROLE_CONFIG[primaryRole] : null;
   const bannerGradient = primaryRoleConf?.bannerGradient || "from-primary/15 via-primary/8 to-transparent";
@@ -217,13 +220,15 @@ export const ProfileHeader = ({
           <div className="flex items-end gap-3 sm:gap-4 -mt-10 sm:-mt-12 md:-mt-14">
             {/* Round avatar overlapping banner */}
             <div className="shrink-0 relative z-10 group">
-              <AvatarWithFallback
-                src={profile.avatar_url}
-                initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
-                className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg"
-                textClassName="text-xl sm:text-2xl md:text-3xl"
-                roleColor={primaryRoleConf?.hslVar}
-              />
+              <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+                <AvatarWithFallback
+                  src={profile.avatar_url}
+                  initials={getInitials(isEntity && profile.organization ? profile.organization : profile.full_name)}
+                  className="h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border-[3px] border-card shadow-lg"
+                  textClassName="text-xl sm:text-2xl md:text-3xl"
+                  roleColor={primaryRoleConf?.hslVar}
+                />
+              </FlairAvatarWrapper>
               {isOwnProfile && (
                 <button
                   onClick={onEditProfile}
@@ -239,7 +244,9 @@ export const ProfileHeader = ({
             <div className="flex-1 min-w-0 pb-1">
               <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                 <h1 className="text-base sm:text-lg md:text-xl font-bold font-heading text-card-foreground leading-tight break-words">
-                  {primaryName}
+                  <FlairName nameEffect={flair?.name_effect || "none"}>
+                    {primaryName}
+                  </FlairName>
                 </h1>
                 {profile.verification_status === "verified" && (
                   <span className="inline-flex items-center gap-0.5 text-accent">
