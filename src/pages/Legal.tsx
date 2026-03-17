@@ -462,7 +462,7 @@ Key Compliance Officers:
 • Grievance Officer: [To be appointed] (responds within 24 hours, resolves within 15 days)
 • Chief Compliance Officer: [To be appointed]
 • Nodal Contact Person: [To be appointed] (24×7 availability for law enforcement coordination)
-For all inquiries: hello@findoo.in`,
+For all inquiries: compliance@findoo.in`,
   },
   {
     title: "3. Content Moderation Overview",
