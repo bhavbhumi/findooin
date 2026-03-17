@@ -93,7 +93,7 @@ const WEBSITE_MODULES: AuditModule[] = [
       { feature: "Transparency Report", scope: "Content moderation statistics", status: "completed" },
       { feature: "Community Guidelines", scope: "Behavioral rules + FAQ", status: "completed" },
       { feature: "Legal hub", scope: "Centralized links to all legal pages", status: "completed" },
-      { feature: "Legal entity details", scope: "Real CIN, address, officer names", status: "incomplete", note: "Placeholder data — needs real entity info" },
+      { feature: "Legal entity details", scope: "Real CIN, address, officer names", status: "completed", note: "CIN AAA-7870, Malad West address updated. Officer names pending." },
     ],
   },
   {

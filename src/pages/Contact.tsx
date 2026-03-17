@@ -170,7 +170,7 @@ const Contact = () => {
                   <h4 className="text-sm font-bold font-heading text-card-foreground">Email Us</h4>
                   <p className="text-xs text-muted-foreground mt-1 mb-3">Available Mon–Sat, 9 AM to 6 PM.</p>
                   <Button variant="outline" size="sm" className="w-full" asChild>
-                    <a href="mailto:support@findoo.in">support@findoo.in</a>
+                    <a href="mailto:hello@findoo.in">hello@findoo.in</a>
                   </Button>
                 </div>
 
