@@ -158,7 +158,7 @@ const ArchitectureTab = () => (
             { domain: "Content", tables: "posts, comments, post_interactions, poll_options, poll_votes, survey_questions, survey_options, survey_responses, featured_posts, post_drafts" },
             { domain: "Jobs", tables: "jobs, job_applications, saved_jobs" },
             { domain: "Events", tables: "events, event_registrations, event_speakers" },
-            { domain: "Directory", tables: "listings, listing_reviews, listing_enquiries" },
+            { domain: "Showcase", tables: "listings, listing_reviews, listing_enquiries" },
             { domain: "Platform", tables: "messages, notifications, connections, reports, blog_posts, file_uploads, vault_files" },
           ].map((d) => (
             <div key={d.domain} className="border border-border rounded-lg p-3">
@@ -432,7 +432,7 @@ const ApiReferenceTab = () => (
         </CardContent>
       </Card>
 
-      {/* Directory, Vault, Network, Notification, Admin, Utility */}
+      {/* Showcase, Vault, Network, Notification, Admin, Utility */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">Other Hooks</CardTitle>
@@ -441,7 +441,7 @@ const ApiReferenceTab = () => (
           <HookDoc
             name="useListings(filters?)"
             file="src/hooks/useListings.ts"
-            desc="Directory listings with owner profiles. 8 exports including reviews and enquiries."
+            desc="Showcase listings with owner profiles. 8 exports including reviews and enquiries."
             returns={[{ name: "data", type: "Listing[]", desc: "Filtered listings" }]}
           />
           <HookDoc

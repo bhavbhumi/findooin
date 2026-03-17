@@ -37,7 +37,7 @@ const PAGES_WITH_META = [
   "Landing", "About", "Blog", "BlogPost", "Contact", "Explore",
   "HelpDesk", "CommunityGuidelines", "Terms", "Privacy", "CookiePolicy",
   "Transparency", "Accessibility", "RefundPolicy", "Discover", "Feed",
-  "Profile", "Network", "Jobs", "Events", "Directory", "Settings",
+  "Profile", "Network", "Jobs", "Events", "Showcase", "Settings",
   "Notifications", "Messages", "Vault", "SharedVaultFile", "PostAnalytics",
   "DeveloperDocs", "PitchDeck", "PitchIndex", "QuickLinks", "Legal",
   "SiteMap", "Install", "EventCheckin", "DigitalCard",

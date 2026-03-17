@@ -125,7 +125,7 @@ const WhatIsContent = () => (
             { feature: "Free for Individuals", linkedin: true, whatsapp: true, terminal: false, findoo: true },
             { feature: "Job Board (BFSI)", linkedin: false, whatsapp: false, terminal: false, findoo: true },
             { feature: "Event Management", linkedin: true, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Product & Service Directory", linkedin: false, whatsapp: false, terminal: true, findoo: true },
+            { feature: "Product & Service Showcase", linkedin: false, whatsapp: false, terminal: true, findoo: true },
           ].map((row, i) => (
             <motion.div key={row.feature} className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] text-center text-xs border-b border-border last:border-0"
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.3}>
@@ -319,7 +319,7 @@ const roleFeatures = {
     activeClass: "bg-investor/15 border-investor ring-2 ring-investor/20",
     features: [
       { module: "Feed", icon: MessageSquare, can: ["Browse all posts", "Like, comment, bookmark & share", "Create text posts & announcements"], cant: ["Create Polls or Surveys"] },
-      { module: "Directory", icon: Package, can: ["Browse & compare products and services", "Send enquiries to listings", "Write reviews & ratings"], cant: ["Create product or service listings"] },
+      { module: "Showcase", icon: Package, can: ["Browse & compare products and services", "Send enquiries to listings", "Write reviews & ratings"], cant: ["Create product or service listings"] },
       { module: "Jobs", icon: Briefcase, can: ["Browse all active jobs", "Apply with resume & cover note", "Track applications via Candidate Dashboard"], cant: ["Post jobs or access Employer Dashboard"] },
       { module: "Events", icon: Calendar, can: ["Browse & register for events", "Attend webinars and investor meets"], cant: ["Create or organize events"] },
       { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
@@ -335,7 +335,7 @@ const roleFeatures = {
     activeClass: "bg-intermediary/15 border-intermediary ring-2 ring-intermediary/20",
     features: [
       { module: "Feed", icon: MessageSquare, can: ["All post types: research, commentary, articles", "Create Polls & Surveys", "Schedule & draft posts"], cant: [] },
-      { module: "Directory", icon: Wrench, can: ["List professional services (Advisory, Compliance, etc.)", "Manage enquiries & reviews"], cant: ["Create product listings (Issuer only)"] },
+      { module: "Showcase", icon: Wrench, can: ["List professional services (Advisory, Compliance, etc.)", "Manage enquiries & reviews"], cant: ["Create product listings (Issuer only)"] },
       { module: "Jobs", icon: Briefcase, can: ["Post jobs & access Employer Dashboard", "Apply for jobs as Individual (Candidate Dashboard)", "Browse & save jobs"], cant: [] },
       { module: "Events", icon: Calendar, can: ["Create & organize events", "Manage registrations & speakers", "Access Organizer Dashboard"], cant: [] },
       { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
@@ -351,7 +351,7 @@ const roleFeatures = {
     activeClass: "bg-issuer/15 border-issuer ring-2 ring-issuer/20",
     features: [
       { module: "Feed", icon: MessageSquare, can: ["All post types: announcements, research, articles", "Create Polls & Surveys", "Schedule & draft posts"], cant: [] },
-      { module: "Directory", icon: Package, can: ["List financial products (MF, Insurance, PMS, AIF, etc.)", "Manage enquiries & reviews"], cant: ["Create service listings (Intermediary only)"] },
+      { module: "Showcase", icon: Package, can: ["List financial products (MF, Insurance, PMS, AIF, etc.)", "Manage enquiries & reviews"], cant: ["Create service listings (Intermediary only)"] },
       { module: "Jobs", icon: Briefcase, can: ["Post jobs & access Employer Dashboard", "Browse & save jobs"], cant: ["Candidate Dashboard (Individual accounts only)"] },
       { module: "Events", icon: Calendar, can: ["Create & organize events", "Manage registrations & speakers", "Access Organizer Dashboard"], cant: [] },
       { module: "Network", icon: Users, can: ["Follow & connect with verified professionals", "Send direct messages"], cant: [] },
@@ -539,11 +539,11 @@ const WhoIsItForContent = () => (
               subTypes: ["Asset Management Companies (AMCs)", "Insurance Companies", "NBFCs & Banks", "Fund Houses & PMS Providers"],
               features: [
                 "Distribute announcements to verified audiences",
-                "List financial products in the Directory",
+                "List financial products in the Showcase",
                 "Post BFSI jobs and access Employer Dashboard",
                 "Organize events, webinars & investor meets",
               ],
-              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Directory, and host a virtual launch event — all from one platform.",
+              scenario: "An AMC launching a new NFO can announce it to verified distributors, list the product in the Showcase, and host a virtual launch event — all from one platform.",
             },
             {
               icon: UserCheck,
@@ -554,7 +554,7 @@ const WhoIsItForContent = () => (
               subTypes: ["Mutual Fund Distributors (MFDs)", "Registered Investment Advisors (RIAs)", "Insurance Agents & Brokers", "Sub-Brokers & Authorized Persons"],
               features: [
                 "Showcase SEBI/AMFI/IRDAI credentials",
-                "List professional services in the Directory",
+                "List professional services in the Showcase",
                 "Apply for jobs AND post jobs (dual access)",
                 "Create polls, surveys & research notes",
               ],

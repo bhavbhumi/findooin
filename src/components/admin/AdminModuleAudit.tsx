@@ -161,7 +161,7 @@ const APP_MODULES: AuditModule[] = [
       { feature: "People also viewed", scope: "Similar profile suggestions", status: "completed" },
       { feature: "Mutual connections", scope: "Shared connections display", status: "completed" },
       { feature: "Digital card tab", scope: "vCard with QR code, share, download", status: "completed" },
-      { feature: "Listings tab", scope: "User's directory listings on profile", status: "completed" },
+      { feature: "Listings tab", scope: "User's showcase listings on profile", status: "completed" },
       { feature: "Vault tab", scope: "Document vault integrated in profile", status: "completed" },
       { feature: "Role management dialog", scope: "Add/switch user roles", status: "completed" },
       { feature: "IR Tab (Investor Relations)", scope: "Dedicated tab for Issuers showing financials, filings, shareholding", status: "not_started", note: "Designed (docs/ir-tab-design.md) — not yet wired into profile" },
@@ -230,7 +230,7 @@ const APP_MODULES: AuditModule[] = [
     ],
   },
   {
-    name: "Directory (Marketplace)",
+    name: "Showcase (Marketplace)",
     items: [
       { feature: "Listing browse with filters", scope: "Products and services with category filters", status: "completed" },
       { feature: "Create listing dialog", scope: "Full listing creation form", status: "completed" },

@@ -117,13 +117,15 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "about");
+  const initialTab = searchParams.get("tab");
+  const normalizedInitialTab = initialTab === "directory" ? "showcase" : initialTab;
+  const [activeTab, setActiveTab] = useState(normalizedInitialTab || "about");
   const [endorsementCount, setEndorsementCount] = useState(0);
   const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
   const { refreshRoles } = useRole();
 
   const isOwnProfile = !id || id === currentUserId;
-  
+
   // Query user posts directly instead of loading all feed posts
   const { data: userPosts, isLoading: postsLoading } = useUserPosts(profile?.id);
 
@@ -230,8 +232,8 @@ const Profile = () => {
                   <TabsTrigger value="network" className={tabTriggerClass}>Network</TabsTrigger>
                   <TabsTrigger value="activity" className={tabTriggerClass}>Activity</TabsTrigger>
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
-                  <TabsTrigger value="directory" className={tabTriggerClass}>
-                    <Store className="h-3.5 w-3.5 mr-1" /> Directory
+                  <TabsTrigger value="showcase" className={tabTriggerClass}>
+                    <Store className="h-3.5 w-3.5 mr-1" /> Showcase
                   </TabsTrigger>
                   {isOwnProfile && (
                     <TabsTrigger value="vault" className={tabTriggerClass}>
@@ -282,7 +284,7 @@ const Profile = () => {
                 )}
               </TabsContent>
 
-              <TabsContent value="directory" className="mt-0">
+              <TabsContent value="showcase" className="mt-0">
                 <ProfileListingsTab profileId={profile.id} isOwnProfile={isOwnProfile} roles={roles} />
               </TabsContent>
 

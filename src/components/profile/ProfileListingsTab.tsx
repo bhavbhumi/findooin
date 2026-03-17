@@ -66,7 +66,7 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
     setLoading(false);
   };
 
-  if (loading) return <FindooLoader size="sm" text="Loading directory..." />;
+  if (loading) return <FindooLoader size="sm" text="Loading showcase..." />;
 
   // ─── Provider View: My Listings ───
   if (showProviderView) {
