@@ -40,35 +40,43 @@ findoo/
 │   ├── architecture.md      # System design, ERD, data flow, security
 │   ├── api-reference.md     # Hook & component API docs
 │   ├── edge-functions.md    # Backend function documentation
+│   ├── ir-tab-design.md     # IR tab design specification
 │   └── getting-started.md   # This file
 │
 ├── public/                  # Static assets (favicon, PWA icons, sitemap, robots.txt)
 ├── supabase/
 │   ├── config.toml          # Backend config (auto-managed, DO NOT EDIT)
-│   ├── functions/           # Edge functions (auto-deployed)
+│   ├── functions/           # Edge functions (9 functions, auto-deployed)
 │   └── migrations/          # DB migrations (read-only)
 │
 ├── src/
 │   ├── assets/              # Logo images (imported as ES6 modules)
 │   ├── components/
 │   │   ├── ui/              # shadcn/ui primitives (53 components)
-│   │   ├── skeletons/       # Loading skeletons per module (5 files)
+│   │   ├── skeletons/       # Loading skeletons per module (7 files)
 │   │   ├── selectors/       # Location, Certification, Language pickers
-│   │   ├── feed/            # Feed module components (10 files)
+│   │   ├── illustrations/   # SVG empty-state illustrations
+│   │   ├── decorative/      # Section decorations for public pages
+│   │   ├── feed/            # Feed module components (12 files)
 │   │   ├── jobs/            # Jobs module components (7 files)
 │   │   ├── events/          # Events module components (6 files)
-│   │   ├── directory/       # Directory module components (5 files)
+│   │   ├── directory/       # Showcase module components (5 files)
 │   │   ├── network/         # Network module components (2 files)
-│   │   ├── profile/         # Profile module components (13 files)
+│   │   ├── profile/         # Profile module components (18 files)
 │   │   ├── vault/           # Vault module components (3 files)
-│   │   ├── admin/           # Admin panel components (6 files)
+│   │   ├── gamification/    # XP, badges, streaks, challenges (10 files)
+│   │   ├── admin/           # Admin panel components (20+ files)
+│   │   ├── blog/            # Blog polls and surveys
+│   │   ├── compare/         # Comparison tables
+│   │   ├── landing/         # Landing page sections
+│   │   ├── pitch/           # Pitch deck renderer
 │   │   └── discover/        # Discover sidebar (1 file)
 │   ├── contexts/            # React contexts (RoleContext)
-│   ├── data/                # Static data (certifications, languages, locations)
-│   ├── hooks/               # 18 custom hooks — one per module
+│   ├── data/                # Static data (certifications, languages, locations, comparisons, pitches)
+│   ├── hooks/               # 25 custom hooks — one per module
 │   ├── integrations/        # Auto-generated Supabase client & types (DO NOT EDIT)
-│   ├── lib/                 # 8 utility modules (utils, storage, session, sanitize, throttle, etc.)
-│   ├── pages/               # 36 route-level page components
+│   ├── lib/                 # 11 utility modules (utils, storage, session, sanitize, throttle, gamification, etc.)
+│   ├── pages/               # 50 route-level page components (+ 18 admin sub-routes)
 │   ├── test/                # 16 test files (unit + integration)
 │   ├── index.css            # Design system tokens (HSL custom properties)
 │   ├── App.tsx              # Root component (providers, routes)

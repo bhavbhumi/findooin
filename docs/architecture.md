@@ -12,13 +12,13 @@
 │                                                              │
 │  ┌────────────┐   ┌──────────────┐   ┌───────────────────┐  │
 │  │  Pages      │   │  Contexts     │   │  UI Components    │  │
-│  │  (36 Routes)│──▶│  RoleContext   │──▶│  shadcn/ui (53)   │  │
+│  │  (50 Routes)│──▶│  RoleContext   │──▶│  shadcn/ui (53)   │  │
 │  │  /feed      │   │  ThemeProvider │   │  Module-specific  │  │
 │  │  /jobs      │   └──────┬───────┘   │  Skeletons         │  │
 │  │  /events    │          │           └───────────────────┘  │
-│  │  /directory │   ┌──────┴───────┐                          │
+│  │  /showcase  │   ┌──────┴───────┐                          │
 │  │  /profile   │   │  Custom Hooks │                          │
-│  │  /messages  │   │  (18 hooks)   │                          │
+│  │  /messages  │   │  (25 hooks)   │                          │
 │  │  /admin     │   │  useFeedPosts │                          │
 │  │  /vault     │   │  useJobs      │                          │
 │  │  /discover  │   │  useEvents    │                          │
@@ -40,13 +40,13 @@
               │    Lovable Cloud        │
               │    (Supabase Backend)   │
               │                         │
-              │  ├── PostgreSQL (34 tables)
+              │  ├── PostgreSQL (60+ tables)
               │  ├── Auth (email+password)
-              │  ├── Storage (5 buckets)
-              │  ├── Edge Functions (4)
+              │  ├── Storage (6 buckets)
+              │  ├── Edge Functions (9)
               │  ├── Realtime (messages, notifications)
               │  ├── RLS Policies (all tables)
-              │  └── DB Functions (19)
+              │  └── DB Functions (40)
               └─────────────────────────┘
 ```
 
@@ -54,27 +54,29 @@
 
 ## Module Map
 
-FindOO is organized into 11 feature modules, each with its own page, hook(s), and component folder:
+FindOO is organized into 13+ feature modules, each with its own page, hook(s), and component folder:
 
-| Module       | Route(s)                  | Hook(s)                                      | Component Folder         |
-| ------------ | ------------------------- | -------------------------------------------- | ------------------------ |
-| **Feed**     | `/feed`                   | `useFeedPosts`, `usePostInteractions`, `useDrafts`, `useScheduledPosts`, `useTrendingPosts`, `useViralPosts`, `useTrendingHashtags` | `components/feed/`       |
-| **Profile**  | `/profile`, `/profile/:id`| `useConnectionActions`, `usePostInteractions` | `components/profile/`    |
-| **Network**  | `/network`                | `useConnectionActions`                        | `components/network/`    |
-| **Jobs**     | `/jobs`                   | `useJobs` (11 exports)                        | `components/jobs/`       |
-| **Events**   | `/events`                 | `useEvents` (9 exports)                       | `components/events/`     |
-| **Directory**| `/directory`              | `useListings` (8 exports)                     | `components/directory/`  |
-| **Messages** | `/messages`               | (inline in page — Supabase Realtime)          | —                        |
-| **Vault**    | `/vault`                  | `useVault`                                    | `components/vault/`      |
-| **Analytics**| `/analytics`              | `useFeedPosts`, `usePostInteractions`         | —                        |
-| **Discover** | `/discover`               | `useConnectionActions`                        | `components/discover/`   |
-| **Admin**    | `/admin`                  | `useAdmin` (8 exports)                        | `components/admin/`      |
+| Module         | Route(s)                  | Hook(s)                                      | Component Folder         |
+| -------------- | ------------------------- | -------------------------------------------- | ------------------------ |
+| **Feed**       | `/feed`                   | `useFeedPosts`, `usePostInteractions`, `useDrafts`, `useScheduledPosts`, `useTrendingPosts`, `useViralPosts`, `useTrendingHashtags` | `components/feed/`       |
+| **Profile**    | `/profile`, `/profile/:id`| `useConnectionActions`, `usePostInteractions`, `useProfileFlair`, `useTabPrivacy` | `components/profile/`    |
+| **Network**    | `/network`                | `useConnectionActions`                        | `components/network/`    |
+| **Jobs**       | `/jobs`                   | `useJobs` (11 exports)                        | `components/jobs/`       |
+| **Events**     | `/events`                 | `useEvents` (9 exports)                       | `components/events/`     |
+| **Showcase**   | `/showcase`               | `useListings` (8 exports)                     | `components/directory/`  |
+| **Messages**   | `/messages`               | (inline in page — Supabase Realtime)          | —                        |
+| **Vault**      | `/vault`                  | `useVault`                                    | `components/vault/`      |
+| **Analytics**  | `/analytics`              | `useFeedPosts`, `usePostInteractions`         | —                        |
+| **Discover**   | `/discover`               | `useConnectionActions`, `useTrustCircleIQ`    | `components/discover/`   |
+| **Bookmarks**  | `/bookmarks`              | `usePostInteractions`, `useJobs`, `useEvents` | —                        |
+| **Leaderboard**| `/leaderboard`            | `useGamification`                             | `components/gamification/` |
+| **Admin**      | `/admin`                  | `useAdmin`, `useInvitations` (15+ exports)    | `components/admin/`      |
 
 ---
 
 ## Entity-Relationship Diagram
 
-The database contains 34 tables organized into 6 domains. Foreign keys are shown as arrows.
+The database contains 60+ tables organized into 8 domains. Foreign keys are shown as arrows.
 
 ### Core User Domain
 
@@ -82,11 +84,15 @@ The database contains 34 tables organized into 6 domains. Foreign keys are shown
 erDiagram
     profiles ||--o{ user_roles : "has roles"
     profiles ||--o{ active_sessions : "has sessions"
-    profiles ||--o{ user_settings : "has settings"
+    profiles ||--o{ profile_tab_privacy : "has privacy settings"
     profiles ||--o{ verification_requests : "submits"
     profiles ||--o{ profile_views : "viewed by"
     profiles ||--o{ endorsements : "receives"
     profiles ||--o{ card_exchanges : "card owner"
+    profiles ||--o{ education : "has education"
+    profiles ||--o{ publications : "has publications"
+    profiles ||--o{ recommendations : "receives"
+    profiles ||--o{ profile_flair : "has flair"
 
     profiles {
         uuid id PK
@@ -258,7 +264,7 @@ erDiagram
     }
 ```
 
-### Directory Domain
+### Showcase (Directory) Domain
 
 ```mermaid
 erDiagram
@@ -327,20 +333,82 @@ erDiagram
     }
 ```
 
+### Gamification Domain
+
+```mermaid
+erDiagram
+    user_xp ||--o{ xp_transactions : "earns"
+    user_xp ||--o{ user_challenge_progress : "tracks"
+    weekly_challenges ||--o{ user_challenge_progress : "has progress"
+    profiles ||--o{ user_badges : "earns"
+    badge_definitions ||--o{ user_badges : "awards"
+    profiles ||--o{ referral_links : "creates"
+    referral_links ||--o{ referral_conversions : "converts"
+    profiles ||--o{ social_proof_events : "triggers"
+
+    user_xp {
+        uuid user_id PK
+        integer total_xp
+        integer level
+        integer current_streak
+        date last_active_date
+    }
+
+    badge_definitions {
+        uuid id PK
+        text slug
+        text name
+        text tier
+        integer xp_reward
+    }
+```
+
+### Growth Domain
+
+```mermaid
+erDiagram
+    invitations ||--o{ sales_leads : "generates"
+    registry_entities ||--o{ invitations : "linked to"
+    registry_entities ||--o{ sales_leads : "linked to"
+    campaigns {
+        uuid id PK
+        text name
+        text campaign_type
+        text status
+    }
+    support_tickets {
+        uuid id PK
+        text subject
+        text category
+        text status
+    }
+```
+
 ### Supporting Tables
 
 | Table | Domain | Purpose |
 | --- | --- | --- |
 | `post_drafts` | Feed | Unsaved post drafts per user |
 | `blog_posts` | CMS | Public blog articles (admin-managed) |
+| `blog_poll_options` / `blog_poll_votes` | CMS | Blog post polls |
+| `blog_survey_questions` / `blog_survey_options` / `blog_survey_responses` | CMS | Blog post surveys |
 | `file_uploads` | Storage | Upload records for all storage buckets |
-| `vault_files` | Vault | Private document storage with share tokens |
 | `reports` | Moderation | User-submitted content/user reports |
 | `audit_logs` | Admin | Administrative action audit trail |
 | `endorsements` | Profile | Skill endorsements between users |
 | `card_exchanges` | Profile | Digital card view/save tracking |
 | `profile_views` | Profile | Profile view analytics |
-| `user_settings` | Settings | Privacy and notification preferences |
+| `profile_tab_privacy` | Privacy | Tab-level privacy controls per user |
+| `education` | Profile | User education history |
+| `publications` | Profile | User publications and research |
+| `recommendations` | Profile | Peer recommendations |
+| `intent_signals` | Discovery | User intent tracking for TrustCircle IQ |
+| `introductions` | Network | Warm introductions between users |
+| `affinity_scores` | Discovery | Computed affinity scores for ranking |
+| `email_send_log` | Email | Transactional email delivery log |
+| `email_send_state` | Email | Email queue processing state |
+| `email_unsubscribe_tokens` | Email | Unsubscribe token management |
+| `suppressed_emails` | Email | Bounced/suppressed email list |
 
 ---
 
@@ -434,7 +502,18 @@ useNotifications()
     → Prepend to local state + increment unreadCount
 ```
 
-### 6. Input Sanitization
+### 6. TrustCircle IQ (Affinity Ranking)
+
+```
+useTrustCircleIQ()
+  → Calls compute_trustcircle_iq(viewer_id) RPC
+  → Multi-factor scoring: role_weight × intent × trust_proximity × activity × freshness
+  → 5-tier circle assignment (Inner → Primary → Secondary → Tertiary → Ecosystem)
+  → Results cached in affinity_scores table
+  → Used by: Discover, Network suggestions, Showcase "Suggested" tab
+```
+
+### 7. Input Sanitization
 
 ```
 User submits content (post, comment, message)
@@ -443,7 +522,7 @@ User submits content (post, comment, message)
   → Sanitized content sent to Supabase
 ```
 
-### 7. Action Throttling
+### 8. Action Throttling
 
 ```
 User rapidly clicks "Like"
@@ -461,12 +540,23 @@ User rapidly clicks "Like"
 | ------------------------------ | -------- | ----------------------------------------------- |
 | `get_feed_posts`               | RPC      | Paginated feed with author profiles + counts     |
 | `get_conversations`            | RPC      | Conversation list with last message + unread     |
+| `get_leaderboard`              | RPC      | XP-based user leaderboard                        |
+| `compute_trustcircle_iq`       | RPC      | Multi-factor affinity scoring for discovery      |
 | `has_role`                     | RPC      | Check if user has a specific role                |
 | `check_rate_limit`             | RPC      | Generic rate limiter (posts, messages, connections) |
 | `enforce_session_limit`        | RPC      | Evict oldest sessions beyond max                 |
 | `cleanup_stale_sessions`       | RPC      | Remove sessions inactive > 7 days                |
+| `cleanup_old_intent_signals`   | RPC      | Remove intent signals older than 30 days         |
 | `date_of`                      | RPC      | Extract date from timestamp (immutable)          |
+| `resolve_flair_from_level`     | RPC      | Map XP level to profile flair settings           |
+| `award_xp`                     | Internal | Award XP with streak multiplier + mentor bonus   |
+| `track_challenge_progress`     | Internal | Update weekly challenge progress                 |
+| `update_login_streak`          | Internal | Track daily login streaks                        |
 | `create_notification`          | Internal | Insert notification (skips self-notifications)   |
+| `enqueue_email`                | Internal | Queue email for async sending                    |
+| `read_email_batch`             | Internal | Read batch of queued emails                      |
+| `delete_email`                 | Internal | Delete processed email from queue                |
+| `move_to_dlq`                  | Internal | Move failed email to dead letter queue           |
 | `handle_new_user`              | Trigger  | Auto-create profile on auth.users INSERT         |
 | `enforce_post_rate_limit`      | Trigger  | Max 10 posts/hour                                |
 | `enforce_message_rate_limit`   | Trigger  | Max 60 messages/5 minutes                        |
@@ -481,6 +571,13 @@ User rapidly clicks "Like"
 | `update_listing_review_stats`  | Trigger  | Auto-update review_count/average_rating          |
 | `update_updated_at`            | Trigger  | Auto-set updated_at on row update                |
 | `update_post_drafts_updated_at`| Trigger  | Auto-set updated_at on draft update              |
+| `sync_profile_flair_from_user_xp` | Trigger | Auto-sync flair on XP level change            |
+| `gamify_on_post`               | Trigger  | Award XP on new post                             |
+| `gamify_on_comment`            | Trigger  | Award XP on new comment                          |
+| `gamify_on_like`               | Trigger  | Award XP on like given/received                  |
+| `gamify_on_connection`         | Trigger  | Award XP on connection accepted                  |
+| `gamify_on_event_registration` | Trigger  | Award XP on event registration                   |
+| `gamify_on_endorsement`        | Trigger  | Award XP on endorsement given/received           |
 
 ---
 
@@ -490,6 +587,7 @@ User rapidly clicks "Like"
 | ------------------- | ------ | ------------------------------------ |
 | `avatars`           | Yes    | Profile avatar uploads               |
 | `banners`           | Yes    | Profile banner uploads               |
+| `email-assets`      | Yes    | Email template images (logo, etc.)   |
 | `verification-docs` | No     | KYC verification document uploads    |
 | `resumes`           | No     | Job application resume uploads       |
 | `vault`             | No     | Private user document vault          |
@@ -513,10 +611,17 @@ All uploads flow through the `upload-file` edge function for server-side validat
 | `/about` | About | Company, Career, Press |
 | `/contact` | Contact | Ask Us, Visit Us |
 | `/explore` | Explore | Platform overview |
+| `/compare` | Compare | Side-by-side platform comparisons |
+| `/professionals` | ProfessionalDirectory | Public AMFI-registered directory |
+| `/professionals/:registrationNumber` | ProfessionalProfile | Individual professional page |
 | `/community-guidelines` | CommunityGuidelines | Guidelines + FAQs |
 | `/terms` | Terms | Terms of service |
 | `/privacy` | Privacy | Privacy policy |
 | `/legal` | Legal | Combined legal pages |
+| `/cookies` | CookiePolicy | Cookie policy |
+| `/refund-policy` | RefundPolicy | Refund policy |
+| `/accessibility` | Accessibility | Accessibility statement |
+| `/transparency` | Transparency | Transparency report |
 | `/helpdesk` | HelpDesk | Support articles |
 | `/quick-links` | QuickLinks | Navigation grid |
 | `/sitemap` | SiteMap | Full page index |
@@ -524,7 +629,10 @@ All uploads flow through the `upload-file` edge function for server-side validat
 | `/event-checkin/:eventId` | EventCheckin | Event QR check-in |
 | `/vault/shared/:shareToken` | SharedVaultFile | Public shared file view |
 | `/cost-report` | CostReport | Development cost analysis |
+| `/scaling-report` | ScalingReport | Infrastructure scaling report |
 | `/developer` | DeveloperDocs | In-app developer documentation |
+| `/pitch` | PitchIndex | Pitch deck library |
+| `/pitch/:deckId` | PitchDeck | Individual pitch presentation |
 
 ### Protected Routes (auth + onboarding required)
 
@@ -539,11 +647,13 @@ All uploads flow through the `upload-file` edge function for server-side validat
 | `/notifications` | Notifications | In-app notifications |
 | `/messages` | Messages | Direct messaging |
 | `/settings` | Settings | Account settings |
-| `/admin` | Admin | Admin panel (admin role only) |
+| `/showcase` | Directory (Showcase) | Product/service marketplace |
+| `/bookmarks` | Bookmarks | Saved posts, jobs, events |
+| `/leaderboard` | Leaderboard | XP-based ranking |
 | `/jobs` | Jobs | Job board |
 | `/events` | Events | Events listing |
-| `/directory` | Directory | Business directory |
 | `/vault` | Vault | Document vault |
+| `/admin` | Admin | Admin panel (admin role only) |
 | `/onboarding` | Onboarding | First-time setup |
 
 ### Loading Strategy
@@ -556,9 +666,10 @@ All uploads flow through the `upload-file` edge function for server-side validat
 
 | Layer | Mechanism | Details |
 | --- | --- | --- |
-| **Database** | RLS Policies | All 34 tables have row-level security |
+| **Database** | RLS Policies | All tables have row-level security |
 | **Database** | Rate Limiting | Trigger-based limits on posts (10/hr), messages (60/5min), connections (30/hr) |
 | **Server** | Edge Functions | File upload validation (type, size, bucket) |
+| **Server** | Email Queue | Async email processing with DLQ and suppression list |
 | **Client** | DOMPurify | XSS prevention on all user-generated content |
 | **Client** | Action Throttling | 500ms-1s guards on rapid interactions |
 | **Client** | Session Management | Max 3 concurrent sessions, 7-day stale cleanup |

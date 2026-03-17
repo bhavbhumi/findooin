@@ -1,6 +1,6 @@
 # FindOO — Edge Functions Reference
 
-> Documentation for all 4 backend functions deployed on Lovable Cloud.
+> Documentation for all 9 backend functions deployed on Lovable Cloud.
 
 ---
 
@@ -10,6 +10,11 @@
 | --------------------------- | ------------- | ---------------- | ------------------------------------ |
 | `upload-file`               | ✅ Bearer token | HTTP POST       | Secure file upload with validation   |
 | `publish-scheduled-posts`   | ❌ Service key  | Cron / manual    | Publish posts at scheduled time      |
+| `trustcircle-iq`            | ✅ Bearer token | HTTP POST       | Compute affinity scores for a user   |
+| `scrape-amfi`               | ❌ Service key  | Cron / manual    | Import AMFI advisor registry data    |
+| `auth-email-hook`           | ❌ (verify_jwt=false) | Auth webhook | Custom auth email rendering    |
+| `process-email-queue`       | ✅ Service key  | Cron (1 min)     | Process async email send queue       |
+| `send-transactional-email`  | ❌ (verify_jwt=false) | HTTP POST  | Send templated transactional emails  |
 | `seed-users`                | ❌ Service key  | Manual (dev only)| Create 8 test users with roles       |
 | `seed-data`                 | ❌ Service key  | Manual (dev only)| Seed posts, connections, events, etc.|
 
@@ -64,14 +69,140 @@ Fields:
 | 401    | Missing or invalid auth token |
 | 500    | Storage or DB insertion failure |
 
-### Flow
+---
 
-1. Verify user auth via Bearer token
-2. Validate bucket name, MIME type, file size
-3. Generate unique path: `{userId}/{timestamp}_{safeName}`
-4. Upload to Supabase Storage
-5. Record in `file_uploads` table
-6. Return public URL (or fallback URL if storage unavailable)
+## `trustcircle-iq`
+
+**Path:** `supabase/functions/trustcircle-iq/index.ts`
+
+Computes multi-factor affinity scores for a viewer against all users in the network using the patented TrustCircle IQ algorithm.
+
+### Request
+
+```
+POST /functions/v1/trustcircle-iq
+Authorization: Bearer <user_access_token>
+Content-Type: application/json
+
+Body:
+  { "limit": 80 }  (optional, default 80)
+```
+
+### Scoring Factors
+
+- **Role Weight** — Cross-role affinity (e.g., investor↔intermediary = 0.9)
+- **Intent Multiplier** — Recent browsing behavior boosts relevant matches
+- **Trust Proximity** — Connection degree + verification + location + mutual connections
+- **Activity Resonance** — Shared events, content engagement, specialization overlap
+- **Freshness Decay** — Exponential decay based on last active date
+- **Referral Boost** — Bonus from referral paths and warm introductions
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "scores": [
+    {
+      "target_id": "uuid",
+      "affinity_score": 0.8234,
+      "circle_tier": 1,
+      "role_weight": 0.9,
+      "intent_multiplier": 1.5,
+      "trust_proximity": 0.75,
+      "activity_resonance": 0.65,
+      "freshness_decay": 0.95,
+      "referral_boost": 0.15,
+      "referral_source": "Referred by Priya Sharma"
+    }
+  ]
+}
+```
+
+---
+
+## `scrape-amfi`
+
+**Path:** `supabase/functions/scrape-amfi/index.ts`
+
+Imports mutual fund distributor data from the AMFI registry into the `registry_entities` table for the Professional Directory feature.
+
+### Request
+
+```
+POST /functions/v1/scrape-amfi
+```
+
+Uses `SUPABASE_SERVICE_ROLE_KEY` internally. Intended for periodic cron execution.
+
+---
+
+## `auth-email-hook`
+
+**Path:** `supabase/functions/auth-email-hook/index.ts`
+
+Intercepts Supabase auth email events (signup confirmation, password reset, magic link, etc.) and renders branded React Email templates.
+
+### Configuration
+
+Set in `supabase/config.toml` with `verify_jwt = false` as it's called internally by the auth system.
+
+### Templates (in `supabase/functions/_shared/email-templates/`)
+
+| Template | Trigger |
+| --- | --- |
+| `signup.tsx` | New user registration |
+| `recovery.tsx` | Password reset request |
+| `magic-link.tsx` | Magic link login |
+| `invite.tsx` | User invitation |
+| `email-change.tsx` | Email address change |
+| `reauthentication.tsx` | Re-authentication required |
+
+---
+
+## `process-email-queue`
+
+**Path:** `supabase/functions/process-email-queue/index.ts`
+
+Processes the async email send queue (pgmq). Reads batches of queued emails, sends them via the configured email provider, and handles retries/DLQ.
+
+### Configuration
+
+- Runs on a 1-minute cron schedule
+- Batch size and delays configurable via `email_send_state` table
+- Failed messages moved to dead letter queue after max retries
+- Respects suppression list (`suppressed_emails` table)
+
+---
+
+## `send-transactional-email`
+
+**Path:** `supabase/functions/send-transactional-email/index.ts`
+
+Sends templated transactional emails (welcome, connection accepted, event registration, contact confirmation) by queuing them in pgmq.
+
+### Request
+
+```
+POST /functions/v1/send-transactional-email
+Content-Type: application/json
+
+Body:
+  {
+    "template": "welcome",
+    "to": "user@example.com",
+    "data": { "name": "Rajesh", ... }
+  }
+```
+
+### Available Templates
+
+| Template | Purpose |
+| --- | --- |
+| `welcome` | New user welcome email |
+| `connection-accepted` | Connection request accepted |
+| `event-registration` | Event registration confirmation |
+| `contact-confirmation` | Contact form submission confirmation |
 
 ---
 
@@ -96,15 +227,6 @@ No auth header needed — uses `SUPABASE_SERVICE_ROLE_KEY` internally.
   "message": "Published scheduled posts",
   "count": 3,
   "ids": ["uuid-1", "uuid-2", "uuid-3"]
-}
-```
-
-Or when no posts are due:
-
-```json
-{
-  "message": "No scheduled posts to publish",
-  "count": 0
 }
 ```
 
@@ -143,18 +265,6 @@ POST /functions/v1/seed-users
 
 **Password for all:** `Test@1234`
 
-### Response (200)
-
-```json
-{
-  "success": true,
-  "results": [
-    { "email": "rajesh.kumar@findoo.test", "status": "created", "roles": ["investor"] },
-    { "email": "priya.sharma@findoo.test", "status": "skipped", "error": "User already exists" }
-  ]
-}
-```
-
 ---
 
 ## `seed-data`
@@ -169,7 +279,7 @@ Seeds comprehensive demo data across all modules. **Development only.** Must run
 POST /functions/v1/seed-data
 ```
 
-### Data Seeded (~996 lines of seed logic)
+### Data Seeded
 
 | Category       | Volume                                           |
 | -------------- | ------------------------------------------------ |
@@ -186,21 +296,3 @@ POST /functions/v1/seed-data
 ### Cleanup
 
 The function performs a full cleanup of existing seeded data (respecting FK constraints) before re-inserting. Safe to run multiple times.
-
-### Response (200)
-
-```json
-{
-  "success": true,
-  "seeded": {
-    "posts": 19,
-    "comments": 13,
-    "interactions": 45,
-    "connections": 20,
-    "messages": 30,
-    "jobs": 8,
-    "events": 7,
-    "listings": 8
-  }
-}
-```
