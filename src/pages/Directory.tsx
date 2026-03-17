@@ -285,7 +285,7 @@ const Directory = () => {
             </TabsContent>
 
             {/* Suggested Tab */}
-            <TabsContent value="suggested" className="mt-4 space-y-4">
+            <TabsContent value="suggested" className="space-y-4">
               <Alert className="border-accent/20 bg-accent/5">
                 <Sparkles className="h-4 w-4 text-accent-foreground" />
                 <AlertDescription className="text-xs text-muted-foreground">
