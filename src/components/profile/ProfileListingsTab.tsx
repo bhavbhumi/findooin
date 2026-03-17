@@ -125,7 +125,7 @@ export function ProfileListingsTab({ profileId, isOwnProfile, roles }: Props) {
         )}
 
         {listings.length > 5 && (
-          <Link to="/directory">
+          <Link to="/showcase">
             <Button variant="outline" className="w-full" size="sm">
               <ExternalLink className="h-3 w-3 mr-1.5" /> View All ({listings.length} listings)
             </Button>
