@@ -43,60 +43,73 @@ export default function Leaderboard() {
             </div>
           ) : (
             <div className="space-y-2">
-              {entries.map((entry, index) => {
-                const rank = index + 1;
-                const isTop3 = rank <= 3;
-                const RankIcon = isTop3 ? RANK_ICONS[index] : null;
+              {entries.map((entry, index) => (
+                <LeaderboardRow key={entry.user_id} entry={entry} rank={index + 1} />
+              ))}
+            </div>
+          )}
+        </div>
+      </PageTransition>
+    </AppLayout>
+  );
+}
 
-                return (
-                  <Link
-                    key={entry.user_id}
-                    to={`/profile/${entry.user_id}`}
-                    className={`flex items-center gap-3 rounded-xl border p-3 sm:p-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
-                      isTop3
-                        ? "border-gold/30 bg-gold/5"
-                        : "border-border bg-card hover:border-primary/15"
-                    }`}
-                  >
-                    {/* Rank */}
-                    <div className="w-8 text-center shrink-0">
-                      {RankIcon ? (
-                        <RankIcon className="h-5 w-5 mx-auto" style={{ color: RANK_COLORS[index] }} />
-                      ) : (
-                        <span className="text-sm font-bold text-muted-foreground">#{rank}</span>
-                      )}
-                    </div>
+function LeaderboardRow({ entry, rank }: { entry: any; rank: number }) {
+  const isTop3 = rank <= 3;
+  const RankIcon = isTop3 ? RANK_ICONS[rank - 1] : null;
+  const { data: flair } = useProfileFlair(entry.user_id);
 
-                    {/* Avatar */}
-                    <AvatarWithFallback
-                      src={entry.profile.avatar_url}
-                      initials={getInitials(entry.profile.full_name)}
-                      className="h-10 w-10 rounded-full"
-                    />
+  return (
+    <Link
+      to={`/profile/${entry.user_id}`}
+      className={`flex items-center gap-3 rounded-xl border p-3 sm:p-4 transition-all hover:shadow-md hover:-translate-y-0.5 ${
+        isTop3
+          ? "border-[hsl(var(--gold))]/30 bg-[hsl(var(--gold))]/5"
+          : "border-border bg-card hover:border-primary/15"
+      }`}
+    >
+      {/* Rank */}
+      <div className="w-8 text-center shrink-0">
+        {RankIcon ? (
+          <RankIcon className="h-5 w-5 mx-auto" style={{ color: RANK_COLORS[rank - 1] }} />
+        ) : (
+          <span className="text-sm font-bold text-muted-foreground">#{rank}</span>
+        )}
+      </div>
 
-                    {/* Name + Level */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-semibold text-card-foreground truncate">
-                          {entry.profile.display_name || entry.profile.full_name}
-                        </span>
-                        <LevelBadge level={entry.level} size="xs" />
-                      </div>
-                      {entry.current_streak > 0 && (
-                        <StreakIndicator streak={entry.current_streak} className="mt-0.5" />
-                      )}
-                    </div>
+      {/* Avatar with flair */}
+      <FlairAvatarWrapper avatarBorder={flair?.avatar_border || "none"}>
+        <AvatarWithFallback
+          src={entry.profile.avatar_url}
+          initials={getInitials(entry.profile.full_name)}
+          className="h-10 w-10 rounded-full"
+        />
+      </FlairAvatarWrapper>
 
-                    {/* XP */}
-                    <div className="flex items-center gap-1 shrink-0">
-                      <Zap className="h-3.5 w-3.5 text-gold" />
-                      <span className="text-sm font-bold text-card-foreground">
-                        {entry.total_xp.toLocaleString()}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
+      {/* Name + Level */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-semibold text-card-foreground truncate">
+            <FlairName nameEffect={flair?.name_effect || "none"}>
+              {entry.profile.display_name || entry.profile.full_name}
+            </FlairName>
+          </span>
+          <LevelBadge level={entry.level} size="xs" />
+        </div>
+        {entry.current_streak > 0 && (
+          <StreakIndicator streak={entry.current_streak} className="mt-0.5" />
+        )}
+      </div>
+
+      {/* XP */}
+      <div className="flex items-center gap-1 shrink-0">
+        <Zap className="h-3.5 w-3.5 text-[hsl(var(--gold))]" />
+        <span className="text-sm font-bold text-card-foreground">
+          {entry.total_xp.toLocaleString()}
+        </span>
+      </div>
+    </Link>
+  );
             </div>
           )}
         </div>
