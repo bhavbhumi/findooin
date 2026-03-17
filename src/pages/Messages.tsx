@@ -210,7 +210,19 @@ const Messages = () => {
       setSearchParams({}, { replace: true });
     }
     const conv = conversations.find((c) => c.user_id === userId);
-    setSelectedProfile(conv ? { full_name: conv.full_name, display_name: conv.display_name, avatar_url: conv.avatar_url } : null);
+    if (!conv) {
+      // New conversation — fetch profile directly
+      const { data: profileData } = await supabase
+        .from("profiles")
+        .select("full_name, display_name, avatar_url")
+        .eq("id", userId)
+        .single();
+      if (profileData) {
+        setSelectedProfile({ full_name: profileData.full_name, display_name: profileData.display_name, avatar_url: profileData.avatar_url });
+      }
+    } else {
+      setSelectedProfile({ full_name: conv.full_name, display_name: conv.display_name, avatar_url: conv.avatar_url });
+    }
 
     // Fetch recipient's roles to determine allowed message categories
     const { data: rolesData } = await supabase
