@@ -7,12 +7,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink } from "lucide-react";
+import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink, FileUp, Eye, Globe } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateInvitation } from "@/hooks/useInvitations";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
+import { RegistryImportWizard } from "@/components/admin/RegistryImportWizard";
 
 export default function AdminRegistryPage() {
   const [search, setSearch] = useState("");
