@@ -193,12 +193,12 @@ const Directory = () => {
         />
       </MobileFilterDrawer>
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
-        <div className="min-w-0 space-y-4">
+        <div className="min-w-0">
           {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-xl font-bold font-heading text-foreground">Showcase</h1>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <h1 className="text-2xl font-heading font-bold text-foreground">Showcase</h1>
+              <p className="text-sm text-muted-foreground">
                 Discover financial products & professional services
               </p>
             </div>
@@ -207,7 +207,7 @@ const Directory = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-1.5 text-xs"
+                  className="gap-1.5"
                   onClick={() => setShowCompare(!showCompare)}
                 >
                   <GitCompare className="h-3.5 w-3.5" />
@@ -215,8 +215,8 @@ const Directory = () => {
                 </Button>
               )}
               {canCreate && (
-                <Button size="sm" className="gap-1.5 text-xs" onClick={() => setCreateOpen(true)}>
-                  <Plus className="h-3.5 w-3.5" /> Create Listing
+                <Button className="gap-1.5" onClick={() => setCreateOpen(true)}>
+                  <Plus className="h-4 w-4" /> Create Listing
                 </Button>
               )}
             </div>
