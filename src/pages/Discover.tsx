@@ -19,6 +19,8 @@ import { PersonCardSkeleton } from "@/components/skeletons/PersonCardSkeleton";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { PostCard } from "@/components/feed/PostCard";
 import { useFeedPosts, type FeedPost } from "@/hooks/useFeedPosts";
+import { useTrendingPosts } from "@/hooks/useTrendingPosts";
+import { useViralPosts } from "@/hooks/useViralPosts";
 import { DiscoverSidebar, saveRecentSearch } from "@/components/discover/DiscoverSidebar";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { cn } from "@/lib/utils";
