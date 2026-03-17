@@ -463,10 +463,21 @@ Managed automatically by Lovable Cloud. **Do not edit `.env` directly.**
 
 ## Changelog
 
+### v3.0 — Mar 2026 (Full Platform Audit & Polish)
+- **Showcase module** — Renamed Directory → Showcase with 3-tab architecture (Browse, Suggested, My Showcase)
+- **Standalone Bookmarks** (`/bookmarks`) — Dedicated page with Posts, Jobs, Events tabs
+- **Gamification suite** — XP, badges, streaks, weekly challenges, referral program, leaderboard
+- **TrustCircle IQ** — Patented multi-factor affinity ranking algorithm with 5-tier circles
+- **Email infrastructure** — Auth email hooks, transactional emails, async queue, suppression list
+- **Professional Directory** (`/professionals`) — Public AMFI-registered advisor directory with claim flow
+- **Growth tools** — Invitations pipeline, registry import wizard, sales CRM, campaigns
+- **Documentation overhaul** — All 4 docs files updated to reflect 50-page, 150+ component, 60+ table state
+- **Full route audit** — All links, sitemaps, and navigation synchronized across website, app, and admin
+
 ### v2.8 — Feb 2026 (Documentation & Reporting)
 - **Cost Report** (`/cost-report`) — Printable AI vs Traditional vs DIY cost comparison for stakeholders
-- **Comprehensive documentation refresh** — All docs updated to reflect current 36-page, 120+ component, 16-test-file state
-- **Complete database schema listing** — All 34 tables documented in README
+- **Comprehensive documentation refresh** — All docs updated
+- **Complete database schema listing** — All tables documented in README
 - **Library modules documented** — Added `sanitize.ts`, `throttle.ts`, `web-vitals.ts` to API reference
 - **Route architecture updated** — All public and protected routes catalogued
 
