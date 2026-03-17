@@ -419,9 +419,6 @@ The extension from people discovery (AffinityRank™) to content discovery (Affi
 `;
 
 export default patentContent;
-2. **Trust inheritance through professional introductions** (Claims 5-6)
-3. **Behavioral intent as a dynamic multiplier** (Claim 3)
-4. **Regulatory context as an affinity signal** (Claim 4)
 
 ...constitutes a **fundamentally new approach** to professional discovery that has no equivalent in existing patent literature or commercial implementations. While individual components (collaborative filtering, degree separation, intent detection) exist independently, their **unified application within a regulated professional context with asymmetric role weighting** is novel.
 
