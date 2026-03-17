@@ -281,38 +281,6 @@ const Network = () => {
               </TabsContent>
             )}
 
-            <TabsContent value="suggestions" className="mt-0 space-y-2">
-              {suggestions.length === 0 ? (
-                <div className="rounded-xl border border-border bg-card p-10 text-center">
-                  <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground text-sm font-medium">No suggestions right now</p>
-                  <p className="text-muted-foreground text-xs mt-1">Check back later as more professionals join the platform.</p>
-                </div>
-              ) : (
-                filterUsers(suggestions).map((user) => (
-                  <div key={user.id} className="rounded-xl border border-border bg-card p-4 flex items-center gap-3">
-                    <Link to={`/profile/${user.id}`}>
-                      <NetworkAvatar src={user.avatar_url} initials={getInitials(user.full_name)} size="md" />
-                    </Link>
-                    <div className="flex-1 min-w-0">
-                      <Link to={`/profile/${user.id}`} className="hover:underline">
-                        <p className="text-sm font-semibold text-card-foreground truncate">
-                          {user.display_name || user.full_name}
-                          {user.verification_status === "verified" && <CheckCircle2 className="h-3.5 w-3.5 text-accent inline ml-1" />}
-                        </p>
-                      </Link>
-                      {user.headline && <p className="text-xs text-muted-foreground truncate">{user.headline}</p>}
-                      {user.organization && <p className="text-[10px] text-muted-foreground mt-0.5">{user.organization}</p>}
-                    </div>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link to={`/profile/${user.id}`}>View</Link>
-                    </Button>
-                  </div>
-                ))
-              )}
-            </TabsContent>
           </Tabs>
         )}
           </div>
