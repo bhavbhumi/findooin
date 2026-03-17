@@ -69,9 +69,9 @@ export async function trackIntentSignal(
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
 
-  await supabase.from("intent_signals").insert({
+  await supabase.from("intent_signals" as any).insert({
     user_id: session.user.id,
     signal_type: signalType,
     signal_data: signalData || {},
-  });
+  } as any);
 }
