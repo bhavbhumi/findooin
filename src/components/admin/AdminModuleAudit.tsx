@@ -161,76 +161,10 @@ const APP_MODULES: AuditModule[] = [
       { feature: "People also viewed", scope: "Similar profile suggestions", status: "completed" },
       { feature: "Mutual connections", scope: "Shared connections display", status: "completed" },
       { feature: "Digital card tab", scope: "vCard with QR code, share, download", status: "completed" },
-      { feature: "Listings tab", scope: "User's directory listings on profile", status: "completed" },
-      { feature: "Vault tab", scope: "Document vault integrated in profile", status: "completed" },
-      { feature: "Role management dialog", scope: "Add/switch user roles", status: "completed" },
-      { feature: "IR Tab (Investor Relations)", scope: "Dedicated tab for Issuers showing financials, filings, shareholding", status: "not_started", note: "Designed (docs/ir-tab-design.md) — not yet wired into profile" },
-    ],
-  },
+      { feature: "Listings tab", scope: "User's showcase listings on profile", status: "completed" },
+...
   {
-    name: "Network",
-    items: [
-      { feature: "Connections list", scope: "View all connections with search/filter", status: "completed" },
-      { feature: "Pending requests", scope: "Accept/reject connection requests", status: "completed" },
-      { feature: "Follow/Unfollow", scope: "One-way follow system", status: "completed" },
-      { feature: "Connect/Disconnect", scope: "Two-way connection system", status: "completed" },
-      { feature: "Invite dialog", scope: "Invite non-platform users", status: "completed" },
-      { feature: "Network sidebar", scope: "Network stats and suggestions", status: "completed" },
-    ],
-  },
-  {
-    name: "Discover",
-    items: [
-      { feature: "People discovery", scope: "Browse and search users by role, location, specialization", status: "completed" },
-      { feature: "Discover sidebar", scope: "Quick filters and stats", status: "completed" },
-    ],
-  },
-  {
-    name: "Messaging",
-    items: [
-      { feature: "Conversation list", scope: "Inbox with message preview", status: "completed" },
-      { feature: "Message thread", scope: "Real-time chat with read receipts", status: "completed" },
-      { feature: "Message categories", scope: "General, Sales, Ops, Support, Complaint", status: "completed" },
-      { feature: "Realtime updates", scope: "Live message delivery via websockets", status: "completed" },
-    ],
-  },
-  {
-    name: "Notifications",
-    items: [
-      { feature: "Notification center", scope: "All notifications with read/unread state", status: "completed" },
-      { feature: "Notification types", scope: "Like, comment, connection, follow, etc.", status: "completed" },
-      { feature: "Mark all as read", scope: "Bulk read action", status: "completed" },
-    ],
-  },
-  {
-    name: "Jobs Board",
-    items: [
-      { feature: "Job listing with filters", scope: "Browse jobs by category, type, location, salary", status: "completed" },
-      { feature: "Post job dialog", scope: "Full job posting form", status: "completed" },
-      { feature: "Job detail sheet", scope: "Full job details in side panel", status: "completed" },
-      { feature: "Apply to job", scope: "Application with cover note and resume", status: "completed" },
-      { feature: "My applications panel", scope: "Track application statuses", status: "completed" },
-      { feature: "Employer dashboard", scope: "View applicants, manage pipeline", status: "completed" },
-      { feature: "Candidate dashboard", scope: "Application tracking for job seekers", status: "completed" },
-      { feature: "Saved jobs", scope: "Bookmark jobs for later", status: "completed" },
-      { feature: "Role-based posting restrictions", scope: "Only Issuer/Intermediary/Admin can post", status: "completed" },
-    ],
-  },
-  {
-    name: "Events",
-    items: [
-      { feature: "Event listing with filters", scope: "Browse events by category, mode, date", status: "completed" },
-      { feature: "Create event dialog", scope: "Full event creation form", status: "completed" },
-      { feature: "Event detail sheet", scope: "Full event details with registration", status: "completed" },
-      { feature: "Event registration", scope: "Register/cancel with capacity tracking", status: "completed" },
-      { feature: "Organizer dashboard", scope: "Manage attendees, export list", status: "completed" },
-      { feature: "Event speakers", scope: "Add/manage speakers per event", status: "completed" },
-      { feature: "Event check-in (QR)", scope: "QR-based check-in for physical events", status: "completed" },
-      { feature: "Role-based event creation", scope: "Only Issuer/Intermediary/Admin can create", status: "completed" },
-    ],
-  },
-  {
-    name: "Directory (Marketplace)",
+    name: "Showcase (Marketplace)",
     items: [
       { feature: "Listing browse with filters", scope: "Products and services with category filters", status: "completed" },
       { feature: "Create listing dialog", scope: "Full listing creation form", status: "completed" },
