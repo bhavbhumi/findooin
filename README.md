@@ -129,7 +129,7 @@ src/
 ├── assets/              # Logo images (imported as ES6 modules)
 ├── components/
 │   ├── ui/              # shadcn/ui primitives (53 components)
-│   ├── skeletons/       # Content-aware loading skeletons per module
+│   ├── skeletons/       # Content-aware loading skeletons per module (7 files)
 │   ├── selectors/       # Location, Certification, Language pickers
 │   ├── feed/            # PostCard, CommentSection, CreatePostComposer, etc.
 │   ├── jobs/            # JobCard, JobDetailSheet, EmployerDashboard, etc.
