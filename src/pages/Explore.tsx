@@ -112,28 +112,28 @@ const WhatIsContent = () => (
         <div className="rounded-2xl border border-border bg-card overflow-hidden">
           <div className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] text-center text-[11px] font-semibold text-muted-foreground bg-muted/50 border-b border-border">
             <div className="p-3 text-left text-card-foreground text-xs">Feature</div>
-            <div className="p-3">LinkedIn</div>
-            <div className="p-3">WhatsApp Groups</div>
+            <div className="p-3">Professional Networks</div>
+            <div className="p-3">Chat Groups</div>
             <div className="p-3">Terminals</div>
             <div className="p-3 bg-primary/5 text-primary">FindOO</div>
           </div>
           {[
-            { feature: "Identity Verification", linkedin: false, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Regulatory Credential Check", linkedin: false, whatsapp: false, terminal: false, findoo: true },
-            { feature: "BFSI-Specific Feed", linkedin: false, whatsapp: false, terminal: true, findoo: true },
-            { feature: "Role-Based Access", linkedin: false, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Free for Individuals", linkedin: true, whatsapp: true, terminal: false, findoo: true },
-            { feature: "Job Board (BFSI)", linkedin: false, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Event Management", linkedin: true, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Product & Service Showcase", linkedin: false, whatsapp: false, terminal: true, findoo: true },
-            { feature: "Gamification & XP System", linkedin: false, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Profile Tab Privacy Controls", linkedin: true, whatsapp: false, terminal: false, findoo: true },
-            { feature: "Digital Business Card & QR", linkedin: false, whatsapp: false, terminal: false, findoo: true },
+            { feature: "Identity Verification", profNetwork: false, chatGroup: false, terminal: false, findoo: true },
+            { feature: "Regulatory Credential Check", profNetwork: false, chatGroup: false, terminal: false, findoo: true },
+            { feature: "BFSI-Specific Feed", profNetwork: false, chatGroup: false, terminal: true, findoo: true },
+            { feature: "Role-Based Access", profNetwork: false, chatGroup: false, terminal: false, findoo: true },
+            { feature: "Free for Individuals", profNetwork: true, chatGroup: true, terminal: false, findoo: true },
+            { feature: "Job Board (BFSI)", profNetwork: false, chatGroup: false, terminal: false, findoo: true },
+            { feature: "Event Management", profNetwork: true, chatGroup: false, terminal: false, findoo: true },
+            { feature: "Product & Service Showcase", profNetwork: false, chatGroup: false, terminal: true, findoo: true },
+            { feature: "Gamification & XP System", profNetwork: false, chatGroup: false, terminal: false, findoo: true },
+            { feature: "Profile Tab Privacy Controls", profNetwork: true, chatGroup: false, terminal: false, findoo: true },
+            { feature: "Digital Business Card & QR", profNetwork: false, chatGroup: false, terminal: false, findoo: true },
           ].map((row, i) => (
             <motion.div key={row.feature} className="grid grid-cols-[1fr_1fr_1fr_1fr_1fr] text-center text-xs border-b border-border last:border-0"
               initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i * 0.3}>
               <div className="p-3 text-left text-card-foreground font-medium">{row.feature}</div>
-              {[row.linkedin, row.whatsapp, row.terminal, row.findoo].map((val, ci) => (
+              {[row.profNetwork, row.chatGroup, row.terminal, row.findoo].map((val, ci) => (
                 <div key={ci} className={`p-3 flex items-center justify-center ${ci === 3 ? "bg-primary/5" : ""}`}>
                   {val ? <CheckCircle className={`h-4 w-4 ${ci === 3 ? "text-primary" : "text-muted-foreground/50"}`} /> : <XCircle className="h-4 w-4 text-muted-foreground/20" />}
                 </div>
