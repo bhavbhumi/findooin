@@ -3,11 +3,11 @@
  */
 
 export const LEVEL_CONFIG = [
-  { level: 1, name: "Newcomer", minXP: 0, color: "hsl(220, 10%, 60%)", icon: "🌱" },
-  { level: 2, name: "Contributor", minXP: 200, color: "hsl(165, 50%, 40%)", icon: "⚡" },
-  { level: 3, name: "Expert", minXP: 800, color: "hsl(210, 70%, 52%)", icon: "🔥" },
-  { level: 4, name: "Thought Leader", minXP: 2000, color: "hsl(270, 50%, 55%)", icon: "💎" },
-  { level: 5, name: "Legend", minXP: 5000, color: "hsl(46, 65%, 52%)", icon: "👑" },
+  { level: 1, name: "Newcomer", minXP: 0, color: "hsl(215, 25%, 48%)", icon: "🌱" },
+  { level: 2, name: "Contributor", minXP: 200, color: "hsl(160, 65%, 38%)", icon: "⚡" },
+  { level: 3, name: "Expert", minXP: 800, color: "hsl(210, 90%, 45%)", icon: "🔥" },
+  { level: 4, name: "Thought Leader", minXP: 2000, color: "hsl(268, 70%, 50%)", icon: "💎" },
+  { level: 5, name: "Legend", minXP: 5000, color: "hsl(42, 90%, 48%)", icon: "👑" },
 ] as const;
 
 export function getLevelConfig(level: number) {

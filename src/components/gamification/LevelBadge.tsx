@@ -10,10 +10,10 @@ interface LevelBadgeProps {
 }
 
 const sizeClasses = {
-  xs: "h-[18px] min-w-[18px] px-0.5 text-[9px]",
-  sm: "h-[22px] min-w-[22px] px-0.5 text-[10px]",
-  md: "h-7 min-w-7 px-1 text-xs",
-  lg: "h-8 min-w-8 px-1.5 text-sm",
+  xs: "h-5 min-w-5 px-1 text-[10px]",
+  sm: "h-6 min-w-6 px-1 text-[11px]",
+  md: "h-7 min-w-7 px-1.5 text-xs",
+  lg: "h-8 min-w-8 px-2 text-sm",
 };
 
 const labelSizeClasses = {
