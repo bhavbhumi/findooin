@@ -105,7 +105,7 @@ export function useLeaderboard(limit = 20) {
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_leaderboard", { p_limit: limit, p_offset: 0 });
       if (error) throw error;
-      return (data as LeaderboardEntry[]) || [];
+      return (data as unknown as LeaderboardEntry[]) || [];
     },
   });
 }
