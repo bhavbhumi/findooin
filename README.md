@@ -12,7 +12,7 @@
 | ----- | ----------- |
 | [Architecture](docs/architecture.md) | System overview, module map, context graph, data flow patterns, DB function map |
 | [API Reference](docs/api-reference.md) | All 18+ hooks documented with params, return types, and usage examples |
-| [Edge Functions](docs/edge-functions.md) | 4 backend functions with request/response schemas and auth requirements |
+| [Edge Functions](docs/edge-functions.md) | 9 backend functions with request/response schemas and auth requirements |
 | [Getting Started](docs/getting-started.md) | Setup, folder conventions, design system, testing, and PR checklist |
 
 ---
@@ -60,7 +60,7 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 ┌─────────────────────────────────────────────────┐
 │                    React SPA                     │
 │  ┌───────────┐  ┌──────────┐  ┌──────────────┐  │
-│  │  36 Pages │  │ 18 Hooks │  │ 120+ Comps   │  │
+│  │  50 Pages │  │ 25 Hooks │  │ 150+ Comps   │  │
 │  │ (Routes)  │  │ (Data)   │  │ (53 UI base) │  │
 │  └─────┬─────┘  └────┬─────┘  └──────┬───────┘  │
 │        │             │               │           │
@@ -117,7 +117,7 @@ FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AM
 | Storage      | Supabase Storage (via edge function)            |
 | Realtime     | Supabase Realtime (messages, typing indicators) |
 | QR Codes     | qrcode.react                                   |
-| Testing      | Vitest + React Testing Library (16 test files)  |
+| Testing      | Vitest + React Testing Library (16 test files + setup)  |
 | Sanitization | DOMPurify (XSS protection)                     |
 
 ---
@@ -129,16 +129,21 @@ src/
 ├── assets/              # Logo images (imported as ES6 modules)
 ├── components/
 │   ├── ui/              # shadcn/ui primitives (53 components)
-│   ├── skeletons/       # Content-aware loading skeletons per module
+│   ├── skeletons/       # Content-aware loading skeletons per module (7 files)
 │   ├── selectors/       # Location, Certification, Language pickers
 │   ├── feed/            # PostCard, CommentSection, CreatePostComposer, etc.
 │   ├── jobs/            # JobCard, JobDetailSheet, EmployerDashboard, etc.
 │   ├── events/          # EventCard, EventDetailSheet, OrganizerDashboard
-│   ├── directory/       # ListingCard, ListingDetailSheet, CreateListingDialog
+│   ├── directory/       # Showcase: ListingCard, ListingDetailSheet, CreateListingDialog
 │   ├── network/         # NetworkSidebar, InviteDialog
 │   ├── profile/         # ProfileHeader, EditProfileDialog, DigitalCardManager
 │   ├── vault/           # VaultFileCard, VaultUploadDialog
-│   ├── admin/           # AdminOverview, VerificationQueue, ContentModeration
+│   ├── admin/           # AdminOverview, VerificationQueue, ContentModeration (20+ files)
+│   ├── gamification/    # XP, badges, streaks, challenges, referral (10 files)
+│   ├── landing/         # CosmicNetworkVisualization, ValueSection, Testimonials
+│   ├── compare/         # ComparisonPage
+│   ├── blog/            # BlogPollWidget, BlogSurveyWidget
+│   ├── pitch/           # PresentationMode, SlideRenderer
 │   ├── discover/        # DiscoverSidebar
 │   ├── AppLayout.tsx    # Shared layout wrapper with navbar + session heartbeat
 │   ├── AppNavbar.tsx    # Main navigation bar (desktop + mobile bottom nav)
@@ -149,7 +154,7 @@ src/
 │   └── ErrorBoundary.tsx  # Graceful error handling per section
 ├── contexts/
 │   └── RoleContext.tsx  # Global role state (investor/intermediary/issuer/admin)
-├── hooks/               # 18 custom hooks — one per module
+├── hooks/               # 25 custom hooks — one per module
 │   ├── useFeedPosts.ts  # Infinite-scroll feed with pagination via RPC
 │   ├── usePostInteractions.ts # Batched like/bookmark with optimistic updates
 │   ├── useJobs.ts       # Job CRUD, applications, saved jobs
@@ -166,9 +171,16 @@ src/
 │   ├── useBlogPosts.ts  # Public blog content
 │   ├── useAdmin.ts      # Admin role check + management hooks
 │   ├── usePageMeta.ts   # Dynamic <title> and meta tags
+│   ├── useGamification.ts # XP, streaks, badges, leaderboard, challenges
+│   ├── useInvitations.ts # Admin invitation pipeline management
+│   ├── useProfileFlair.ts # Profile visual customization by level
+│   ├── useTabPrivacy.ts   # Profile tab visibility settings
+│   ├── useTrustCircleIQ.ts # Affinity scoring & network ranking
+│   ├── useOfflineDetector.tsx # Offline status detection
+│   ├── useBlogInteractions.ts # Blog poll/survey interactions
 │   ├── use-mobile.tsx   # Mobile viewport detection
 │   └── use-toast.ts     # Toast notification hook
-├── lib/                 # 8 utility modules
+├── lib/                 # 11 utility modules
 │   ├── utils.ts         # cn() utility (clsx + tailwind-merge)
 │   ├── role-config.ts   # Role labels, icons, colors, CSS vars
 │   ├── session-manager.ts # Multi-device session management (max 3)
@@ -177,11 +189,18 @@ src/
 │   ├── throttle.ts      # Generic throttle utility for action guards
 │   ├── vcard.ts         # vCard (.vcf) generation and download
 │   └── web-vitals.ts    # Core Web Vitals (LCP, CLS, FID) monitoring
+│   ├── gamification.ts  # Level thresholds, XP calculations
+│   ├── profile-flair.ts # Flair configuration by level
+│   ├── error-tracker.ts # Client-side error tracking utility
+│   └── web-vitals.ts    # Core Web Vitals (LCP, CLS, FID) monitoring
 ├── data/
 │   ├── certifications.ts # BFSI certification options
 │   ├── languages.ts     # Indian language options
-│   └── locations.ts     # Indian city/state options
-├── pages/               # 36 route-level page components (lazy-loaded)
+│   ├── locations.ts     # Indian city/state options
+│   ├── compare/         # Comparison data (5 category files)
+│   ├── pitchDecks.tsx   # Pitch deck slide content
+│   └── patent-content.ts # Patent documentation
+├── pages/               # 50 route-level page components (+ 18 admin sub-routes, lazy-loaded)
 ├── integrations/
 │   └── supabase/        # Auto-generated client + types (DO NOT EDIT)
 ├── test/                # 16 test files (unit + integration)
@@ -332,7 +351,7 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 
 ## Database Schema
 
-Key tables (30+ total — see `src/integrations/supabase/types.ts` for full schema):
+Key tables (60+ total — see `src/integrations/supabase/types.ts` for full schema):
 
 | Table                  | Purpose                                    |
 | ---------------------- | ------------------------------------------ |
@@ -353,7 +372,7 @@ Key tables (30+ total — see `src/integrations/supabase/types.ts` for full sche
 | `listings`             | Directory products/services                |
 | `listing_reviews`      | Directory listing reviews                  |
 | `listing_enquiries`    | Directory listing enquiries                |
-| `vault_files`          | Secure document storage                    |
+| `file_uploads`         | Upload records for all storage buckets     |
 | `notifications`        | In-app notifications                       |
 | `verification_requests`| KYC verification queue                     |
 | `active_sessions`      | Multi-device session tracking              |
@@ -362,7 +381,6 @@ Key tables (30+ total — see `src/integrations/supabase/types.ts` for full sche
 | `reports`              | Content/user reports                       |
 | `endorsements`         | Skill endorsements                         |
 | `card_exchanges`       | Digital card view/save tracking            |
-| `file_uploads`         | Upload records for all storage buckets     |
 | `poll_options`         | Poll answer choices                        |
 | `poll_votes`           | Poll votes                                 |
 | `survey_questions`     | Survey question definitions                |
@@ -370,7 +388,30 @@ Key tables (30+ total — see `src/integrations/supabase/types.ts` for full sche
 | `survey_responses`     | Survey responses                           |
 | `featured_posts`       | User-pinned featured posts                 |
 | `profile_views`        | Profile view tracking                      |
-| `user_settings`        | Privacy and notification preferences       |
+| `profile_tab_privacy`  | Tab-level visibility settings              |
+| `profile_flair`        | Visual customization by XP level           |
+| `education`            | User education history                     |
+| `publications`         | User publications and research             |
+| `recommendations`      | Peer recommendations                       |
+| `user_xp`             | XP totals, levels, streaks                 |
+| `xp_transactions`     | XP earning history                         |
+| `badge_definitions`   | Achievement badge catalog                  |
+| `user_badges`         | Earned badges per user                     |
+| `weekly_challenges`   | Gamification challenges                    |
+| `user_challenge_progress` | Challenge completion tracking          |
+| `referral_links`      | Referral code management                   |
+| `referral_conversions`| Referral conversion tracking               |
+| `social_proof_events` | Level-up and achievement events            |
+| `affinity_scores`     | TrustCircle IQ computed scores             |
+| `intent_signals`      | User intent tracking for ranking           |
+| `introductions`       | Warm introductions between users           |
+| `invitations`         | Admin-managed user invitations             |
+| `registry_entities`   | AMFI/regulatory registry data              |
+| `sales_leads`         | CRM lead pipeline                          |
+| `campaigns`           | Marketing campaign tracking                |
+| `support_tickets`     | User support requests                      |
+| `email_send_log`      | Transactional email delivery log           |
+| `suppressed_emails`   | Bounced/suppressed email list              |
 
 ---
 
@@ -409,18 +450,34 @@ Managed automatically by Lovable Cloud. **Do not edit `.env` directly.**
 | Function                    | Purpose                                |
 | --------------------------- | -------------------------------------- |
 | `upload-file`               | Secure file upload with validation     |
-| `seed-data`                 | Development data seeding               |
-| `seed-users`                | Development user seeding               |
 | `publish-scheduled-posts`   | Cron: publish posts at scheduled time  |
+| `trustcircle-iq`            | Compute affinity scores for discovery  |
+| `scrape-amfi`               | Import AMFI advisor registry data      |
+| `auth-email-hook`           | Branded auth email rendering           |
+| `process-email-queue`       | Async email queue processing           |
+| `send-transactional-email`  | Templated transactional emails         |
+| `seed-users`                | Development user seeding               |
+| `seed-data`                 | Development data seeding               |
 
 ---
 
 ## Changelog
 
+### v3.0 — Mar 2026 (Full Platform Audit & Polish)
+- **Showcase module** — Renamed Directory → Showcase with 3-tab architecture (Browse, Suggested, My Showcase)
+- **Standalone Bookmarks** (`/bookmarks`) — Dedicated page with Posts, Jobs, Events tabs
+- **Gamification suite** — XP, badges, streaks, weekly challenges, referral program, leaderboard
+- **TrustCircle IQ** — Patented multi-factor affinity ranking algorithm with 5-tier circles
+- **Email infrastructure** — Auth email hooks, transactional emails, async queue, suppression list
+- **Professional Directory** (`/professionals`) — Public AMFI-registered advisor directory with claim flow
+- **Growth tools** — Invitations pipeline, registry import wizard, sales CRM, campaigns
+- **Documentation overhaul** — All 4 docs files updated to reflect 50-page, 150+ component, 60+ table state
+- **Full route audit** — All links, sitemaps, and navigation synchronized across website, app, and admin
+
 ### v2.8 — Feb 2026 (Documentation & Reporting)
 - **Cost Report** (`/cost-report`) — Printable AI vs Traditional vs DIY cost comparison for stakeholders
-- **Comprehensive documentation refresh** — All docs updated to reflect current 36-page, 120+ component, 16-test-file state
-- **Complete database schema listing** — All 34 tables documented in README
+- **Comprehensive documentation refresh** — All docs updated
+- **Complete database schema listing** — All tables documented in README
 - **Library modules documented** — Added `sanitize.ts`, `throttle.ts`, `web-vitals.ts` to API reference
 - **Route architecture updated** — All public and protected routes catalogued
 
