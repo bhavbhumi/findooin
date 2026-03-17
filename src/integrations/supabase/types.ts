@@ -2844,6 +2844,7 @@ export type Database = {
         Args: { p_limit?: number; p_offset?: number }
         Returns: Json
       }
+      get_growth_metrics: { Args: { p_days?: number }; Returns: Json }
       get_leaderboard: {
         Args: { p_limit?: number; p_offset?: number }
         Returns: Json
