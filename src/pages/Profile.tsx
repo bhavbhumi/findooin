@@ -239,6 +239,7 @@ const Profile = () => {
                 connLoading={connLoading}
                 onEditProfile={() => setEditOpen(true)}
                 onNavigateToNetwork={() => setActiveTab("network")}
+                canViewNetwork={isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)}
               />
             </ErrorBoundary>
 
@@ -408,6 +409,7 @@ const Profile = () => {
                 stats={stats}
                 isOwnProfile={isOwnProfile}
                 onNavigateToNetwork={() => setActiveTab("network")}
+                canViewNetwork={isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)}
               />
             </div>
           </div>
@@ -440,6 +442,7 @@ const Profile = () => {
                 stats={stats}
                 isOwnProfile={isOwnProfile}
                 onNavigateToNetwork={() => setActiveTab("network")}
+                canViewNetwork={isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)}
               />
             </div>
           </aside>
