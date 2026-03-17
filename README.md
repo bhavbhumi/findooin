@@ -450,9 +450,14 @@ Managed automatically by Lovable Cloud. **Do not edit `.env` directly.**
 | Function                    | Purpose                                |
 | --------------------------- | -------------------------------------- |
 | `upload-file`               | Secure file upload with validation     |
-| `seed-data`                 | Development data seeding               |
-| `seed-users`                | Development user seeding               |
 | `publish-scheduled-posts`   | Cron: publish posts at scheduled time  |
+| `trustcircle-iq`            | Compute affinity scores for discovery  |
+| `scrape-amfi`               | Import AMFI advisor registry data      |
+| `auth-email-hook`           | Branded auth email rendering           |
+| `process-email-queue`       | Async email queue processing           |
+| `send-transactional-email`  | Templated transactional emails         |
+| `seed-users`                | Development user seeding               |
+| `seed-data`                 | Development data seeding               |
 
 ---
 
