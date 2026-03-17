@@ -139,6 +139,11 @@ const Profile = () => {
   const { connectionStatus, follow, unfollow, connect, disconnect, loading: connLoading } = useConnectionActions(currentUserId, profile?.id ?? null);
   const { refreshRoles } = useRole();
 
+  // Tab privacy
+  const { settings: tabPrivacy, updateSettings: updateTabPrivacy } = useTabPrivacy(profile?.id ?? null);
+  const isLoggedIn = !!currentUserId;
+  const isConnected = connectionStatus === "connected";
+
   const isOwnProfile = !id || id === currentUserId;
 
   // Query user posts directly instead of loading all feed posts
