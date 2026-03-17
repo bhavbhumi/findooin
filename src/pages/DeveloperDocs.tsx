@@ -527,8 +527,12 @@ const ApiReferenceTab = () => (
           {[
             { name: "src/lib/storage.ts", exports: "validateFile(), uploadFile(), deleteFile()", desc: "File upload via upload-file edge function with client-side validation." },
             { name: "src/lib/session-manager.ts", exports: "registerSession(), removeSession(), touchSession()", desc: "Multi-device session management (max 3 concurrent). Heartbeat every 5min." },
+            { name: "src/lib/gamification.ts", exports: "LEVEL_CONFIG, getLevelConfig(), getXPProgress(), TIER_COLORS, BADGE_CATEGORY_LABELS", desc: "Gamification constants: 5-tier level config, XP thresholds, badge categories & tier colors." },
+            { name: "src/lib/profile-flair.ts", exports: "getFlairStyles(), getNameEffectClass(), getBorderClass()", desc: "Profile flair rendering: avatar borders (fire/diamond/legendary), name effects (glow/shimmer)." },
             { name: "src/lib/role-config.ts", exports: "ROLE_CONFIG, getRoleIcon(), getRoleBadgeClasses()", desc: "Role metadata: labels, icons, colors, CSS variables." },
             { name: "src/lib/vcard.ts", exports: "generateVCard(), downloadVCard()", desc: "vCard (.vcf) generation for digital business cards." },
+            { name: "src/lib/sanitize.ts", exports: "sanitizeText(), sanitizeHtml()", desc: "Input sanitization for user-generated content to prevent XSS." },
+            { name: "src/lib/throttle.ts", exports: "throttle()", desc: "Generic throttle utility for rate-limiting client-side operations." },
           ].map((mod) => (
             <div key={mod.name} className="space-y-1 p-3 rounded-lg bg-muted/30">
               <code className="text-xs font-semibold text-foreground">{mod.name}</code>
