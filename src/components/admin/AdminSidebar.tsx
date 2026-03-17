@@ -9,7 +9,7 @@ import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
-  IndianRupee, Server, Search
+  IndianRupee, Server, Search, FileText
 } from "lucide-react";
 import {
   Sidebar,
@@ -78,6 +78,12 @@ export function AdminSidebar() {
       label: "Content",
       items: [
         { title: "Blog", url: "/admin/blog", icon: BookOpen },
+      ],
+    },
+    {
+      label: "Platform",
+      items: [
+        { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText },
       ],
     },
     {

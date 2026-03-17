@@ -69,6 +69,7 @@ const AdminScorecardPage = lazy(() => import("./pages/admin/AdminScorecardPage")
 const AdminModuleAuditPage = lazy(() => import("./pages/admin/AdminModuleAuditPage"));
 const AdminSeoPage = lazy(() => import("./pages/admin/AdminSeoPage"));
 const AdminEmailPage = lazy(() => import("./pages/admin/AdminEmailPage"));
+const AdminPatentPage = lazy(() => import("./pages/admin/AdminPatentPage"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
@@ -186,6 +187,7 @@ const App = () => {
                         <Route path="module-audit" element={<Suspense fallback={<LazyFallback />}><AdminModuleAuditPage /></Suspense>} />
                         <Route path="seo" element={<Suspense fallback={<LazyFallback />}><AdminSeoPage /></Suspense>} />
                         <Route path="email" element={<Suspense fallback={<LazyFallback />}><AdminEmailPage /></Suspense>} />
+                        <Route path="patent" element={<Suspense fallback={<LazyFallback />}><AdminPatentPage /></Suspense>} />
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
                       </Route>
