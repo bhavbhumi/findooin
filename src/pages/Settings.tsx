@@ -61,6 +61,9 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const { settings: tabPrivacy, updateSettings: updateTabPrivacy, isSaving: tabPrivacySaving } = useTabPrivacy(currentUserId);
+
   // Email change
   const [showEmailChange, setShowEmailChange] = useState(false);
   const [newEmail, setNewEmail] = useState("");
