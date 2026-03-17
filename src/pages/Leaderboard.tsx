@@ -2,6 +2,8 @@ import AppLayout from "@/components/AppLayout";
 import { useLeaderboard } from "@/hooks/useGamification";
 import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { StreakIndicator } from "@/components/gamification/StreakIndicator";
+import { FlairName, FlairAvatarWrapper } from "@/components/gamification/ProfileFlair";
+import { useProfileFlair } from "@/hooks/useProfileFlair";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { Trophy, Medal, Crown, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
