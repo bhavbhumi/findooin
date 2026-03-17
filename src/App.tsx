@@ -196,6 +196,7 @@ const App = () => {
                       <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/showcase" element={<ProtectedRoute><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/leaderboard" element={<ProtectedRoute><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/bookmarks" element={<ProtectedRoute><RouteErrorBoundary routeName="Bookmarks"><Bookmarks /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/vault" element={<ProtectedRoute><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
