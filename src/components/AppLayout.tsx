@@ -46,6 +46,9 @@ export default function AppLayout({
     return () => clearInterval(interval);
   }, []);
 
+  // Update login streak
+  useLoginStreak();
+
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0">
       {showNavbar && <AppNavbar />}
