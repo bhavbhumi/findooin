@@ -1572,6 +1572,33 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_tab_privacy: {
+        Row: {
+          activity_visibility: string
+          id: string
+          network_visibility: string
+          updated_at: string
+          user_id: string
+          vault_visibility: string
+        }
+        Insert: {
+          activity_visibility?: string
+          id?: string
+          network_visibility?: string
+          updated_at?: string
+          user_id: string
+          vault_visibility?: string
+        }
+        Update: {
+          activity_visibility?: string
+          id?: string
+          network_visibility?: string
+          updated_at?: string
+          user_id?: string
+          vault_visibility?: string
+        }
+        Relationships: []
+      }
       profile_views: {
         Row: {
           created_at: string
