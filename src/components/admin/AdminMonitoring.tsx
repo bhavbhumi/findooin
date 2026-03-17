@@ -24,7 +24,7 @@ import {
   AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts";
-import { format, subDays, subHours, startOfDay, differenceInMinutes } from "date-fns";
+import { format, subDays } from "date-fns";
 
 const CHART_COLORS = [
   "hsl(var(--primary))",
