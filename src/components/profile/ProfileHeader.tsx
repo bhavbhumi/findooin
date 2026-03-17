@@ -38,6 +38,7 @@ interface ProfileHeaderProps {
   connLoading: boolean;
   onEditProfile?: () => void;
   onNavigateToNetwork?: () => void;
+  canViewNetwork?: boolean;
 }
 
 export interface ProfileData {
