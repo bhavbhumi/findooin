@@ -69,6 +69,7 @@ const AdminScorecardPage = lazy(() => import("./pages/admin/AdminScorecardPage")
 const AdminModuleAuditPage = lazy(() => import("./pages/admin/AdminModuleAuditPage"));
 const AdminSeoPage = lazy(() => import("./pages/admin/AdminSeoPage"));
 const AdminEmailPage = lazy(() => import("./pages/admin/AdminEmailPage"));
+const AdminPatentPage = lazy(() => import("./pages/admin/AdminPatentPage"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
