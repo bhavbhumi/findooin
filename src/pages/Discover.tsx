@@ -237,24 +237,24 @@ const Discover = () => {
             )}
           </div>
 
-          {/* Main Tabs: TrustCircle / Posts */}
-          <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as "trustcircle" | "posts")} className="mb-4">
+          {/* Main Tabs: People (AffinityRank™) / Posts (AffinityFeed™) */}
+          <Tabs value={mainTab} onValueChange={(v) => setMainTab(v as "people" | "posts")} className="mb-4">
             <TabsList className="w-full grid grid-cols-2 h-10">
-              <TabsTrigger value="trustcircle" className="gap-1.5 text-sm">
-                <Sparkles className="h-4 w-4" />
-                TrustCircle
+              <TabsTrigger value="people" className="gap-1.5 text-sm">
+                <Users className="h-4 w-4" />
+                People
                 {trustData && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{circleCounts.all}</span>}
               </TabsTrigger>
               <TabsTrigger value="posts" className="gap-1.5 text-sm">
                 <FileText className="h-4 w-4" />
                 Posts
-                {search && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{filteredPosts.length}</span>}
+                {affinityRankedPosts.length > 0 && <span className="text-[10px] bg-muted px-1.5 rounded-full ml-1">{affinityRankedPosts.length}</span>}
               </TabsTrigger>
             </TabsList>
           </Tabs>
 
-          {/* TrustCircle Tab */}
-          {mainTab === "trustcircle" && (
+          {/* People Tab (AffinityRank™) */}
+          {mainTab === "people" && (
             <>
               {/* Circle Tabs — Horizontal */}
               <div className="mb-4 overflow-x-auto scrollbar-hide">
