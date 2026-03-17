@@ -588,8 +588,10 @@ const WhoIsItForContent = () => (
                 "Browse & compare products and services",
                 "Apply for BFSI career opportunities",
                 "Access curated market insights & research",
+                "Earn XP & badges through engagement",
+                "Control who sees your Activity & Network tabs",
               ],
-              scenario: "An HNI looking for a PMS advisor can browse verified intermediaries, compare their credentials, check endorsements, and enquire directly — knowing every profile is credential-checked.",
+              scenario: "An HNI looking for a PMS advisor can browse verified intermediaries, compare their credentials, check endorsements, enquire directly, and manage their own profile privacy — knowing every profile is credential-checked.",
             },
           ].map((item, i) => (
             <motion.div key={item.role} className={`rounded-xl border bg-card p-6 flex flex-col ${item.bgColor}`}
