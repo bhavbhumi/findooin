@@ -27,6 +27,8 @@ import { MutualConnections } from "@/components/profile/MutualConnections";
 import { TrustScoreBadge } from "@/components/profile/TrustScoreBadge";
 import { useQuery } from "@tanstack/react-query";
 import { GamificationProfileCard } from "@/components/gamification/GamificationProfileCard";
+import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
+import { ReferralCard } from "@/components/gamification/ReferralCard";
 import type { FeedPost } from "@/hooks/useFeedPosts";
 
 const MemoizedPostCard = memo(PostCard);
@@ -332,6 +334,8 @@ const Profile = () => {
                 isOwnProfile={isOwnProfile}
               />
               <GamificationProfileCard userId={profile.id} />
+              {isOwnProfile && <WeeklyChallenges userId={profile.id} />}
+              {isOwnProfile && <ReferralCard userId={profile.id} />}
               <MemoizedProfileSidebar
                 profile={profile}
                 roles={roles}
@@ -362,6 +366,8 @@ const Profile = () => {
                 isOwnProfile={isOwnProfile}
               />
               <GamificationProfileCard userId={profile.id} />
+              {isOwnProfile && <WeeklyChallenges userId={profile.id} />}
+              {isOwnProfile && <ReferralCard userId={profile.id} />}
               <MemoizedProfileSidebar
                 profile={profile}
                 roles={roles}

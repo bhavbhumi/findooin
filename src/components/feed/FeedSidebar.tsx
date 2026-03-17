@@ -4,6 +4,8 @@ import { TrendingSidebar } from "@/components/feed/TrendingSidebar";
 import { PostDraft } from "@/hooks/useDrafts";
 import { TrendingUp, FileEdit, Clock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
+import { ReferralCard } from "@/components/gamification/ReferralCard";
 
 // Lazy load non-default tabs
 const DraftsPanel = lazy(() =>
@@ -82,6 +84,14 @@ export const FeedSidebar = memo(function FeedSidebar({ userId, onLoadDraft, init
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Gamification widgets below tabs */}
+      {userId && (
+        <div className="space-y-3 mt-4">
+          <WeeklyChallenges userId={userId} />
+          <ReferralCard userId={userId} />
+        </div>
+      )}
     </div>
   );
 });

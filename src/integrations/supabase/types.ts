@@ -1545,6 +1545,33 @@ export type Database = {
         }
         Relationships: []
       }
+      profile_flair: {
+        Row: {
+          avatar_border: string
+          id: string
+          name_effect: string
+          profile_theme: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_border?: string
+          id?: string
+          name_effect?: string
+          profile_theme?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_border?: string
+          id?: string
+          name_effect?: string
+          profile_theme?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profile_views: {
         Row: {
           created_at: string
@@ -1719,6 +1746,68 @@ export type Database = {
           relationship?: string
           status?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      referral_conversions: {
+        Row: {
+          created_at: string
+          id: string
+          mentor_bonus_until: string
+          referral_link_id: string | null
+          referred_user_id: string
+          referrer_id: string
+          total_bonus_xp: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          mentor_bonus_until?: string
+          referral_link_id?: string | null
+          referred_user_id: string
+          referrer_id: string
+          total_bonus_xp?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          mentor_bonus_until?: string
+          referral_link_id?: string | null
+          referred_user_id?: string
+          referrer_id?: string
+          total_bonus_xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_conversions_referral_link_id_fkey"
+            columns: ["referral_link_id"]
+            isOneToOne: false
+            referencedRelation: "referral_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referral_links: {
+        Row: {
+          click_count: number
+          code: string
+          created_at: string
+          id: string
+          referrer_id: string
+        }
+        Insert: {
+          click_count?: number
+          code: string
+          created_at?: string
+          id?: string
+          referrer_id: string
+        }
+        Update: {
+          click_count?: number
+          code?: string
+          created_at?: string
+          id?: string
+          referrer_id?: string
         }
         Relationships: []
       }
@@ -1938,6 +2027,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      social_proof_events: {
+        Row: {
+          created_at: string
+          event_data: Json
+          event_type: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json
+          event_type: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json
+          event_type?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       support_tickets: {
         Row: {
@@ -2607,6 +2720,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      track_challenge_progress: {
+        Args: { p_action: string; p_user_id: string }
+        Returns: undefined
       }
       update_login_streak: { Args: { p_user_id: string }; Returns: undefined }
     }

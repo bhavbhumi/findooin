@@ -26,7 +26,9 @@ import { CommentSection } from "@/components/feed/CommentSection";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { UserCheck } from "lucide-react";
 import { LevelBadge } from "@/components/gamification/LevelBadge";
+import { FlairName } from "@/components/gamification/ProfileFlair";
 import { useUserXP } from "@/hooks/useGamification";
+import { useProfileFlair } from "@/hooks/useProfileFlair";
 
 const postTypeConfig: Record<string, { label: string; icon: typeof TrendingUp; className: string }> = {
   market_commentary: { label: "Market Commentary", icon: TrendingUp, className: "bg-status-info/10 text-status-info" },
@@ -62,6 +64,7 @@ function getInitials(name: string) {
 export function PostCard({ post }: { post: FeedPost }) {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const { data: authorXP } = useUserXP(post.author.id);
+  const { data: flair } = useProfileFlair(post.author.id);
   const [reportOpen, setReportOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
@@ -99,7 +102,9 @@ export function PostCard({ post }: { post: FeedPost }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <Link to={`/profile/${post.author.id}`} className="font-semibold text-card-foreground text-sm truncate hover:underline">
-              {post.author.display_name || post.author.full_name}
+              <FlairName nameEffect={flair?.name_effect || "none"}>
+                {post.author.display_name || post.author.full_name}
+              </FlairName>
             </Link>
             {post.author.verification_status === "verified" && (
               <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
