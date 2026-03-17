@@ -80,7 +80,7 @@ const Events = () => {
 
     if (userTags.size === 0 && !userProfile.location) return [];
 
-    const registeredIds = new Set(myRegistrations?.map((r) => r.event_id) || []);
+    const registeredIds = new Set(myRegistrations.map((r) => r.event_id));
 
     return events
       .filter((e) => !isPast(new Date(e.end_time)) && !registeredIds.has(e.id))
