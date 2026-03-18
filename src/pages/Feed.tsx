@@ -156,6 +156,9 @@ const Feed = () => {
           </ErrorBoundary>
           <FeedTabs value={filter} onChange={setFilter} />
 
+          {/* Opinions Tab */}
+          {filter === "opinions" && <FeedOpinionsTab />}
+
           {/* AffinityFeed™ context bar */}
           {filter === "affinity" && !isLoading && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border">
@@ -166,7 +169,7 @@ const Feed = () => {
             </div>
           )}
 
-          {isLoading && (
+          {filter !== "opinions" && isLoading && (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <PostCardSkeleton key={i} />
@@ -174,13 +177,13 @@ const Feed = () => {
             </div>
           )}
 
-          {error && (
+          {filter !== "opinions" && error && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center">
               <p className="text-sm text-destructive">Failed to load feed. Please try again.</p>
             </div>
           )}
 
-          {visiblePosts && visiblePosts.length === 0 && !isLoading && (
+          {filter !== "opinions" && visiblePosts && visiblePosts.length === 0 && !isLoading && (
             <EmptyState
               illustration={<EmptyFeedIllustration />}
               icon={filter === "affinity" ? Sparkles : Clock}
@@ -195,7 +198,7 @@ const Feed = () => {
             />
           )}
 
-          {visiblePosts?.map((post) => {
+          {filter !== "opinions" && visiblePosts?.map((post) => {
             const tierInfo = filter === "affinity" ? postTierMap.get(post.id) : null;
             return (
               <div key={post.id} className="relative">
@@ -222,7 +225,7 @@ const Feed = () => {
           })}
 
           {/* Infinite scroll trigger (Recent only) */}
-          {hasMore && (
+          {filter !== "opinions" && hasMore && (
             <>
               <div ref={observerRef} className="h-4" />
               {!isFetchingMore && (
@@ -237,13 +240,13 @@ const Feed = () => {
               )}
             </>
           )}
-          {isFetchingMore && (
+          {filter !== "opinions" && isFetchingMore && (
             <div className="space-y-4">
               <PostCardSkeleton />
               <PostCardSkeleton />
             </div>
           )}
-          {!hasMore && !isLoading && visiblePosts && visiblePosts.length > 0 && (
+          {filter !== "opinions" && !hasMore && !isLoading && visiblePosts && visiblePosts.length > 0 && (
             <p className="text-center text-xs text-muted-foreground py-6">You're all caught up!</p>
           )}
         </div>
