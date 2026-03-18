@@ -540,7 +540,6 @@ export function AdminModuleAudit() {
       setRefreshKey(k => k + 1);
       setLastRefreshed(new Date());
       setIsRefreshing(false);
-      const { toast } = require("sonner");
       toast.success("Module Audit refreshed", { description: `${allModules.length} modules re-evaluated at ${new Date().toLocaleTimeString()}` });
     }, 800);
   };
