@@ -438,6 +438,34 @@ const Discover = () => {
               )}
             </>
           )}
+
+          {/* Featured Opinions Section */}
+          {featuredOpinions && featuredOpinions.length > 0 && (
+            <div className="mt-8">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-primary" />
+                  <h2 className="text-base font-semibold">Trending Opinions</h2>
+                  <Badge variant="secondary" className="text-[10px]">{featuredOpinions.length}</Badge>
+                </div>
+                <Button variant="ghost" size="sm" className="text-xs gap-1 text-primary" asChild>
+                  <Link to="/opinions">
+                    View all <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                {featuredOpinions.filter((o) => o.is_featured).slice(0, 4).length > 0
+                  ? featuredOpinions.filter((o) => o.is_featured).slice(0, 4).map((op) => (
+                      <OpinionCard key={op.id} opinion={op} compact />
+                    ))
+                  : featuredOpinions.slice(0, 4).map((op) => (
+                      <OpinionCard key={op.id} opinion={op} compact />
+                    ))
+                }
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
