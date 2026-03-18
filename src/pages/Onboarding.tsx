@@ -86,6 +86,8 @@ const Onboarding = () => {
   const [verificationFiles, setVerificationFiles] = useState<Record<string, File | null>>({});
   const [initialLoading, setInitialLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [contactImportOpen, setContactImportOpen] = useState(false);
+  const [contactsImported, setContactsImported] = useState(0);
   const { toast } = useToast();
   const navigate = useNavigate();
 
