@@ -64,8 +64,6 @@ const Discover = () => {
   const { flatPosts: recentPosts, isLoading: loadingRecent } = useFeedPosts();
   const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, true);
   const { data: featuredOpinions } = useOpinions(undefined, "active");
-  const { flatPosts: recentPosts, isLoading: loadingRecent } = useFeedPosts();
-  const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
