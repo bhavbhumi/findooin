@@ -123,7 +123,7 @@ export function DirectoryPublicSidebar({ totalProfessionals, claimedCount }: Dir
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <Star className="h-3.5 w-3.5 text-amber-500" />
+                <Star className="h-3.5 w-3.5 text-primary" />
                 Trending Opinions
               </h3>
               <Link to="/opinions" className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
