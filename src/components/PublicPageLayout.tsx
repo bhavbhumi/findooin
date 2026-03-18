@@ -290,8 +290,15 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               <p className="text-[10px] text-muted-foreground leading-relaxed mb-3">
                 B/201 Hemu Classic Premises CS Ltd, S V Road, Malad West, Mumbai 400064
               </p>
-              <div className="w-full h-20 rounded-lg bg-muted/50 border border-border flex items-center justify-center">
-                <span className="text-xs text-muted-foreground">📍 Mumbai, India</span>
+              <div className="w-full h-24 rounded-lg overflow-hidden border border-border">
+                <iframe
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=72.83%2C19.17%2C72.86%2C19.20&layer=mapnik&marker=19.186,72.845"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  title="FindOO office — Malad West, Mumbai"
+                />
               </div>
             </div>
 

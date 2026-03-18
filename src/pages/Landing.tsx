@@ -99,8 +99,6 @@ const Landing = () => {
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
       <section className="relative pt-12 pb-10 lg:pt-16 lg:pb-14 overflow-hidden">
-        {/* Layered background: gradient + dot grid + network mesh */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02]" />
         <NetworkMesh />
         
         {/* Glow blobs for depth */}
@@ -232,7 +230,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="bottom-left" color="primary" size="md" />
         <div className="container relative">
           <CosmicValueSection />
@@ -240,7 +238,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden">
         <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
@@ -249,7 +247,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
         <div className="container max-w-4xl relative">
@@ -259,7 +257,7 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden">
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         <ConcentricRings className="-bottom-20 -left-20 hidden lg:block" />
         
@@ -422,7 +420,7 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-16 border-t border-border relative overflow-hidden">
+      <section className="py-16 bg-muted/30 border-t border-border relative overflow-hidden">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">

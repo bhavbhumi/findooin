@@ -8,9 +8,10 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { lazy, Suspense, useState, useCallback } from "react";
+import { lazy, Suspense, useState } from "react";
 import { FindooLoader } from "@/components/FindooLoader";
-import { SplashScreen } from "@/components/SplashScreen";
+import { lazy as lazyReact } from "react";
+const SplashScreen = lazyReact(() => import("@/components/SplashScreen").then(m => ({ default: m.SplashScreen })));
 import { CommandPalette } from "@/components/CommandPalette";
 import { SkipNav } from "@/components/SkipNav";
 import { useOfflineDetector } from "@/hooks/useOfflineDetector";
@@ -122,8 +123,7 @@ const LazyFallback = () => (
 );
 
 const App = () => {
-  const [splashDone, setSplashDone] = useState(false);
-  const handleSplashComplete = useCallback(() => setSplashDone(true), []);
+  const [splashDone, setSplashDone] = useState(true);
   useOfflineDetector();
 
   return (
@@ -132,7 +132,7 @@ const App = () => {
         <TooltipProvider>
           <RoleProvider>
             <ErrorBoundary fallbackTitle="FindOO encountered an error">
-              {!splashDone && <SplashScreen onComplete={handleSplashComplete} />}
+              {/* Splash screen removed for faster loading */}
               <Toaster />
               <Sonner />
               <BrowserRouter>
