@@ -249,7 +249,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-14 relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden">
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
         <div className="container max-w-4xl relative">
