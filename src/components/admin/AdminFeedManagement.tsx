@@ -123,7 +123,7 @@ export function AdminFeedManagement() {
     return {
       total: posts.length,
       reported: posts.filter((p) => p.report_count > 0).length,
-      polls: posts.filter((p) => p.post_type === "poll").length,
+      polls: posts.filter((p) => p.post_kind === "poll").length,
       totalLikes: posts.reduce((s, p) => s + p.like_count, 0),
       totalComments: posts.reduce((s, p) => s + p.comment_count, 0),
     };
