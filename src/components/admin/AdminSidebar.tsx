@@ -188,7 +188,7 @@ export function AdminSidebar() {
           if (isOverview || collapsed) {
             return (
               <SidebarGroup key={section.label}>
-                <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50">
+                <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-white/40">
                   {!collapsed && section.label}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
