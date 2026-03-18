@@ -528,8 +528,21 @@ function generateCSV(modules: AuditModule[], section: string): string {
 
 export function AdminModuleAudit() {
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
   const allModules = [...WEBSITE_MODULES, ...APP_MODULES, ...ADMIN_MODULES];
   const overall = useMemo(() => getModuleStats(allModules), [refreshKey]);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setRefreshKey(k => k + 1);
+      setLastRefreshed(new Date());
+      setIsRefreshing(false);
+      const { toast } = require("sonner");
+      toast.success("Module Audit refreshed", { description: `${allModules.length} modules re-evaluated at ${new Date().toLocaleTimeString()}` });
+    }, 800);
+  };
 
   const handleDownload = () => {
     const websiteCSV = generateCSV(WEBSITE_MODULES, "Website");
@@ -559,10 +572,15 @@ export function AdminModuleAudit() {
           <p className="text-sm text-muted-foreground">
             End-to-end feature audit · {overall.total} features across {allModules.length} modules
           </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            <Clock className="inline h-3 w-3 mr-1" />
+            Last refreshed: {lastRefreshed.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+          </p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
-          <Button variant="outline" size="sm" className="gap-2" onClick={() => setRefreshKey(k => k + 1)}>
-            <RefreshCw className="h-4 w-4" /> Refresh
+          <Button variant="outline" size="sm" className="gap-2" onClick={handleRefresh} disabled={isRefreshing}>
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            {isRefreshing ? "Refreshing…" : "Refresh"}
           </Button>
           <Button variant="outline" size="sm" className="gap-2" onClick={handleDownload}>
             <Download className="h-4 w-4" /> Download CSV
