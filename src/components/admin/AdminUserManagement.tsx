@@ -323,8 +323,10 @@ export function AdminUserManagement() {
       <div className="space-y-1.5">
         {filtered.map((u: any) => {
           const vBadge = verificationBadge[u.verification_status] || verificationBadge.unverified;
+          const aBadge = activityBadge[u.activity?.status || "dormant"] || activityBadge.dormant;
+          const ActivityIcon = aBadge.icon;
           return (
-            <Card key={u.id} className="hover:bg-muted/30 transition-colors">
+            <Card key={u.id} className={`hover:bg-muted/30 transition-colors ${u.activity?.status === "dormant" ? "opacity-60" : ""}`}>
               <CardContent className="py-2.5 px-3">
                 <div className="flex items-center gap-3">
                   {/* Avatar */}
