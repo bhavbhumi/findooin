@@ -103,6 +103,7 @@ const Bookmarks = lazy(() => import("./pages/Bookmarks"));
 const Opinions = lazy(() => import("./pages/Opinions"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const AdminOpinionsPage = lazy(() => import("./pages/admin/AdminOpinionsPage"));
+const AdminPremiumFeaturesPage = lazy(() => import("./pages/admin/AdminPremiumFeaturesPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
