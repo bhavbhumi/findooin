@@ -64,73 +64,8 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel }: Direc
 
   return (
     <aside className="space-y-5">
-      {/* Claim Your Profile CTA */}
+      {/* 1. Leaderboard Widget */}
       <motion.div custom={0} initial="hidden" animate="visible" variants={fadeUp}>
-        <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
-          <CardContent className="p-5">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Shield className="h-4.5 w-4.5 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-foreground">Claim Your Profile</h3>
-                <p className="text-[10px] text-muted-foreground">Are you listed here?</p>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
-              If you're an AMFI or SEBI registered professional, claim your directory listing to get a verified badge and unlock your full profile.
-            </p>
-            <div className="flex flex-col gap-2">
-              <Link to="/auth?mode=signup">
-                <Button size="sm" className="w-full gap-1.5 text-xs">
-                  <UserPlus className="h-3.5 w-3.5" />
-                  Sign Up & Claim
-                </Button>
-              </Link>
-              <Link to="/auth">
-                <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground">
-                  Already a member? Log in
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Tab-specific Stats */}
-      <motion.div custom={1} initial="hidden" animate="visible" variants={fadeUp}>
-        <Card>
-          <CardContent className="p-5">
-            <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
-              <BarChart3 className="h-3.5 w-3.5 text-primary" />
-              {tabLabel} Stats
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="text-center p-2.5 rounded-lg bg-muted/50">
-                <p className="text-lg font-bold text-foreground">{tabTotal.toLocaleString()}</p>
-                <p className="text-[10px] text-muted-foreground">Professionals</p>
-              </div>
-              <div className="text-center p-2.5 rounded-lg bg-muted/50">
-                <p className="text-lg font-bold text-primary">{tabClaimed}</p>
-                <p className="text-[10px] text-muted-foreground">Verified</p>
-              </div>
-              <div className="text-center p-2.5 rounded-lg bg-muted/50">
-                <p className="text-lg font-bold text-foreground">
-                  {tabTotal > 0 ? Math.round((tabClaimed / tabTotal) * 100) : 0}%
-                </p>
-                <p className="text-[10px] text-muted-foreground">Claimed</p>
-              </div>
-              <div className="text-center p-2.5 rounded-lg bg-muted/50">
-                <p className="text-lg font-bold text-foreground">Free</p>
-                <p className="text-[10px] text-muted-foreground">To Join</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Leaderboard Widget */}
-      <motion.div custom={2} initial="hidden" animate="visible" variants={fadeUp}>
         <Card className="overflow-hidden">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
@@ -195,8 +130,40 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel }: Direc
         </Card>
       </motion.div>
 
-      {/* Why Join FindOO */}
-      <motion.div custom={3} initial="hidden" animate="visible" variants={fadeUp}>
+      {/* 2. Tab-specific Stats */}
+      <motion.div custom={1} initial="hidden" animate="visible" variants={fadeUp}>
+        <Card>
+          <CardContent className="p-5">
+            <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
+              <BarChart3 className="h-3.5 w-3.5 text-primary" />
+              {tabLabel} Stats
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="text-center p-2.5 rounded-lg bg-muted/50">
+                <p className="text-lg font-bold text-foreground">{tabTotal.toLocaleString()}</p>
+                <p className="text-[10px] text-muted-foreground">Professionals</p>
+              </div>
+              <div className="text-center p-2.5 rounded-lg bg-muted/50">
+                <p className="text-lg font-bold text-primary">{tabClaimed}</p>
+                <p className="text-[10px] text-muted-foreground">Verified</p>
+              </div>
+              <div className="text-center p-2.5 rounded-lg bg-muted/50">
+                <p className="text-lg font-bold text-foreground">
+                  {tabTotal > 0 ? Math.round((tabClaimed / tabTotal) * 100) : 0}%
+                </p>
+                <p className="text-[10px] text-muted-foreground">Claimed</p>
+              </div>
+              <div className="text-center p-2.5 rounded-lg bg-muted/50">
+                <p className="text-lg font-bold text-foreground">Free</p>
+                <p className="text-[10px] text-muted-foreground">To Join</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* 3. Why Join FindOO */}
+      <motion.div custom={2} initial="hidden" animate="visible" variants={fadeUp}>
         <Card>
           <CardContent className="p-5">
             <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
@@ -221,8 +188,8 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel }: Direc
         </Card>
       </motion.div>
 
-      {/* Trending Opinions Teaser */}
-      <motion.div custom={4} initial="hidden" animate="visible" variants={fadeUp}>
+      {/* 4. Trending Opinions Teaser */}
+      <motion.div custom={3} initial="hidden" animate="visible" variants={fadeUp}>
         <Card className="overflow-hidden">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
@@ -260,6 +227,39 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel }: Direc
             <p className="text-[10px] text-muted-foreground mt-3 text-center">
               Sign up to vote & share your professional opinion
             </p>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* 5. Claim Your Profile CTA */}
+      <motion.div custom={4} initial="hidden" animate="visible" variants={fadeUp}>
+        <Card className="overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Shield className="h-4.5 w-4.5 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-foreground">Claim Your Profile</h3>
+                <p className="text-[10px] text-muted-foreground">Are you listed here?</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+              If you're an AMFI or SEBI registered professional, claim your directory listing to get a verified badge and unlock your full profile.
+            </p>
+            <div className="flex flex-col gap-2">
+              <Link to="/auth?mode=signup">
+                <Button size="sm" className="w-full gap-1.5 text-xs">
+                  <UserPlus className="h-3.5 w-3.5" />
+                  Sign Up & Claim
+                </Button>
+              </Link>
+              <Link to="/auth">
+                <Button variant="ghost" size="sm" className="w-full text-xs text-muted-foreground">
+                  Already a member? Log in
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
