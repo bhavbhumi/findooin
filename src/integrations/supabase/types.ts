@@ -1710,6 +1710,71 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_history: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          payment_method: string | null
+          razorpay_invoice_id: string | null
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
+          razorpay_signature: string | null
+          refund_amount: number | null
+          refund_reason: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method?: string | null
+          razorpay_invoice_id?: string | null
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          refund_amount?: number | null
+          refund_reason?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          payment_method?: string | null
+          razorpay_invoice_id?: string | null
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          razorpay_signature?: string | null
+          refund_amount?: number | null
+          refund_reason?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_history_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "user_subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       poll_options: {
         Row: {
           created_at: string
@@ -2484,6 +2549,124 @@ export type Database = {
         }
         Relationships: []
       }
+      subscription_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          from_plan_id: string | null
+          id: string
+          metadata: Json | null
+          subscription_id: string | null
+          to_plan_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          from_plan_id?: string | null
+          id?: string
+          metadata?: Json | null
+          subscription_id?: string | null
+          to_plan_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          from_plan_id?: string | null
+          id?: string
+          metadata?: Json | null
+          subscription_id?: string | null
+          to_plan_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subscription_events_from_plan_id_fkey"
+            columns: ["from_plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_events_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "user_subscriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscription_events_to_plan_id_fkey"
+            columns: ["to_plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_plans: {
+        Row: {
+          annual_discount_pct: number
+          billing_interval: Database["public"]["Enums"]["billing_interval"]
+          created_at: string
+          description: string
+          features: Json
+          id: string
+          limits: Json
+          name: string
+          price_amount: number
+          price_currency: string
+          razorpay_plan_id: string | null
+          slug: string
+          sort_order: number
+          status: Database["public"]["Enums"]["plan_status"]
+          target_role: string
+          tier: string
+          trial_days: number
+          updated_at: string
+        }
+        Insert: {
+          annual_discount_pct?: number
+          billing_interval?: Database["public"]["Enums"]["billing_interval"]
+          created_at?: string
+          description?: string
+          features?: Json
+          id?: string
+          limits?: Json
+          name: string
+          price_amount?: number
+          price_currency?: string
+          razorpay_plan_id?: string | null
+          slug: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["plan_status"]
+          target_role: string
+          tier: string
+          trial_days?: number
+          updated_at?: string
+        }
+        Update: {
+          annual_discount_pct?: number
+          billing_interval?: Database["public"]["Enums"]["billing_interval"]
+          created_at?: string
+          description?: string
+          features?: Json
+          id?: string
+          limits?: Json
+          name?: string
+          price_amount?: number
+          price_currency?: string
+          razorpay_plan_id?: string | null
+          slug?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["plan_status"]
+          target_role?: string
+          tier?: string
+          trial_days?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       support_tickets: {
         Row: {
           assigned_to: string | null
@@ -2829,6 +3012,71 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_subscriptions: {
+        Row: {
+          billing_interval: Database["public"]["Enums"]["billing_interval"]
+          cancel_at_period_end: boolean
+          cancelled_at: string | null
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          metadata: Json | null
+          plan_id: string
+          razorpay_customer_id: string | null
+          razorpay_subscription_id: string | null
+          status: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at: string | null
+          trial_starts_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billing_interval?: Database["public"]["Enums"]["billing_interval"]
+          cancel_at_period_end?: boolean
+          cancelled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          metadata?: Json | null
+          plan_id: string
+          razorpay_customer_id?: string | null
+          razorpay_subscription_id?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at?: string | null
+          trial_starts_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billing_interval?: Database["public"]["Enums"]["billing_interval"]
+          cancel_at_period_end?: boolean
+          cancelled_at?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          metadata?: Json | null
+          plan_id?: string
+          razorpay_customer_id?: string | null
+          razorpay_subscription_id?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          trial_ends_at?: string | null
+          trial_starts_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_xp: {
         Row: {
@@ -3189,6 +3437,7 @@ export type Database = {
       }
       get_seed_user_ids: { Args: never; Returns: string[] }
       get_staff_permissions: { Args: { _user_id: string }; Returns: string[] }
+      get_user_plan_tier: { Args: { p_user_id: string }; Returns: string }
       get_users_activity_status: {
         Args: { p_user_ids: string[] }
         Returns: {
@@ -3204,6 +3453,10 @@ export type Database = {
       }
       has_permission: {
         Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
+      has_plan_tier: {
+        Args: { p_tier: string; p_user_id: string }
         Returns: boolean
       }
       has_role: {
@@ -3256,6 +3509,7 @@ export type Database = {
         | "hired"
         | "rejected"
         | "withdrawn"
+      billing_interval: "monthly" | "annual"
       blog_post_type: "article" | "survey" | "poll" | "bulletin"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
@@ -3314,6 +3568,14 @@ export type Database = {
         | "global_impact"
       opinion_format: "binary" | "multiple_choice" | "scale" | "over_under"
       opinion_status: "draft" | "active" | "closed" | "archived"
+      payment_status:
+        | "created"
+        | "authorized"
+        | "captured"
+        | "failed"
+        | "refunded"
+        | "partially_refunded"
+      plan_status: "active" | "archived" | "draft"
       post_kind: "normal" | "poll" | "survey"
       post_type:
         | "text"
@@ -3357,6 +3619,13 @@ export type Database = {
         | "financial_planning"
         | "legal"
         | "other_service"
+      subscription_status:
+        | "trialing"
+        | "active"
+        | "past_due"
+        | "cancelled"
+        | "expired"
+        | "paused"
       user_type: "individual" | "entity"
       verification_status: "unverified" | "pending" | "verified"
     }
@@ -3497,6 +3766,7 @@ export const Constants = {
         "rejected",
         "withdrawn",
       ],
+      billing_interval: ["monthly", "annual"],
       blog_post_type: ["article", "survey", "poll", "bulletin"],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
@@ -3560,6 +3830,15 @@ export const Constants = {
       ],
       opinion_format: ["binary", "multiple_choice", "scale", "over_under"],
       opinion_status: ["draft", "active", "closed", "archived"],
+      payment_status: [
+        "created",
+        "authorized",
+        "captured",
+        "failed",
+        "refunded",
+        "partially_refunded",
+      ],
+      plan_status: ["active", "archived", "draft"],
       post_kind: ["normal", "poll", "survey"],
       post_type: [
         "text",
@@ -3607,6 +3886,14 @@ export const Constants = {
         "financial_planning",
         "legal",
         "other_service",
+      ],
+      subscription_status: [
+        "trialing",
+        "active",
+        "past_due",
+        "cancelled",
+        "expired",
+        "paused",
       ],
       user_type: ["individual", "entity"],
       verification_status: ["unverified", "pending", "verified"],
