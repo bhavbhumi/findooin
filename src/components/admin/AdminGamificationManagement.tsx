@@ -543,7 +543,7 @@ function ChallengeRow({ challenge: c, stats, onEdit, onDelete }: { challenge: an
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium truncate">{c.title}</p>
-            {isActive ? <Badge className="text-[9px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20">Active</Badge> : <Badge variant="secondary" className="text-[9px]">Ended</Badge>}
+            {isActive ? <Badge variant="default" className="text-[9px]">Active</Badge> : <Badge variant="secondary" className="text-[9px]">Ended</Badge>}
           </div>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[10px] text-muted-foreground capitalize">{c.action_type} × {c.target_count}</span>
