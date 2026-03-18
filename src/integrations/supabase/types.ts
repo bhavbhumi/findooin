@@ -1799,6 +1799,7 @@ export type Database = {
           full_name: string
           headline: string | null
           id: string
+          is_staff: boolean
           languages: Json | null
           location: string | null
           onboarding_completed: boolean
@@ -1824,6 +1825,7 @@ export type Database = {
           full_name?: string
           headline?: string | null
           id: string
+          is_staff?: boolean
           languages?: Json | null
           location?: string | null
           onboarding_completed?: boolean
@@ -1849,6 +1851,7 @@ export type Database = {
           full_name?: string
           headline?: string | null
           id?: string
+          is_staff?: boolean
           languages?: Json | null
           location?: string | null
           onboarding_completed?: boolean
@@ -2240,6 +2243,30 @@ export type Database = {
           event_data?: Json
           event_type?: string
           id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      staff_permissions: {
+        Row: {
+          created_at: string
+          granted_by: string | null
+          id: string
+          permission: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          permission: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          granted_by?: string | null
+          id?: string
+          permission?: string
           user_id?: string
         }
         Relationships: []
@@ -2940,6 +2967,15 @@ export type Database = {
       get_leaderboard: {
         Args: { p_limit?: number; p_offset?: number }
         Returns: Json
+      }
+      get_staff_permissions: { Args: { _user_id: string }; Returns: string[] }
+      grant_moderator_defaults: {
+        Args: { _granted_by: string; _user_id: string }
+        Returns: undefined
+      }
+      has_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
       }
       has_role: {
         Args: {
