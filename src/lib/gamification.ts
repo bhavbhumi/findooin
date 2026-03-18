@@ -42,5 +42,6 @@ export const BADGE_CATEGORY_LABELS: Record<string, string> = {
   streak: "Streaks",
   trust: "Trust",
   events: "Events",
+  opinions: "Opinions",
   milestone: "Milestones",
 };
