@@ -31,9 +31,7 @@ const breakpointData = [
 ];
 
 const ScalingReport = () => {
-  useEffect(() => {
-    document.title = "Findoo – Infrastructure Scaling & Cost Report";
-  }, []);
+  usePageMeta({ title: "Scaling Report", description: "FindOO infrastructure scaling and cost analysis.", path: "/scaling-report" });
 
   return (
     <div className="max-w-4xl mx-auto px-8 py-12 bg-white text-gray-900 print:p-0" style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
