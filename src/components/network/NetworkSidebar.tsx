@@ -126,6 +126,42 @@ export function NetworkSidebar({
         </div>
       </div>
 
+      {/* Import & Invite Contacts */}
+      <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+        <h3 className="text-sm font-semibold text-card-foreground flex items-center gap-2">
+          <Upload className="h-4 w-4 text-primary" />
+          Grow Your Network
+        </h3>
+        <p className="text-xs text-muted-foreground">
+          Import your phone contacts to find people on FindOO and invite others.
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setImportOpen(true)}>
+            <Upload className="h-3.5 w-3.5" />
+            Import
+            {contactStats.total > 0 && (
+              <Badge variant="secondary" className="text-[10px] h-4 px-1 ml-0.5">{contactStats.total}</Badge>
+            )}
+          </Button>
+          <Button size="sm" className="gap-1.5 text-xs" onClick={() => setInviteOpen(true)} disabled={contactStats.total === 0}>
+            <Send className="h-3.5 w-3.5" />
+            Invite
+            {contactStats.notInvited > 0 && (
+              <Badge variant="secondary" className="text-[10px] h-4 px-1 ml-0.5">{contactStats.notInvited}</Badge>
+            )}
+          </Button>
+        </div>
+        {contactStats.total > 0 && (
+          <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+            <span>{contactStats.invited} invited</span>
+            <span>{contactStats.matched} on FindOO</span>
+          </div>
+        )}
+      </div>
+
+      <ContactImportDialog open={importOpen} onOpenChange={setImportOpen} />
+      <ContactInviteSheet open={inviteOpen} onOpenChange={setInviteOpen} />
+
       {/* People You May Know */}
       {peopleYouMayKnow.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-4">
