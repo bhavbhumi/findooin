@@ -211,8 +211,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                     <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
                     {/* Confetti dots — left side */}
                     <span className="absolute -top-0.5 -left-1 flex gap-[2px] pointer-events-none">
-                      <span className="w-[3px] h-[3px] rounded-full bg-yellow-500/80 animate-[confetti1_2.5s_ease-in-out_infinite]" />
-                      <span className="w-[2px] h-[2px] rounded-full bg-gradient-to-br from-primary to-yellow-500 animate-[confetti2_3s_ease-in-out_infinite_0.3s]" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), #eab308)" }} />
+                      <span className="w-[3px] h-[3px] rounded-full animate-[confetti1_2.5s_ease-in-out_infinite]" style={{ backgroundColor: "hsl(45, 90%, 50%)" }} />
+                      <span className="w-[2px] h-[2px] rounded-full animate-[confetti2_3s_ease-in-out_infinite_0.3s]" style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(45, 90%, 50%))" }} />
                       <span className="w-[3px] h-[3px] rounded-full bg-primary/60 animate-[confetti3_2.8s_ease-in-out_infinite_0.6s]" />
                     </span>
                   </>
