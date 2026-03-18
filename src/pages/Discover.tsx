@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import {
   CheckCircle2, Search, Users, FileText, TrendingUp, MapPin, Building2, X,
   Shield, Sparkles, Eye, Zap, UserPlus, Users2, Globe, Network,
-  RefreshCw, Info,
+  RefreshCw, Info, BarChart3, ArrowRight,
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { PersonCardSkeleton } from "@/components/skeletons/PersonCardSkeleton";
@@ -26,6 +26,8 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 import { cn } from "@/lib/utils";
 import { useTrustCircleIQ, CIRCLE_TIERS, type TrustCircleResult, type CircleTier, type TrustCircleData } from "@/hooks/useTrustCircleIQ";
 import { useRole } from "@/contexts/RoleContext";
+import { useOpinions } from "@/hooks/useOpinions";
+import { OpinionCard } from "@/components/opinions/OpinionCard";
 
 const MemoizedDiscoverSidebar = memo(DiscoverSidebar);
 
