@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { RouteErrorBoundary } from "@/components/RouteErrorBoundary";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { lazy, Suspense, useState, useCallback } from "react";
+import { lazy, Suspense, useState } from "react";
 import { FindooLoader } from "@/components/FindooLoader";
 import { lazy as lazyReact } from "react";
 const SplashScreen = lazyReact(() => import("@/components/SplashScreen").then(m => ({ default: m.SplashScreen })));
