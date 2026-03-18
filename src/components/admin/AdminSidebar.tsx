@@ -3,14 +3,15 @@
  * Groups sections into Operations, Content, Platform, and Coming Soon.
  * Shows real-time badge counts for pending verifications and reports.
  */
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
-  IndianRupee, Server, Search, FileText
+  IndianRupee, Server, Search, FileText, LogOut, ExternalLink
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sidebar,
   SidebarContent,
@@ -33,6 +34,12 @@ export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/auth");
+  };
 
   const { data: requests } = useVerificationQueue();
   const { data: reports } = useAdminReports();
@@ -158,25 +165,23 @@ export function AdminSidebar() {
   );
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
-      <SidebarHeader className="p-3 border-b border-white/10">
+    <Sidebar collapsible="icon" className="border-r-0 bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
+      {/* Header — branded logo block */}
+      <div className={`flex items-center gap-2.5 px-4 py-5 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(43,72%,53%)] to-[hsl(43,72%,40%)] shadow-lg shadow-[hsl(43,72%,53%)]/20">
+          <span className="text-sm font-bold text-[hsl(240,100%,15%)] font-heading">FO</span>
+        </div>
         {!collapsed && (
-          <div className="flex items-center gap-2 px-1">
-            <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center">
-              <Shield className="h-4 w-4 text-[hsl(43,72%,53%)]" />
-            </div>
-            <div>
-              <p className="text-sm font-bold font-heading text-white">Admin</p>
-              <p className="text-[10px] text-white/50">Control Center</p>
-            </div>
+          <div className="animate-slide-in-left">
+            <h1 className="text-sm font-bold text-white tracking-tight font-heading">
+              FindOO Admin
+            </h1>
+            <p className="text-[10px] text-white/50 leading-none">
+              Control Center
+            </p>
           </div>
         )}
-        {collapsed && (
-          <div className="flex justify-center">
-            <Shield className="h-5 w-5 text-[hsl(43,72%,53%)]" />
-          </div>
-        )}
-      </SidebarHeader>
+      </div>
 
       <SidebarContent>
         {NAV_SECTIONS.map((section) => {
@@ -234,11 +239,39 @@ export function AdminSidebar() {
         })}
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 space-y-2 border-t border-white/10">
+        {/* Admin user card */}
+        <div className={`flex items-center gap-2.5 rounded-lg bg-white/10 p-2.5 ${collapsed ? "justify-center" : ""}`}>
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(43,72%,53%)]/20">
+            <Shield className="h-3.5 w-3.5 text-[hsl(43,72%,53%)]" />
+          </div>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-white truncate">Administrator</p>
+              <p className="text-[10px] text-white/40 truncate">Full access</p>
+            </div>
+          )}
+        </div>
+
+        {/* Action links */}
         {!collapsed && (
-          <p className="text-[10px] text-white/30 text-center">
-            FindOO Admin v2.0
-          </p>
+          <div className="space-y-0.5">
+            <button
+              onClick={() => navigate("/feed")}
+              className="flex items-center gap-2 text-[11px] text-white/50 hover:text-white transition-colors px-2.5 py-1.5 w-full rounded-md hover:bg-white/5"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Back to App
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 text-[11px] text-white/50 hover:text-white transition-colors px-2.5 py-1.5 w-full rounded-md hover:bg-white/5"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Sign Out
+            </button>
+            <p className="text-[9px] text-white/20 text-center pt-1">FindOO Admin v2.0</p>
+          </div>
         )}
       </SidebarFooter>
     </Sidebar>
