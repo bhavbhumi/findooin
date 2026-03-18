@@ -42,11 +42,25 @@ export function AdminMessagesManagement() {
   });
   const flaggedCount = new Set((reportsData || []).filter(r => r.reported_user_id).map(r => r.reported_user_id)).size;
 
+  const { data: msgReportCount } = useQuery({
+    queryKey: ["admin-resource-reports-count", "message"],
+    queryFn: async () => {
+      const { count } = await supabase.from("reports").select("id", { count: "exact", head: true }).eq("resource_type", "message").eq("status", "pending");
+      return count || 0;
+    },
+  });
+
   return (
     <Tabs defaultValue="messages" className="space-y-4">
       <TabsList>
         <TabsTrigger value="messages" className="gap-1.5">
           <MessageSquare className="h-3.5 w-3.5" /> All Messages
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {(msgReportCount || 0) > 0 && (
+            <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">{msgReportCount}</Badge>
+          )}
         </TabsTrigger>
         <TabsTrigger value="abuse" className="gap-1.5">
           <ShieldAlert className="h-3.5 w-3.5" /> Abuse Monitor
@@ -59,6 +73,9 @@ export function AdminMessagesManagement() {
       </TabsList>
       <TabsContent value="messages" className="mt-0">
         <MessagesTab />
+      </TabsContent>
+      <TabsContent value="reports" className="mt-0">
+        <ResourceModeration resourceType="message" />
       </TabsContent>
       <TabsContent value="abuse" className="mt-0">
         <AbuseMonitorTab />
