@@ -198,6 +198,24 @@ export function AdminUserManagement() {
     }
   };
 
+  const handlePurgeSeedData = async () => {
+    setIsPurging(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("purge-seed-data", {
+        body: { action: "purge", includeBlog: true },
+      });
+      if (error) throw error;
+      toast.success(`Seed data purged: ${data?.seed_users_purged || 0} test users and all their content removed`);
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-reports"] });
+    } catch (err: any) {
+      toast.error(`Purge failed: ${err.message}`);
+    } finally {
+      setIsPurging(false);
+    }
+  };
+
   if (isLoading) return <FindooLoader text="Loading users..." />;
 
   return (
