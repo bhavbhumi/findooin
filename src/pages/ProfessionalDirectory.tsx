@@ -520,6 +520,18 @@ export default function ProfessionalDirectory() {
             )}
           </motion.div>
         </AnimatePresence>
+        </div>
+
+        {/* Right sidebar — desktop only */}
+        <div className="hidden lg:block w-[300px] shrink-0">
+          <div className="sticky top-28">
+            <DirectoryPublicSidebar
+              totalProfessionals={allEntities.length}
+              claimedCount={allEntities.filter(e => !!e.matched_user_id).length}
+            />
+          </div>
+        </div>
+        </div>
       </div>
     </PublicPageLayout>
   );
