@@ -449,7 +449,17 @@ const Messages = () => {
                     {otherTyping && (
                       <p className="text-[10px] text-accent animate-pulse">typing...</p>
                     )}
+                </div>
+
+                {/* Inactive user warning */}
+                {recipientActivity && (recipientActivity.status === "inactive" || recipientActivity.status === "dormant") && (
+                  <div className="mx-2.5 mt-1.5 px-2.5 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20 flex items-center gap-2">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400">
+                      This user has been {recipientActivity.status} for {recipientActivity.days_inactive} days and may not respond.
+                    </p>
                   </div>
+                )}
                 </div>
 
                 {/* Category tabs */}
