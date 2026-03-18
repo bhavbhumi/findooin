@@ -12,7 +12,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import {
   CheckCircle2, Search, Users, FileText, TrendingUp, MapPin, Building2, X,
   Shield, Sparkles, Eye, Zap, UserPlus, Users2, Globe, Network,
-  RefreshCw, Info,
+  RefreshCw, Info, BarChart3, ArrowRight,
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { PersonCardSkeleton } from "@/components/skeletons/PersonCardSkeleton";
@@ -26,6 +26,8 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 import { cn } from "@/lib/utils";
 import { useTrustCircleIQ, CIRCLE_TIERS, type TrustCircleResult, type CircleTier, type TrustCircleData } from "@/hooks/useTrustCircleIQ";
 import { useRole } from "@/contexts/RoleContext";
+import { useOpinions } from "@/hooks/useOpinions";
+import { OpinionCard } from "@/components/opinions/OpinionCard";
 
 const MemoizedDiscoverSidebar = memo(DiscoverSidebar);
 
@@ -61,6 +63,7 @@ const Discover = () => {
   const { data: viralPosts, isLoading: loadingViral } = useViralPosts();
   const { flatPosts: recentPosts, isLoading: loadingRecent } = useFeedPosts();
   const { data: trustData, isLoading: loadingTrust, refetch, isFetching } = useTrustCircleIQ(currentUserId, true);
+  const { data: featuredOpinions } = useOpinions(undefined, "active");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -434,6 +437,34 @@ const Discover = () => {
                 </div>
               )}
             </>
+          )}
+
+          {/* Featured Opinions Section */}
+          {featuredOpinions && featuredOpinions.length > 0 && (
+            <div className="mt-8">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <BarChart3 className="h-4 w-4 text-primary" />
+                  <h2 className="text-base font-semibold">Trending Opinions</h2>
+                  <Badge variant="secondary" className="text-[10px]">{featuredOpinions.length}</Badge>
+                </div>
+                <Button variant="ghost" size="sm" className="text-xs gap-1 text-primary" asChild>
+                  <Link to="/opinions">
+                    View all <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </Button>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                {featuredOpinions.filter((o) => o.is_featured).slice(0, 4).length > 0
+                  ? featuredOpinions.filter((o) => o.is_featured).slice(0, 4).map((op) => (
+                      <OpinionCard key={op.id} opinion={op} compact />
+                    ))
+                  : featuredOpinions.slice(0, 4).map((op) => (
+                      <OpinionCard key={op.id} opinion={op} compact />
+                    ))
+                }
+              </div>
+            </div>
           )}
         </div>
 

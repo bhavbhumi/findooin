@@ -18,10 +18,14 @@ import { DraftsPanel } from "@/components/feed/DraftsPanel";
 import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EmptyFeedIllustration } from "@/components/illustrations/EmptyStateIllustrations";
-import { MessageSquare, Clock, Sparkles, Info } from "lucide-react";
+import { MessageSquare, Clock, Sparkles, Info, BarChart3 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTrustCircleIQ, CIRCLE_TIERS, type CircleTier } from "@/hooks/useTrustCircleIQ";
 import { cn } from "@/lib/utils";
+import { OpinionCard } from "@/components/opinions/OpinionCard";
+import { OpinionDetailSheet } from "@/components/opinions/OpinionDetailSheet";
+import { useOpinions, useOpinionDetail } from "@/hooks/useOpinions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /* ── AffinityFeed™ Trust-Weighted Scoring ── */
 const TRUST_WEIGHT_BY_TIER: Record<number, number> = { 1: 10, 2: 6, 3: 3, 4: 1.5, 5: 1 };
@@ -152,6 +156,9 @@ const Feed = () => {
           </ErrorBoundary>
           <FeedTabs value={filter} onChange={setFilter} />
 
+          {/* Opinions Tab */}
+          {filter === "opinions" && <FeedOpinionsTab />}
+
           {/* AffinityFeed™ context bar */}
           {filter === "affinity" && !isLoading && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border">
@@ -162,7 +169,7 @@ const Feed = () => {
             </div>
           )}
 
-          {isLoading && (
+          {filter !== "opinions" && isLoading && (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <PostCardSkeleton key={i} />
@@ -170,13 +177,13 @@ const Feed = () => {
             </div>
           )}
 
-          {error && (
+          {filter !== "opinions" && error && (
             <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-center">
               <p className="text-sm text-destructive">Failed to load feed. Please try again.</p>
             </div>
           )}
 
-          {visiblePosts && visiblePosts.length === 0 && !isLoading && (
+          {filter !== "opinions" && visiblePosts && visiblePosts.length === 0 && !isLoading && (
             <EmptyState
               illustration={<EmptyFeedIllustration />}
               icon={filter === "affinity" ? Sparkles : Clock}
@@ -191,7 +198,7 @@ const Feed = () => {
             />
           )}
 
-          {visiblePosts?.map((post) => {
+          {filter !== "opinions" && visiblePosts?.map((post) => {
             const tierInfo = filter === "affinity" ? postTierMap.get(post.id) : null;
             return (
               <div key={post.id} className="relative">
@@ -218,7 +225,7 @@ const Feed = () => {
           })}
 
           {/* Infinite scroll trigger (Recent only) */}
-          {hasMore && (
+          {filter !== "opinions" && hasMore && (
             <>
               <div ref={observerRef} className="h-4" />
               {!isFetchingMore && (
@@ -233,13 +240,13 @@ const Feed = () => {
               )}
             </>
           )}
-          {isFetchingMore && (
+          {filter !== "opinions" && isFetchingMore && (
             <div className="space-y-4">
               <PostCardSkeleton />
               <PostCardSkeleton />
             </div>
           )}
-          {!hasMore && !isLoading && visiblePosts && visiblePosts.length > 0 && (
+          {filter !== "opinions" && !hasMore && !isLoading && visiblePosts && visiblePosts.length > 0 && (
             <p className="text-center text-xs text-muted-foreground py-6">You're all caught up!</p>
           )}
         </div>
@@ -274,5 +281,59 @@ const Feed = () => {
     </AppLayout>
   );
 };
+
+/** FeedOpinionsTab — Inline opinions content within the Feed page */
+function FeedOpinionsTab() {
+  const { data: opinions, isLoading } = useOpinions(undefined, "active");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { data: selectedOpinion } = useOpinionDetail(selectedId);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="rounded-xl border p-4 space-y-3">
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!opinions?.length) {
+    return (
+      <EmptyState
+        icon={BarChart3}
+        title="No active opinions"
+        description="Professional sentiment polls will appear here when published by the FindOO team."
+      />
+    );
+  }
+
+  return (
+    <>
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border mb-4">
+        <BarChart3 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+        <p className="text-[11px] text-muted-foreground">
+          <span className="font-semibold text-foreground">Professional Opinions</span> — curated BFSI sentiment polls from verified industry experts
+        </p>
+      </div>
+      <div className="grid gap-4">
+        {opinions.map((op) => (
+          <OpinionCard key={op.id} opinion={op} onOpenDetail={setSelectedId} />
+        ))}
+      </div>
+      <OpinionDetailSheet
+        opinionId={selectedId}
+        opinion={selectedOpinion || null}
+        open={!!selectedId}
+        onClose={() => setSelectedId(null)}
+      />
+    </>
+  );
+}
 
 export default Feed;
