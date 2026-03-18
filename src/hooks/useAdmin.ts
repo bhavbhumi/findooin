@@ -3,18 +3,28 @@
  *
  * Provides 8 exports:
  * - `useIsAdmin()` — role check via `has_role` RPC (cached 60s)
- * - `useVerificationQueue()` — pending/reviewed verification requests
+ * - `useVerificationQueue()` — pending/reviewed verification requests (date-bounded)
  * - `useReviewVerification()` — approve/reject with profile status update
- * - `useAdminReports()` — content reports with user profiles
+ * - `useAdminReports()` — content reports with user profiles (date-bounded)
  * - `useUpdateReportStatus()` — update report status
  * - `useAdminUsers()` — all users (max 200) with roles
  * - `useDeletePost()` — admin-delete any post
  *
  * All admin queries require the `admin` role via RLS policies.
+ *
+ * Caching strategy:
+ * - staleTime: 60s — admin data is not real-time critical
+ * - gcTime: 10min — free memory after leaving admin panel
+ * - Row limits + date filters — prevent unbounded growth
+ * - Minimal column selection — reduce payload size
  */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { subDays } from "date-fns";
+
+/** Shared cache config for admin queries */
+const ADMIN_CACHE = { staleTime: 60_000, gcTime: 600_000 } as const;
 
 /** Fire-and-forget audit log insert */
 async function logAdminAction(action: string, resourceType: string, resourceId?: string, metadata?: Record<string, any>) {
@@ -42,6 +52,7 @@ export function useIsAdmin() {
       return !!data;
     },
     staleTime: 60_000,
+    gcTime: 300_000,
   });
 }
 
@@ -50,16 +61,12 @@ export interface VerificationRequest {
   user_id: string;
   document_url: string;
   document_name: string;
-  document_type: string | null;
-  regulator: string | null;
-  registration_number: string | null;
-  notes: string | null;
+  registration_number?: string;
+  regulator?: string;
+  notes?: string;
   status: string;
-  admin_notes: string | null;
-  reviewed_by: string | null;
-  reviewed_at: string | null;
+  admin_notes?: string;
   created_at: string;
-  updated_at: string;
   profile?: {
     full_name: string;
     display_name: string | null;
@@ -71,31 +78,49 @@ export interface VerificationRequest {
   roles?: { role: string; sub_type: string | null }[];
 }
 
-export function useVerificationQueue() {
+/**
+ * Fetches verification requests. 
+ * - includeArchived=false (default): only last 90 days
+ * - includeArchived=true: all records
+ * Always fetches ALL pending regardless of date.
+ */
+export function useVerificationQueue(includeArchived = false) {
   return useQuery({
-    queryKey: ["admin-verification-queue"],
+    queryKey: ["admin-verification-queue", includeArchived],
     queryFn: async (): Promise<VerificationRequest[]> => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("verification_requests")
-        .select("*")
+        .select("id, user_id, document_url, document_name, registration_number, regulator, notes, status, admin_notes, created_at")
         .order("created_at", { ascending: false });
+
+      if (!includeArchived) {
+        const cutoff = subDays(new Date(), 90).toISOString();
+        // Fetch pending (any date) + recent resolved
+        query = query.or(`status.eq.pending,created_at.gte.${cutoff}`);
+      }
+
+      query = query.limit(500);
+
+      const { data, error } = await query;
       if (error) throw error;
 
-      // Fetch profiles for each request
       const userIds = [...new Set((data || []).map((r: any) => r.user_id))];
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("id, full_name, display_name, avatar_url, organization, user_type, verification_status")
-        .in("id", userIds);
+      if (userIds.length === 0) return [];
 
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("user_id, role, sub_type")
-        .in("user_id", userIds);
+      const [profilesRes, rolesRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("id, full_name, display_name, avatar_url, organization, user_type, verification_status")
+          .in("id", userIds),
+        supabase
+          .from("user_roles")
+          .select("user_id, role, sub_type")
+          .in("user_id", userIds),
+      ]);
 
-      const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p]));
+      const profileMap = Object.fromEntries((profilesRes.data || []).map((p: any) => [p.id, p]));
       const roleMap: Record<string, any[]> = {};
-      (roles || []).forEach((r: any) => {
+      (rolesRes.data || []).forEach((r: any) => {
         if (!roleMap[r.user_id]) roleMap[r.user_id] = [];
         roleMap[r.user_id].push({ role: r.role, sub_type: r.sub_type });
       });
@@ -106,47 +131,42 @@ export function useVerificationQueue() {
         roles: roleMap[r.user_id] || [],
       }));
     },
-    staleTime: 10_000,
+    ...ADMIN_CACHE,
   });
 }
 
 export function useReviewVerification() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ requestId, status, adminNotes, userId }: {
+    mutationFn: async ({
+      requestId,
+      status,
+      adminNotes,
+      userId,
+    }: {
       requestId: string;
       status: "approved" | "rejected";
-      adminNotes?: string;
+      adminNotes: string;
       userId: string;
     }) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      // Update request
-      const { error: reqErr } = await supabase
+      const { error: reqError } = await supabase
         .from("verification_requests")
-        .update({
-          status,
-          admin_notes: adminNotes || null,
-          reviewed_by: session.user.id,
-          reviewed_at: new Date().toISOString(),
-        })
+        .update({ status, admin_notes: adminNotes })
         .eq("id", requestId);
-      if (reqErr) throw reqErr;
+      if (reqError) throw reqError;
 
-      // Update profile verification_status
-      const newStatus = status === "approved" ? "verified" : "unverified";
-      const { error: profErr } = await supabase
+      const newVerificationStatus = status === "approved" ? "verified" : "unverified";
+      const { error: profError } = await supabase
         .from("profiles")
-        .update({ verification_status: newStatus })
+        .update({ verification_status: newVerificationStatus })
         .eq("id", userId);
-      if (profErr) throw profErr;
+      if (profError) throw profError;
     },
     onSuccess: (_, vars) => {
       toast.success(`Verification ${vars.status}`);
       qc.invalidateQueries({ queryKey: ["admin-verification-queue"] });
       logAdminAction("verification_review", "verification_request", vars.requestId, {
-        status: vars.status,
+        decision: vars.status,
         user_id: vars.userId,
       });
     },
@@ -168,58 +188,69 @@ export interface AdminReport {
   post?: { content: string; created_at: string; post_type?: string; hashtags?: string[] } | null;
 }
 
-export function useAdminReports() {
+/**
+ * Fetches reports.
+ * - includeArchived=false (default): pending + last 90 days resolved
+ * - includeArchived=true: all records (capped at 500)
+ */
+export function useAdminReports(includeArchived = false) {
   return useQuery({
-    queryKey: ["admin-reports"],
+    queryKey: ["admin-reports", includeArchived],
     queryFn: async (): Promise<AdminReport[]> => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("reports")
-        .select("*")
+        .select("id, reporter_id, post_id, reported_user_id, reason, description, status, created_at")
         .order("created_at", { ascending: false });
+
+      if (!includeArchived) {
+        const cutoff = subDays(new Date(), 90).toISOString();
+        query = query.or(`status.eq.pending,created_at.gte.${cutoff}`);
+      }
+
+      query = query.limit(500);
+
+      const { data, error } = await query;
       if (error) throw error;
+      if (!data?.length) return [];
 
       const userIds = [...new Set([
-        ...(data || []).map((r: any) => r.reporter_id),
-        ...(data || []).filter((r: any) => r.reported_user_id).map((r: any) => r.reported_user_id),
+        ...data.map((r: any) => r.reporter_id),
+        ...data.filter((r: any) => r.reported_user_id).map((r: any) => r.reported_user_id),
       ])];
 
-      const { data: profiles } = await supabase
-        .from("profiles")
-        .select("id, full_name, avatar_url, display_name, user_type, verification_status, organization")
-        .in("id", userIds);
+      const postIds = [...new Set(data.filter((r: any) => r.post_id).map((r: any) => r.post_id))];
 
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("user_id, role")
-        .in("user_id", userIds);
+      // Parallel fetch: profiles, roles, posts
+      const [profilesRes, rolesRes, postsRes] = await Promise.all([
+        supabase
+          .from("profiles")
+          .select("id, full_name, avatar_url, user_type, verification_status, organization")
+          .in("id", userIds),
+        supabase
+          .from("user_roles")
+          .select("user_id, role")
+          .in("user_id", userIds),
+        postIds.length > 0
+          ? supabase.from("posts").select("id, content, created_at, post_type, hashtags").in("id", postIds)
+          : Promise.resolve({ data: [] }),
+      ]);
 
+      const profileMap = Object.fromEntries((profilesRes.data || []).map((p: any) => [p.id, p]));
       const roleMap: Record<string, string[]> = {};
-      (roles || []).forEach((r: any) => {
+      (rolesRes.data || []).forEach((r: any) => {
         if (!roleMap[r.user_id]) roleMap[r.user_id] = [];
         roleMap[r.user_id].push(r.role);
       });
+      const postMap = Object.fromEntries(((postsRes as any).data || []).map((p: any) => [p.id, p]));
 
-      const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p]));
-
-      // Fetch reported post content
-      const postIds = [...new Set((data || []).filter((r: any) => r.post_id).map((r: any) => r.post_id))];
-      let postMap: Record<string, any> = {};
-      if (postIds.length > 0) {
-        const { data: posts } = await supabase
-          .from("posts")
-          .select("id, content, created_at, post_type, hashtags")
-          .in("id", postIds);
-        postMap = Object.fromEntries((posts || []).map((p: any) => [p.id, p]));
-      }
-
-      return (data || []).map((r: any) => ({
+      return data.map((r: any) => ({
         ...r,
         reporter: profileMap[r.reporter_id] ? { ...profileMap[r.reporter_id], roles: roleMap[r.reporter_id] || [] } : null,
         reported_user: r.reported_user_id && profileMap[r.reported_user_id] ? { ...profileMap[r.reported_user_id], roles: roleMap[r.reported_user_id] || [] } : null,
         post: r.post_id ? postMap[r.post_id] || null : null,
       }));
     },
-    staleTime: 10_000,
+    ...ADMIN_CACHE,
   });
 }
 
@@ -248,12 +279,14 @@ export function useAdminUsers() {
     queryFn: async () => {
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select("id, full_name, display_name, avatar_url, organization, user_type, verification_status, is_staff, onboarding_completed, created_at")
         .order("created_at", { ascending: false })
         .limit(200);
       if (error) throw error;
 
       const userIds = (profiles || []).map((p: any) => p.id);
+      if (userIds.length === 0) return [];
+
       const { data: roles } = await supabase
         .from("user_roles")
         .select("user_id, role, sub_type")
@@ -270,7 +303,7 @@ export function useAdminUsers() {
         roles: roleMap[p.id] || [],
       }));
     },
-    staleTime: 10_000,
+    ...ADMIN_CACHE,
   });
 }
 

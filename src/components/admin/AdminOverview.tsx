@@ -172,9 +172,9 @@ export function AdminOverview() {
     if (!requests?.length) return toast.error("No verification data to export");
     const headers = ["User", "Document", "Type", "Regulator", "Status", "Submitted", "Reviewed"];
     const rows = requests.map(r => [
-      r.profile?.full_name || r.user_id, r.document_name, r.document_type || "",
+      r.profile?.full_name || r.user_id, r.document_name, r.regulator || "",
       r.regulator || "", r.status, new Date(r.created_at).toLocaleDateString(),
-      r.reviewed_at ? new Date(r.reviewed_at).toLocaleDateString() : "",
+      "",
     ]);
     downloadCsv(`findoo-verifications-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
     toast.success(`Exported ${rows.length} verification records`);

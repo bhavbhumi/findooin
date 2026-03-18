@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import {
   Flag, CheckCircle2, XCircle, Trash2, FileText, User, Search, Filter,
   AlertTriangle, ShieldAlert, AlertOctagon, Info, ChevronLeft, ChevronRight,
-  BarChart3, Users, ShieldCheck, Building2, MessageSquare, Eye
+  BarChart3, Users, ShieldCheck, Building2, MessageSquare, Eye, Archive
 } from "lucide-react";
 import { formatDistanceToNow, isToday } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -61,7 +63,8 @@ function RoleBadges({ roles }: { roles?: string[] }) {
 const PAGE_SIZE = 15;
 
 export function AdminContentModeration() {
-  const { data: reports, isLoading } = useAdminReports();
+  const [showArchived, setShowArchived] = useState(false);
+  const { data: reports, isLoading } = useAdminReports(showArchived);
   const updateStatus = useUpdateReportStatus();
   const deletePost = useDeletePost();
 
@@ -182,6 +185,12 @@ export function AdminContentModeration() {
             <SelectItem value="low">Low</SelectItem>
           </SelectContent>
         </Select>
+        <div className="flex items-center gap-2">
+          <Switch id="mod-archive" checked={showArchived} onCheckedChange={v => { setShowArchived(v); setPage(1); }} />
+          <Label htmlFor="mod-archive" className="text-xs text-muted-foreground cursor-pointer flex items-center gap-1">
+            <Archive className="h-3 w-3" /> Show archived
+          </Label>
+        </div>
       </div>
 
       {/* Reports List */}

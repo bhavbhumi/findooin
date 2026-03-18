@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   CheckCircle2, XCircle, Clock, FileText, ExternalLink, ShieldCheck,
   Building2, User, Search, ArrowUpDown, ArrowUp, ArrowDown, Filter,
-  AlertTriangle, Timer, TrendingUp, BarChart3, ChevronLeft, ChevronRight
+  AlertTriangle, Timer, TrendingUp, BarChart3, ChevronLeft, ChevronRight, Archive
 } from "lucide-react";
 import { formatDistanceToNow, differenceInHours, subDays } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -33,7 +35,8 @@ function getSLABadge(createdAt: string) {
 const PAGE_SIZE = 15;
 
 export function AdminVerificationQueue() {
-  const { data: requests, isLoading } = useVerificationQueue();
+  const [showArchived, setShowArchived] = useState(false);
+  const { data: requests, isLoading } = useVerificationQueue(showArchived);
   const review = useReviewVerification();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
@@ -195,6 +198,12 @@ export function AdminVerificationQueue() {
         <Button variant="ghost" size="sm" onClick={() => setSortDir(prev => prev === "asc" ? "desc" : "asc")}>
           <SortIcon className="h-3.5 w-3.5" />
         </Button>
+        <div className="flex items-center gap-2">
+          <Switch id="verif-archive" checked={showArchived} onCheckedChange={v => { setShowArchived(v); setPage(1); }} />
+          <Label htmlFor="verif-archive" className="text-xs text-muted-foreground cursor-pointer flex items-center gap-1">
+            <Archive className="h-3 w-3" /> Show archived
+          </Label>
+        </div>
       </div>
 
       {/* Bulk Actions */}

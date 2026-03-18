@@ -2,13 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Activity, Eye, FileText, Shield, User, Search, Download, Clock,
-  ChevronLeft, ChevronRight, ArrowUpDown, Filter, BarChart3, Users
+  ChevronLeft, ChevronRight, Filter, BarChart3, Users, Archive
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { format, subDays, isToday } from "date-fns";
@@ -45,27 +46,38 @@ export function AdminAuditLog() {
   const [filterResource, setFilterResource] = useState("all");
   const [filterDate, setFilterDate] = useState("all");
   const [page, setPage] = useState(1);
+  const [showArchived, setShowArchived] = useState(false);
 
   const { data: logs, isLoading } = useQuery({
-    queryKey: ["admin-audit-logs"],
+    queryKey: ["admin-audit-logs", showArchived],
     queryFn: async (): Promise<AuditLog[]> => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("audit_logs")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(1000);
-      if (error) throw error;
+        .select("id, user_id, action, resource_type, resource_id, metadata, created_at")
+        .order("created_at", { ascending: false });
 
-      const userIds = [...new Set((data || []).map((l: any) => l.user_id))];
+      if (!showArchived) {
+        const cutoff = subDays(new Date(), 90).toISOString();
+        query = query.gte("created_at", cutoff);
+      }
+
+      query = query.limit(500);
+
+      const { data, error } = await query;
+      if (error) throw error;
+      if (!data?.length) return [];
+
+      const userIds = [...new Set(data.map((l: any) => l.user_id))];
       const { data: profiles } = await supabase
         .from("profiles")
         .select("id, full_name, avatar_url, display_name")
         .in("id", userIds);
 
       const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p]));
-      return (data || []).map((l: any) => ({ ...l, profile: profileMap[l.user_id] || null }));
+      return data.map((l: any) => ({ ...l, profile: profileMap[l.user_id] || null }));
     },
-    staleTime: 15_000,
+    staleTime: 60_000,
+    gcTime: 600_000,
   });
 
   const actionTypes = useMemo(() => logs ? [...new Set(logs.map(l => l.action))] : [], [logs]);
@@ -200,6 +212,12 @@ export function AdminAuditLog() {
         <Button variant="outline" size="sm" className="gap-1.5" onClick={exportCSV} disabled={filtered.length === 0}>
           <Download className="h-3.5 w-3.5" /> Export CSV
         </Button>
+        <div className="flex items-center gap-2">
+          <Switch id="audit-archive" checked={showArchived} onCheckedChange={v => { setShowArchived(v); setPage(1); }} />
+          <Label htmlFor="audit-archive" className="text-xs text-muted-foreground cursor-pointer flex items-center gap-1">
+            <Archive className="h-3 w-3" /> Show archived
+          </Label>
+        </div>
       </div>
 
       {/* Log entries */}
