@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { ReportDialog } from "@/components/feed/ReportDialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Star, MapPin, BadgeCheck, TrendingUp, Package, Wrench, Send, CheckCircle, MessageCircle } from "lucide-react";
+import { Star, MapPin, BadgeCheck, TrendingUp, Package, Wrench, Send, CheckCircle, MessageCircle, Flag } from "lucide-react";
 import { toast } from "sonner";
 import type { Listing } from "@/hooks/useListings";
 import { PRODUCT_CATEGORIES, SERVICE_CATEGORIES, useListingReviews, useSubmitReview, useSubmitEnquiry } from "@/hooks/useListings";
@@ -23,6 +24,7 @@ export const ListingDetailSheet = ({ listing, open, onOpenChange }: ListingDetai
   const [reviewText, setReviewText] = useState("");
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [showReview, setShowReview] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   const { data: reviews } = useListingReviews(listing?.id ?? null);
   const submitReview = useSubmitReview();
@@ -225,7 +227,20 @@ export const ListingDetailSheet = ({ listing, open, onOpenChange }: ListingDetai
               <p className="text-xs text-muted-foreground text-center py-4">No reviews yet. Be the first to review!</p>
             )}
           </div>
+
+          {/* Report */}
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1.5 w-full" onClick={() => setShowReport(true)}>
+            <Flag className="h-3.5 w-3.5" /> Report this listing
+          </Button>
         </div>
+
+        <ReportDialog
+          open={showReport}
+          onOpenChange={setShowReport}
+          resourceType="listing"
+          resourceId={listing.id}
+          reportedUserId={listing.user_id}
+        />
       </SheetContent>
     </Sheet>
   );

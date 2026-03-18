@@ -1,6 +1,6 @@
 /**
  * AdminEventsManagement — Admin view for managing all platform events.
- * Provides stats, filtering, and moderation (publish, cancel, delete).
+ * Tabs: "All Events" and "Reports".
  */
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,11 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
+import { ResourceModeration } from "./ResourceModeration";
 import { toast } from "sonner";
 import {
-  Calendar, Search, ChevronLeft, ChevronRight, Eye, Users,
-  Trash2, MapPin, Clock, Globe, Monitor, Play, XCircle, CheckCircle2
+  Calendar, Search, ChevronLeft, ChevronRight, Users,
+  Trash2, MapPin, Clock, Globe, Monitor, Play, XCircle, CheckCircle2, Flag
 } from "lucide-react";
 import { formatDistanceToNow, format, isPast } from "date-fns";
 
@@ -25,15 +27,34 @@ const statusColors: Record<string, string> = {
   completed: "bg-accent/10 text-accent border-accent/20",
 };
 
-const modeIcons: Record<string, typeof Globe> = {
-  virtual: Monitor,
-  physical: MapPin,
-  hybrid: Globe,
-};
-
+const modeIcons: Record<string, typeof Globe> = { virtual: Monitor, physical: MapPin, hybrid: Globe };
 const PAGE_SIZE = 15;
 
 export function AdminEventsManagement() {
+  const { data: reportCount } = useQuery({
+    queryKey: ["admin-resource-reports-count", "event"],
+    queryFn: async () => {
+      const { count } = await supabase.from("reports").select("id", { count: "exact", head: true }).eq("resource_type", "event").eq("status", "pending");
+      return count || 0;
+    },
+  });
+
+  return (
+    <Tabs defaultValue="events" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="events" className="gap-1.5"><Calendar className="h-3.5 w-3.5" /> All Events</TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {(reportCount || 0) > 0 && <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">{reportCount}</Badge>}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="events" className="mt-0"><EventsTab /></TabsContent>
+      <TabsContent value="reports" className="mt-0"><ResourceModeration resourceType="event" /></TabsContent>
+    </Tabs>
+  );
+}
+
+function EventsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -43,10 +64,7 @@ export function AdminEventsManagement() {
   const { data: events, isLoading } = useQuery({
     queryKey: ["admin-events"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("events")
-        .select("*")
-        .order("start_time", { ascending: false });
+      const { data, error } = await supabase.from("events").select("*").order("start_time", { ascending: false });
       if (error) throw error;
       const orgIds = [...new Set((data || []).map((e) => e.organizer_id))];
       const { data: profiles } = orgIds.length > 0
@@ -62,10 +80,7 @@ export function AdminEventsManagement() {
       const { error } = await supabase.from("events").update({ status }).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-events"] });
-      toast.success("Event status updated");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-events"] }); toast.success("Event status updated"); },
   });
 
   const deleteEvent = useMutation({
@@ -73,10 +88,7 @@ export function AdminEventsManagement() {
       const { error } = await supabase.from("events").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-events"] });
-      toast.success("Event deleted");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-events"] }); toast.success("Event deleted"); },
   });
 
   const filtered = useMemo(() => {
@@ -84,9 +96,7 @@ export function AdminEventsManagement() {
     return events.filter((e) => {
       if (statusFilter !== "all" && e.status !== statusFilter) return false;
       if (modeFilter !== "all" && e.event_mode !== modeFilter) return false;
-      if (search) {
-        return e.title.toLowerCase().includes(search.toLowerCase());
-      }
+      if (search) return e.title.toLowerCase().includes(search.toLowerCase());
       return true;
     });
   }, [events, search, statusFilter, modeFilter]);
@@ -110,7 +120,6 @@ export function AdminEventsManagement() {
 
   return (
     <div className="space-y-4">
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {[
           { label: "Total Events", value: stats.total, icon: Calendar },
@@ -131,7 +140,6 @@ export function AdminEventsManagement() {
         ))}
       </div>
 
-      {/* Filters */}
       <div className="flex flex-wrap gap-2 items-center">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -160,13 +168,11 @@ export function AdminEventsManagement() {
 
       <p className="text-xs text-muted-foreground">{filtered.length} event{filtered.length !== 1 ? "s" : ""}</p>
 
-      {/* Event list */}
       <div className="space-y-2">
         {paged.map((event) => {
           const organizer = event.organizer_profile as any;
           const ModeIcon = modeIcons[event.event_mode] || Globe;
           const isUpcoming = !isPast(new Date(event.start_time));
-
           return (
             <Card key={event.id} className="border-border/50">
               <CardContent className="p-3">
@@ -174,12 +180,8 @@ export function AdminEventsManagement() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-sm font-semibold truncate">{event.title}</h3>
-                      <Badge variant="outline" className={`text-[9px] ${statusColors[event.status] || ""}`}>
-                        {event.status}
-                      </Badge>
-                      <Badge variant="outline" className="text-[9px] gap-0.5">
-                        <ModeIcon className="h-2.5 w-2.5" /> {event.event_mode}
-                      </Badge>
+                      <Badge variant="outline" className={`text-[9px] ${statusColors[event.status] || ""}`}>{event.status}</Badge>
+                      <Badge variant="outline" className="text-[9px] gap-0.5"><ModeIcon className="h-2.5 w-2.5" /> {event.event_mode}</Badge>
                       {isUpcoming && event.status === "published" && (
                         <Badge variant="outline" className="text-[9px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20">Upcoming</Badge>
                       )}
@@ -187,28 +189,18 @@ export function AdminEventsManagement() {
                     <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
                       <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{format(new Date(event.start_time), "MMM d, yyyy h:mm a")}</span>
                       <span className="flex items-center gap-1"><Users className="h-3 w-3" />{event.registration_count}{event.capacity ? `/${event.capacity}` : ""} regs</span>
-                      <span className="flex items-center gap-1">{event.category.replace(/_/g, " ")}</span>
+                      <span>{event.category.replace(/_/g, " ")}</span>
                     </div>
-                    {organizer && (
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        Organizer: {organizer.display_name || organizer.full_name}
-                      </p>
-                    )}
+                    {organizer && <p className="text-[10px] text-muted-foreground mt-1">Organizer: {organizer.display_name || organizer.full_name}</p>}
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     {event.status === "draft" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateEvent.mutate({ id: event.id, status: "published" })}>
-                        <CheckCircle2 className="h-3 w-3" /> Publish
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateEvent.mutate({ id: event.id, status: "published" })}><CheckCircle2 className="h-3 w-3" /> Publish</Button>
                     )}
                     {event.status === "published" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateEvent.mutate({ id: event.id, status: "cancelled" })}>
-                        <XCircle className="h-3 w-3" /> Cancel
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateEvent.mutate({ id: event.id, status: "cancelled" })}><XCircle className="h-3 w-3" /> Cancel</Button>
                     )}
-                    <Button size="sm" variant="ghost" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => deleteEvent.mutate(event.id)}>
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
+                    <Button size="sm" variant="ghost" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => deleteEvent.mutate(event.id)}><Trash2 className="h-3 w-3" /></Button>
                   </div>
                 </div>
               </CardContent>

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { ReportDialog } from "@/components/feed/ReportDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Clock, Briefcase, IndianRupee, BadgeCheck, Upload, Send, Bookmark, BookmarkCheck, Building2 } from "lucide-react";
+import { MapPin, Clock, Briefcase, IndianRupee, BadgeCheck, Upload, Send, Bookmark, BookmarkCheck, Building2, Flag } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useRole } from "@/contexts/RoleContext";
 import { useApplyToJob } from "@/hooks/useJobs";
@@ -30,6 +31,7 @@ export function JobDetailSheet({ job, open, onClose, isSaved, onToggleSave, hasA
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showApplyForm, setShowApplyForm] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   // Check if user is an entity (entities cannot apply)
   const { data: userProfile } = useQuery({
@@ -221,7 +223,24 @@ export function JobDetailSheet({ job, open, onClose, isSaved, onToggleSave, hasA
               )}
             </div>
           )}
+
+          {/* Report */}
+          {!isOwnJob && userId && (
+            <div className="pt-2">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1.5 w-full" onClick={() => setShowReport(true)}>
+                <Flag className="h-3.5 w-3.5" /> Report this job
+              </Button>
+            </div>
+          )}
         </div>
+
+        <ReportDialog
+          open={showReport}
+          onOpenChange={setShowReport}
+          resourceType="job"
+          resourceId={job.id}
+          reportedUserId={job.poster_id}
+        />
       </SheetContent>
     </Sheet>
   );

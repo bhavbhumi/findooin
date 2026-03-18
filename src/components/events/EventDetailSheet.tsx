@@ -1,25 +1,14 @@
 /**
  * EventDetailSheet — Slide-over panel showing full event details.
- *
- * Displays event metadata (title, description, date/time, venue/virtual link),
- * organizer profile with verification badge, speaker list, registration status,
- * and capacity tracking. Conditionally shows virtual link within 1 hour of start.
- *
- * @component
- * @param {EventDetailSheetProps} props
- * @param {EventData | null} props.event - Event to display (null hides sheet)
- * @param {boolean} props.open - Whether the sheet is open
- * @param {() => void} props.onClose - Close handler
- * @param {() => void} [props.onRegister] - Registration callback
- * @param {() => void} [props.onCancelRegistration] - Cancel registration callback
- * @param {boolean} [props.isRegistering] - Loading state for registration action
  */
+import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Clock, MapPin, Monitor, Users, BadgeCheck, ExternalLink, User } from "lucide-react";
+import { Calendar, Clock, MapPin, Monitor, Users, BadgeCheck, ExternalLink, User, Flag } from "lucide-react";
+import { ReportDialog } from "@/components/feed/ReportDialog";
 import { format, isPast, differenceInHours } from "date-fns";
 import type { EventData } from "@/hooks/useEvents";
 import { EVENT_CATEGORY_LABELS, EVENT_MODE_LABELS, useEventSpeakers } from "@/hooks/useEvents";
@@ -35,6 +24,7 @@ interface EventDetailSheetProps {
 
 export function EventDetailSheet({ event, open, onClose, onRegister, onCancelRegistration, isRegistering }: EventDetailSheetProps) {
   const { data: speakers } = useEventSpeakers(event?.id);
+  const [showReport, setShowReport] = useState(false);
 
   if (!event) return null;
 
@@ -191,7 +181,20 @@ export function EventDetailSheet({ event, open, onClose, onRegister, onCancelReg
               </Button>
             )}
           </div>
+
+          {/* Report */}
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1.5 w-full" onClick={() => setShowReport(true)}>
+            <Flag className="h-3.5 w-3.5" /> Report this event
+          </Button>
         </div>
+
+        <ReportDialog
+          open={showReport}
+          onOpenChange={setShowReport}
+          resourceType="event"
+          resourceId={event.id}
+          reportedUserId={event.organizer_id}
+        />
       </SheetContent>
     </Sheet>
   );

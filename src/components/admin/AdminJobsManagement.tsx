@@ -1,6 +1,6 @@
 /**
  * AdminJobsManagement — Admin view for managing all job listings across the platform.
- * Provides overview stats, filtering, and moderation actions (pause, close, delete).
+ * Tabs: "All Jobs" and "Reports".
  */
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,12 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
+import { ResourceModeration } from "./ResourceModeration";
 import { toast } from "sonner";
 import {
   Briefcase, Search, ChevronLeft, ChevronRight, Eye, Users,
-  Pause, Play, Trash2, MapPin, Building2, Clock, BarChart3, AlertTriangle
+  Pause, Play, Trash2, MapPin, Building2, Clock, Flag
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -29,6 +30,34 @@ const statusColors: Record<string, string> = {
 const PAGE_SIZE = 15;
 
 export function AdminJobsManagement() {
+  const { data: reportCount } = useQuery({
+    queryKey: ["admin-resource-reports-count", "job"],
+    queryFn: async () => {
+      const { count } = await supabase.from("reports").select("id", { count: "exact", head: true }).eq("resource_type", "job").eq("status", "pending");
+      return count || 0;
+    },
+  });
+
+  return (
+    <Tabs defaultValue="jobs" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="jobs" className="gap-1.5">
+          <Briefcase className="h-3.5 w-3.5" /> All Jobs
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {(reportCount || 0) > 0 && (
+            <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">{reportCount}</Badge>
+          )}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="jobs" className="mt-0"><JobsTab /></TabsContent>
+      <TabsContent value="reports" className="mt-0"><ResourceModeration resourceType="job" /></TabsContent>
+    </Tabs>
+  );
+}
+
+function JobsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -38,12 +67,8 @@ export function AdminJobsManagement() {
   const { data: jobs, isLoading } = useQuery({
     queryKey: ["admin-jobs"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("jobs")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.from("jobs").select("*").order("created_at", { ascending: false });
       if (error) throw error;
-      // Fetch poster profiles
       const posterIds = [...new Set((data || []).map((j) => j.poster_id))];
       const { data: profiles } = posterIds.length > 0
         ? await supabase.from("profiles").select("id, full_name, display_name, avatar_url").in("id", posterIds)
@@ -58,10 +83,7 @@ export function AdminJobsManagement() {
       const { error } = await supabase.from("jobs").update({ status }).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
-      toast.success("Job status updated");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-jobs"] }); toast.success("Job status updated"); },
   });
 
   const deleteJob = useMutation({
@@ -69,10 +91,7 @@ export function AdminJobsManagement() {
       const { error } = await supabase.from("jobs").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-jobs"] });
-      toast.success("Job deleted");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-jobs"] }); toast.success("Job deleted"); },
   });
 
   const filtered = useMemo(() => {
@@ -91,7 +110,6 @@ export function AdminJobsManagement() {
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  // Stats
   const stats = useMemo(() => {
     if (!jobs) return { total: 0, active: 0, paused: 0, totalApps: 0, totalViews: 0 };
     return {
@@ -112,7 +130,6 @@ export function AdminJobsManagement() {
 
   return (
     <div className="space-y-4">
-      {/* Stats bar */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {[
           { label: "Total Jobs", value: stats.total, icon: Briefcase },
@@ -133,7 +150,6 @@ export function AdminJobsManagement() {
         ))}
       </div>
 
-      {/* Filters */}
       <div className="flex flex-wrap gap-2 items-center">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -153,16 +169,13 @@ export function AdminJobsManagement() {
           <SelectTrigger className="w-[150px] h-9"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((c) => (
-              <SelectItem key={c} value={c}>{c.replace(/_/g, " ")}</SelectItem>
-            ))}
+            {categories.map((c) => <SelectItem key={c} value={c}>{c.replace(/_/g, " ")}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
 
       <p className="text-xs text-muted-foreground">{filtered.length} job{filtered.length !== 1 ? "s" : ""}</p>
 
-      {/* Job list */}
       <div className="space-y-2">
         {paged.map((job) => {
           const poster = job.poster_profile as any;
@@ -173,9 +186,7 @@ export function AdminJobsManagement() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-sm font-semibold truncate">{job.title}</h3>
-                      <Badge variant="outline" className={`text-[9px] ${statusColors[job.status] || ""}`}>
-                        {job.status}
-                      </Badge>
+                      <Badge variant="outline" className={`text-[9px] ${statusColors[job.status] || ""}`}>{job.status}</Badge>
                       <Badge variant="outline" className="text-[9px]">{job.job_type.replace(/_/g, " ")}</Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
@@ -185,31 +196,19 @@ export function AdminJobsManagement() {
                       <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{job.view_count} views</span>
                       <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatDistanceToNow(new Date(job.created_at), { addSuffix: true })}</span>
                     </div>
-                    {poster && (
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        Posted by: {poster.display_name || poster.full_name}
-                      </p>
-                    )}
+                    {poster && <p className="text-[10px] text-muted-foreground mt-1">Posted by: {poster.display_name || poster.full_name}</p>}
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     {job.status === "active" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateJob.mutate({ id: job.id, status: "paused" })}>
-                        <Pause className="h-3 w-3" /> Pause
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateJob.mutate({ id: job.id, status: "paused" })}><Pause className="h-3 w-3" /> Pause</Button>
                     )}
                     {job.status === "paused" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateJob.mutate({ id: job.id, status: "active" })}>
-                        <Play className="h-3 w-3" /> Resume
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateJob.mutate({ id: job.id, status: "active" })}><Play className="h-3 w-3" /> Resume</Button>
                     )}
                     {(job.status === "active" || job.status === "paused") && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateJob.mutate({ id: job.id, status: "closed" })}>
-                        Close
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateJob.mutate({ id: job.id, status: "closed" })}>Close</Button>
                     )}
-                    <Button size="sm" variant="ghost" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => deleteJob.mutate(job.id)}>
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
+                    <Button size="sm" variant="ghost" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => deleteJob.mutate(job.id)}><Trash2 className="h-3 w-3" /></Button>
                   </div>
                 </div>
               </CardContent>
@@ -224,7 +223,6 @@ export function AdminJobsManagement() {
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 pt-2">
           <Button size="sm" variant="outline" disabled={page <= 1} onClick={() => setPage(page - 1)}><ChevronLeft className="h-4 w-4" /></Button>
