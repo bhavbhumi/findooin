@@ -1,19 +1,7 @@
 /**
  * EventDetailSheet — Slide-over panel showing full event details.
- *
- * Displays event metadata (title, description, date/time, venue/virtual link),
- * organizer profile with verification badge, speaker list, registration status,
- * and capacity tracking. Conditionally shows virtual link within 1 hour of start.
- *
- * @component
- * @param {EventDetailSheetProps} props
- * @param {EventData | null} props.event - Event to display (null hides sheet)
- * @param {boolean} props.open - Whether the sheet is open
- * @param {() => void} props.onClose - Close handler
- * @param {() => void} [props.onRegister] - Registration callback
- * @param {() => void} [props.onCancelRegistration] - Cancel registration callback
- * @param {boolean} [props.isRegistering] - Loading state for registration action
  */
+import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
