@@ -165,25 +165,23 @@ export function AdminSidebar() {
   );
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
-      <SidebarHeader className="p-3 border-b border-white/10">
+    <Sidebar collapsible="icon" className="border-r-0 bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
+      {/* Header — branded logo block */}
+      <div className={`flex items-center gap-2.5 px-4 py-5 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(43,72%,53%)] to-[hsl(43,72%,40%)] shadow-lg shadow-[hsl(43,72%,53%)]/20">
+          <span className="text-sm font-bold text-[hsl(240,100%,15%)] font-heading">FO</span>
+        </div>
         {!collapsed && (
-          <div className="flex items-center gap-2 px-1">
-            <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center">
-              <Shield className="h-4 w-4 text-[hsl(43,72%,53%)]" />
-            </div>
-            <div>
-              <p className="text-sm font-bold font-heading text-white">Admin</p>
-              <p className="text-[10px] text-white/50">Control Center</p>
-            </div>
+          <div className="animate-slide-in-left">
+            <h1 className="text-sm font-bold text-white tracking-tight font-heading">
+              FindOO Admin
+            </h1>
+            <p className="text-[10px] text-white/50 leading-none">
+              Control Center
+            </p>
           </div>
         )}
-        {collapsed && (
-          <div className="flex justify-center">
-            <Shield className="h-5 w-5 text-[hsl(43,72%,53%)]" />
-          </div>
-        )}
-      </SidebarHeader>
+      </div>
 
       <SidebarContent>
         {NAV_SECTIONS.map((section) => {
