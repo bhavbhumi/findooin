@@ -901,6 +901,13 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
           </Button>
         </div>
       </div>
+      {hasAICompose && (
+        <AIComposeDialog
+          open={aiComposeOpen}
+          onOpenChange={setAiComposeOpen}
+          onInsert={(text) => setContent((prev) => prev ? prev + "\n\n" + text : text)}
+        />
+      )}
     </TooltipProvider>
   );
 }
