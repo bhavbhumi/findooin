@@ -18,10 +18,14 @@ import { DraftsPanel } from "@/components/feed/DraftsPanel";
 import { ScheduledPostsManager } from "@/components/feed/ScheduledPostsManager";
 import { EmptyState } from "@/components/ui/empty-state";
 import { EmptyFeedIllustration } from "@/components/illustrations/EmptyStateIllustrations";
-import { MessageSquare, Clock, Sparkles, Info } from "lucide-react";
+import { MessageSquare, Clock, Sparkles, Info, BarChart3 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTrustCircleIQ, CIRCLE_TIERS, type CircleTier } from "@/hooks/useTrustCircleIQ";
 import { cn } from "@/lib/utils";
+import { OpinionCard } from "@/components/opinions/OpinionCard";
+import { OpinionDetailSheet } from "@/components/opinions/OpinionDetailSheet";
+import { useOpinions, useOpinionDetail } from "@/hooks/useOpinions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /* ── AffinityFeed™ Trust-Weighted Scoring ── */
 const TRUST_WEIGHT_BY_TIER: Record<number, number> = { 1: 10, 2: 6, 3: 3, 4: 1.5, 5: 1 };
