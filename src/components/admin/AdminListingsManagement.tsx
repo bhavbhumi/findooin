@@ -1,6 +1,6 @@
 /**
  * AdminListingsManagement — Admin view for managing all marketplace listings.
- * Provides stats, filtering, and moderation (approve, suspend, delete).
+ * Tabs: "All Listings" and "Reports".
  */
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,11 +10,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
+import { ResourceModeration } from "./ResourceModeration";
 import { toast } from "sonner";
 import {
   ShoppingBag, Search, ChevronLeft, ChevronRight, Eye, Star,
-  Trash2, CheckCircle2, Pause, Play, MessageSquare, Clock, BarChart3
+  Trash2, CheckCircle2, Pause, Play, MessageSquare, Clock, Flag
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -28,6 +30,30 @@ const statusColors: Record<string, string> = {
 const PAGE_SIZE = 15;
 
 export function AdminListingsManagement() {
+  const { data: reportCount } = useQuery({
+    queryKey: ["admin-resource-reports-count", "listing"],
+    queryFn: async () => {
+      const { count } = await supabase.from("reports").select("id", { count: "exact", head: true }).eq("resource_type", "listing").eq("status", "pending");
+      return count || 0;
+    },
+  });
+
+  return (
+    <Tabs defaultValue="listings" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="listings" className="gap-1.5"><ShoppingBag className="h-3.5 w-3.5" /> All Listings</TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {(reportCount || 0) > 0 && <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">{reportCount}</Badge>}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="listings" className="mt-0"><ListingsTab /></TabsContent>
+      <TabsContent value="reports" className="mt-0"><ResourceModeration resourceType="listing" /></TabsContent>
+    </Tabs>
+  );
+}
+
+function ListingsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -37,10 +63,7 @@ export function AdminListingsManagement() {
   const { data: listings, isLoading } = useQuery({
     queryKey: ["admin-listings"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("listings")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const { data, error } = await supabase.from("listings").select("*").order("created_at", { ascending: false });
       if (error) throw error;
       const ownerIds = [...new Set((data || []).map((l) => l.user_id))];
       const { data: profiles } = ownerIds.length > 0
@@ -56,10 +79,7 @@ export function AdminListingsManagement() {
       const { error } = await supabase.from("listings").update({ status }).eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-listings"] });
-      toast.success("Listing status updated");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-listings"] }); toast.success("Listing status updated"); },
   });
 
   const deleteListing = useMutation({
@@ -67,10 +87,7 @@ export function AdminListingsManagement() {
       const { error } = await supabase.from("listings").delete().eq("id", id);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-listings"] });
-      toast.success("Listing deleted");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin-listings"] }); toast.success("Listing deleted"); },
   });
 
   const filtered = useMemo(() => {
@@ -78,9 +95,7 @@ export function AdminListingsManagement() {
     return listings.filter((l) => {
       if (statusFilter !== "all" && l.status !== statusFilter) return false;
       if (typeFilter !== "all" && l.listing_type !== typeFilter) return false;
-      if (search) {
-        return l.title.toLowerCase().includes(search.toLowerCase());
-      }
+      if (search) return l.title.toLowerCase().includes(search.toLowerCase());
       return true;
     });
   }, [listings, search, statusFilter, typeFilter]);
@@ -104,7 +119,6 @@ export function AdminListingsManagement() {
 
   return (
     <div className="space-y-4">
-      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {[
           { label: "Total Listings", value: stats.total, icon: ShoppingBag },
@@ -125,7 +139,6 @@ export function AdminListingsManagement() {
         ))}
       </div>
 
-      {/* Filters */}
       <div className="flex flex-wrap gap-2 items-center">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -153,7 +166,6 @@ export function AdminListingsManagement() {
 
       <p className="text-xs text-muted-foreground">{filtered.length} listing{filtered.length !== 1 ? "s" : ""}</p>
 
-      {/* Listing list */}
       <div className="space-y-2">
         {paged.map((listing) => {
           const owner = listing.owner_profile as any;
@@ -164,9 +176,7 @@ export function AdminListingsManagement() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="text-sm font-semibold truncate">{listing.title}</h3>
-                      <Badge variant="outline" className={`text-[9px] ${statusColors[listing.status] || ""}`}>
-                        {listing.status}
-                      </Badge>
+                      <Badge variant="outline" className={`text-[9px] ${statusColors[listing.status] || ""}`}>{listing.status}</Badge>
                       <Badge variant="outline" className="text-[9px]">{listing.listing_type}</Badge>
                     </div>
                     <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
@@ -177,31 +187,19 @@ export function AdminListingsManagement() {
                       )}
                       <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatDistanceToNow(new Date(listing.created_at), { addSuffix: true })}</span>
                     </div>
-                    {owner && (
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        Owner: {owner.display_name || owner.full_name}
-                      </p>
-                    )}
+                    {owner && <p className="text-[10px] text-muted-foreground mt-1">Owner: {owner.display_name || owner.full_name}</p>}
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     {listing.status === "draft" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "active" })}>
-                        <CheckCircle2 className="h-3 w-3" /> Approve
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "active" })}><CheckCircle2 className="h-3 w-3" /> Approve</Button>
                     )}
                     {listing.status === "active" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "paused" })}>
-                        <Pause className="h-3 w-3" /> Pause
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "paused" })}><Pause className="h-3 w-3" /> Pause</Button>
                     )}
                     {listing.status === "paused" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "active" })}>
-                        <Play className="h-3 w-3" /> Reactivate
-                      </Button>
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "active" })}><Play className="h-3 w-3" /> Reactivate</Button>
                     )}
-                    <Button size="sm" variant="ghost" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => deleteListing.mutate(listing.id)}>
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
+                    <Button size="sm" variant="ghost" className="h-7 text-xs text-destructive hover:text-destructive" onClick={() => deleteListing.mutate(listing.id)}><Trash2 className="h-3 w-3" /></Button>
                   </div>
                 </div>
               </CardContent>
