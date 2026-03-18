@@ -23,10 +23,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Search, ShieldCheck, Clock, User, Building2, Users, UserCheck,
   MoreHorizontal, Eye, Mail, ShieldOff, ArrowUpDown, ChevronLeft,
   ChevronRight, TrendingUp, UserPlus, Shield, CheckCircle, Activity,
-  Zap, Moon, AlertTriangle,
+  Zap, Moon, AlertTriangle, FlaskConical, Trash2,
 } from "lucide-react";
 import { formatDistanceToNow, subDays, isAfter } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -34,6 +45,7 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PAGE_SIZE = 20;
 
