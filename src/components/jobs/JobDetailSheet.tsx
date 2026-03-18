@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Clock, Briefcase, IndianRupee, BadgeCheck, Upload, Send, Bookmark, BookmarkCheck, Building2 } from "lucide-react";
+import { MapPin, Clock, Briefcase, IndianRupee, BadgeCheck, Upload, Send, Bookmark, BookmarkCheck, Building2, Flag } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useRole } from "@/contexts/RoleContext";
 import { useApplyToJob } from "@/hooks/useJobs";
