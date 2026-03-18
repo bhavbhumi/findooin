@@ -263,6 +263,35 @@ export function AdminUserManagement() {
               </Badge>
             );
           })}
+          {stats.seedCount > 0 && (
+            <>
+              <span className="text-[10px] text-muted-foreground mx-1">|</span>
+              <Badge variant="outline" className="text-[10px] gap-1 bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20">
+                <FlaskConical className="h-2.5 w-2.5" /> Seed · {stats.seedCount}
+              </Badge>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-5 px-1.5 text-[10px] text-destructive hover:text-destructive gap-0.5" disabled={isPurging}>
+                    <Trash2 className="h-2.5 w-2.5" /> {isPurging ? "Purging..." : "Purge"}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Purge all seed/test data?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete all {stats.seedCount} test users (@findoo.test) and ALL their content: posts, comments, connections, messages, jobs, events, listings, blog posts, endorsements, and more. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handlePurgeSeedData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                      Yes, purge all test data
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
         </div>
       )}
 
