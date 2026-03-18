@@ -1,6 +1,6 @@
 /**
- * AdminMessagesManagement — Admin view for message abuse oversight.
- * Shows messaging stats, reported messages, and moderation actions.
+ * AdminMessagesManagement — Admin view for message oversight & abuse monitoring.
+ * Tabs: "All Messages" and "Abuse Monitor" (flagged senders cross-referenced with reports).
  */
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,13 +11,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { FindooLoader } from "@/components/FindooLoader";
-import { AdminContentModeration } from "./AdminContentModeration";
-import { useAdminReports } from "@/hooks/useAdmin";
 import { toast } from "sonner";
 import {
   MessageSquare, Search, ChevronLeft, ChevronRight, Users, Flag,
-  Trash2, Clock, Mail, AlertTriangle, CheckCircle2, Shield
+  Trash2, Clock, Mail, AlertTriangle, CheckCircle2, Shield, ShieldAlert,
+  Ban, UserX
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -31,8 +31,15 @@ const categoryColors: Record<string, string> = {
 };
 
 export function AdminMessagesManagement() {
-  const { data: reports } = useAdminReports();
-  const pendingReports = reports?.filter((r) => r.status === "pending").length || 0;
+  // Count flagged senders for badge
+  const { data: reportsData } = useQuery({
+    queryKey: ["admin-message-reports"],
+    queryFn: async () => {
+      const { data } = await supabase.from("reports").select("reported_user_id, status").eq("status", "pending");
+      return data || [];
+    },
+  });
+  const flaggedCount = new Set((reportsData || []).filter(r => r.reported_user_id).map(r => r.reported_user_id)).size;
 
   return (
     <Tabs defaultValue="messages" className="space-y-4">
@@ -40,11 +47,11 @@ export function AdminMessagesManagement() {
         <TabsTrigger value="messages" className="gap-1.5">
           <MessageSquare className="h-3.5 w-3.5" /> All Messages
         </TabsTrigger>
-        <TabsTrigger value="reports" className="gap-1.5">
-          <Flag className="h-3.5 w-3.5" /> Reports
-          {pendingReports > 0 && (
+        <TabsTrigger value="abuse" className="gap-1.5">
+          <ShieldAlert className="h-3.5 w-3.5" /> Abuse Monitor
+          {flaggedCount > 0 && (
             <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">
-              {pendingReports}
+              {flaggedCount}
             </Badge>
           )}
         </TabsTrigger>
@@ -52,8 +59,8 @@ export function AdminMessagesManagement() {
       <TabsContent value="messages" className="mt-0">
         <MessagesTab />
       </TabsContent>
-      <TabsContent value="reports" className="mt-0">
-        <AdminContentModeration />
+      <TabsContent value="abuse" className="mt-0">
+        <AbuseMonitorTab />
       </TabsContent>
     </Tabs>
   );
