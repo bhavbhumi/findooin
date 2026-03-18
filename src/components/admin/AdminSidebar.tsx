@@ -129,7 +129,7 @@ export function AdminSidebar() {
         { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText, permission: "view_patent" },
         { title: "Cost Report", url: "/admin/cost-report", icon: IndianRupee, permission: "view_cost_report" },
         { title: "Scaling Report", url: "/admin/scaling-report", icon: Server, permission: "view_scaling_report" },
-        { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true, permission: "manage_features" },
+        { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, permission: "manage_features" },
         { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true, permission: "manage_billing" },
       ],
     },
