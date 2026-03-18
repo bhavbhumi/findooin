@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { SubscriptionSettings } from "@/components/settings/SubscriptionSettings";
 import { supabase } from "@/integrations/supabase/client";
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,7 @@ import {
 import {
   Bell, Mail, Shield, Eye, LogOut, Trash2, User, Lock, Palette,
   Heart, MessageCircle, UserPlus, Users, MessageSquare, Loader2,
-  Activity, Network, FolderLock,
+  Activity, Network, FolderLock, CreditCard,
 } from "lucide-react";
 import { useTabPrivacy, visibilityLabels, type TabVisibility, type TabPrivacySettings } from "@/hooks/useTabPrivacy";
 
@@ -328,6 +329,15 @@ const Settings = () => {
                 </div>
               </div>
             ))}
+          </section>
+
+          {/* Subscription */}
+          <section className="rounded-xl border border-border bg-card p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <CreditCard className="h-4 w-4 text-foreground" />
+              <h2 className="text-base font-semibold font-heading text-foreground">Subscription</h2>
+            </div>
+            <SubscriptionSettings />
           </section>
 
           {/* Save */}
