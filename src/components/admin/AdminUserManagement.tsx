@@ -388,11 +388,11 @@ export function AdminUserManagement() {
           const aBadge = activityBadge[u.activity?.status || "dormant"] || activityBadge.dormant;
           const ActivityIcon = aBadge.icon;
           return (
-            <Card key={u.id} className={`hover:bg-muted/30 transition-colors ${u.activity?.status === "dormant" ? "opacity-60" : ""}`}>
+            <Card key={u.id} className={`hover:bg-muted/30 transition-colors ${u.activity?.status === "dormant" ? "opacity-60" : ""} ${u.is_seed ? "border-dashed border-violet-500/30" : ""}`}>
               <CardContent className="py-2.5 px-3">
                 <div className="flex items-center gap-3">
                   {/* Avatar */}
-                  <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+                  <div className={`h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0 ${u.is_seed ? "ring-1 ring-violet-500/40 ring-dashed" : ""}`}>
                     {u.avatar_url ? (
                       <img src={u.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
                     ) : (
@@ -408,6 +408,11 @@ export function AdminUserManagement() {
                       <span className="font-semibold text-sm truncate max-w-[200px]">
                         {u.user_type === "entity" && u.organization ? u.organization : (u.display_name || u.full_name)}
                       </span>
+                      {u.is_seed && (
+                        <Badge variant="outline" className="text-[9px] h-4 px-1 bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20 gap-0.5">
+                          <FlaskConical className="h-2.5 w-2.5" /> Test
+                        </Badge>
+                      )}
                       <Badge variant="outline" className={`text-[9px] h-4 px-1 ${vBadge.className}`}>
                         {u.verification_status === "verified" && <ShieldCheck className="h-2.5 w-2.5 mr-0.5" />}
                         {vBadge.label}
