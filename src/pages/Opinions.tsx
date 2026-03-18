@@ -6,7 +6,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
-import AppLayout from "@/components/AppLayout";
+
 import { PageHero } from "@/components/PageHero";
 import { PageTransition } from "@/components/PageTransition";
 import { OpinionCard } from "@/components/opinions/OpinionCard";
