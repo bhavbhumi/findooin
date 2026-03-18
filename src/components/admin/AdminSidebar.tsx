@@ -9,7 +9,7 @@ import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
-  IndianRupee, Server, Search, FileText, LogOut, ExternalLink
+  IndianRupee, Server, Search, FileText, LogOut, ExternalLink, BarChart3
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
