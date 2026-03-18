@@ -420,7 +420,7 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-16 border-t border-border relative overflow-hidden">
+      <section className="py-16 bg-muted/30 border-t border-border relative overflow-hidden">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">

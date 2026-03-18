@@ -137,13 +137,16 @@ export function OpinionCard({ opinion, onOpenDetail, compact }: OpinionCardProps
               return (
                 <button
                   key={opt.label}
-                  onClick={() => canVote ? handleVote(opt.label) : undefined}
+                  onClick={() => {
+                    if (!loggedIn) { navigate("/auth"); return; }
+                    if (canVote) handleVote(opt.label);
+                  }}
                   disabled={!canVote && loggedIn}
                   className={cn(
                     "w-full relative rounded-lg border transition-all text-left",
                     canVote && "hover:border-primary/50 hover:bg-primary/5 cursor-pointer",
                     isMyChoice && "border-primary ring-1 ring-primary/30",
-                    !canVote && loggedIn && "cursor-default",
+                    !canVote && loggedIn && "cursor-default opacity-60",
                     !loggedIn && "cursor-pointer hover:border-primary/30"
                   )}
                 >
