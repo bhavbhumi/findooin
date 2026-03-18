@@ -83,7 +83,13 @@ export function AdminUserManagement() {
       });
     });
 
-    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts };
+    const activityCounts: Record<string, number> = { active: 0, idle: 0, inactive: 0, dormant: 0 };
+    users.forEach((u: any) => {
+      const s = u.activity?.status || "dormant";
+      activityCounts[s] = (activityCounts[s] || 0) + 1;
+    });
+
+    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts, activityCounts };
   }, [users]);
 
   // ── Filter + Sort + Paginate ──
