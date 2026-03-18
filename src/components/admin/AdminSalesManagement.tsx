@@ -1,26 +1,27 @@
 /**
  * AdminSalesManagement — Kanban-style sales pipeline with lead CRUD,
- * activity timeline, and conversion analytics.
+ * stage advancement, and conversion to invitations/contacts.
  */
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 import {
   TrendingUp, Plus, Search, MoreHorizontal, ArrowRight,
-  Users, Target, CheckCircle2, XCircle, Phone, Mail, Building2,
-  Clock, Star, AlertTriangle
+  Users, Target, XCircle, Phone, Mail, Building2,
+  Clock, Star, AlertTriangle, UserPlus, Send, Link2, Trash2, Save
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow, format } from "date-fns";
@@ -67,6 +68,7 @@ export function AdminSalesManagement() {
   const [stageFilter, setStageFilter] = useState("all");
   const [createOpen, setCreateOpen] = useState(false);
   const [editLead, setEditLead] = useState<Lead | null>(null);
+  const [convertLead, setConvertLead] = useState<Lead | null>(null);
   const qc = useQueryClient();
 
   const { data: leads = [], isLoading } = useQuery({
@@ -87,7 +89,7 @@ export function AdminSalesManagement() {
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["admin-sales-leads"] }); },
-    onError: (e) => toast.error(e.message),
+    onError: (e: any) => toast.error(e.message),
   });
 
   const moveStage = (id: string, stage: string) => {
@@ -108,7 +110,6 @@ export function AdminSalesManagement() {
     });
   }, [leads, search, stageFilter]);
 
-  // Pipeline stats
   const stats = useMemo(() => {
     const s: Record<string, number> = {};
     STAGES.forEach((st) => { s[st.key] = leads.filter((l) => l.lead_stage === st.key).length; });
@@ -194,29 +195,35 @@ export function AdminSalesManagement() {
                             )}
                             <div className="flex items-center justify-between">
                               <Badge variant="outline" className="text-[8px] capitalize">{lead.lead_source}</Badge>
-                              <span className="text-[9px] text-muted-foreground">
-                                {formatDistanceToNow(new Date(lead.created_at), { addSuffix: true })}
-                              </span>
+                              {lead.invitation_id && <Link2 className="h-2.5 w-2.5 text-primary" />}
                             </div>
-                            {/* Stage advancement buttons */}
-                            {stage.key !== "won" && (
-                              <div className="flex gap-1 pt-1">
-                                {STAGES.filter(s => 
-                                  STAGES.findIndex(x => x.key === s.key) > STAGES.findIndex(x => x.key === stage.key) && s.key !== "lost"
-                                ).slice(0, 1).map((next) => (
-                                  <Button key={next.key} size="sm" variant="ghost"
-                                    className="h-5 text-[9px] px-1.5 w-full"
-                                    onClick={(e) => { e.stopPropagation(); moveStage(lead.id, next.key); }}>
-                                    <ArrowRight className="h-2.5 w-2.5 mr-0.5" /> {next.label}
-                                  </Button>
-                                ))}
-                                <Button size="sm" variant="ghost"
-                                  className="h-5 text-[9px] px-1.5 text-destructive"
-                                  onClick={(e) => { e.stopPropagation(); moveStage(lead.id, "lost"); }}>
-                                  <XCircle className="h-2.5 w-2.5" />
+                            {/* Stage advancement + convert */}
+                            <div className="flex gap-1 pt-1">
+                              {stage.key === "won" ? (
+                                <Button size="sm" variant="outline"
+                                  className="h-5 text-[9px] px-1.5 w-full text-primary"
+                                  onClick={(e) => { e.stopPropagation(); setConvertLead(lead); }}>
+                                  <UserPlus className="h-2.5 w-2.5 mr-0.5" /> Convert
                                 </Button>
-                              </div>
-                            )}
+                              ) : (
+                                <>
+                                  {STAGES.filter(s =>
+                                    STAGES.findIndex(x => x.key === s.key) > STAGES.findIndex(x => x.key === stage.key) && s.key !== "lost"
+                                  ).slice(0, 1).map((next) => (
+                                    <Button key={next.key} size="sm" variant="ghost"
+                                      className="h-5 text-[9px] px-1.5 w-full"
+                                      onClick={(e) => { e.stopPropagation(); moveStage(lead.id, next.key); }}>
+                                      <ArrowRight className="h-2.5 w-2.5 mr-0.5" /> {next.label}
+                                    </Button>
+                                  ))}
+                                  <Button size="sm" variant="ghost"
+                                    className="h-5 text-[9px] px-1.5 text-destructive"
+                                    onClick={(e) => { e.stopPropagation(); moveStage(lead.id, "lost"); }}>
+                                    <XCircle className="h-2.5 w-2.5" />
+                                  </Button>
+                                </>
+                              )}
+                            </div>
                           </CardContent>
                         </Card>
                       );
@@ -257,6 +264,9 @@ export function AdminSalesManagement() {
                 <div className="text-center py-12 text-muted-foreground">
                   <Users className="h-8 w-8 mx-auto mb-2 opacity-40" />
                   <p className="text-sm">No leads found</p>
+                  <Button size="sm" variant="outline" className="mt-3" onClick={() => setCreateOpen(true)}>
+                    <Plus className="h-3.5 w-3.5 mr-1" /> Add your first lead
+                  </Button>
                 </div>
               ) : (
                 <Table>
@@ -267,7 +277,7 @@ export function AdminSalesManagement() {
                       <TableHead className="text-xs">Priority</TableHead>
                       <TableHead className="text-xs">Source</TableHead>
                       <TableHead className="text-xs">Contact</TableHead>
-                      <TableHead className="text-xs">Last Contact</TableHead>
+                      <TableHead className="text-xs">Linked</TableHead>
                       <TableHead className="text-xs w-10"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -302,11 +312,10 @@ export function AdminSalesManagement() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            {lead.last_contacted_at ? (
-                              <span className="text-xs text-muted-foreground">{formatDistanceToNow(new Date(lead.last_contacted_at), { addSuffix: true })}</span>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">Never</span>
-                            )}
+                            <div className="flex gap-1">
+                              {lead.invitation_id && <Badge variant="outline" className="text-[8px]">Invited</Badge>}
+                              {lead.registry_entity_id && <Badge variant="outline" className="text-[8px]">Registry</Badge>}
+                            </div>
                           </TableCell>
                           <TableCell>
                             <DropdownMenu>
@@ -321,6 +330,10 @@ export function AdminSalesManagement() {
                                     <div className={`h-2 w-2 rounded-full ${s.color} mr-2`} /> Move to {s.label}
                                   </DropdownMenuItem>
                                 ))}
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setConvertLead(lead); }}>
+                                  <UserPlus className="h-3.5 w-3.5 mr-2" /> Convert to Invitation
+                                </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </TableCell>
@@ -340,13 +353,27 @@ export function AdminSalesManagement() {
 
       {/* Edit Lead Dialog */}
       {editLead && (
-        <EditLeadDialog lead={editLead} open={!!editLead} onOpenChange={(v) => { if (!v) setEditLead(null); }} />
+        <EditLeadDialog
+          lead={editLead}
+          open={!!editLead}
+          onOpenChange={(v) => { if (!v) setEditLead(null); }}
+          onConvert={() => { setConvertLead(editLead); setEditLead(null); }}
+        />
+      )}
+
+      {/* Convert Lead Dialog */}
+      {convertLead && (
+        <ConvertLeadDialog
+          lead={convertLead}
+          open={!!convertLead}
+          onOpenChange={(v) => { if (!v) setConvertLead(null); }}
+        />
       )}
     </div>
   );
 }
 
-/* --- Create Lead Dialog --- */
+/* ─── Create Lead Dialog ─── */
 function CreateLeadDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const qc = useQueryClient();
   const [form, setForm] = useState({
@@ -367,22 +394,26 @@ function CreateLeadDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
         lead_priority: form.lead_priority,
         lead_source: form.lead_source,
         notes: form.notes || null,
+        assigned_to: user.id,
       });
       if (error) throw error;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-sales-leads"] });
-      toast.success("Lead created");
+      toast.success("Lead created successfully");
       onOpenChange(false);
       setForm({ lead_name: "", lead_email: "", lead_phone: "", company_name: "", lead_stage: "new", lead_priority: "medium", lead_source: "manual", notes: "" });
     },
-    onError: (e) => toast.error(e.message),
+    onError: (e: any) => toast.error(`Failed to create lead: ${e.message}`),
   });
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader><DialogTitle>New Lead</DialogTitle></DialogHeader>
+        <DialogHeader>
+          <DialogTitle>New Lead</DialogTitle>
+          <DialogDescription>Add a new lead to the sales pipeline.</DialogDescription>
+        </DialogHeader>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
@@ -443,8 +474,10 @@ function CreateLeadDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
   );
 }
 
-/* --- Edit Lead Dialog --- */
-function EditLeadDialog({ lead, open, onOpenChange }: { lead: Lead; open: boolean; onOpenChange: (v: boolean) => void }) {
+/* ─── Edit Lead Dialog ─── */
+function EditLeadDialog({ lead, open, onOpenChange, onConvert }: {
+  lead: Lead; open: boolean; onOpenChange: (v: boolean) => void; onConvert: () => void;
+}) {
   const qc = useQueryClient();
   const [form, setForm] = useState({
     lead_name: lead.lead_name,
@@ -477,7 +510,7 @@ function EditLeadDialog({ lead, open, onOpenChange }: { lead: Lead; open: boolea
       toast.success("Lead updated");
       onOpenChange(false);
     },
-    onError: (e) => toast.error(e.message),
+    onError: (e: any) => toast.error(e.message),
   });
 
   const deleteLead = useMutation({
@@ -490,14 +523,15 @@ function EditLeadDialog({ lead, open, onOpenChange }: { lead: Lead; open: boolea
       toast.success("Lead deleted");
       onOpenChange(false);
     },
-    onError: (e) => toast.error(e.message),
+    onError: (e: any) => toast.error(e.message),
   });
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Edit Lead</DialogTitle>
+          <DialogDescription>Update lead details or convert to invitation.</DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
@@ -547,21 +581,166 @@ function EditLeadDialog({ lead, open, onOpenChange }: { lead: Lead; open: boolea
             <Label className="text-xs">Notes</Label>
             <Textarea rows={3} value={form.notes} onChange={(e) => setForm(f => ({ ...f, notes: e.target.value }))} />
           </div>
+
+          {/* Linked entities */}
+          {(lead.invitation_id || lead.registry_entity_id) && (
+            <div className="flex gap-2 flex-wrap">
+              {lead.invitation_id && <Badge variant="secondary" className="text-xs"><Send className="h-3 w-3 mr-1" /> Linked to Invitation</Badge>}
+              {lead.registry_entity_id && <Badge variant="secondary" className="text-xs"><Building2 className="h-3 w-3 mr-1" /> Linked to Registry</Badge>}
+            </div>
+          )}
+
           <div className="text-xs text-muted-foreground space-y-0.5">
             <p>Created: {format(new Date(lead.created_at), "dd MMM yyyy, HH:mm")}</p>
             {lead.last_contacted_at && <p>Last contacted: {formatDistanceToNow(new Date(lead.last_contacted_at), { addSuffix: true })}</p>}
           </div>
         </div>
-        <DialogFooter className="flex justify-between">
-          <Button variant="destructive" size="sm" onClick={() => deleteLead.mutate()} disabled={deleteLead.isPending}>
-            Delete
-          </Button>
+
+        <Separator />
+
+        <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <div className="flex gap-2 mr-auto">
+            <Button variant="destructive" size="sm" onClick={() => deleteLead.mutate()} disabled={deleteLead.isPending}>
+              <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
+            </Button>
+            <Button variant="outline" size="sm" onClick={onConvert}>
+              <UserPlus className="h-3.5 w-3.5 mr-1" /> Convert to Invitation
+            </Button>
+          </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
             <Button onClick={() => update.mutate()} disabled={!form.lead_name || update.isPending}>
-              {update.isPending ? "Saving..." : "Save Changes"}
+              <Save className="h-3.5 w-3.5 mr-1" /> {update.isPending ? "Saving..." : "Save"}
             </Button>
           </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+/* ─── Convert Lead → Invitation Dialog ─── */
+function ConvertLeadDialog({ lead, open, onOpenChange }: {
+  lead: Lead; open: boolean; onOpenChange: (v: boolean) => void;
+}) {
+  const qc = useQueryClient();
+  const [targetRole, setTargetRole] = useState("intermediary");
+  const [notes, setNotes] = useState(lead.notes || "");
+  const [markWon, setMarkWon] = useState(lead.lead_stage !== "won");
+
+  const convert = useMutation({
+    mutationFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      if (!lead.lead_email) throw new Error("Lead must have an email to convert to invitation");
+
+      // 1. Create invitation
+      const { data: invitation, error: invErr } = await supabase.from("invitations").insert({
+        target_name: lead.lead_name,
+        target_email: lead.lead_email,
+        target_phone: lead.lead_phone || null,
+        target_role: targetRole,
+        notes: notes || null,
+        created_by: user.id,
+        registry_entity_id: lead.registry_entity_id || null,
+      }).select("id").single();
+      if (invErr) throw invErr;
+
+      // 2. Link invitation back to lead + mark won
+      const leadUpdates: Record<string, any> = {
+        invitation_id: invitation.id,
+        last_contacted_at: new Date().toISOString(),
+      };
+      if (markWon) leadUpdates.lead_stage = "won";
+
+      const { error: leadErr } = await supabase.from("sales_leads")
+        .update(leadUpdates).eq("id", lead.id);
+      if (leadErr) throw leadErr;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-sales-leads"] });
+      qc.invalidateQueries({ queryKey: ["admin-invitations"] });
+      toast.success("Lead converted to invitation successfully!");
+      onOpenChange(false);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const hasEmail = !!lead.lead_email;
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <UserPlus className="h-5 w-5 text-primary" /> Convert Lead to Invitation
+          </DialogTitle>
+          <DialogDescription>
+            This will create an invitation for <strong>{lead.lead_name}</strong> and link it to this lead.
+          </DialogDescription>
+        </DialogHeader>
+
+        {!hasEmail && (
+          <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-sm text-destructive">
+            <AlertTriangle className="h-4 w-4 inline mr-1" />
+            This lead has no email address. An email is required to send an invitation.
+          </div>
+        )}
+
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Name</Label>
+              <p className="text-sm font-medium">{lead.lead_name}</p>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Email</Label>
+              <p className="text-sm">{lead.lead_email || "—"}</p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs">Invite as Role *</Label>
+            <Select value={targetRole} onValueChange={setTargetRole}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="intermediary">Intermediary (MFD / RIA / Agent)</SelectItem>
+                <SelectItem value="issuer">Issuer (AMC / Insurance Co.)</SelectItem>
+                <SelectItem value="investor">Investor</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs">Invitation Notes</Label>
+            <Textarea rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional context..." />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="markWon"
+              checked={markWon}
+              onChange={(e) => setMarkWon(e.target.checked)}
+              className="rounded border-border"
+            />
+            <Label htmlFor="markWon" className="text-xs">Mark lead as "Won" after conversion</Label>
+          </div>
+
+          {lead.registry_entity_id && (
+            <Badge variant="secondary" className="text-xs">
+              <Building2 className="h-3 w-3 mr-1" /> Will link registry entity to invitation
+            </Badge>
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button onClick={() => convert.mutate()} disabled={!hasEmail || convert.isPending}>
+            <Send className="h-3.5 w-3.5 mr-1" />
+            {convert.isPending ? "Converting..." : "Create Invitation"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
