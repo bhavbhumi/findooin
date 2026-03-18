@@ -167,6 +167,7 @@ const App = () => {
                       <Route path="/professional/:registrationNumber" element={<ProfessionalProfile />} />
                       <Route path="/transparency" element={<TransparencyPage />} />
                       <Route path="/compare" element={<ComparePage />} />
+                      <Route path="/opinions" element={<Opinions />} />
                       <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
                       <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
