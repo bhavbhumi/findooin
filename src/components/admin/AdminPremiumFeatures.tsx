@@ -393,6 +393,19 @@ const INTERMEDIARY_FEATURES: FeatureSpec[] = [
     status: "planned",
     revenueImpact: "medium",
   },
+  {
+    name: "AI Compose (Add-on)",
+    icon: Sparkles,
+    description: "AI-powered post generation: draft announcements, repurpose annual reports/press releases into social posts, auto-suggest weekly IR content.",
+    rationale: "IR teams need to publish regular updates. AI dramatically reduces content production time, making Enterprise tier essential for issuers with active investor communications.",
+    tier: "enterprise",
+    freeLimits: "No AI posting",
+    proLimits: "No AI posting",
+    enterpriseLimits: "Unlimited AI drafts, content repurposing from reports/filings, weekly auto-suggest calendar, tone controls",
+    effort: "medium",
+    status: "shipped",
+    revenueImpact: "high",
+  },
 ];
 
 const EFFORT_CONFIG: Record<EffortLevel, { label: string; color: string; days: string }> = {
