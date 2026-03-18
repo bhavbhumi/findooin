@@ -67,8 +67,10 @@ type SortDir = "asc" | "desc";
 
 export function AdminUserManagement() {
   const { data: users, isLoading } = useAdminUsers();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [isPurging, setIsPurging] = useState(false);
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [verificationFilter, setVerificationFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
