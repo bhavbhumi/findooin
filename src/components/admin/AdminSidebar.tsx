@@ -95,9 +95,9 @@ export function AdminSidebar() {
       label: "App Modules",
       items: [
         { title: "Feed & Posts", url: "/admin/feed", icon: BookOpen, soon: true, permission: "manage_moderation" },
-        { title: "Jobs", url: "/admin/jobs", icon: Database, soon: true, permission: "manage_moderation" },
-        { title: "Events", url: "/admin/events", icon: Activity, soon: true, permission: "manage_moderation" },
-        { title: "Listings", url: "/admin/listings", icon: ClipboardList, soon: true, permission: "manage_moderation" },
+        { title: "Jobs", url: "/admin/jobs", icon: Database, permission: "manage_moderation" },
+        { title: "Events", url: "/admin/events", icon: Activity, permission: "manage_moderation" },
+        { title: "Listings", url: "/admin/listings", icon: ClipboardList, permission: "manage_moderation" },
         { title: "Messages", url: "/admin/messages", icon: Mail, soon: true, permission: "manage_moderation" },
         { title: "Gamification", url: "/admin/gamification", icon: TrendingUp, soon: true, permission: "manage_moderation" },
       ],
