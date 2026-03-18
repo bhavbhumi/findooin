@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Briefcase, Eye, Users, Pause, Play, X, BadgeCheck, FileText } from "lucide-react";
+import { Briefcase, Eye, Users, Pause, Play, X, BadgeCheck, FileText, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
+import { useUserActivityStatus } from "@/hooks/useAdmin";
 
 const STATUS_LABELS: Record<string, string> = {
   submitted: "New",
