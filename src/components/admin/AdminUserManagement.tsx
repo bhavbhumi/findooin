@@ -124,6 +124,11 @@ export function AdminUserManagement() {
       list = list.filter((u: any) => u.user_type === typeFilter);
     }
 
+    // Activity filter
+    if (activityFilter !== "all") {
+      list = list.filter((u: any) => (u.activity?.status || "dormant") === activityFilter);
+    }
+
     // Sort
     list.sort((a: any, b: any) => {
       let cmp = 0;
