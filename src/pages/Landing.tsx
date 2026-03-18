@@ -257,7 +257,7 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden">
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         <ConcentricRings className="-bottom-20 -left-20 hidden lg:block" />
         
