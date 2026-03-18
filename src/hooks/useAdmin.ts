@@ -202,8 +202,8 @@ export function useAdminReports() {
 
       return (data || []).map((r: any) => ({
         ...r,
-        reporter: profileMap[r.reporter_id] || null,
-        reported_user: r.reported_user_id ? profileMap[r.reported_user_id] || null : null,
+        reporter: profileMap[r.reporter_id] ? { ...profileMap[r.reporter_id], roles: roleMap[r.reporter_id] || [] } : null,
+        reported_user: r.reported_user_id && profileMap[r.reported_user_id] ? { ...profileMap[r.reported_user_id], roles: roleMap[r.reported_user_id] || [] } : null,
       }));
     },
     staleTime: 10_000,
