@@ -178,13 +178,11 @@ export function AdminSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r-0 bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
-      {/* Header — branded logo block */}
-      <div className={`flex items-center gap-2.5 px-4 py-5 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(43,72%,53%)] to-[hsl(43,72%,40%)] shadow-lg shadow-[hsl(43,72%,53%)]/20">
-          <span className="text-sm font-bold text-[hsl(240,100%,15%)] font-heading">FO</span>
-        </div>
+      {/* Header — branded logo */}
+      <div className={`flex items-center gap-2.5 px-4 py-4 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
+        <img src={findooLogo} alt="FindOO" className="h-8 w-8 shrink-0 rounded-lg" />
         {!collapsed && (
-          <div className="animate-slide-in-left">
+          <div>
             <h1 className="text-sm font-bold text-white tracking-tight font-heading">
               FindOO Admin
             </h1>
