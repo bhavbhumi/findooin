@@ -23,10 +23,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Search, ShieldCheck, Clock, User, Building2, Users, UserCheck,
   MoreHorizontal, Eye, Mail, ShieldOff, ArrowUpDown, ChevronLeft,
   ChevronRight, TrendingUp, UserPlus, Shield, CheckCircle, Activity,
-  Zap, Moon, AlertTriangle,
+  Zap, Moon, AlertTriangle, FlaskConical, Trash2,
 } from "lucide-react";
 import { formatDistanceToNow, subDays, isAfter } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -34,6 +45,7 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PAGE_SIZE = 20;
 
@@ -55,8 +67,10 @@ type SortDir = "asc" | "desc";
 
 export function AdminUserManagement() {
   const { data: users, isLoading } = useAdminUsers();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [isPurging, setIsPurging] = useState(false);
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [verificationFilter, setVerificationFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -75,6 +89,7 @@ export function AdminUserManagement() {
     const entities = users.filter((u: any) => u.user_type === "entity").length;
     const individuals = total - entities;
     const withOnboarding = users.filter((u: any) => u.onboarding_completed).length;
+    const seedCount = users.filter((u: any) => u.is_seed).length;
 
     const roleCounts: Record<string, number> = {};
     users.forEach((u: any) => {
@@ -89,7 +104,7 @@ export function AdminUserManagement() {
       activityCounts[s] = (activityCounts[s] || 0) + 1;
     });
 
-    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts, activityCounts };
+    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts, activityCounts, seedCount };
   }, [users]);
 
   // ── Filter + Sort + Paginate ──
@@ -183,6 +198,24 @@ export function AdminUserManagement() {
     }
   };
 
+  const handlePurgeSeedData = async () => {
+    setIsPurging(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("purge-seed-data", {
+        body: { action: "purge", includeBlog: true },
+      });
+      if (error) throw error;
+      toast.success(`Seed data purged: ${data?.seed_users_purged || 0} test users and all their content removed`);
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      queryClient.invalidateQueries({ queryKey: ["feed-posts"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-reports"] });
+    } catch (err: any) {
+      toast.error(`Purge failed: ${err.message}`);
+    } finally {
+      setIsPurging(false);
+    }
+  };
+
   if (isLoading) return <FindooLoader text="Loading users..." />;
 
   return (
@@ -230,6 +263,35 @@ export function AdminUserManagement() {
               </Badge>
             );
           })}
+          {stats.seedCount > 0 && (
+            <>
+              <span className="text-[10px] text-muted-foreground mx-1">|</span>
+              <Badge variant="outline" className="text-[10px] gap-1 bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20">
+                <FlaskConical className="h-2.5 w-2.5" /> Seed · {stats.seedCount}
+              </Badge>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-5 px-1.5 text-[10px] text-destructive hover:text-destructive gap-0.5" disabled={isPurging}>
+                    <Trash2 className="h-2.5 w-2.5" /> {isPurging ? "Purging..." : "Purge"}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Purge all seed/test data?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete all {stats.seedCount} test users (@findoo.test) and ALL their content: posts, comments, connections, messages, jobs, events, listings, blog posts, endorsements, and more. This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handlePurgeSeedData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                      Yes, purge all test data
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
         </div>
       )}
 
@@ -326,11 +388,11 @@ export function AdminUserManagement() {
           const aBadge = activityBadge[u.activity?.status || "dormant"] || activityBadge.dormant;
           const ActivityIcon = aBadge.icon;
           return (
-            <Card key={u.id} className={`hover:bg-muted/30 transition-colors ${u.activity?.status === "dormant" ? "opacity-60" : ""}`}>
+            <Card key={u.id} className={`hover:bg-muted/30 transition-colors ${u.activity?.status === "dormant" ? "opacity-60" : ""} ${u.is_seed ? "border-dashed border-violet-500/30" : ""}`}>
               <CardContent className="py-2.5 px-3">
                 <div className="flex items-center gap-3">
                   {/* Avatar */}
-                  <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+                  <div className={`h-9 w-9 rounded-full bg-muted flex items-center justify-center shrink-0 ${u.is_seed ? "ring-1 ring-violet-500/40 ring-dashed" : ""}`}>
                     {u.avatar_url ? (
                       <img src={u.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
                     ) : (
@@ -346,6 +408,11 @@ export function AdminUserManagement() {
                       <span className="font-semibold text-sm truncate max-w-[200px]">
                         {u.user_type === "entity" && u.organization ? u.organization : (u.display_name || u.full_name)}
                       </span>
+                      {u.is_seed && (
+                        <Badge variant="outline" className="text-[9px] h-4 px-1 bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20 gap-0.5">
+                          <FlaskConical className="h-2.5 w-2.5" /> Test
+                        </Badge>
+                      )}
                       <Badge variant="outline" className={`text-[9px] h-4 px-1 ${vBadge.className}`}>
                         {u.verification_status === "verified" && <ShieldCheck className="h-2.5 w-2.5 mr-0.5" />}
                         {vBadge.label}

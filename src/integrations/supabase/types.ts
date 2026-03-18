@@ -2973,6 +2973,7 @@ export type Database = {
         Args: { p_limit?: number; p_offset?: number }
         Returns: Json
       }
+      get_seed_user_ids: { Args: never; Returns: string[] }
       get_staff_permissions: { Args: { _user_id: string }; Returns: string[] }
       get_users_activity_status: {
         Args: { p_user_ids: string[] }
@@ -2998,6 +2999,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_seed_user: { Args: { p_user_id: string }; Returns: boolean }
       move_to_dlq: {
         Args: {
           dlq_name: string
