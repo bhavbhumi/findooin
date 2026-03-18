@@ -177,23 +177,23 @@ export function AdminSidebar() {
   );
 
   return (
-    <Sidebar collapsible="icon" className="border-r-0 bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
+    <Sidebar collapsible="icon" className="border-r-0 bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent [&_[data-radix-scroll-area-viewport]]:scrollbar-thin [&_*::-webkit-scrollbar]:w-1 [&_*::-webkit-scrollbar-track]:bg-transparent [&_*::-webkit-scrollbar-thumb]:bg-white/15 [&_*::-webkit-scrollbar-thumb]:rounded-full [&_*::-webkit-scrollbar-thumb:hover]:bg-white/25">
       {/* Header — branded logo */}
-      <div className={`flex items-center gap-2.5 px-4 py-4 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
-        <img src={findooLogo} alt="FindOO" className="h-8 w-8 shrink-0 rounded-lg" />
+      <div className={`flex items-center gap-2.5 px-4 py-3 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
+        <img src={findooLogo} alt="FindOO" className="h-10 w-10 shrink-0 rounded-lg" />
         {!collapsed && (
           <div>
-            <h1 className="text-sm font-bold text-white tracking-tight font-heading">
+            <h1 className="text-sm font-bold text-white tracking-tight font-heading leading-tight">
               FindOO Admin
             </h1>
-            <p className="text-[10px] text-white/50 leading-none">
+            <p className="text-[10px] text-white/50 leading-none mt-0.5">
               Control Center
             </p>
           </div>
         )}
       </div>
 
-      <SidebarContent>
+      <SidebarContent className="[&>div]:py-1 [&_ul]:gap-0.5">
         {NAV_SECTIONS.map((section) => {
           const sectionHasActive = section.items.some((item) =>
             item.end ? location.pathname === item.url : location.pathname.startsWith(item.url)
