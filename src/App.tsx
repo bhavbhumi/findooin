@@ -129,7 +129,7 @@ const App = () => {
         <TooltipProvider>
           <RoleProvider>
             <ErrorBoundary fallbackTitle="FindOO encountered an error">
-              {/* Splash screen removed for faster loading */}
+              {/* Splash screen removed – direct render */}
               <Toaster />
               <Sonner />
               <BrowserRouter>
