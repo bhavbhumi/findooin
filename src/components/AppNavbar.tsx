@@ -203,6 +203,12 @@ const AppNavbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <Link to="/opinions" className="flex items-center gap-2 cursor-pointer">
+                    <BarChart3 className="h-4 w-4" />
+                    Opinions
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
                     <Settings className="h-4 w-4" />
                     Settings
