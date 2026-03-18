@@ -594,7 +594,6 @@ export function AdminSeoAudit() {
       setChecks(runSeoChecks());
       setLastRefreshed(new Date());
       setIsRefreshing(false);
-      const { toast } = require("sonner");
       toast.success("SEO Audit refreshed", { description: `${checks.length} checks re-evaluated at ${new Date().toLocaleTimeString()}` });
     }, 800);
   };
