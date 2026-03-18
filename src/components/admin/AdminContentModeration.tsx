@@ -63,7 +63,8 @@ function RoleBadges({ roles }: { roles?: string[] }) {
 const PAGE_SIZE = 15;
 
 export function AdminContentModeration() {
-  const { data: reports, isLoading } = useAdminReports();
+  const [showArchived, setShowArchived] = useState(false);
+  const { data: reports, isLoading } = useAdminReports(showArchived);
   const updateStatus = useUpdateReportStatus();
   const deletePost = useDeletePost();
 
