@@ -11,11 +11,14 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
+import { AdminContentModeration } from "./AdminContentModeration";
+import { useAdminReports } from "@/hooks/useAdmin";
 import { toast } from "sonner";
 import {
   Briefcase, Search, ChevronLeft, ChevronRight, Eye, Users,
-  Pause, Play, Trash2, MapPin, Building2, Clock, BarChart3, AlertTriangle
+  Pause, Play, Trash2, MapPin, Building2, Clock, BarChart3, AlertTriangle, Flag
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
