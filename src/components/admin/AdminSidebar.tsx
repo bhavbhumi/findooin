@@ -110,7 +110,7 @@ export function AdminSidebar() {
         { title: "Sales", url: "/admin/sales", icon: TrendingUp, permission: "manage_sales" },
         { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone, permission: "manage_campaigns" },
         { title: "Email", url: "/admin/email", icon: Mail, permission: "manage_email" },
-        { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true, permission: "manage_notifications" },
+        { title: "Notifications", url: "/admin/notifications", icon: Bell, permission: "manage_notifications" },
       ],
     },
     {
