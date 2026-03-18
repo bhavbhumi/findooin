@@ -91,17 +91,6 @@ function OpinionsContent() {
   return (
     <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Platform Disclaimer Banner */}
-        <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
-          <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-medium text-foreground">Professional Sentiment Only — Not Investment Advice</p>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              FindOO Opinions is a professional sentiment gauge. No financial transactions occur. Participation does not create an advisory relationship. FindOO is not a SEBI-registered Research Analyst or Investment Adviser. Always consult qualified professionals before making investment decisions.
-            </p>
-          </div>
-        </div>
-
         <div className="grid lg:grid-cols-[240px_1fr] gap-6">
           {/* Category Sidebar */}
           <aside className="hidden lg:block">
@@ -137,6 +126,16 @@ function OpinionsContent() {
                   ) : null}
                 </button>
               ))}
+
+              {/* Disclaimer below categories */}
+              <div className="mt-4 pt-4 border-t border-border">
+                <div className="flex items-start gap-2 rounded-lg bg-amber-500/5 border border-amber-500/20 p-3">
+                  <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                  <p className="text-[11px] leading-relaxed text-muted-foreground">
+                    Professional sentiment only — not investment advice. No financial transactions occur. FindOO is not a SEBI-registered Research Analyst or Investment Adviser.
+                  </p>
+                </div>
+              </div>
             </div>
           </aside>
 
