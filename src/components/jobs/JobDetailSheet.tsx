@@ -223,7 +223,24 @@ export function JobDetailSheet({ job, open, onClose, isSaved, onToggleSave, hasA
               )}
             </div>
           )}
+
+          {/* Report */}
+          {!isOwnJob && userId && (
+            <div className="pt-2">
+              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1.5 w-full" onClick={() => setShowReport(true)}>
+                <Flag className="h-3.5 w-3.5" /> Report this job
+              </Button>
+            </div>
+          )}
         </div>
+
+        <ReportDialog
+          open={showReport}
+          onOpenChange={setShowReport}
+          resourceType="job"
+          resourceId={job.id}
+          reportedUserId={job.poster_id}
+        />
       </SheetContent>
     </Sheet>
   );
