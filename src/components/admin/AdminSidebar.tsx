@@ -76,71 +76,62 @@ export function AdminSidebar() {
 
   const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
     {
-      label: "Overview",
+      label: "Dashboard",
       items: [
-        { title: "Dashboard", url: "/admin", icon: LayoutDashboard, end: true },
+        { title: "Overview", url: "/admin", icon: LayoutDashboard, end: true },
+        { title: "Monitoring", url: "/admin/monitoring", icon: Monitor, permission: "view_monitoring" },
+        { title: "Scorecard", url: "/admin/scorecard", icon: Gauge, permission: "view_scorecard" },
       ],
     },
     {
-      label: "Operations",
+      label: "Users & Access",
       items: [
         { title: "Users", url: "/admin/users", icon: Users, permission: "manage_users" },
         { title: "Verification", url: "/admin/verification", icon: ShieldCheck, permission: "manage_verification" },
-        { title: "Reports", url: "/admin/moderation", icon: Flag, permission: "manage_moderation" },
         { title: "Audit Log", url: "/admin/audit", icon: Activity, permission: "view_audit" },
       ],
     },
     {
-      label: "Growth",
+      label: "App Modules",
+      items: [
+        { title: "Feed & Posts", url: "/admin/feed", icon: BookOpen, soon: true, permission: "manage_moderation" },
+        { title: "Jobs", url: "/admin/jobs", icon: Database, soon: true, permission: "manage_moderation" },
+        { title: "Events", url: "/admin/events", icon: Activity, soon: true, permission: "manage_moderation" },
+        { title: "Listings", url: "/admin/listings", icon: ClipboardList, soon: true, permission: "manage_moderation" },
+        { title: "Messages", url: "/admin/messages", icon: Mail, soon: true, permission: "manage_moderation" },
+        { title: "Gamification", url: "/admin/gamification", icon: TrendingUp, soon: true, permission: "manage_moderation" },
+      ],
+    },
+    {
+      label: "Growth & Outreach",
       items: [
         { title: "Invitations", url: "/admin/invitations", icon: Send, permission: "manage_invitations" },
         { title: "Registry", url: "/admin/registry", icon: Database, permission: "manage_registry" },
         { title: "Sales", url: "/admin/sales", icon: TrendingUp, permission: "manage_sales" },
         { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone, permission: "manage_campaigns" },
-        { title: "Cost Report", url: "/admin/cost-report", icon: IndianRupee, permission: "view_cost_report" },
-        { title: "Scaling Report", url: "/admin/scaling-report", icon: Server, permission: "view_scaling_report" },
+        { title: "Email", url: "/admin/email", icon: Mail, permission: "manage_email" },
+        { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true, permission: "manage_notifications" },
       ],
     },
     {
-      label: "Content",
+      label: "Content & Support",
       items: [
         { title: "Blog", url: "/admin/blog", icon: BookOpen, permission: "manage_blog" },
-      ],
-    },
-    {
-      label: "Platform",
-      items: [
-        { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText, permission: "view_patent" },
-      ],
-    },
-    {
-      label: "Support",
-      items: [
-        { title: "Tickets", url: "/admin/support", icon: LifeBuoy, permission: "manage_support" },
+        { title: "Moderation", url: "/admin/moderation", icon: Flag, permission: "manage_moderation" },
+        { title: "Support Tickets", url: "/admin/support", icon: LifeBuoy, permission: "manage_support" },
         { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen, permission: "manage_kb" },
       ],
     },
     {
       label: "Infrastructure",
       items: [
-        { title: "Monitoring", url: "/admin/monitoring", icon: Monitor, permission: "view_monitoring" },
-        { title: "Scorecard", url: "/admin/scorecard", icon: Gauge, permission: "view_scorecard" },
         { title: "Module Audit", url: "/admin/module-audit", icon: ClipboardList, permission: "view_module_audit" },
         { title: "SEO Audit", url: "/admin/seo", icon: Search, permission: "view_seo" },
-      ],
-    },
-    {
-      label: "Communications",
-      items: [
-        { title: "Email", url: "/admin/email", icon: Mail, permission: "manage_email" },
-      ],
-    },
-    {
-      label: "Coming Soon",
-      items: [
-        { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true, permission: "manage_billing" },
-        { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true, permission: "manage_notifications" },
+        { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText, permission: "view_patent" },
+        { title: "Cost Report", url: "/admin/cost-report", icon: IndianRupee, permission: "view_cost_report" },
+        { title: "Scaling Report", url: "/admin/scaling-report", icon: Server, permission: "view_scaling_report" },
         { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true, permission: "manage_features" },
+        { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true, permission: "manage_billing" },
       ],
     },
   ];
