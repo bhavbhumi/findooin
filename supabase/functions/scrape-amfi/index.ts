@@ -249,18 +249,30 @@ async function processSeedData(
   for (const rec of records) {
     const name = rec.name || rec.entity_name || rec.arn_holder_name || "";
     const arn = rec.arn || rec.arn_number || rec.registration_number || "";
+    const source = rec.source || "amfi";
 
     if (!name) { skipped++; continue; }
 
+    // Derive entity_type and registration_category from source
+    const sourceDefaults: Record<string, { entity_type: string; registration_category: string }> = {
+      amfi: { entity_type: "distributor", registration_category: "MF Distributor" },
+      sebi: { entity_type: "intermediary", registration_category: "SEBI Registered" },
+      rbi: { entity_type: "institution", registration_category: "RBI Regulated" },
+      irdai: { entity_type: "intermediary", registration_category: "Insurance Intermediary" },
+      pfrda: { entity_type: "intermediary", registration_category: "Pension Fund" },
+      manual: { entity_type: rec.entity_type || "other", registration_category: rec.registration_category || "Manual Entry" },
+    };
+    const defaults = sourceDefaults[source] || sourceDefaults.manual;
+
     const entityData: Record<string, any> = {
       entity_name: name,
-      entity_type: "distributor",
+      entity_type: rec.entity_type || defaults.entity_type,
       registration_number: arn || null,
-      registration_category: "MF Distributor",
-      source: "amfi",
+      registration_category: rec.registration_category || defaults.registration_category,
+      source: source,
       source_id: arn || null,
-      contact_email: (rec.email || "").toLowerCase() || null,
-      contact_phone: rec.phone || rec.telephone || null,
+      contact_email: (rec.email || rec.contact_email || "").toLowerCase() || null,
+      contact_phone: rec.phone || rec.telephone || rec.contact_phone || null,
       address: rec.address || null,
       city: rec.city || null,
       state: rec.state || null,
@@ -278,7 +290,7 @@ async function processSeedData(
       const { data: existing } = await supabase
         .from("registry_entities")
         .select("id")
-        .eq("source", "amfi")
+        .eq("source", source)
         .eq("source_id", arn)
         .maybeSingle();
 
