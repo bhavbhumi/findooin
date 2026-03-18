@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ReportDialog } from "@/components/feed/ReportDialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
