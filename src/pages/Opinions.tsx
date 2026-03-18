@@ -1,13 +1,12 @@
 /**
- * Opinions — Public + authenticated professional sentiment hub.
- * Polymarket-inspired UI for BFSI India sentiment polling.
- * Uses AppLayout when logged in, PublicPageLayout when not.
+ * Opinions — Always renders in PublicPageLayout for consistent public browsing.
+ * App-view access is via Feed "Opinions" tab + sidebar widget.
  */
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
-import AppLayout from "@/components/AppLayout";
+
 import { PageHero } from "@/components/PageHero";
 import { PageTransition } from "@/components/PageTransition";
 import { OpinionCard } from "@/components/opinions/OpinionCard";
@@ -25,7 +24,7 @@ import {
   OPINION_CATEGORIES,
 } from "@/hooks/useOpinions";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRole } from "@/contexts/RoleContext";
+
 
 const CATEGORY_ALL = "all" as const;
 type CategoryFilter = OpinionCategory | typeof CATEGORY_ALL;
@@ -256,24 +255,6 @@ export default function Opinions() {
     title: "Professional Opinions — FindOO",
     description: "Track professional sentiment on RBI policy, SEBI regulations, markets, and the Indian BFSI ecosystem. No betting — pure professional insight.",
   });
-
-  const { userId } = useRole();
-
-  if (userId) {
-    return (
-      <AppLayout maxWidth="max-w-6xl">
-        <PageTransition>
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-foreground">Professional Opinions</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Track BFSI professional sentiment on policy, markets, and regulation.
-            </p>
-          </div>
-          <OpinionsContent />
-        </PageTransition>
-      </AppLayout>
-    );
-  }
 
   return (
     <PublicPageLayout>
