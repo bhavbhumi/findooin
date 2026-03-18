@@ -1,10 +1,11 @@
 /**
  * Admin — Layout shell with sidebar + nested routes for all admin sections.
+ * Access is gated by staff permissions (admins get all implicitly).
  */
 import { useEffect } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
-import { useIsAdmin } from "@/hooks/useAdmin";
+import { useStaffPermissions } from "@/hooks/useStaffPermissions";
 import { FindooLoader } from "@/components/FindooLoader";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
@@ -34,19 +35,20 @@ const BREADCRUMB_MAP: Record<string, string> = {
   "/admin/scaling-report": "Scaling Report",
   "/admin/email": "Email",
   "/admin/patent": "TrustCircle IQ™ Patent",
+  "/admin/seo": "SEO Audit",
 };
 
 export default function Admin() {
   usePageMeta({ title: "Admin Panel" });
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: isAdmin, isLoading } = useIsAdmin();
+  const { isStaff, isLoading } = useStaffPermissions();
 
   useEffect(() => {
-    if (!isLoading && !isAdmin) {
+    if (!isLoading && !isStaff) {
       navigate("/feed");
     }
-  }, [isAdmin, isLoading, navigate]);
+  }, [isStaff, isLoading, navigate]);
 
   if (isLoading) {
     return (
@@ -56,7 +58,7 @@ export default function Admin() {
     );
   }
 
-  if (!isAdmin) return null;
+  if (!isStaff) return null;
 
   const currentLabel = BREADCRUMB_MAP[location.pathname] || "Admin";
   const isRoot = location.pathname === "/admin";
