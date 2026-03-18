@@ -138,8 +138,8 @@ export function AdminSidebar() {
   ];
 
   const renderMenuItem = (item: NavItem, isActive: boolean, badgeCount: number, isCollapsed: boolean) => (
-    <SidebarMenuItem key={item.title}>
-      <SidebarMenuButton asChild>
+    <SidebarMenuItem key={item.title} className="mb-0">
+      <SidebarMenuButton asChild className="h-8 px-2 py-1">
         <NavLink
           to={item.url}
           end={item.end}
