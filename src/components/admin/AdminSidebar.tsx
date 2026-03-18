@@ -1,13 +1,13 @@
 /**
  * AdminSidebar — Collapsible sidebar navigation for the admin panel.
- * Groups sections into Operations, Content, Platform, and Coming Soon.
- * Shows real-time badge counts for pending verifications and reports.
+ * Items are filtered by the current user's staff permissions.
+ * Admins see everything; moderators/staff see only permitted sections.
  */
 import { useLocation, useNavigate } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
-  Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy, Shield,
+  Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
   IndianRupee, Server, Search, FileText, LogOut, ExternalLink
 } from "lucide-react";
@@ -23,7 +23,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarHeader,
   SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -31,12 +30,14 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useVerificationQueue, useAdminReports } from "@/hooks/useAdmin";
+import { useStaffPermissions, type StaffPermission } from "@/hooks/useStaffPermissions";
 
 export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
   const navigate = useNavigate();
+  const { hasPermission } = useStaffPermissions();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -64,7 +65,14 @@ export function AdminSidebar() {
     "/admin/moderation": pendingReports,
   };
 
-  type NavItem = { title: string; url: string; icon: React.ComponentType<{ className?: string }>; end?: boolean; soon?: boolean };
+  type NavItem = {
+    title: string;
+    url: string;
+    icon: React.ComponentType<{ className?: string }>;
+    end?: boolean;
+    soon?: boolean;
+    permission?: StaffPermission;
+  };
 
   const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
     {
@@ -76,66 +84,76 @@ export function AdminSidebar() {
     {
       label: "Operations",
       items: [
-        { title: "Users", url: "/admin/users", icon: Users },
-        { title: "Verification", url: "/admin/verification", icon: ShieldCheck },
-        { title: "Reports", url: "/admin/moderation", icon: Flag },
-        { title: "Audit Log", url: "/admin/audit", icon: Activity },
+        { title: "Users", url: "/admin/users", icon: Users, permission: "manage_users" },
+        { title: "Verification", url: "/admin/verification", icon: ShieldCheck, permission: "manage_verification" },
+        { title: "Reports", url: "/admin/moderation", icon: Flag, permission: "manage_moderation" },
+        { title: "Audit Log", url: "/admin/audit", icon: Activity, permission: "view_audit" },
       ],
     },
     {
       label: "Growth",
       items: [
-        { title: "Invitations", url: "/admin/invitations", icon: Send },
-        { title: "Registry", url: "/admin/registry", icon: Database },
-        { title: "Sales", url: "/admin/sales", icon: TrendingUp },
-        { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone },
-        { title: "Cost Report", url: "/admin/cost-report", icon: IndianRupee },
-        { title: "Scaling Report", url: "/admin/scaling-report", icon: Server },
+        { title: "Invitations", url: "/admin/invitations", icon: Send, permission: "manage_invitations" },
+        { title: "Registry", url: "/admin/registry", icon: Database, permission: "manage_registry" },
+        { title: "Sales", url: "/admin/sales", icon: TrendingUp, permission: "manage_sales" },
+        { title: "Campaigns", url: "/admin/campaigns", icon: Megaphone, permission: "manage_campaigns" },
+        { title: "Cost Report", url: "/admin/cost-report", icon: IndianRupee, permission: "view_cost_report" },
+        { title: "Scaling Report", url: "/admin/scaling-report", icon: Server, permission: "view_scaling_report" },
       ],
     },
     {
       label: "Content",
       items: [
-        { title: "Blog", url: "/admin/blog", icon: BookOpen },
+        { title: "Blog", url: "/admin/blog", icon: BookOpen, permission: "manage_blog" },
       ],
     },
     {
       label: "Platform",
       items: [
-        { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText },
+        { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText, permission: "view_patent" },
       ],
     },
     {
       label: "Support",
       items: [
-        { title: "Tickets", url: "/admin/support", icon: LifeBuoy },
-        { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen },
+        { title: "Tickets", url: "/admin/support", icon: LifeBuoy, permission: "manage_support" },
+        { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen, permission: "manage_kb" },
       ],
     },
     {
       label: "Infrastructure",
       items: [
-        { title: "Monitoring", url: "/admin/monitoring", icon: Monitor },
-        { title: "Scorecard", url: "/admin/scorecard", icon: Gauge },
-        { title: "Module Audit", url: "/admin/module-audit", icon: ClipboardList },
-        { title: "SEO Audit", url: "/admin/seo", icon: Search },
+        { title: "Monitoring", url: "/admin/monitoring", icon: Monitor, permission: "view_monitoring" },
+        { title: "Scorecard", url: "/admin/scorecard", icon: Gauge, permission: "view_scorecard" },
+        { title: "Module Audit", url: "/admin/module-audit", icon: ClipboardList, permission: "view_module_audit" },
+        { title: "SEO Audit", url: "/admin/seo", icon: Search, permission: "view_seo" },
       ],
     },
     {
       label: "Communications",
       items: [
-        { title: "Email", url: "/admin/email", icon: Mail },
+        { title: "Email", url: "/admin/email", icon: Mail, permission: "manage_email" },
       ],
     },
     {
       label: "Coming Soon",
       items: [
-        { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true },
-        { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true },
-        { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true },
+        { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true, permission: "manage_billing" },
+        { title: "Notifications", url: "/admin/notifications", icon: Bell, soon: true, permission: "manage_notifications" },
+        { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, soon: true, permission: "manage_features" },
       ],
     },
   ];
+
+  // Filter sections based on permissions
+  const filteredSections = NAV_SECTIONS
+    .map((section) => ({
+      ...section,
+      items: section.items.filter(
+        (item) => !item.permission || hasPermission(item.permission)
+      ),
+    }))
+    .filter((section) => section.items.length > 0);
 
   const renderMenuItem = (item: NavItem, isActive: boolean, badgeCount: number, isCollapsed: boolean) => (
     <SidebarMenuItem key={item.title} className="mb-0">
@@ -194,7 +212,7 @@ export function AdminSidebar() {
       </div>
 
       <SidebarContent className="[&_[data-sidebar=group]]:py-1 [&_[data-sidebar=group]]:px-2 [&_ul]:gap-0 [&_[data-sidebar=group-label]]:h-6 [&_[data-sidebar=group-label]]:mb-0">
-        {NAV_SECTIONS.map((section) => {
+        {filteredSections.map((section) => {
           const sectionHasActive = section.items.some((item) =>
             item.end ? location.pathname === item.url : location.pathname.startsWith(item.url)
           );
