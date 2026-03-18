@@ -47,6 +47,7 @@ const REGULATOR_LABELS: Record<string, string> = {
 };
 
 const DigitalCard = () => {
+  usePageMeta({ title: "Digital Business Card", description: "Professional digital business card on FindOO." });
   const { userId } = useParams<{ userId: string }>();
   const [searchParams] = useSearchParams();
   const eventContext = searchParams.get("event");

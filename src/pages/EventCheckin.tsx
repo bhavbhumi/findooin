@@ -11,6 +11,7 @@ import findooLogo from "@/assets/findoo-logo-white.png";
 import { format } from "date-fns";
 
 const EventCheckin = () => {
+  usePageMeta({ title: "Event Check-in", description: "Check in to your registered FindOO event." });
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
