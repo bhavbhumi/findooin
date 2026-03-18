@@ -124,10 +124,10 @@ export function AdminSidebar() {
         <NavLink
           to={item.url}
           end={item.end}
-          className={`hover:bg-sidebar-accent transition-colors relative text-sidebar-foreground ${
+          className={`hover:bg-white/10 transition-colors relative text-white/80 ${
             item.soon ? "opacity-60" : ""
           }`}
-          activeClassName="bg-sidebar-accent text-sidebar-primary-foreground font-medium"
+          activeClassName="bg-white/15 text-white font-medium"
         >
           <div className="relative mr-2 shrink-0">
             <item.icon className="h-4 w-4" />
@@ -141,7 +141,7 @@ export function AdminSidebar() {
             <span className="flex-1 flex items-center justify-between">
               <span className="text-sm">{item.title}</span>
               {item.soon && (
-                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0 border-sidebar-foreground/30 text-sidebar-foreground/60">
+                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0 border-white/30 text-white/60">
                   Soon
                 </Badge>
               )}
@@ -158,22 +158,22 @@ export function AdminSidebar() {
   );
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-      <SidebarHeader className="p-3">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
+      <SidebarHeader className="p-3 border-b border-white/10">
         {!collapsed && (
           <div className="flex items-center gap-2 px-1">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Shield className="h-4 w-4 text-primary" />
+            <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center">
+              <Shield className="h-4 w-4 text-[hsl(43,72%,53%)]" />
             </div>
             <div>
-              <p className="text-sm font-bold font-heading">Admin</p>
-              <p className="text-[10px] text-muted-foreground">Control Center</p>
+              <p className="text-sm font-bold font-heading text-white">Admin</p>
+              <p className="text-[10px] text-white/50">Control Center</p>
             </div>
           </div>
         )}
         {collapsed && (
           <div className="flex justify-center">
-            <Shield className="h-5 w-5 text-primary" />
+            <Shield className="h-5 w-5 text-[hsl(43,72%,53%)]" />
           </div>
         )}
       </SidebarHeader>
@@ -188,7 +188,7 @@ export function AdminSidebar() {
           if (isOverview || collapsed) {
             return (
               <SidebarGroup key={section.label}>
-                <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50">
+                <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-white/40">
                   {!collapsed && section.label}
                 </SidebarGroupLabel>
                 <SidebarGroupContent>
@@ -209,7 +209,7 @@ export function AdminSidebar() {
           return (
             <Collapsible key={section.label} defaultOpen={sectionHasActive} className="group/collapsible">
               <SidebarGroup>
-                <SidebarGroupLabel asChild className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50 hover:bg-sidebar-accent/50 rounded-md cursor-pointer">
+                <SidebarGroupLabel asChild className="text-[10px] uppercase tracking-wider text-white/40 hover:bg-white/5 rounded-md cursor-pointer">
                   <CollapsibleTrigger className="flex w-full items-center justify-between">
                     <span>{section.label}</span>
                     <ChevronRight className="h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -236,7 +236,7 @@ export function AdminSidebar() {
 
       <SidebarFooter className="p-3">
         {!collapsed && (
-          <p className="text-[10px] text-sidebar-foreground/40 text-center">
+          <p className="text-[10px] text-white/30 text-center">
             FindOO Admin v2.0
           </p>
         )}
