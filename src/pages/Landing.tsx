@@ -232,7 +232,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-10 relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden">
         <GlowBlob position="bottom-left" color="primary" size="md" />
         <div className="container relative">
           <CosmicValueSection />
@@ -240,7 +240,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-12 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
@@ -249,7 +249,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-14 relative overflow-hidden">
+      <section className="py-16 relative overflow-hidden">
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
         <div className="container max-w-4xl relative">
@@ -259,7 +259,7 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-14 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         <ConcentricRings className="-bottom-20 -left-20 hidden lg:block" />
         
@@ -422,7 +422,7 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-14 border-t border-border relative overflow-hidden">
+      <section className="py-16 border-t border-border relative overflow-hidden">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">
@@ -439,6 +439,11 @@ const Landing = () => {
               View all Insights <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </motion.div>
+          {(!blogPosts || blogPosts.length === 0) ? (
+            <div className="md:col-span-3 text-center py-10">
+              <p className="text-muted-foreground text-sm">Insights coming soon. Stay tuned!</p>
+            </div>
+          ) : null}
           <div className="grid md:grid-cols-3 gap-5">
             {(blogPosts ?? []).map((post, i) => (
               <motion.div

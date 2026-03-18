@@ -1,53 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Fragment } from "react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { useState, useRef, useEffect } from "react";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import findooLogo from "@/assets/findoo-logo-icon.png";
-
-const PUBLIC_LABEL_MAP: Record<string, string> = {
-  about: "About", blog: "Blog", contact: "Contact", legal: "Legal",
-  privacy: "Privacy", terms: "Terms", guidelines: "Community Guidelines",
-  explore: "Explore", pitch: "Pitch", install: "Install", help: "Help Desk",
-  sitemap: "Site Map",
-};
-
-function PublicBreadcrumbs() {
-  const location = useLocation();
-  const segments = location.pathname.split("/").filter(Boolean);
-  if (segments.length < 1) return null;
-  return (
-    <Breadcrumb className="mb-2">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild><Link to="/">Home</Link></BreadcrumbLink>
-        </BreadcrumbItem>
-        {segments.map((seg, i) => {
-          const path = "/" + segments.slice(0, i + 1).join("/");
-          const label = PUBLIC_LABEL_MAP[seg] || seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " ");
-          const isLast = i === segments.length - 1;
-          return (
-            <Fragment key={path}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {isLast ? <BreadcrumbPage>{label}</BreadcrumbPage> : <BreadcrumbLink asChild><Link to={path}>{label}</Link></BreadcrumbLink>}
-              </BreadcrumbItem>
-            </Fragment>
-          );
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
-  );
-}
 
 interface PublicPageLayoutProps {
   children: React.ReactNode;
@@ -334,16 +290,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               <p className="text-[10px] text-muted-foreground leading-relaxed mb-3">
                 B/201 Hemu Classic Premises CS Ltd, S V Road, Malad West, Mumbai 400064
               </p>
-              <div className="w-full h-20 rounded-lg bg-muted/50 border border-border flex items-center justify-center overflow-hidden">
-                <img
-                  src="https://maps.googleapis.com/maps/api/staticmap?center=Mumbai,India&zoom=12&size=300x120&scale=2&style=feature:all|element:labels|visibility:off&style=feature:road|element:geometry|color:0xe0e0e0&style=feature:water|element:geometry|color:0xc9d1d9&style=feature:landscape|element:geometry|color:0xf0f0f0&key=none"
-                  alt="Location map"
-                  className="w-full h-full object-cover opacity-60"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="text-xs text-muted-foreground">Mumbai, India</div>';
-                  }}
-                />
+              <div className="w-full h-20 rounded-lg bg-muted/50 border border-border flex items-center justify-center">
+                <span className="text-xs text-muted-foreground">📍 Mumbai, India</span>
               </div>
             </div>
 
