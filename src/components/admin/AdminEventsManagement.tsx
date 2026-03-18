@@ -10,11 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
+import { AdminContentModeration } from "./AdminContentModeration";
+import { useAdminReports } from "@/hooks/useAdmin";
 import { toast } from "sonner";
 import {
   Calendar, Search, ChevronLeft, ChevronRight, Eye, Users,
-  Trash2, MapPin, Clock, Globe, Monitor, Play, XCircle, CheckCircle2
+  Trash2, MapPin, Clock, Globe, Monitor, Play, XCircle, CheckCircle2, Flag
 } from "lucide-react";
 import { formatDistanceToNow, format, isPast } from "date-fns";
 
@@ -34,6 +37,35 @@ const modeIcons: Record<string, typeof Globe> = {
 const PAGE_SIZE = 15;
 
 export function AdminEventsManagement() {
+  const { data: reports } = useAdminReports();
+  const pendingReports = reports?.filter((r) => r.status === "pending").length || 0;
+
+  return (
+    <Tabs defaultValue="events" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="events" className="gap-1.5">
+          <Calendar className="h-3.5 w-3.5" /> All Events
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {pendingReports > 0 && (
+            <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">
+              {pendingReports}
+            </Badge>
+          )}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="events" className="mt-0">
+        <EventsTab />
+      </TabsContent>
+      <TabsContent value="reports" className="mt-0">
+        <AdminContentModeration />
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+function EventsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
