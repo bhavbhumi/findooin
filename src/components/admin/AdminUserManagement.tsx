@@ -25,7 +25,8 @@ import {
 import {
   Search, ShieldCheck, Clock, User, Building2, Users, UserCheck,
   MoreHorizontal, Eye, Mail, ShieldOff, ArrowUpDown, ChevronLeft,
-  ChevronRight, TrendingUp, UserPlus, Shield, CheckCircle,
+  ChevronRight, TrendingUp, UserPlus, Shield, CheckCircle, Activity,
+  Zap, Moon, AlertTriangle,
 } from "lucide-react";
 import { formatDistanceToNow, subDays, isAfter } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
