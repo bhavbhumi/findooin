@@ -101,6 +101,8 @@ const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const ComparePage = lazy(() => import("./pages/Compare"));
 const Bookmarks = lazy(() => import("./pages/Bookmarks"));
+const Opinions = lazy(() => import("./pages/Opinions"));
+const AdminOpinionsPage = lazy(() => import("./pages/admin/AdminOpinionsPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -165,6 +167,7 @@ const App = () => {
                       <Route path="/professional/:registrationNumber" element={<ProfessionalProfile />} />
                       <Route path="/transparency" element={<TransparencyPage />} />
                       <Route path="/compare" element={<ComparePage />} />
+                      <Route path="/opinions" element={<Opinions />} />
                       <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
                       <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
@@ -211,6 +214,7 @@ const App = () => {
                         <Route path="feed" element={<Suspense fallback={<LazyFallback />}><AdminFeedPage /></Suspense>} />
                         <Route path="gamification" element={<Suspense fallback={<LazyFallback />}><AdminGamificationPage /></Suspense>} />
                         <Route path="messages" element={<Suspense fallback={<LazyFallback />}><AdminMessagesPage /></Suspense>} />
+                        <Route path="opinions" element={<Suspense fallback={<LazyFallback />}><AdminOpinionsPage /></Suspense>} />
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
                       </Route>

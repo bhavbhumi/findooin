@@ -9,7 +9,7 @@ import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
-  IndianRupee, Server, Search, FileText, LogOut, ExternalLink
+  IndianRupee, Server, Search, FileText, LogOut, ExternalLink, BarChart3
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -99,6 +99,7 @@ export function AdminSidebar() {
         { title: "Events", url: "/admin/events", icon: Activity, permission: "manage_moderation" },
         { title: "Listings", url: "/admin/listings", icon: ClipboardList, permission: "manage_moderation" },
         { title: "Messages", url: "/admin/messages", icon: Mail, permission: "manage_moderation" },
+        { title: "Opinions", url: "/admin/opinions", icon: BarChart3, permission: "manage_moderation" },
         { title: "Gamification", url: "/admin/gamification", icon: TrendingUp, permission: "manage_moderation" },
       ],
     },

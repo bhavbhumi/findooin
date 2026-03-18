@@ -1545,6 +1545,171 @@ export type Database = {
         }
         Relationships: []
       }
+      opinion_comments: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          opinion_id: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          opinion_id: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          opinion_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opinion_comments_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opinion_interactions: {
+        Row: {
+          created_at: string
+          id: string
+          interaction_type: string
+          opinion_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          interaction_type: string
+          opinion_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          interaction_type?: string
+          opinion_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opinion_interactions_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opinion_votes: {
+        Row: {
+          created_at: string
+          id: string
+          is_public: boolean
+          opinion_id: string
+          selected_option: string
+          user_id: string
+          voter_role: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          opinion_id: string
+          selected_option: string
+          user_id: string
+          voter_role?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_public?: boolean
+          opinion_id?: string
+          selected_option?: string
+          user_id?: string
+          voter_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opinion_votes_opinion_id_fkey"
+            columns: ["opinion_id"]
+            isOneToOne: false
+            referencedRelation: "opinions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      opinions: {
+        Row: {
+          category: Database["public"]["Enums"]["opinion_category"]
+          comment_count: number
+          created_at: string
+          created_by: string
+          description: string
+          disclaimer_text: string | null
+          ends_at: string
+          format: Database["public"]["Enums"]["opinion_format"]
+          id: string
+          is_featured: boolean
+          like_count: number
+          options: Json
+          participation_count: number
+          share_count: number
+          starts_at: string
+          status: Database["public"]["Enums"]["opinion_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["opinion_category"]
+          comment_count?: number
+          created_at?: string
+          created_by: string
+          description?: string
+          disclaimer_text?: string | null
+          ends_at: string
+          format?: Database["public"]["Enums"]["opinion_format"]
+          id?: string
+          is_featured?: boolean
+          like_count?: number
+          options?: Json
+          participation_count?: number
+          share_count?: number
+          starts_at?: string
+          status?: Database["public"]["Enums"]["opinion_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["opinion_category"]
+          comment_count?: number
+          created_at?: string
+          created_by?: string
+          description?: string
+          disclaimer_text?: string | null
+          ends_at?: string
+          format?: Database["public"]["Enums"]["opinion_format"]
+          id?: string
+          is_featured?: boolean
+          like_count?: number
+          options?: Json
+          participation_count?: number
+          share_count?: number
+          starts_at?: string
+          status?: Database["public"]["Enums"]["opinion_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       poll_options: {
         Row: {
           created_at: string
@@ -3138,6 +3303,17 @@ export type Database = {
         | "accounts"
         | "support"
         | "complaint"
+      opinion_category:
+        | "rbi_monetary_policy"
+        | "markets_indices"
+        | "regulatory_sebi"
+        | "insurance_irdai"
+        | "mutual_funds_amfi"
+        | "banking_nbfc"
+        | "macro_india"
+        | "global_impact"
+      opinion_format: "binary" | "multiple_choice" | "scale" | "over_under"
+      opinion_status: "draft" | "active" | "closed" | "archived"
       post_kind: "normal" | "poll" | "survey"
       post_type:
         | "text"
@@ -3372,6 +3548,18 @@ export const Constants = {
         "support",
         "complaint",
       ],
+      opinion_category: [
+        "rbi_monetary_policy",
+        "markets_indices",
+        "regulatory_sebi",
+        "insurance_irdai",
+        "mutual_funds_amfi",
+        "banking_nbfc",
+        "macro_india",
+        "global_impact",
+      ],
+      opinion_format: ["binary", "multiple_choice", "scale", "over_under"],
+      opinion_status: ["draft", "active", "closed", "archived"],
       post_kind: ["normal", "poll", "survey"],
       post_type: [
         "text",
