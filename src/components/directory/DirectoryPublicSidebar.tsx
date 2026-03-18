@@ -85,7 +85,7 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel, activeT
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                 <Trophy className="h-3.5 w-3.5 text-primary" />
-                Top Contributors
+                Top {tabLabel}
               </h3>
               <Link to="/leaderboard" className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
                 Full board <ArrowRight className="h-2.5 w-2.5" />
