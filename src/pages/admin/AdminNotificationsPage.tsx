@@ -1,17 +1,6 @@
-import { AdminComingSoon } from "@/components/admin/AdminComingSoon";
+import { AdminRouteGuard } from "@/components/admin/AdminRouteGuard";
+import { AdminNotificationsManagement } from "@/components/admin/AdminNotificationsManagement";
 
 export default function AdminNotificationsPage() {
-  return (
-    <AdminComingSoon
-      title="Email & Notifications"
-      description="Manage communication channels and notification campaigns."
-      features={[
-        "Auth email template editor",
-        "Push notification campaigns (PWA)",
-        "Broadcast messaging to user segments",
-        "Notification delivery analytics",
-        "Custom email domain management",
-      ]}
-    />
-  );
+  return <AdminRouteGuard permission="manage_notifications"><AdminNotificationsManagement /></AdminRouteGuard>;
 }
