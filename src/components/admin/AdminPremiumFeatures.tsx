@@ -274,9 +274,21 @@ const INTERMEDIARY_FEATURES: FeatureSpec[] = [
     status: "ready",
     revenueImpact: "medium",
   },
+  {
+    name: "AI Compose (Add-on)",
+    icon: Sparkles,
+    description: "AI-powered post generation: draft from topic, repurpose articles/reports into social posts, auto-suggest weekly content calendar.",
+    rationale: "Solves content creation friction for busy professionals. Streams AI output in real-time. Enterprise add-on with high perceived value and low marginal cost.",
+    tier: "enterprise",
+    freeLimits: "No AI posting",
+    proLimits: "No AI posting",
+    enterpriseLimits: "Unlimited AI drafts, content repurposing, weekly auto-suggest calendar, tone controls (formal/conversational/thought-leadership/educational)",
+    effort: "medium",
+    status: "shipped",
+    revenueImpact: "high",
+  },
 ];
 
-const ISSUER_FEATURES: FeatureSpec[] = [
   {
     name: "Advanced IR Portal",
     icon: Landmark,
