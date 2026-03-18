@@ -21,7 +21,7 @@ import { formatDistanceToNow } from "date-fns";
 const statusColors: Record<string, string> = {
   draft: "bg-muted text-muted-foreground border-border",
   active: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-  suspended: "bg-destructive/10 text-destructive border-destructive/20",
+  paused: "bg-destructive/10 text-destructive border-destructive/20",
   archived: "bg-accent/10 text-accent border-accent/20",
 };
 
