@@ -2963,6 +2963,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      get_admin_module_stats: { Args: never; Returns: Json }
       get_conversations: { Args: { p_user_id: string }; Returns: Json }
       get_feed_posts: {
         Args: { p_limit?: number; p_offset?: number }

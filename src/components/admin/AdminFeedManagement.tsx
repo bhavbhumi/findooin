@@ -1,6 +1,6 @@
 /**
- * AdminFeedManagement — Admin view for managing all feed posts.
- * Provides stats, filtering, and moderation (hide, delete, view reports).
+ * AdminFeedManagement — Admin view for managing all feed posts + integrated moderation.
+ * Two tabs: "All Posts" and "Reports & Moderation".
  */
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,7 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
+import { AdminContentModeration } from "./AdminContentModeration";
+import { useAdminReports } from "@/hooks/useAdmin";
 import { toast } from "sonner";
 import {
   FileText, Search, ChevronLeft, ChevronRight, Eye, Heart,
@@ -30,6 +33,35 @@ const kindColors: Record<string, string> = {
 };
 
 export function AdminFeedManagement() {
+  const { data: reports } = useAdminReports();
+  const pendingReports = reports?.filter((r) => r.status === "pending").length || 0;
+
+  return (
+    <Tabs defaultValue="posts" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="posts" className="gap-1.5">
+          <FileText className="h-3.5 w-3.5" /> All Posts
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {pendingReports > 0 && (
+            <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">
+              {pendingReports}
+            </Badge>
+          )}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="posts" className="mt-0">
+        <FeedPostsTab />
+      </TabsContent>
+      <TabsContent value="reports" className="mt-0">
+        <AdminContentModeration />
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+function FeedPostsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [kindFilter, setKindFilter] = useState("all");
@@ -52,7 +84,6 @@ export function AdminFeedManagement() {
         : { data: [] };
       const profileMap = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
 
-      // Get interaction counts
       const postIds = (data || []).map((p) => p.id);
       const { data: interactions } = postIds.length > 0
         ? await supabase.from("post_interactions").select("post_id, interaction_type").in("post_id", postIds)

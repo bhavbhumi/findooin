@@ -1,5 +1,6 @@
+import { AdminRouteGuard } from "@/components/admin/AdminRouteGuard";
 import { InvitationsPipeline } from "@/components/admin/invitations/InvitationsPipeline";
 
 export default function AdminInvitationsPage() {
-  return <InvitationsPipeline />;
+  return <AdminRouteGuard permission="manage_invitations"><InvitationsPipeline /></AdminRouteGuard>;
 }

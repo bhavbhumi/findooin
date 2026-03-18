@@ -54,7 +54,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const AdminOverviewPage = lazy(() => import("./pages/admin/AdminOverviewPage"));
 const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminVerificationPage = lazy(() => import("./pages/admin/AdminVerificationPage"));
-const AdminModerationPage = lazy(() => import("./pages/admin/AdminModerationPage"));
+// AdminModerationPage removed — merged into Feed & Posts
 const AdminAuditPage = lazy(() => import("./pages/admin/AdminAuditPage"));
 const AdminBlogPage = lazy(() => import("./pages/admin/AdminBlogPage"));
 const AdminMonitoringPage = lazy(() => import("./pages/admin/AdminMonitoringPage"));
@@ -182,7 +182,7 @@ const App = () => {
                         <Route index element={<Suspense fallback={<LazyFallback />}><AdminOverviewPage /></Suspense>} />
                         <Route path="users" element={<Suspense fallback={<LazyFallback />}><AdminUsersPage /></Suspense>} />
                         <Route path="verification" element={<Suspense fallback={<LazyFallback />}><AdminVerificationPage /></Suspense>} />
-                        <Route path="moderation" element={<Suspense fallback={<LazyFallback />}><AdminModerationPage /></Suspense>} />
+                        {/* Moderation merged into Feed & Posts tab */}
                         <Route path="audit" element={<Suspense fallback={<LazyFallback />}><AdminAuditPage /></Suspense>} />
                         <Route path="blog" element={<Suspense fallback={<LazyFallback />}><AdminBlogPage /></Suspense>} />
                         <Route path="monitoring" element={<Suspense fallback={<LazyFallback />}><AdminMonitoringPage /></Suspense>} />
