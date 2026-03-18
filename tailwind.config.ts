@@ -112,9 +112,17 @@ export default {
           from: { opacity: "0", transform: "translateY(20px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        "shimmer": {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(100%)" },
+        "confetti1": {
+          "0%, 100%": { transform: "translateY(0) scale(1)", opacity: "0.7" },
+          "50%": { transform: "translateY(-6px) scale(1.3)", opacity: "1" },
+        },
+        "confetti2": {
+          "0%, 100%": { transform: "translateY(0) translateX(0) scale(1)", opacity: "0.5" },
+          "50%": { transform: "translateY(-4px) translateX(2px) scale(1.2)", opacity: "0.9" },
+        },
+        "confetti3": {
+          "0%, 100%": { transform: "translateY(0) scale(1)", opacity: "0.4" },
+          "50%": { transform: "translateY(-5px) translateX(-1px) scale(1.4)", opacity: "0.8" },
         },
       },
       animation: {

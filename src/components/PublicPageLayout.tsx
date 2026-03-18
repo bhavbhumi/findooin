@@ -203,14 +203,19 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                   isActive(link.to)
                     ? "text-foreground"
                     : "text-muted-foreground"
-                } ${'featured' in link && link.featured ? "overflow-hidden" : ""}`}
+                }`}
               >
+                {link.label}
                 {'featured' in link && link.featured && (
-                  <span className="absolute inset-0 rounded-md bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-[shimmer_3s_ease-in-out_infinite] pointer-events-none" />
-                )}
-                <span className="relative">{link.label}</span>
-                {'featured' in link && link.featured && (
-                  <span className="relative ml-1 inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                  <>
+                    <span className="ml-1 inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                    {/* Confetti dots */}
+                    <span className="absolute -top-0.5 -right-0.5 flex gap-[2px] pointer-events-none">
+                      <span className="w-[3px] h-[3px] rounded-full bg-primary/70 animate-[confetti1_2.5s_ease-in-out_infinite]" />
+                      <span className="w-[2px] h-[2px] rounded-full bg-accent/60 animate-[confetti2_3s_ease-in-out_infinite_0.3s]" />
+                      <span className="w-[3px] h-[3px] rounded-full bg-primary/50 animate-[confetti3_2.8s_ease-in-out_infinite_0.6s]" />
+                    </span>
+                  </>
                 )}
               </Link>
             ))}
