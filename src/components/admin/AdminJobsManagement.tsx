@@ -32,6 +32,35 @@ const statusColors: Record<string, string> = {
 const PAGE_SIZE = 15;
 
 export function AdminJobsManagement() {
+  const { data: reports } = useAdminReports();
+  const pendingReports = reports?.filter((r) => r.status === "pending").length || 0;
+
+  return (
+    <Tabs defaultValue="jobs" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="jobs" className="gap-1.5">
+          <Briefcase className="h-3.5 w-3.5" /> All Jobs
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {pendingReports > 0 && (
+            <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">
+              {pendingReports}
+            </Badge>
+          )}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="jobs" className="mt-0">
+        <JobsTab />
+      </TabsContent>
+      <TabsContent value="reports" className="mt-0">
+        <AdminContentModeration />
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+function JobsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");

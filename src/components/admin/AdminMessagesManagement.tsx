@@ -31,6 +31,35 @@ const categoryColors: Record<string, string> = {
 };
 
 export function AdminMessagesManagement() {
+  const { data: reports } = useAdminReports();
+  const pendingReports = reports?.filter((r) => r.status === "pending").length || 0;
+
+  return (
+    <Tabs defaultValue="messages" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="messages" className="gap-1.5">
+          <MessageSquare className="h-3.5 w-3.5" /> All Messages
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {pendingReports > 0 && (
+            <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">
+              {pendingReports}
+            </Badge>
+          )}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="messages" className="mt-0">
+        <MessagesTab />
+      </TabsContent>
+      <TabsContent value="reports" className="mt-0">
+        <AdminContentModeration />
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+function MessagesTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");

@@ -31,6 +31,35 @@ const statusColors: Record<string, string> = {
 const PAGE_SIZE = 15;
 
 export function AdminListingsManagement() {
+  const { data: reports } = useAdminReports();
+  const pendingReports = reports?.filter((r) => r.status === "pending").length || 0;
+
+  return (
+    <Tabs defaultValue="listings" className="space-y-4">
+      <TabsList>
+        <TabsTrigger value="listings" className="gap-1.5">
+          <ShoppingBag className="h-3.5 w-3.5" /> All Listings
+        </TabsTrigger>
+        <TabsTrigger value="reports" className="gap-1.5">
+          <Flag className="h-3.5 w-3.5" /> Reports
+          {pendingReports > 0 && (
+            <Badge variant="destructive" className="text-[9px] h-4 px-1 ml-1">
+              {pendingReports}
+            </Badge>
+          )}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="listings" className="mt-0">
+        <ListingsTab />
+      </TabsContent>
+      <TabsContent value="reports" className="mt-0">
+        <AdminContentModeration />
+      </TabsContent>
+    </Tabs>
+  );
+}
+
+function ListingsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
