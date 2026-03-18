@@ -10,11 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FindooLoader } from "@/components/FindooLoader";
+import { AdminContentModeration } from "./AdminContentModeration";
+import { useAdminReports } from "@/hooks/useAdmin";
 import { toast } from "sonner";
 import {
   Calendar, Search, ChevronLeft, ChevronRight, Eye, Users,
-  Trash2, MapPin, Clock, Globe, Monitor, Play, XCircle, CheckCircle2
+  Trash2, MapPin, Clock, Globe, Monitor, Play, XCircle, CheckCircle2, Flag
 } from "lucide-react";
 import { formatDistanceToNow, format, isPast } from "date-fns";
 
