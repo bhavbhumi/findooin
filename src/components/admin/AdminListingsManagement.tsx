@@ -185,11 +185,11 @@ export function AdminListingsManagement() {
                       </Button>
                     )}
                     {listing.status === "active" && (
-                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "suspended" })}>
-                        <Pause className="h-3 w-3" /> Suspend
+                      <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "paused" })}>
+                        <Pause className="h-3 w-3" /> Pause
                       </Button>
                     )}
-                    {listing.status === "suspended" && (
+                    {listing.status === "paused" && (
                       <Button size="sm" variant="outline" className="h-7 text-xs gap-1" onClick={() => updateListing.mutate({ id: listing.id, status: "active" })}>
                         <Play className="h-3 w-3" /> Reactivate
                       </Button>
