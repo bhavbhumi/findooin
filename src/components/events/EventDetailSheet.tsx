@@ -24,6 +24,7 @@ interface EventDetailSheetProps {
 
 export function EventDetailSheet({ event, open, onClose, onRegister, onCancelRegistration, isRegistering }: EventDetailSheetProps) {
   const { data: speakers } = useEventSpeakers(event?.id);
+  const [showReport, setShowReport] = useState(false);
 
   if (!event) return null;
 
