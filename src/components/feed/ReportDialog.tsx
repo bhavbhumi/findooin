@@ -120,7 +120,7 @@ export function ReportDialog({
       insertData.post_id = finalResourceId;
     }
 
-    const { error } = await supabase.from("reports").insert(insertData);
+    const { error } = await supabase.from("reports").insert(insertData as any);
 
     if (error) {
       toast.error("Failed to submit report");
