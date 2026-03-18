@@ -294,7 +294,7 @@ export function AdminSidebar() {
           )}
         </div>
         {!collapsed && (
-          <p className="text-[9px] text-white/20 text-center mt-1.5">FindOO Admin v2.0</p>
+          <p className="text-[9px] text-white/20 text-center mt-1.5">FindOO Admin v3.0</p>
         )}
       </SidebarFooter>
     </Sidebar>
