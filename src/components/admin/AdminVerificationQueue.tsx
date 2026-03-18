@@ -35,7 +35,8 @@ function getSLABadge(createdAt: string) {
 const PAGE_SIZE = 15;
 
 export function AdminVerificationQueue() {
-  const { data: requests, isLoading } = useVerificationQueue();
+  const [showArchived, setShowArchived] = useState(false);
+  const { data: requests, isLoading } = useVerificationQueue(showArchived);
   const review = useReviewVerification();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [adminNotes, setAdminNotes] = useState("");
