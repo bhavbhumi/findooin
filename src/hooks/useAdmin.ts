@@ -163,8 +163,8 @@ export interface AdminReport {
   description: string | null;
   status: string;
   created_at: string;
-  reporter?: { full_name: string; avatar_url: string | null };
-  reported_user?: { full_name: string; avatar_url: string | null };
+  reporter?: { full_name: string; avatar_url: string | null; roles?: string[] };
+  reported_user?: { full_name: string; avatar_url: string | null; user_type?: string; verification_status?: string; organization?: string | null; roles?: string[] };
 }
 
 export function useAdminReports() {
