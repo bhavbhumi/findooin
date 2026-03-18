@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import PublicPageLayout from "@/components/PublicPageLayout";
+import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { useSubscriptionPlans, formatPrice, getMonthlyEquivalent } from "@/hooks/useSubscriptionPlans";
 import { useRole } from "@/contexts/RoleContext";
 import { useSubscription } from "@/hooks/useSubscription";
