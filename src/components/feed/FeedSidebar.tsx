@@ -7,8 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
 import { ReferralCard } from "@/components/gamification/ReferralCard";
 import { OpinionsSidebarWidget } from "@/components/opinions/OpinionsSidebarWidget";
-import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
-import { ReferralCard } from "@/components/gamification/ReferralCard";
 
 // Lazy load non-default tabs
 const DraftsPanel = lazy(() =>
