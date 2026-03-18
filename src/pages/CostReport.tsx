@@ -1,37 +1,14 @@
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useEffect } from "react";
 
 const CostReport = () => {
-  const [, setRefreshKey] = useState(0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
-
   useEffect(() => {
     document.title = "Findoo – Development Cost & Efficiency Report";
   }, []);
-
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setRefreshKey(k => k + 1);
-      setLastRefreshed(new Date());
-      setIsRefreshing(false);
-      toast.success("Cost Report refreshed", { description: `Report data re-evaluated at ${new Date().toLocaleTimeString()}` });
-    }, 800);
-  };
 
   return (
     <div className="max-w-4xl mx-auto px-8 py-12 bg-white text-gray-900 print:p-0" style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
       {/* Action buttons */}
       <div className="print:hidden mb-6 flex items-center gap-3">
-        <button
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          className="px-6 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 font-medium border border-gray-300 flex items-center gap-2 disabled:opacity-60"
-        >
-          <svg className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
-          {isRefreshing ? "Refreshing…" : "Refresh"}
-        </button>
         <button
           onClick={() => window.print()}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
@@ -39,7 +16,7 @@ const CostReport = () => {
           📄 Save as PDF / Print
         </button>
         <span className="text-xs text-gray-400 ml-auto">
-          Last refreshed: {lastRefreshed.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+          📌 Static document · Last updated: February 2026
         </span>
       </div>
 

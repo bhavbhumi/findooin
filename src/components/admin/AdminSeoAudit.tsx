@@ -591,11 +591,25 @@ export function AdminSeoAudit() {
   const rerun = () => {
     setIsRefreshing(true);
     setTimeout(() => {
-      setChecks(runSeoChecks());
+      const prevScore = stats.score;
+      const newChecks = runSeoChecks();
+      setChecks(newChecks);
       setLastRefreshed(new Date());
       setIsRefreshing(false);
-      toast.success("SEO Audit refreshed", { description: `${checks.length} checks re-evaluated at ${new Date().toLocaleTimeString()}` });
-    }, 800);
+      const newStats = {
+        pass: newChecks.filter(c => c.status === "pass").length,
+        warn: newChecks.filter(c => c.status === "warn").length,
+        fail: newChecks.filter(c => c.status === "fail").length,
+        total: newChecks.length,
+        score: Math.round((newChecks.filter(c => c.status === "pass").length / newChecks.length) * 100),
+      };
+      const scoreDiff = newStats.score - prevScore;
+      toast.success("SEO Audit complete", {
+        description: scoreDiff === 0
+          ? `Score: ${newStats.score}% — No changes detected. ${newStats.pass} passed, ${newStats.warn} warnings, ${newStats.fail} failed.`
+          : `Score: ${newStats.score}% (${scoreDiff > 0 ? "+" : ""}${scoreDiff}%) — ${newStats.pass} passed, ${newStats.warn} warnings, ${newStats.fail} failed.`
+      });
+    }, 1200);
   };
 
   return (

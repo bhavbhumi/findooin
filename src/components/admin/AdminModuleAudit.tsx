@@ -527,21 +527,53 @@ function generateCSV(modules: AuditModule[], section: string): string {
   return csv;
 }
 
+type LiveStats = {
+  posts_total: number;
+  posts_reported: number;
+  jobs_total: number;
+  jobs_active: number;
+  jobs_applications: number;
+  events_total: number;
+  events_published: number;
+  events_registrations: number;
+  listings_total: number;
+  listings_active: number;
+  listings_enquiries: number;
+  messages_total: number;
+  reports_pending: number;
+  users_total: number;
+  users_verified: number;
+  connections_total: number;
+} | null;
+
 export function AdminModuleAudit() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
+  const [liveStats, setLiveStats] = useState<LiveStats>(null);
   const allModules = [...WEBSITE_MODULES, ...APP_MODULES, ...ADMIN_MODULES];
   const overall = useMemo(() => getModuleStats(allModules), [refreshKey]);
 
-  const handleRefresh = () => {
+  const fetchLiveStats = async () => {
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data, error } = await supabase.rpc("get_admin_module_stats");
+      if (error) throw error;
+      setLiveStats(data as unknown as LiveStats);
+    } catch {
+      // silently fail — stats are supplementary
+    }
+  };
+
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
-      setRefreshKey(k => k + 1);
-      setLastRefreshed(new Date());
-      setIsRefreshing(false);
-      toast.success("Module Audit refreshed", { description: `${allModules.length} modules re-evaluated at ${new Date().toLocaleTimeString()}` });
-    }, 800);
+    await fetchLiveStats();
+    setRefreshKey(k => k + 1);
+    setLastRefreshed(new Date());
+    setIsRefreshing(false);
+    toast.success("Module Audit refreshed", {
+      description: `${allModules.length} modules re-evaluated with live data at ${new Date().toLocaleTimeString()}`
+    });
   };
 
   const handleDownload = () => {
@@ -574,7 +606,9 @@ export function AdminModuleAudit() {
           </p>
           <p className="text-xs text-muted-foreground mt-1">
             <Clock className="inline h-3 w-3 mr-1" />
-            Last refreshed: {lastRefreshed.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+            {lastRefreshed
+              ? `Last refreshed: ${lastRefreshed.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}`
+              : "Click Refresh to fetch live stats"}
           </p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
@@ -615,6 +649,46 @@ export function AdminModuleAudit() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Live Platform Stats */}
+      {liveStats && (
+        <Card className="border-primary/20">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              Live Platform Stats
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 text-center">
+              {[
+                { label: "Users", value: liveStats.users_total, sub: `${liveStats.users_verified} verified` },
+                { label: "Posts", value: liveStats.posts_total, sub: `${liveStats.posts_reported} reported` },
+                { label: "Jobs", value: liveStats.jobs_total, sub: `${liveStats.jobs_active} active` },
+                { label: "Events", value: liveStats.events_total, sub: `${liveStats.events_published} published` },
+                { label: "Listings", value: liveStats.listings_total, sub: `${liveStats.listings_active} active` },
+                { label: "Messages", value: liveStats.messages_total },
+                { label: "Connections", value: liveStats.connections_total },
+                { label: "Pending Reports", value: liveStats.reports_pending },
+              ].map(s => (
+                <div key={s.label} className="p-2 rounded-lg bg-muted/50">
+                  <p className="text-lg font-bold">{s.value.toLocaleString()}</p>
+                  <p className="text-[10px] text-muted-foreground font-medium">{s.label}</p>
+                  {s.sub && <p className="text-[9px] text-muted-foreground">{s.sub}</p>}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {!liveStats && !lastRefreshed && (
+        <Card className="border-dashed border-muted-foreground/30">
+          <CardContent className="py-4 text-center text-sm text-muted-foreground">
+            Click <strong>Refresh</strong> to fetch live platform statistics from the database.
+          </CardContent>
+        </Card>
+      )}
 
       {/* Tabs */}
       <Tabs defaultValue="website" className="print:hidden">
