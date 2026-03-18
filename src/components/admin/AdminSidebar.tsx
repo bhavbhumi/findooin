@@ -236,7 +236,7 @@ export function AdminSidebar() {
 
       <SidebarFooter className="p-3">
         {!collapsed && (
-          <p className="text-[10px] text-sidebar-foreground/40 text-center">
+          <p className="text-[10px] text-white/30 text-center">
             FindOO Admin v2.0
           </p>
         )}
