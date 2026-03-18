@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
+import { ROLE_CONFIG } from "@/lib/role-config";
 import {
   Flag, CheckCircle2, XCircle, Trash2, FileText, User, Search, Filter,
   AlertTriangle, ShieldAlert, AlertOctagon, Info, ChevronLeft, ChevronRight,
-  BarChart3, Clock, TrendingDown, Users
+  BarChart3, Clock, TrendingDown, Users, ShieldCheck, Building2
 } from "lucide-react";
 import { formatDistanceToNow, isToday, subDays } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -192,18 +194,71 @@ export function AdminContentModeration() {
                       {report.description && (
                         <p className="text-xs text-muted-foreground bg-muted/50 rounded p-2 border border-border line-clamp-2">{report.description}</p>
                       )}
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <User className="h-3 w-3" />
-                          Reporter: {report.reporter?.full_name || "Unknown"}
-                        </span>
+                      {/* Reporter & Reported User Cards */}
+                      <div className="flex flex-wrap gap-3 text-xs">
+                        {/* Reporter */}
+                        <div className="flex items-center gap-2 bg-muted/40 rounded-lg px-2.5 py-1.5 border border-border">
+                          <AvatarWithFallback
+                            src={report.reporter?.avatar_url || undefined}
+                            initials={(report.reporter?.full_name || "U").slice(0, 2).toUpperCase()}
+                            className="h-6 w-6 text-[9px]"
+                          />
+                          <div>
+                            <div className="flex items-center gap-1">
+                              <span className="text-muted-foreground">Reporter:</span>
+                              <span className="font-medium text-foreground">{report.reporter?.full_name || "Unknown"}</span>
+                            </div>
+                            {report.reporter?.roles?.length > 0 && (
+                              <div className="flex gap-1 mt-0.5">
+                                {report.reporter.roles.map((role: string) => {
+                                  const rc = ROLE_CONFIG[role];
+                                  return rc ? (
+                                    <span key={role} className={`text-[9px] px-1 py-0 rounded-full ${rc.bgColor}`}>{rc.label}</span>
+                                  ) : null;
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Reported User */}
                         {report.reported_user && (
-                          <span className="flex items-center gap-1">
-                            Reported: {report.reported_user.full_name}
-                          </span>
+                          <div className="flex items-center gap-2 bg-destructive/5 rounded-lg px-2.5 py-1.5 border border-destructive/20">
+                            <AvatarWithFallback
+                              src={report.reported_user.avatar_url || undefined}
+                              initials={(report.reported_user.full_name || "U").slice(0, 2).toUpperCase()}
+                              className="h-6 w-6 text-[9px]"
+                            />
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-muted-foreground">Reported:</span>
+                                <span className="font-medium text-foreground">{report.reported_user.full_name}</span>
+                                {report.reported_user.verification_status === "verified" && (
+                                  <ShieldCheck className="h-3 w-3 text-accent" />
+                                )}
+                                {report.reported_user.user_type === "entity" ? (
+                                  <Building2 className="h-3 w-3 text-muted-foreground" />
+                                ) : (
+                                  <User className="h-3 w-3 text-muted-foreground" />
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1 mt-0.5">
+                                {report.reported_user.organization && (
+                                  <span className="text-[9px] text-muted-foreground">{report.reported_user.organization}</span>
+                                )}
+                                {report.reported_user.roles?.length > 0 && report.reported_user.roles.map((role: string) => {
+                                  const rc = ROLE_CONFIG[role];
+                                  return rc ? (
+                                    <span key={role} className={`text-[9px] px-1 py-0 rounded-full ${rc.bgColor}`}>{rc.label}</span>
+                                  ) : null;
+                                })}
+                              </div>
+                            </div>
+                          </div>
                         )}
+
                         {report.post_id && (
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center gap-1 text-muted-foreground self-center">
                             <FileText className="h-3 w-3" /> Post reported
                           </span>
                         )}

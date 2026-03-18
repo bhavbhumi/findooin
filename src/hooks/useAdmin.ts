@@ -163,8 +163,8 @@ export interface AdminReport {
   description: string | null;
   status: string;
   created_at: string;
-  reporter?: { full_name: string; avatar_url: string | null };
-  reported_user?: { full_name: string; avatar_url: string | null };
+  reporter?: { full_name: string; avatar_url: string | null; roles?: string[] };
+  reported_user?: { full_name: string; avatar_url: string | null; user_type?: string; verification_status?: string; organization?: string | null; roles?: string[] };
 }
 
 export function useAdminReports() {
@@ -184,15 +184,26 @@ export function useAdminReports() {
 
       const { data: profiles } = await supabase
         .from("profiles")
-        .select("id, full_name, avatar_url")
+        .select("id, full_name, avatar_url, display_name, user_type, verification_status, organization")
         .in("id", userIds);
+
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("user_id, role")
+        .in("user_id", userIds);
+
+      const roleMap: Record<string, string[]> = {};
+      (roles || []).forEach((r: any) => {
+        if (!roleMap[r.user_id]) roleMap[r.user_id] = [];
+        roleMap[r.user_id].push(r.role);
+      });
 
       const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p]));
 
       return (data || []).map((r: any) => ({
         ...r,
-        reporter: profileMap[r.reporter_id] || null,
-        reported_user: r.reported_user_id ? profileMap[r.reported_user_id] || null : null,
+        reporter: profileMap[r.reporter_id] ? { ...profileMap[r.reporter_id], roles: roleMap[r.reporter_id] || [] } : null,
+        reported_user: r.reported_user_id && profileMap[r.reported_user_id] ? { ...profileMap[r.reported_user_id], roles: roleMap[r.reported_user_id] || [] } : null,
       }));
     },
     staleTime: 10_000,
