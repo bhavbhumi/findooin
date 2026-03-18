@@ -261,7 +261,7 @@ export default function Opinions() {
 
   if (userId) {
     return (
-      <AppLayout>
+      <AppLayout maxWidth="max-w-6xl">
         <PageTransition>
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-foreground">Professional Opinions</h1>
