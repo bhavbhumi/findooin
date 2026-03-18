@@ -117,7 +117,6 @@ export function AdminSidebar() {
       label: "Content & Support",
       items: [
         { title: "Blog", url: "/admin/blog", icon: BookOpen, permission: "manage_blog" },
-        { title: "Moderation", url: "/admin/moderation", icon: Flag, permission: "manage_moderation" },
         { title: "Support Tickets", url: "/admin/support", icon: LifeBuoy, permission: "manage_support" },
         { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen, permission: "manage_kb" },
       ],
