@@ -29,8 +29,6 @@ const statusColors: Record<string, string> = {
 const PAGE_SIZE = 15;
 
 export function AdminJobsManagement() {
-
-function JobsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");

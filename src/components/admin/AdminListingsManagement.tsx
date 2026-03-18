@@ -28,8 +28,6 @@ const statusColors: Record<string, string> = {
 const PAGE_SIZE = 15;
 
 export function AdminListingsManagement() {
-
-function ListingsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");

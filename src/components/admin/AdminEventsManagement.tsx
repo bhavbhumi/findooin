@@ -34,8 +34,6 @@ const modeIcons: Record<string, typeof Globe> = {
 const PAGE_SIZE = 15;
 
 export function AdminEventsManagement() {
-
-function EventsTab() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
