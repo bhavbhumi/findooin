@@ -25,7 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 const MemoizedJobsSidebar = memo(JobsSidebar);
 
 const Jobs = () => {
-  usePageMeta({ title: "BFSI Jobs", description: "India's only BFSI-focused job board — find or post finance, compliance, and advisory roles." });
+  usePageMeta({ title: "BFSI Jobs", description: "India's only BFSI-focused job board — find or post finance, compliance, and advisory roles.", path: "/jobs" });
   const { activeRole, userId } = useRole();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");

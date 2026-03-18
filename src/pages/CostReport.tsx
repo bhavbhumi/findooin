@@ -1,9 +1,7 @@
-import { useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const CostReport = () => {
-  useEffect(() => {
-    document.title = "Findoo – Development Cost & Efficiency Report";
-  }, []);
+  usePageMeta({ title: "Development Cost Report", description: "FindOO development cost and efficiency analysis.", path: "/cost-report" });
 
   return (
     <div className="max-w-4xl mx-auto px-8 py-12 bg-white text-gray-900 print:p-0" style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>

@@ -43,7 +43,7 @@ const faqs = [
 ];
 
 const CommunityGuidelines = () => {
-  usePageMeta({ title: "Community Guidelines", description: "FindOO community guidelines and FAQs — professional conduct standards for India's financial network." });
+  usePageMeta({ title: "Community Guidelines", description: "FindOO community guidelines and FAQs — professional conduct standards for India's financial network.", path: "/community-guidelines" });
   const [activeTab, setActiveTab] = useState("Guidelines");
 
   return (

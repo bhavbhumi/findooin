@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion } from "framer-motion";
 import { Download, Share, MoreVertical, Plus, Smartphone, Monitor, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const Install = () => {
+  usePageMeta({ title: "Install FindOO", description: "Install FindOO as a Progressive Web App on your device.", path: "/install" });
   const navigate = useNavigate();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 
 const ResetPassword = () => {
+  usePageMeta({ title: "Reset Password", description: "Reset your FindOO account password.", path: "/reset-password" });
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);

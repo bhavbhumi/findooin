@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,7 @@ const needsVerification = (roles: Role[]) =>
 const TOTAL_STEPS = 5; // Step 5 = verification nudge (conditional)
 
 const Onboarding = () => {
+  usePageMeta({ title: "Onboarding", description: "Complete your FindOO profile setup.", path: "/onboarding" });
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState<UserType | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<Role[]>(["investor"]);

@@ -696,7 +696,7 @@ const tabContentMap: Record<string, React.FC> = {
 };
 
 const Explore = () => {
-  usePageMeta({ title: "Explore", description: "Discover what FindOO is, why it exists, how it works, and who it's for." });
+  usePageMeta({ title: "Explore", description: "Discover what FindOO is, why it exists, how it works, and who it's for.", path: "/explore" });
   const [activeTab, setActiveTab] = useState("What is FindOO");
   const Content = tabContentMap[activeTab];
 

@@ -23,7 +23,7 @@ const LOCKOUT_DURATION_MS = 60_000; // 1 minute
 const REQUEST_TIMEOUT_MS = 30_000;
 
 const Auth = () => {
-  usePageMeta({ title: "Sign In", description: "Sign in or create your FindOO account." });
+  usePageMeta({ title: "Sign In", description: "Sign in or create your FindOO account.", path: "/auth" });
   const [searchParams] = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(searchParams.get("mode") === "signup");
   const [email, setEmail] = useState("");

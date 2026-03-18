@@ -29,7 +29,7 @@ interface NetworkUser {
 const MemoizedNetworkSidebar = memo(NetworkSidebar);
 
 const Network = () => {
-  usePageMeta({ title: "Network", description: "Build your trust network — connect with verified financial professionals." });
+  usePageMeta({ title: "Network", description: "Build your trust network — connect with verified financial professionals.", path: "/network" });
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");

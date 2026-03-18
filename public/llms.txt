@@ -38,6 +38,7 @@ https://findoo.in/sitemap.xml
 ## Public Pages
 - Homepage: https://findoo.in/
 - About: https://findoo.in/about
+- Opinions: https://findoo.in/opinions
 - Explore: https://findoo.in/explore
 - Compare: https://findoo.in/compare
 - Blog: https://findoo.in/blog
