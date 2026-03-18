@@ -359,6 +359,9 @@ export function AdminUserManagement() {
                           <Shield className="h-2.5 w-2.5" /> Staff
                         </Badge>
                       )}
+                      <Badge variant="outline" className={`text-[9px] h-4 px-1 gap-0.5 ${aBadge.className}`}>
+                        <ActivityIcon className="h-2.5 w-2.5" /> {aBadge.label}
+                      </Badge>
                     </div>
                     <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                       {u.roles?.map((r: any) => {
@@ -371,8 +374,14 @@ export function AdminUserManagement() {
                       })}
                       <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                         <Clock className="h-2.5 w-2.5" />
-                        {formatDistanceToNow(new Date(u.created_at), { addSuffix: true })}
+                        Joined {formatDistanceToNow(new Date(u.created_at), { addSuffix: true })}
                       </span>
+                      {u.activity?.last_active_at && (
+                        <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                          · <Activity className="h-2.5 w-2.5" />
+                          Last active {formatDistanceToNow(new Date(u.activity.last_active_at), { addSuffix: true })}
+                        </span>
+                      )}
                       {u.location && (
                         <span className="text-[10px] text-muted-foreground">· {u.location}</span>
                       )}
