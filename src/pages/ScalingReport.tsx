@@ -30,19 +30,29 @@ const breakpointData = [
 ];
 
 const ScalingReport = () => {
+  const [, setRefreshKey] = useState(0);
+
   useEffect(() => {
     document.title = "Findoo – Infrastructure Scaling & Cost Report";
   }, []);
 
   return (
     <div className="max-w-4xl mx-auto px-8 py-12 bg-white text-gray-900 print:p-0" style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" }}>
-      {/* Print button */}
-      <button
-        onClick={() => window.print()}
-        className="print:hidden mb-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
-      >
-        📄 Save as PDF / Print
-      </button>
+      {/* Action buttons */}
+      <div className="print:hidden mb-6 flex gap-3">
+        <button
+          onClick={() => setRefreshKey(k => k + 1)}
+          className="px-6 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 font-medium border border-gray-300"
+        >
+          🔄 Refresh
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+        >
+          📄 Save as PDF / Print
+        </button>
+      </div>
 
       {/* Header */}
       <div className="text-center mb-10 border-b-2 border-gray-800 pb-6">

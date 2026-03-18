@@ -561,6 +561,9 @@ export function AdminModuleAudit() {
           </p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => setRefreshKey(k => k + 1)}>
+            <RefreshCw className="h-4 w-4" /> Refresh
+          </Button>
           <Button variant="outline" size="sm" className="gap-2" onClick={handleDownload}>
             <Download className="h-4 w-4" /> Download CSV
           </Button>
