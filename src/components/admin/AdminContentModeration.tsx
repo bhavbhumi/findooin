@@ -13,7 +13,7 @@ import { ROLE_CONFIG } from "@/lib/role-config";
 import {
   Flag, CheckCircle2, XCircle, Trash2, FileText, User, Search, Filter,
   AlertTriangle, ShieldAlert, AlertOctagon, Info, ChevronLeft, ChevronRight,
-  BarChart3, Users, ShieldCheck, Building2, MessageSquare, Eye
+  BarChart3, Users, ShieldCheck, Building2, MessageSquare, Eye, Archive
 } from "lucide-react";
 import { formatDistanceToNow, isToday } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
