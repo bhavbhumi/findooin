@@ -260,6 +260,7 @@ export default function Opinions() {
   usePageMeta({
     title: "Professional Opinions — FindOO",
     description: "Track professional sentiment on RBI policy, SEBI regulations, markets, and the Indian BFSI ecosystem. No betting — pure professional insight.",
+    path: "/opinions",
   });
 
   return (
