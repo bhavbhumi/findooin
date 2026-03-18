@@ -3,6 +3,7 @@
  * Runs client-side checks against all known routes and meta configuration.
  */
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 import { CheckCircle2, XCircle, AlertTriangle, Search, RefreshCw, Printer, Globe, FileText, Code, Image, Link2, Shield, Bot, Rss } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
