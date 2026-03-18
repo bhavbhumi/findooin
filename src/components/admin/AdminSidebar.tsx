@@ -9,7 +9,8 @@ import {
   LayoutDashboard, ShieldCheck, Users, Flag, BookOpen, Activity,
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
-  IndianRupee, Server, Search, FileText, LogOut, ExternalLink, BarChart3
+  IndianRupee, Server, Search, FileText, LogOut, ExternalLink, BarChart3,
+  Crown
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -132,6 +133,7 @@ export function AdminSidebar() {
         { title: "Scaling Report", url: "/admin/scaling-report", icon: Server, permission: "view_scaling_report" },
         { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, permission: "manage_features" },
         { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true, permission: "manage_billing" },
+        { title: "Premium Spec", url: "/admin/premium-features", icon: Crown, permission: "manage_billing" },
       ],
     },
   ];

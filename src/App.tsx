@@ -103,6 +103,7 @@ const Bookmarks = lazy(() => import("./pages/Bookmarks"));
 const Opinions = lazy(() => import("./pages/Opinions"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const AdminOpinionsPage = lazy(() => import("./pages/admin/AdminOpinionsPage"));
+const AdminPremiumFeaturesPage = lazy(() => import("./pages/admin/AdminPremiumFeaturesPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -214,6 +215,7 @@ const App = () => {
                         <Route path="gamification" element={<Suspense fallback={<LazyFallback />}><AdminGamificationPage /></Suspense>} />
                         <Route path="messages" element={<Suspense fallback={<LazyFallback />}><AdminMessagesPage /></Suspense>} />
                         <Route path="opinions" element={<Suspense fallback={<LazyFallback />}><AdminOpinionsPage /></Suspense>} />
+                        <Route path="premium-features" element={<Suspense fallback={<LazyFallback />}><AdminPremiumFeaturesPage /></Suspense>} />
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
                       </Route>
