@@ -289,6 +289,7 @@ const INTERMEDIARY_FEATURES: FeatureSpec[] = [
   },
 ];
 
+const ISSUER_FEATURES: FeatureSpec[] = [
   {
     name: "Advanced IR Portal",
     icon: Landmark,
