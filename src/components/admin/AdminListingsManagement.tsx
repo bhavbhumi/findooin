@@ -39,10 +39,15 @@ export function AdminListingsManagement() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("listings")
-        .select("*, profiles:user_id(full_name, display_name, avatar_url)")
+        .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data || [];
+      const ownerIds = [...new Set((data || []).map((l) => l.user_id))];
+      const { data: profiles } = ownerIds.length > 0
+        ? await supabase.from("profiles").select("id, full_name, display_name, avatar_url").in("id", ownerIds)
+        : { data: [] };
+      const profileMap = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
+      return (data || []).map((l) => ({ ...l, owner_profile: profileMap[l.user_id] || null }));
     },
   });
 

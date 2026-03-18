@@ -40,10 +40,16 @@ export function AdminJobsManagement() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("jobs")
-        .select("*, profiles:poster_id(full_name, display_name, avatar_url)")
+        .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data || [];
+      // Fetch poster profiles
+      const posterIds = [...new Set((data || []).map((j) => j.poster_id))];
+      const { data: profiles } = posterIds.length > 0
+        ? await supabase.from("profiles").select("id, full_name, display_name, avatar_url").in("id", posterIds)
+        : { data: [] };
+      const profileMap = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
+      return (data || []).map((j) => ({ ...j, poster_profile: profileMap[j.poster_id] || null }));
     },
   });
 
