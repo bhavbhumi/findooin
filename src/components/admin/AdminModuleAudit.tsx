@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import {
   Download, Printer, CheckCircle2, AlertTriangle, XCircle, Clock,
-  Globe, Smartphone, Shield, ChevronDown, ChevronUp
+  Globe, Smartphone, Shield, ChevronDown, ChevronUp, RefreshCw
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
