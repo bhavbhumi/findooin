@@ -69,9 +69,9 @@ interface ReportDialogProps {
   /** Resource type being reported */
   resourceType?: string;
   /** ID of the resource (job, event, listing, message) */
-  resourceId: string;
+  resourceId?: string;
   /** User ID of the content owner */
-  reportedUserId: string;
+  reportedUserId?: string;
   /** @deprecated Use resourceId + resourceType instead */
   postId?: string;
   /** @deprecated Use reportedUserId instead */
