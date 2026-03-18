@@ -209,7 +209,7 @@ export function AdminSidebar() {
           return (
             <Collapsible key={section.label} defaultOpen={sectionHasActive} className="group/collapsible">
               <SidebarGroup>
-                <SidebarGroupLabel asChild className="text-[10px] uppercase tracking-wider text-sidebar-foreground/50 hover:bg-sidebar-accent/50 rounded-md cursor-pointer">
+                <SidebarGroupLabel asChild className="text-[10px] uppercase tracking-wider text-white/40 hover:bg-white/5 rounded-md cursor-pointer">
                   <CollapsibleTrigger className="flex w-full items-center justify-between">
                     <span>{section.label}</span>
                     <ChevronRight className="h-3 w-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
