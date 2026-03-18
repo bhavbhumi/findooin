@@ -887,6 +887,48 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_flags: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string
+          flag_key: string
+          id: string
+          is_enabled: boolean
+          label: string
+          metadata: Json | null
+          rollout_percentage: number
+          target_segment: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string
+          flag_key: string
+          id?: string
+          is_enabled?: boolean
+          label: string
+          metadata?: Json | null
+          rollout_percentage?: number
+          target_segment?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string
+          flag_key?: string
+          id?: string
+          is_enabled?: boolean
+          label?: string
+          metadata?: Json | null
+          rollout_percentage?: number
+          target_segment?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       featured_posts: {
         Row: {
           created_at: string
