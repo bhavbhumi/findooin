@@ -198,6 +198,12 @@ export function AdminVerificationQueue() {
         <Button variant="ghost" size="sm" onClick={() => setSortDir(prev => prev === "asc" ? "desc" : "asc")}>
           <SortIcon className="h-3.5 w-3.5" />
         </Button>
+        <div className="flex items-center gap-2">
+          <Switch id="verif-archive" checked={showArchived} onCheckedChange={v => { setShowArchived(v); setPage(1); }} />
+          <Label htmlFor="verif-archive" className="text-xs text-muted-foreground cursor-pointer flex items-center gap-1">
+            <Archive className="h-3 w-3" /> Show archived
+          </Label>
+        </div>
       </div>
 
       {/* Bulk Actions */}
