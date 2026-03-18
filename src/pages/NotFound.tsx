@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 
 const NotFound = () => {
+  usePageMeta({ title: "Page Not Found", description: "The page you're looking for doesn't exist on FindOO." });
   const location = useLocation();
 
   useEffect(() => {

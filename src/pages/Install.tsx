@@ -13,6 +13,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const Install = () => {
+  usePageMeta({ title: "Install FindOO", description: "Install FindOO as a Progressive Web App on your device.", path: "/install" });
   const navigate = useNavigate();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
