@@ -24,6 +24,7 @@ export const ListingDetailSheet = ({ listing, open, onOpenChange }: ListingDetai
   const [reviewText, setReviewText] = useState("");
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [showReview, setShowReview] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   const { data: reviews } = useListingReviews(listing?.id ?? null);
   const submitReview = useSubmitReview();
