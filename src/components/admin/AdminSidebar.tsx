@@ -239,11 +239,39 @@ export function AdminSidebar() {
         })}
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 space-y-2 border-t border-white/10">
+        {/* Admin user card */}
+        <div className={`flex items-center gap-2.5 rounded-lg bg-white/10 p-2.5 ${collapsed ? "justify-center" : ""}`}>
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(43,72%,53%)]/20">
+            <Shield className="h-3.5 w-3.5 text-[hsl(43,72%,53%)]" />
+          </div>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-white truncate">Administrator</p>
+              <p className="text-[10px] text-white/40 truncate">Full access</p>
+            </div>
+          )}
+        </div>
+
+        {/* Action links */}
         {!collapsed && (
-          <p className="text-[10px] text-white/30 text-center">
-            FindOO Admin v2.0
-          </p>
+          <div className="space-y-0.5">
+            <button
+              onClick={() => navigate("/feed")}
+              className="flex items-center gap-2 text-[11px] text-white/50 hover:text-white transition-colors px-2.5 py-1.5 w-full rounded-md hover:bg-white/5"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Back to App
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 text-[11px] text-white/50 hover:text-white transition-colors px-2.5 py-1.5 w-full rounded-md hover:bg-white/5"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Sign Out
+            </button>
+            <p className="text-[9px] text-white/20 text-center pt-1">FindOO Admin v2.0</p>
+          </div>
         )}
       </SidebarFooter>
     </Sidebar>
