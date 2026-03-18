@@ -54,7 +54,7 @@ const Admin = lazy(() => import("./pages/Admin"));
 const AdminOverviewPage = lazy(() => import("./pages/admin/AdminOverviewPage"));
 const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminVerificationPage = lazy(() => import("./pages/admin/AdminVerificationPage"));
-const AdminModerationPage = lazy(() => import("./pages/admin/AdminModerationPage"));
+// AdminModerationPage removed — merged into Feed & Posts
 const AdminAuditPage = lazy(() => import("./pages/admin/AdminAuditPage"));
 const AdminBlogPage = lazy(() => import("./pages/admin/AdminBlogPage"));
 const AdminMonitoringPage = lazy(() => import("./pages/admin/AdminMonitoringPage"));
