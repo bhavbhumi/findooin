@@ -3,6 +3,7 @@
  * Runs client-side checks against all known routes and meta configuration.
  */
 import { useState, useMemo } from "react";
+import { toast } from "sonner";
 import { CheckCircle2, XCircle, AlertTriangle, Search, RefreshCw, Printer, Globe, FileText, Code, Image, Link2, Shield, Bot, Rss } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -559,6 +560,8 @@ const STATUS_CONFIG = {
 export function AdminSeoAudit() {
   const [checks, setChecks] = useState<SeoCheck[]>(() => runSeoChecks());
   const [activeTab, setActiveTab] = useState("all");
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
   const stats = useMemo(() => {
     const pass = checks.filter(c => c.status === "pass").length;
@@ -585,7 +588,15 @@ export function AdminSeoAudit() {
     return categories.filter(([cat]) => cat.toLowerCase().includes(activeTab));
   }, [categories, activeTab]);
 
-  const rerun = () => setChecks(runSeoChecks());
+  const rerun = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setChecks(runSeoChecks());
+      setLastRefreshed(new Date());
+      setIsRefreshing(false);
+      toast.success("SEO Audit refreshed", { description: `${checks.length} checks re-evaluated at ${new Date().toLocaleTimeString()}` });
+    }, 800);
+  };
 
   return (
     <div className="space-y-6">
@@ -595,10 +606,15 @@ export function AdminSeoAudit() {
           <p className="text-muted-foreground text-sm mt-1">
             End-to-end SEO analysis across meta tags, structured data, accessibility, and performance.
           </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            <Search className="inline h-3 w-3 mr-1" />
+            Last refreshed: {lastRefreshed.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+          </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={rerun}>
-            <RefreshCw className="h-4 w-4 mr-1" /> Re-run
+          <Button variant="outline" size="sm" onClick={rerun} disabled={isRefreshing}>
+            <RefreshCw className={`h-4 w-4 mr-1 ${isRefreshing ? "animate-spin" : ""}`} />
+            {isRefreshing ? "Running…" : "Re-run"}
           </Button>
           <Button variant="outline" size="sm" onClick={() => window.print()}>
             <Printer className="h-4 w-4 mr-1" /> Print
