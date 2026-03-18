@@ -9,3 +9,5 @@ project_id = "qvzvhmuosxdaqxwyokpg"
     verify_jwt = false
   [functions.cleanup-stale-data]
     verify_jwt = false
+  [functions.purge-seed-data]
+    verify_jwt = false

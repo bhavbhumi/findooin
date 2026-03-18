@@ -287,12 +287,13 @@ export function useAdminUsers() {
       const userIds = (profiles || []).map((p: any) => p.id);
       if (userIds.length === 0) return [];
 
-      const [rolesRes, activityRes] = await Promise.all([
+      const [rolesRes, activityRes, seedIdsRes] = await Promise.all([
         supabase
           .from("user_roles")
           .select("user_id, role, sub_type")
           .in("user_id", userIds),
         supabase.rpc("get_users_activity_status", { p_user_ids: userIds }),
+        supabase.rpc("get_seed_user_ids"),
       ]);
 
       const roleMap: Record<string, any[]> = {};
@@ -306,10 +307,13 @@ export function useAdminUsers() {
         activityMap[a.user_id] = { status: a.status, last_active_at: a.last_active_at, days_inactive: Number(a.days_inactive) };
       });
 
+      const seedUserIds = new Set<string>((seedIdsRes.data as string[]) || []);
+
       return (profiles || []).map((p: any) => ({
         ...p,
         roles: roleMap[p.id] || [],
         activity: activityMap[p.id] || { status: "dormant", last_active_at: p.created_at, days_inactive: 999 },
+        is_seed: seedUserIds.has(p.id),
       }));
     },
     ...ADMIN_CACHE,
