@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
+import { ROLE_CONFIG } from "@/lib/role-config";
 import {
   Flag, CheckCircle2, XCircle, Trash2, FileText, User, Search, Filter,
   AlertTriangle, ShieldAlert, AlertOctagon, Info, ChevronLeft, ChevronRight,
-  BarChart3, Clock, TrendingDown, Users
+  BarChart3, Clock, TrendingDown, Users, ShieldCheck, Building2
 } from "lucide-react";
 import { formatDistanceToNow, isToday, subDays } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
