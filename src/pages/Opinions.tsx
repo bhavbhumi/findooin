@@ -256,24 +256,6 @@ export default function Opinions() {
     description: "Track professional sentiment on RBI policy, SEBI regulations, markets, and the Indian BFSI ecosystem. No betting — pure professional insight.",
   });
 
-  const { userId } = useRole();
-
-  if (userId) {
-    return (
-      <AppLayout maxWidth="max-w-6xl">
-        <PageTransition>
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-foreground">Professional Opinions</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Track BFSI professional sentiment on policy, markets, and regulation.
-            </p>
-          </div>
-          <OpinionsContent />
-        </PageTransition>
-      </AppLayout>
-    );
-  }
-
   return (
     <PublicPageLayout>
       <PageTransition>
