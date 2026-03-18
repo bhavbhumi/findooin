@@ -4,34 +4,24 @@
  * Flow:
  * 1. Checks for active Supabase session → redirects to /auth if none
  * 2. Checks `profiles.onboarding_completed` → redirects to /onboarding if false
- * 3. Shows splash screen once per browser session (post-login branding)
- * 4. Listens for SIGNED_OUT events to redirect immediately
+ * 3. Listens for SIGNED_OUT events to redirect immediately
  *
  * The `requireOnboarding` prop can be set to false for pages that
  * should be accessible before onboarding (e.g., the onboarding page itself).
  */
-import { useEffect, useState, useCallback, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { SplashScreen } from "@/components/SplashScreen";
+import { FindooLoader } from "@/components/FindooLoader";
 
 interface Props {
   children: ReactNode;
   requireOnboarding?: boolean;
 }
 
-// Track if post-login splash has been shown this session
-let sessionSplashShown = false;
-
 export default function ProtectedRoute({ children, requireOnboarding = true }: Props) {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
-  const [showSplash, setShowSplash] = useState(false);
-
-  const handleSplashComplete = useCallback(() => {
-    sessionSplashShown = true;
-    setShowSplash(false);
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -61,9 +51,6 @@ export default function ProtectedRoute({ children, requireOnboarding = true }: P
         }
 
         if (!cancelled) {
-          if (!sessionSplashShown) {
-            setShowSplash(true);
-          }
           setReady(true);
         }
       } catch (error) {
@@ -76,7 +63,6 @@ export default function ProtectedRoute({ children, requireOnboarding = true }: P
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") {
-        sessionSplashShown = false;
         navigate("/auth", { replace: true });
       }
     });
@@ -90,13 +76,9 @@ export default function ProtectedRoute({ children, requireOnboarding = true }: P
   if (!ready) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <SplashScreen onComplete={handleSplashComplete} duration={2000} />
+        <FindooLoader />
       </div>
     );
-  }
-
-  if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} duration={2000} />;
   }
 
   return <>{children}</>;
