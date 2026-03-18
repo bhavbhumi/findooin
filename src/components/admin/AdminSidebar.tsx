@@ -207,7 +207,7 @@ export function AdminSidebar() {
           const sectionHasActive = section.items.some((item) =>
             item.end ? location.pathname === item.url : location.pathname.startsWith(item.url)
           );
-          const isOverview = section.label === "Overview";
+          const isOverview = section.label === "Dashboard";
 
           if (isOverview || collapsed) {
             return (
