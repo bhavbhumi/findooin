@@ -132,6 +132,7 @@ export function AdminSidebar() {
         { title: "Scaling Report", url: "/admin/scaling-report", icon: Server, permission: "view_scaling_report" },
         { title: "Feature Flags", url: "/admin/features", icon: ToggleLeft, permission: "manage_features" },
         { title: "Billing", url: "/admin/billing", icon: CreditCard, soon: true, permission: "manage_billing" },
+        { title: "Premium Spec", url: "/admin/premium-features", icon: Crown, permission: "manage_billing" },
       ],
     },
   ];
