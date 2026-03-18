@@ -75,7 +75,7 @@ The Grievance Officer shall acknowledge complaints within 24 hours and resolve t
 ];
 
 const Privacy = () => {
-  usePageMeta({ title: "Privacy Policy", description: "FindOO Privacy Policy — DPDP Act 2023 and IT Act compliant, Indian jurisdiction." });
+  usePageMeta({ title: "Privacy Policy", description: "FindOO Privacy Policy — DPDP Act 2023 and IT Act compliant, Indian jurisdiction.", path: "/privacy" });
   return (
     <PublicPageLayout>
       <PageHero
