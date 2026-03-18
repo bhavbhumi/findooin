@@ -184,8 +184,19 @@ export function useAdminReports() {
 
       const { data: profiles } = await supabase
         .from("profiles")
-        .select("id, full_name, avatar_url")
+        .select("id, full_name, avatar_url, display_name, user_type, verification_status, organization")
         .in("id", userIds);
+
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("user_id, role")
+        .in("user_id", userIds);
+
+      const roleMap: Record<string, string[]> = {};
+      (roles || []).forEach((r: any) => {
+        if (!roleMap[r.user_id]) roleMap[r.user_id] = [];
+        roleMap[r.user_id].push(r.role);
+      });
 
       const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p]));
 
