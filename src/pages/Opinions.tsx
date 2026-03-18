@@ -97,10 +97,11 @@ export default function Opinions() {
     <PublicPageLayout>
       <PageTransition>
         <PageHero
-          title="Professional Opinions"
+          breadcrumb="Opinions"
+          title="Professional"
+          titleAccent="Opinions"
           subtitle="Track BFSI professional sentiment on policy, markets, and regulation. Curated by verified industry experts."
-          badge="Sentiment Hub"
-          gradient
+          variant="hexagons"
         />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">

@@ -220,7 +220,7 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
                 <div key={c.id} className="flex gap-2.5 rounded-lg border p-3">
                   <AvatarWithFallback
                     src={c.profile?.avatar_url}
-                    name={c.profile?.display_name || c.profile?.full_name || "?"}
+                    initials={(c.profile?.display_name || c.profile?.full_name || "?").charAt(0)}
                     className="h-7 w-7 text-[10px]"
                   />
                   <div className="flex-1 min-w-0">

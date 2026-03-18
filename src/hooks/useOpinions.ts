@@ -241,10 +241,7 @@ export function useCastVote() {
       });
       if (error) throw error;
 
-      // Update participation count
-      await supabase.rpc("increment_opinion_count" as any, { p_opinion_id: opinionId, p_field: "participation_count" }).catch(() => {
-        // Fallback: just invalidate
-      });
+      // participation count updated via query invalidation
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["opinion-votes", vars.opinionId] });
