@@ -1,10 +1,11 @@
 /**
- * ProfessionalDirectory — Public SEO-optimized directory listing page.
- * Browse registry entities by source, city, category with search.
+ * ProfessionalDirectory — Public SEO-optimized directory with tabbed layout.
+ * Two tabs: Intermediaries and Issuers with filters, sort, and pagination.
  */
-import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useState, useMemo, useCallback } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
@@ -19,11 +20,69 @@ import { FlairAvatarWrapper, FlairName } from "@/components/gamification/Profile
 import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { resolveProfileFlair } from "@/lib/profile-flair";
 import {
-  Search, Shield, MapPin, CheckCircle2, Clock, ArrowRight,
-  Users, ChevronLeft, ChevronRight
+  Search, Shield, MapPin, CheckCircle2, ArrowRight, ArrowUpDown,
+  Users, ChevronLeft, ChevronRight, Briefcase, Building2, SlidersHorizontal, X
 } from "lucide-react";
 
 const PAGE_SIZE = 24;
+
+const TABS = [
+  { key: "intermediaries", label: "Intermediaries", icon: Briefcase, description: "MF Distributors, Advisers, Brokers & Analysts" },
+  { key: "issuers", label: "Issuers", icon: Building2, description: "Portfolio Managers, AMCs & Finance Companies" },
+] as const;
+
+type TabKey = typeof TABS[number]["key"];
+
+// Categories that map to Intermediaries vs Issuers
+const INTERMEDIARY_CATEGORIES = [
+  "Mutual Fund Distributor",
+  "Investment Adviser",
+  "Stock Broker",
+  "Research Analyst",
+  "Compliance Consultant",
+  "Insurance Agent",
+  "Insurance Broker",
+];
+
+const ISSUER_CATEGORIES = [
+  "Portfolio Manager",
+  "Infrastructure Finance Specialist",
+  "Merchant Banker",
+  "Asset Management Company",
+  "Depository Participant",
+];
+
+type SortOption = "name_asc" | "name_desc" | "recent" | "views";
+
+const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: "name_asc", label: "Name A → Z" },
+  { value: "name_desc", label: "Name Z → A" },
+  { value: "recent", label: "Recently Added" },
+  { value: "views", label: "Most Viewed" },
+];
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
+};
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 16, scale: 0.97 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0, scale: 1,
+    transition: { delay: i * 0.03, duration: 0.3, ease: "easeOut" as const },
+  }),
+};
+
+function isIntermediary(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): boolean {
+  if (entity.registration_category && INTERMEDIARY_CATEGORIES.some(c => entity.registration_category!.includes(c))) return true;
+  if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return false;
+  // Fallback: AMFI entities are typically intermediaries, individuals too
+  if (entity.source === "amfi") return true;
+  if (entity.entity_type === "individual") return true;
+  return false;
+}
 
 export default function ProfessionalDirectory() {
   usePageMeta({
@@ -31,48 +90,91 @@ export default function ProfessionalDirectory() {
     description: "Browse AMFI & SEBI registered financial professionals across India. Find mutual fund distributors, investment advisers, and more.",
   });
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTab = (searchParams.get("tab") as TabKey) || "intermediaries";
+
+  const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
   const [search, setSearch] = useState("");
   const [source, setSource] = useState("all");
   const [city, setCity] = useState("all");
+  const [sort, setSort] = useState<SortOption>("name_asc");
   const [page, setPage] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
 
-  const { data: entities = [], isLoading } = useQuery({
-    queryKey: ["public-professionals", search, source, city],
+  const handleTabChange = useCallback((tab: TabKey) => {
+    setActiveTab(tab);
+    setPage(0);
+    setSearchParams({ tab }, { replace: true });
+  }, [setSearchParams]);
+
+  const { data: allEntities = [], isLoading } = useQuery({
+    queryKey: ["public-professionals"],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from("registry_entities")
-        .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count")
+        .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at")
         .eq("is_public", true)
         .eq("status", "active")
         .order("entity_name", { ascending: true })
-        .limit(500);
-
-      if (source !== "all") query = query.eq("source", source);
-      if (city !== "all") query = query.eq("city", city);
-      if (search) {
-        query = query.or(
-          `entity_name.ilike.%${search}%,registration_number.ilike.%${search}%,city.ilike.%${search}%`
-        );
-      }
-
-      const { data, error } = await query;
+        .limit(1000);
       if (error) throw error;
       return data;
     },
+    staleTime: 5 * 60 * 1000,
   });
 
-  // Extract unique cities for filter
+  // Split entities by tab
+  const intermediaries = useMemo(() => allEntities.filter(isIntermediary), [allEntities]);
+  const issuers = useMemo(() => allEntities.filter(e => !isIntermediary(e)), [allEntities]);
+  const tabEntities = activeTab === "intermediaries" ? intermediaries : issuers;
+
+  // Cities for current tab
   const cities = useMemo(() => {
-    const set = new Set(entities.map(e => e.city).filter(Boolean));
+    const set = new Set(tabEntities.map(e => e.city).filter(Boolean));
     return Array.from(set).sort() as string[];
-  }, [entities]);
+  }, [tabEntities]);
 
-  const paginated = entities.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
-  const totalPages = Math.ceil(entities.length / PAGE_SIZE);
+  // Sources for current tab
+  const sources = useMemo(() => {
+    const set = new Set(tabEntities.map(e => e.source).filter(Boolean));
+    return Array.from(set).sort() as string[];
+  }, [tabEntities]);
 
-  // Fetch flair for all claimed user IDs in current page
+  // Filter
+  const filtered = useMemo(() => {
+    let result = tabEntities;
+    if (source !== "all") result = result.filter(e => e.source === source);
+    if (city !== "all") result = result.filter(e => e.city === city);
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter(e =>
+        e.entity_name?.toLowerCase().includes(q) ||
+        e.registration_number?.toLowerCase().includes(q) ||
+        e.city?.toLowerCase().includes(q) ||
+        e.registration_category?.toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [tabEntities, source, city, search]);
+
+  // Sort
+  const sorted = useMemo(() => {
+    const arr = [...filtered];
+    switch (sort) {
+      case "name_asc": return arr.sort((a, b) => (a.entity_name || "").localeCompare(b.entity_name || ""));
+      case "name_desc": return arr.sort((a, b) => (b.entity_name || "").localeCompare(a.entity_name || ""));
+      case "recent": return arr.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime());
+      case "views": return arr.sort((a, b) => (b.view_count || 0) - (a.view_count || 0));
+      default: return arr;
+    }
+  }, [filtered, sort]);
+
+  const paginated = sorted.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  const totalPages = Math.ceil(sorted.length / PAGE_SIZE);
+
+  // Flair data for claimed profiles
   const claimedUserIds = useMemo(
-    () => paginated.filter(e => e.matched_user_id).map(e => e.matched_user_id!) || [],
+    () => paginated.filter(e => e.matched_user_id).map(e => e.matched_user_id!),
     [paginated]
   );
 
@@ -108,160 +210,313 @@ export default function ProfessionalDirectory() {
     },
   });
 
+  const hasActiveFilters = source !== "all" || city !== "all" || search !== "";
+
+  const clearFilters = () => {
+    setSearch("");
+    setSource("all");
+    setCity("all");
+    setPage(0);
+  };
+
   return (
     <PublicPageLayout>
       <PageHero
         breadcrumb="Directory"
         title="Financial Professionals"
         titleAccent="Directory"
-        subtitle="Browse AMFI & SEBI registered professionals across India. Find, verify, and connect."
+        subtitle="Browse AMFI & SEBI registered professionals across India. Find, verify, and connect with trusted intermediaries and issuers."
         variant="dots"
       />
 
-      <div className="container py-6">
-        {/* Stats bar */}
-        <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <Users className="h-4 w-4" />
-            <span><strong className="text-foreground">{entities.length}</strong> professionals</span>
-          </div>
+      {/* Sticky Tabs */}
+      <div className="border-b border-border bg-background sticky top-16 z-30">
+        <div className="container flex gap-0">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => handleTabChange(tab.key)}
+              className={`px-5 py-3.5 text-sm font-medium transition-colors relative flex items-center gap-2 ${
+                activeTab === tab.key
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <tab.icon className="h-4 w-4" />
+              {tab.label}
+              <Badge variant="outline" className="text-[10px] h-5 px-1.5 font-normal">
+                {tab.key === "intermediaries" ? intermediaries.length : issuers.length}
+              </Badge>
+              {activeTab === tab.key && (
+                <motion.div
+                  layoutId="directory-tab"
+                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary"
+                />
+              )}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-2 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, registration number, or city..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(0); }}
-              className="pl-9"
-            />
-          </div>
-          <Select value={source} onValueChange={(v) => { setSource(v); setPage(0); }}>
-            <SelectTrigger className="w-[130px]"><SelectValue placeholder="Source" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Sources</SelectItem>
-              <SelectItem value="amfi">AMFI</SelectItem>
-              <SelectItem value="sebi">SEBI</SelectItem>
-              <SelectItem value="manual">Manual</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={city} onValueChange={(v) => { setCity(v); setPage(0); }}>
-            <SelectTrigger className="w-[160px]"><SelectValue placeholder="City" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Cities</SelectItem>
-              {cities.map((c) => (
-                <SelectItem key={c} value={c}>{c}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-36" />
-            ))}
-          </div>
-        ) : entities.length === 0 ? (
-          <div className="text-center py-16 text-muted-foreground">
-            <Search className="h-10 w-10 mx-auto mb-3 opacity-30" />
-            <p className="font-medium">No professionals found</p>
-            <p className="text-sm mt-1">Try adjusting your search or filters</p>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {paginated.map((entity) => {
-                const isClaimed = !!entity.matched_user_id;
-                const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
-                const level = isClaimed && entity.matched_user_id ? xpMap[entity.matched_user_id] : 0;
-                const resolvedFlair = resolveProfileFlair(flair, level);
-                return (
-                  <Link
-                    key={entity.id}
-                    to={`/professional/${entity.registration_number}`}
-                    className="group"
-                  >
-                    <Card className="h-full hover:shadow-md transition-all hover:border-primary/20 group-hover:bg-muted/30">
-                      <CardContent className="p-4">
-                        <div className="flex items-start justify-between gap-2 mb-3">
-                          <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border} className="shrink-0">
-                            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
-                              <span className="text-sm font-bold text-primary">
-                                {entity.entity_name?.charAt(0)?.toUpperCase() || "?"}
-                              </span>
-                            </div>
-                          </FlairAvatarWrapper>
-                          <div className="flex items-center gap-1">
-                            {level > 0 && <LevelBadge level={level} size="xs" />}
-                            <Badge variant="outline" className="text-[8px] uppercase">
-                              {entity.source}
-                            </Badge>
-                            {isClaimed && (
-                              <Badge variant="default" className="text-[8px] gap-0.5">
-                                <CheckCircle2 className="h-2.5 w-2.5" /> Claimed
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                        <h3 className="text-sm font-semibold truncate mb-1 group-hover:text-primary transition-colors">
-                          <FlairName nameEffect={resolvedFlair.name_effect}>
-                            {entity.entity_name}
-                          </FlairName>
-                        </h3>
-                        {entity.registration_category && (
-                          <p className="text-[11px] text-muted-foreground truncate mb-2">
-                            {entity.registration_category}
-                          </p>
-                        )}
-                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                          {entity.city && (
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-3 w-3" /> {entity.city}
-                            </span>
-                          )}
-                          {entity.registration_number && (
-                            <span className="font-mono">{entity.registration_number}</span>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                );
-              })}
+      {/* Content */}
+      <div className="container py-8">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={fadeIn}
+          >
+            {/* Tab description + stats */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">
+                  {TABS.find(t => t.key === activeTab)?.label}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {TABS.find(t => t.key === activeTab)?.description}
+                  {" · "}
+                  <span className="font-medium text-foreground">{sorted.length}</span> professionals found
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={showFilters ? "secondary" : "outline"}
+                  size="sm"
+                  className="gap-1.5"
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <SlidersHorizontal className="h-3.5 w-3.5" />
+                  Filters
+                  {hasActiveFilters && (
+                    <span className="h-2 w-2 rounded-full bg-primary" />
+                  )}
+                </Button>
+                <Select value={sort} onValueChange={(v) => { setSort(v as SortOption); setPage(0); }}>
+                  <SelectTrigger className="w-[150px] h-9 text-xs">
+                    <ArrowUpDown className="h-3 w-3 mr-1" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SORT_OPTIONS.map(o => (
+                      <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between mt-6">
-                <p className="text-xs text-muted-foreground">
-                  Page {page + 1} of {totalPages} ({entities.length} results)
-                </p>
-                <div className="flex gap-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page === 0}
-                    onClick={() => setPage(p => p - 1)}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page >= totalPages - 1}
-                    onClick={() => setPage(p => p + 1)}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
+            {/* Filters panel */}
+            <AnimatePresence>
+              {showFilters && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden"
+                >
+                  <Card className="mb-6 border-dashed">
+                    <CardContent className="p-4">
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <div className="relative flex-1">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            placeholder="Search by name, ARN, city, or category..."
+                            value={search}
+                            onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+                            className="pl-9"
+                          />
+                        </div>
+                        <Select value={source} onValueChange={(v) => { setSource(v); setPage(0); }}>
+                          <SelectTrigger className="w-[140px]">
+                            <SelectValue placeholder="Source" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Sources</SelectItem>
+                            {sources.map(s => (
+                              <SelectItem key={s} value={s}>{s.toUpperCase()}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Select value={city} onValueChange={(v) => { setCity(v); setPage(0); }}>
+                          <SelectTrigger className="w-[160px]">
+                            <SelectValue placeholder="City" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Cities</SelectItem>
+                            {cities.map((c) => (
+                              <SelectItem key={c} value={c}>{c}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {hasActiveFilters && (
+                          <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 text-muted-foreground">
+                            <X className="h-3.5 w-3.5" /> Clear
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Grid */}
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Skeleton key={i} className="h-40 rounded-xl" />
+                ))}
               </div>
+            ) : sorted.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-20"
+              >
+                <div className="w-16 h-16 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
+                  <Search className="h-7 w-7 text-muted-foreground" />
+                </div>
+                <p className="font-semibold text-foreground mb-1">No professionals found</p>
+                <p className="text-sm text-muted-foreground mb-4">Try adjusting your search or filters</p>
+                {hasActiveFilters && (
+                  <Button variant="outline" size="sm" onClick={clearFilters}>
+                    Clear all filters
+                  </Button>
+                )}
+              </motion.div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {paginated.map((entity, i) => {
+                    const isClaimed = !!entity.matched_user_id;
+                    const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
+                    const level = isClaimed && entity.matched_user_id ? xpMap[entity.matched_user_id] : 0;
+                    const resolvedFlair = resolveProfileFlair(flair, level);
+                    return (
+                      <motion.div
+                        key={entity.id}
+                        custom={i}
+                        initial="hidden"
+                        animate="visible"
+                        variants={cardVariant}
+                      >
+                        <Link
+                          to={`/professional/${entity.registration_number}`}
+                          className="group block"
+                        >
+                          <Card className="h-full hover:shadow-lg transition-all duration-300 hover:border-primary/30 group-hover:bg-muted/20 hover:-translate-y-0.5">
+                            <CardContent className="p-5">
+                              <div className="flex items-start justify-between gap-2 mb-3">
+                                <FlairAvatarWrapper avatarBorder={resolvedFlair.avatar_border} className="shrink-0">
+                                  <div className="h-11 w-11 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+                                    <span className="text-sm font-bold text-primary">
+                                      {entity.entity_name?.charAt(0)?.toUpperCase() || "?"}
+                                    </span>
+                                  </div>
+                                </FlairAvatarWrapper>
+                                <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                                  {level > 0 && <LevelBadge level={level} size="xs" />}
+                                  <Badge variant="outline" className="text-[9px] uppercase tracking-wider">
+                                    {entity.source}
+                                  </Badge>
+                                  {isClaimed && (
+                                    <Badge variant="default" className="text-[9px] gap-0.5">
+                                      <CheckCircle2 className="h-2.5 w-2.5" /> Verified
+                                    </Badge>
+                                  )}
+                                </div>
+                              </div>
+                              <h3 className="text-sm font-semibold truncate mb-1 group-hover:text-primary transition-colors">
+                                <FlairName nameEffect={resolvedFlair.name_effect}>
+                                  {entity.entity_name}
+                                </FlairName>
+                              </h3>
+                              {entity.registration_category && (
+                                <p className="text-[11px] text-muted-foreground truncate mb-2.5">
+                                  {entity.registration_category}
+                                </p>
+                              )}
+                              <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                                <div className="flex items-center gap-3">
+                                  {entity.city && (
+                                    <span className="flex items-center gap-1">
+                                      <MapPin className="h-3 w-3" /> {entity.city}
+                                    </span>
+                                  )}
+                                  {entity.registration_number && (
+                                    <span className="font-mono text-[10px]">{entity.registration_number}</span>
+                                  )}
+                                </div>
+                                <ArrowRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
+                    <p className="text-sm text-muted-foreground">
+                      Showing <span className="font-medium text-foreground">{page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, sorted.length)}</span> of{" "}
+                      <span className="font-medium text-foreground">{sorted.length}</span>
+                    </p>
+                    <div className="flex gap-1.5">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={page === 0}
+                        onClick={() => { setPage(p => p - 1); window.scrollTo({ top: 300, behavior: "smooth" }); }}
+                        className="gap-1"
+                      >
+                        <ChevronLeft className="h-4 w-4" /> Prev
+                      </Button>
+                      {/* Page numbers */}
+                      {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                        let pageNum: number;
+                        if (totalPages <= 5) {
+                          pageNum = i;
+                        } else if (page < 3) {
+                          pageNum = i;
+                        } else if (page > totalPages - 4) {
+                          pageNum = totalPages - 5 + i;
+                        } else {
+                          pageNum = page - 2 + i;
+                        }
+                        return (
+                          <Button
+                            key={pageNum}
+                            variant={page === pageNum ? "default" : "outline"}
+                            size="sm"
+                            className="w-9 h-9 p-0"
+                            onClick={() => { setPage(pageNum); window.scrollTo({ top: 300, behavior: "smooth" }); }}
+                          >
+                            {pageNum + 1}
+                          </Button>
+                        );
+                      })}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={page >= totalPages - 1}
+                        onClick={() => { setPage(p => p + 1); window.scrollTo({ top: 300, behavior: "smooth" }); }}
+                        className="gap-1"
+                      >
+                        Next <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </PublicPageLayout>
   );
