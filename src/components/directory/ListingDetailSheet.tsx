@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Star, MapPin, BadgeCheck, TrendingUp, Package, Wrench, Send, CheckCircle, MessageCircle } from "lucide-react";
+import { Star, MapPin, BadgeCheck, TrendingUp, Package, Wrench, Send, CheckCircle, MessageCircle, Flag } from "lucide-react";
 import { toast } from "sonner";
 import type { Listing } from "@/hooks/useListings";
 import { PRODUCT_CATEGORIES, SERVICE_CATEGORIES, useListingReviews, useSubmitReview, useSubmitEnquiry } from "@/hooks/useListings";
