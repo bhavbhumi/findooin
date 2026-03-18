@@ -138,8 +138,8 @@ export function AdminSidebar() {
   ];
 
   const renderMenuItem = (item: NavItem, isActive: boolean, badgeCount: number, isCollapsed: boolean) => (
-    <SidebarMenuItem key={item.title}>
-      <SidebarMenuButton asChild>
+    <SidebarMenuItem key={item.title} className="mb-0">
+      <SidebarMenuButton asChild className="h-8 px-2 py-1">
         <NavLink
           to={item.url}
           end={item.end}
@@ -193,7 +193,7 @@ export function AdminSidebar() {
         )}
       </div>
 
-      <SidebarContent className="[&>div]:py-0.5 [&_ul]:gap-0 [&_[data-sidebar=group-label]]:py-1 [&_[data-sidebar=menu-button]]:h-[15px] [&_[data-sidebar=group]]:px-1.5">
+      <SidebarContent className="[&_[data-sidebar=group]]:py-1 [&_[data-sidebar=group]]:px-2 [&_ul]:gap-0 [&_[data-sidebar=group-label]]:h-6 [&_[data-sidebar=group-label]]:mb-0">
         {NAV_SECTIONS.map((section) => {
           const sectionHasActive = section.items.some((item) =>
             item.end ? location.pathname === item.url : location.pathname.startsWith(item.url)
