@@ -62,7 +62,7 @@ export function AdminSidebar() {
 
   const badgeMap: Record<string, number> = {
     "/admin/verification": pendingVerifications,
-    "/admin/moderation": pendingReports,
+    "/admin/feed": pendingReports,
   };
 
   type NavItem = {
