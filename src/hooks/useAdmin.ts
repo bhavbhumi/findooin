@@ -165,6 +165,7 @@ export interface AdminReport {
   created_at: string;
   reporter?: { full_name: string; avatar_url: string | null; roles?: string[] };
   reported_user?: { full_name: string; avatar_url: string | null; user_type?: string; verification_status?: string; organization?: string | null; roles?: string[] };
+  post?: { content: string; created_at: string; post_type?: string; hashtags?: string[] } | null;
 }
 
 export function useAdminReports() {
