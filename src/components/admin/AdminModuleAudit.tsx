@@ -527,8 +527,9 @@ function generateCSV(modules: AuditModule[], section: string): string {
 }
 
 export function AdminModuleAudit() {
+  const [refreshKey, setRefreshKey] = useState(0);
   const allModules = [...WEBSITE_MODULES, ...APP_MODULES, ...ADMIN_MODULES];
-  const overall = useMemo(() => getModuleStats(allModules), []);
+  const overall = useMemo(() => getModuleStats(allModules), [refreshKey]);
 
   const handleDownload = () => {
     const websiteCSV = generateCSV(WEBSITE_MODULES, "Website");
