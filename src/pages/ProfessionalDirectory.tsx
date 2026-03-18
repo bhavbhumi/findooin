@@ -392,7 +392,7 @@ export default function ProfessionalDirectory() {
               </motion.div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {paginated.map((entity, i) => {
                     const isClaimed = !!entity.matched_user_id;
                     const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
