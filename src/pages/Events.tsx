@@ -26,7 +26,7 @@ import { supabase } from "@/integrations/supabase/client";
 const MemoizedEventsSidebar = memo(EventsSidebar);
 
 const Events = () => {
-  usePageMeta({ title: "Events", description: "Discover and host investor meets, webinars, AGMs, and industry events." });
+  usePageMeta({ title: "Events", description: "Discover and host investor meets, webinars, AGMs, and industry events.", path: "/events" });
   const { activeRole, userId } = useRole();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");

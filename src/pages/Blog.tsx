@@ -203,7 +203,7 @@ function BlogCard({ post, index, statCount }: { post: BlogPost; index: number; s
 }
 
 const Blog = () => {
-  usePageMeta({ title: "Blog", description: "Articles, analysis, reports, and insights from the financial ecosystem." });
+  usePageMeta({ title: "Blog", description: "Articles, analysis, reports, and insights from the financial ecosystem.", path: "/blog" });
   const { data: posts, isLoading } = useBlogPosts();
   const { data: pollStats } = useBlogPollStats();
   const { data: surveyStats } = useBlogSurveyStats();

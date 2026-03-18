@@ -40,7 +40,7 @@ const pressItems = [
 ];
 
 const About = () => {
-  usePageMeta({ title: "About", description: "Learn about FindOO — India's first financial network. Company, careers, and press." });
+  usePageMeta({ title: "About", description: "Learn about FindOO — India's first financial network. Company, careers, and press.", path: "/about" });
   const [activeTab, setActiveTab] = useState("Company");
 
   return (

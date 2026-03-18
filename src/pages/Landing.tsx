@@ -93,7 +93,7 @@ const platformFeatures = [
 const Landing = () => {
   const { data: blogPosts } = useBlogPosts(3);
 
-  usePageMeta({ title: "India's First Financial Network", description: "FindOO is India's first financial network — Financially Social. Connecting verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA ecosystems." });
+  usePageMeta({ title: "India's First Financial Network", description: "FindOO is India's first financial network — Financially Social. Connecting verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA ecosystems.", path: "/" });
 
   return (
     <PublicPageLayout>

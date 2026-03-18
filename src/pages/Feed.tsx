@@ -44,7 +44,7 @@ function computeAffinityFeedScore(post: FeedPost, authorTier: number): number {
 const MemoizedPostCard = memo(PostCard);
 
 const Feed = () => {
-  usePageMeta({ title: "Feed", description: "Your personalized financial feed — market commentary, research notes, and insights from verified professionals." });
+  usePageMeta({ title: "Feed", description: "Your personalized financial feed — market commentary, research notes, and insights from verified professionals.", path: "/feed" });
   const [filter, setFilter] = useState<FeedFilter>("affinity");
   const [feedUserId, setFeedUserId] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
