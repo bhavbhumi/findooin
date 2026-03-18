@@ -197,7 +197,7 @@ export function AdminUserManagement() {
         </div>
       )}
 
-      {/* Role distribution mini-bar */}
+      {/* Role + Activity distribution mini-bar */}
       {stats && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs text-muted-foreground font-medium">Roles:</span>
@@ -218,6 +218,18 @@ export function AdminUserManagement() {
           <Badge variant="outline" className="text-[10px] gap-1">
             Onboarded · {stats.withOnboarding}/{stats.total}
           </Badge>
+          <span className="text-[10px] text-muted-foreground mx-1">|</span>
+          <span className="text-xs text-muted-foreground font-medium">Activity:</span>
+          {Object.entries(stats.activityCounts).map(([status, count]) => {
+            const ab = activityBadge[status];
+            if (!ab || !count) return null;
+            const AbIcon = ab.icon;
+            return (
+              <Badge key={status} variant="outline" className={`text-[10px] gap-1 ${ab.className}`}>
+                <AbIcon className="h-2.5 w-2.5" /> {ab.label} · {count}
+              </Badge>
+            );
+          })}
         </div>
       )}
 
