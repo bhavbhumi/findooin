@@ -45,10 +45,15 @@ export function AdminEventsManagement() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("events")
-        .select("*, profiles:organizer_id(full_name, display_name, avatar_url)")
+        .select("*")
         .order("start_time", { ascending: false });
       if (error) throw error;
-      return data || [];
+      const orgIds = [...new Set((data || []).map((e) => e.organizer_id))];
+      const { data: profiles } = orgIds.length > 0
+        ? await supabase.from("profiles").select("id, full_name, display_name, avatar_url").in("id", orgIds)
+        : { data: [] };
+      const profileMap = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
+      return (data || []).map((e) => ({ ...e, organizer_profile: profileMap[e.organizer_id] || null }));
     },
   });
 
@@ -158,7 +163,7 @@ export function AdminEventsManagement() {
       {/* Event list */}
       <div className="space-y-2">
         {paged.map((event) => {
-          const organizer = event.profiles as any;
+          const organizer = event.organizer_profile as any;
           const ModeIcon = modeIcons[event.event_mode] || Globe;
           const isUpcoming = !isPast(new Date(event.start_time));
 

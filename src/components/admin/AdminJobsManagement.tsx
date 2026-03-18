@@ -40,10 +40,16 @@ export function AdminJobsManagement() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("jobs")
-        .select("*, profiles:poster_id(full_name, display_name, avatar_url)")
+        .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data || [];
+      // Fetch poster profiles
+      const posterIds = [...new Set((data || []).map((j) => j.poster_id))];
+      const { data: profiles } = posterIds.length > 0
+        ? await supabase.from("profiles").select("id, full_name, display_name, avatar_url").in("id", posterIds)
+        : { data: [] };
+      const profileMap = Object.fromEntries((profiles || []).map((p) => [p.id, p]));
+      return (data || []).map((j) => ({ ...j, poster_profile: profileMap[j.poster_id] || null }));
     },
   });
 
@@ -159,7 +165,7 @@ export function AdminJobsManagement() {
       {/* Job list */}
       <div className="space-y-2">
         {paged.map((job) => {
-          const poster = job.profiles as any;
+          const poster = job.poster_profile as any;
           return (
             <Card key={job.id} className="border-border/50">
               <CardContent className="p-3">
