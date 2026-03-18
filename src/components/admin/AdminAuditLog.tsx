@@ -46,27 +46,38 @@ export function AdminAuditLog() {
   const [filterResource, setFilterResource] = useState("all");
   const [filterDate, setFilterDate] = useState("all");
   const [page, setPage] = useState(1);
+  const [showArchived, setShowArchived] = useState(false);
 
   const { data: logs, isLoading } = useQuery({
-    queryKey: ["admin-audit-logs"],
+    queryKey: ["admin-audit-logs", showArchived],
     queryFn: async (): Promise<AuditLog[]> => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("audit_logs")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(1000);
-      if (error) throw error;
+        .select("id, user_id, action, resource_type, resource_id, metadata, created_at")
+        .order("created_at", { ascending: false });
 
-      const userIds = [...new Set((data || []).map((l: any) => l.user_id))];
+      if (!showArchived) {
+        const cutoff = subDays(new Date(), 90).toISOString();
+        query = query.gte("created_at", cutoff);
+      }
+
+      query = query.limit(500);
+
+      const { data, error } = await query;
+      if (error) throw error;
+      if (!data?.length) return [];
+
+      const userIds = [...new Set(data.map((l: any) => l.user_id))];
       const { data: profiles } = await supabase
         .from("profiles")
         .select("id, full_name, avatar_url, display_name")
         .in("id", userIds);
 
       const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p]));
-      return (data || []).map((l: any) => ({ ...l, profile: profileMap[l.user_id] || null }));
+      return data.map((l: any) => ({ ...l, profile: profileMap[l.user_id] || null }));
     },
-    staleTime: 15_000,
+    staleTime: 60_000,
+    gcTime: 600_000,
   });
 
   const actionTypes = useMemo(() => logs ? [...new Set(logs.map(l => l.action))] : [], [logs]);
