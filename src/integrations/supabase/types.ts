@@ -2090,6 +2090,8 @@ export type Database = {
           reason: string
           reported_user_id: string | null
           reporter_id: string
+          resource_id: string | null
+          resource_type: string
           status: string
         }
         Insert: {
@@ -2100,6 +2102,8 @@ export type Database = {
           reason: string
           reported_user_id?: string | null
           reporter_id: string
+          resource_id?: string | null
+          resource_type?: string
           status?: string
         }
         Update: {
@@ -2110,6 +2114,8 @@ export type Database = {
           reason?: string
           reported_user_id?: string | null
           reporter_id?: string
+          resource_id?: string | null
+          resource_type?: string
           status?: string
         }
         Relationships: [
