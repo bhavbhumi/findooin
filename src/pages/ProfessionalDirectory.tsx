@@ -4,6 +4,7 @@
  */
 import { useState, useMemo, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { DirectoryPublicSidebar } from "@/components/directory/DirectoryPublicSidebar";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -258,8 +259,10 @@ export default function ProfessionalDirectory() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="container py-8">
+        <div className="flex gap-8">
+        {/* Main content */}
+        <div className="flex-1 min-w-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -365,7 +368,7 @@ export default function ProfessionalDirectory() {
 
             {/* Grid */}
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <Skeleton key={i} className="h-40 rounded-xl" />
                 ))}
@@ -389,7 +392,7 @@ export default function ProfessionalDirectory() {
               </motion.div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                   {paginated.map((entity, i) => {
                     const isClaimed = !!entity.matched_user_id;
                     const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
@@ -517,6 +520,18 @@ export default function ProfessionalDirectory() {
             )}
           </motion.div>
         </AnimatePresence>
+        </div>
+
+        {/* Right sidebar — desktop only */}
+        <div className="hidden lg:block w-[300px] shrink-0">
+          <div className="sticky top-28">
+            <DirectoryPublicSidebar
+              totalProfessionals={allEntities.length}
+              claimedCount={allEntities.filter(e => !!e.matched_user_id).length}
+            />
+          </div>
+        </div>
+        </div>
       </div>
     </PublicPageLayout>
   );
