@@ -103,38 +103,7 @@ function ApplicantsList({ jobId }: { jobId: string }) {
       {applications.map((app) => {
         const profile = app.applicant_profile;
         return (
-          <div key={app.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border">
-            <Avatar className="h-9 w-9">
-              <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback>{(profile?.full_name || "?")[0]}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-sm font-medium truncate">{profile?.display_name || profile?.full_name}</span>
-                {profile?.verification_status === "verified" && <BadgeCheck className="h-3.5 w-3.5 text-primary" />}
-              </div>
-              {profile?.headline && <p className="text-[10px] text-muted-foreground truncate">{profile.headline}</p>}
-              {app.cover_note && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{app.cover_note}</p>}
-              <div className="flex items-center gap-2 mt-2">
-                {app.resume_url && app.resume_name && (
-                  <Button variant="outline" size="sm" className="h-6 text-[10px] gap-1" onClick={() => handleDownloadResume(app.resume_url!, app.resume_name!)}>
-                    <FileText className="h-3 w-3" />Resume
-                  </Button>
-                )}
-                <Select value={app.status} onValueChange={(v) => updateStatus.mutate({ id: app.id, status: v })}>
-                  <SelectTrigger className="h-6 text-[10px] w-auto min-w-[100px]"><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(STATUS_LABELS).map(([k, v]) => (
-                      <SelectItem key={k} value={k} className="text-xs">{v}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <span className="text-[10px] text-muted-foreground shrink-0">
-              {formatDistanceToNow(new Date(app.created_at), { addSuffix: true })}
-            </span>
-          </div>
+          <ApplicantCard key={app.id} app={app} updateStatus={updateStatus} handleDownloadResume={handleDownloadResume} />
         );
       })}
     </div>
