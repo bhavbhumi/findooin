@@ -123,8 +123,7 @@ const LazyFallback = () => (
 );
 
 const App = () => {
-  const [splashDone, setSplashDone] = useState(false);
-  const handleSplashComplete = useCallback(() => setSplashDone(true), []);
+  const [splashDone, setSplashDone] = useState(true);
   useOfflineDetector();
 
   return (
