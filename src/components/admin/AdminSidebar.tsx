@@ -12,6 +12,8 @@ import {
   IndianRupee, Server, Search, FileText, LogOut, ExternalLink
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import findooLogo from "@/assets/findoo-logo-icon.png";
 import {
   Sidebar,
   SidebarContent,
