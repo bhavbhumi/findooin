@@ -129,11 +129,18 @@ function OpinionsContent() {
 
               {/* Disclaimer below categories */}
               <div className="mt-4 pt-4 border-t border-border">
-                <div className="flex items-start gap-2 rounded-lg bg-amber-500/5 border border-amber-500/20 p-3">
-                  <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-                  <p className="text-[11px] leading-relaxed text-muted-foreground">
-                    Professional sentiment only — not investment advice. No financial transactions occur. FindOO is not a SEBI-registered Research Analyst or Investment Adviser.
-                  </p>
+                <div className="rounded-lg bg-amber-500/5 border border-amber-500/20 p-3 space-y-2">
+                  <div className="flex items-center gap-1.5">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                    <span className="text-[11px] font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wide">Disclaimer</span>
+                  </div>
+                  <ul className="text-[10.5px] leading-relaxed text-muted-foreground space-y-1.5 list-disc list-outside pl-3.5">
+                    <li>Outcomes are derived from participation by registered BFSI professionals (Intermediaries & Issuers) and do not represent universal market consensus.</li>
+                    <li>Sentiment indicators reflect reactions from investor participants and are observational in nature.</li>
+                    <li>FindOO is solely a medium and presenter platform — we do not encourage, facilitate, or endorse any betting, wagering, or actions involving financial stakes.</li>
+                    <li>All content is for <strong>educational and informational purposes only</strong> and should not be construed as investment advice, research recommendations, or any form of professional financial guidance.</li>
+                    <li>Please consult a qualified, SEBI-registered advisor before making any financial decisions.</li>
+                  </ul>
                 </div>
               </div>
             </div>
