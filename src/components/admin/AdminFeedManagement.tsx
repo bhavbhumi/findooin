@@ -202,7 +202,7 @@ export function AdminFeedManagement() {
                       <Badge variant="outline" className={`text-[9px] ${kindColors[post.post_kind] || ""}`}>
                         {post.post_kind.replace(/_/g, " ")}
                       </Badge>
-                      {post.post_type === "poll" && (
+                      {post.post_kind === "poll" && (
                         <Badge variant="outline" className="text-[9px]">Poll</Badge>
                       )}
                       {post.report_count > 0 && (
