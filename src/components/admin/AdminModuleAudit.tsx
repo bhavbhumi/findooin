@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import {
   Download, Printer, CheckCircle2, AlertTriangle, XCircle, Clock,
-  Globe, Smartphone, Shield, ChevronDown, ChevronUp
+  Globe, Smartphone, Shield, ChevronDown, ChevronUp, RefreshCw
 } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -527,8 +527,9 @@ function generateCSV(modules: AuditModule[], section: string): string {
 }
 
 export function AdminModuleAudit() {
+  const [refreshKey, setRefreshKey] = useState(0);
   const allModules = [...WEBSITE_MODULES, ...APP_MODULES, ...ADMIN_MODULES];
-  const overall = useMemo(() => getModuleStats(allModules), []);
+  const overall = useMemo(() => getModuleStats(allModules), [refreshKey]);
 
   const handleDownload = () => {
     const websiteCSV = generateCSV(WEBSITE_MODULES, "Website");
@@ -560,6 +561,9 @@ export function AdminModuleAudit() {
           </p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => setRefreshKey(k => k + 1)}>
+            <RefreshCw className="h-4 w-4" /> Refresh
+          </Button>
           <Button variant="outline" size="sm" className="gap-2" onClick={handleDownload}>
             <Download className="h-4 w-4" /> Download CSV
           </Button>
