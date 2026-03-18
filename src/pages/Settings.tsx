@@ -27,7 +27,7 @@ import {
 import {
   Bell, Mail, Shield, Eye, LogOut, Trash2, User, Lock, Palette,
   Heart, MessageCircle, UserPlus, Users, MessageSquare, Loader2,
-  Activity, Network, FolderLock,
+  Activity, Network, FolderLock, CreditCard,
 } from "lucide-react";
 import { useTabPrivacy, visibilityLabels, type TabVisibility, type TabPrivacySettings } from "@/hooks/useTabPrivacy";
 
