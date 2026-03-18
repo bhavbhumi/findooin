@@ -43,6 +43,16 @@ export function AdminSidebar() {
     navigate("/auth");
   };
 
+  const { data: profile } = useQuery({
+    queryKey: ["admin-profile"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+      const { data } = await supabase.from("profiles").select("full_name, display_name, avatar_url").eq("id", user.id).single();
+      return { ...data, email: user.email };
+    },
+  });
+
   const { data: requests } = useVerificationQueue();
   const { data: reports } = useAdminReports();
 
