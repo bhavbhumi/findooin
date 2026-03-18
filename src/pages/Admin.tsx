@@ -13,29 +13,41 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbP
 import { Shield } from "lucide-react";
 
 const BREADCRUMB_MAP: Record<string, string> = {
+  // Dashboard
   "/admin": "Dashboard",
+  "/admin/monitoring": "Monitoring",
+  "/admin/scorecard": "Project Scorecard",
+  // Users & Access
   "/admin/users": "Users",
   "/admin/verification": "Verification",
-  "/admin/moderation": "Reports",
   "/admin/audit": "Audit Log",
+  // App Modules (Phase 2)
+  "/admin/feed": "Feed & Posts",
+  "/admin/jobs": "Jobs Management",
+  "/admin/events": "Events Management",
+  "/admin/listings": "Listings Management",
+  "/admin/messages": "Messages",
+  "/admin/gamification": "Gamification & XP",
+  // Growth & Outreach
   "/admin/invitations": "Invitations",
   "/admin/registry": "Registry",
   "/admin/sales": "Sales Pipeline",
   "/admin/campaigns": "Campaigns",
-  "/admin/blog": "Blog",
-  "/admin/monitoring": "Monitoring",
-  "/admin/billing": "Billing",
+  "/admin/email": "Email",
   "/admin/notifications": "Notifications",
-  "/admin/features": "Feature Flags",
-  "/admin/support": "Tickets",
+  // Content & Support
+  "/admin/blog": "Blog",
+  "/admin/moderation": "Moderation",
+  "/admin/support": "Support Tickets",
   "/admin/kb": "Knowledge Base",
-  "/admin/scorecard": "Project Scorecard",
+  // Infrastructure
   "/admin/module-audit": "Module Audit",
+  "/admin/seo": "SEO Audit",
+  "/admin/patent": "TrustCircle IQ™ Patent",
   "/admin/cost-report": "Cost Report",
   "/admin/scaling-report": "Scaling Report",
-  "/admin/email": "Email",
-  "/admin/patent": "TrustCircle IQ™ Patent",
-  "/admin/seo": "SEO Audit",
+  "/admin/features": "Feature Flags",
+  "/admin/billing": "Billing",
 };
 
 export default function Admin() {
