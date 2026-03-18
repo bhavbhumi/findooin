@@ -2,13 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Activity, Eye, FileText, Shield, User, Search, Download, Clock,
-  ChevronLeft, ChevronRight, ArrowUpDown, Filter, BarChart3, Users
+  ChevronLeft, ChevronRight, Filter, BarChart3, Users, Archive
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { format, subDays, isToday } from "date-fns";
