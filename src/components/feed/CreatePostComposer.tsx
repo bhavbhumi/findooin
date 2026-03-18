@@ -177,6 +177,9 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
 
   const queryClient = useQueryClient();
   const { saveDraft } = useDrafts(userId);
+  const { hasTier } = useSubscription();
+  const hasAICompose = hasTier("enterprise") && !isInvestorMode;
+  const [aiComposeOpen, setAiComposeOpen] = useState(false);
 
   // Derive investor mode from active role context
   const isInvestorMode = activeRole === "investor";
