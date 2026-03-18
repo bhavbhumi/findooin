@@ -75,6 +75,9 @@ const AdminPatentPage = lazy(() => import("./pages/admin/AdminPatentPage"));
 const AdminJobsPage = lazy(() => import("./pages/admin/AdminJobsPage"));
 const AdminEventsPage = lazy(() => import("./pages/admin/AdminEventsPage"));
 const AdminListingsPage = lazy(() => import("./pages/admin/AdminListingsPage"));
+const AdminFeedPage = lazy(() => import("./pages/admin/AdminFeedPage"));
+const AdminGamificationPage = lazy(() => import("./pages/admin/AdminGamificationPage"));
+const AdminMessagesPage = lazy(() => import("./pages/admin/AdminMessagesPage"));
 const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
@@ -200,6 +203,9 @@ const App = () => {
                         <Route path="jobs" element={<Suspense fallback={<LazyFallback />}><AdminJobsPage /></Suspense>} />
                         <Route path="events" element={<Suspense fallback={<LazyFallback />}><AdminEventsPage /></Suspense>} />
                         <Route path="listings" element={<Suspense fallback={<LazyFallback />}><AdminListingsPage /></Suspense>} />
+                        <Route path="feed" element={<Suspense fallback={<LazyFallback />}><AdminFeedPage /></Suspense>} />
+                        <Route path="gamification" element={<Suspense fallback={<LazyFallback />}><AdminGamificationPage /></Suspense>} />
+                        <Route path="messages" element={<Suspense fallback={<LazyFallback />}><AdminMessagesPage /></Suspense>} />
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
                       </Route>
