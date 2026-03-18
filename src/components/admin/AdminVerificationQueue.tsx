@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   CheckCircle2, XCircle, Clock, FileText, ExternalLink, ShieldCheck,
   Building2, User, Search, ArrowUpDown, ArrowUp, ArrowDown, Filter,
-  AlertTriangle, Timer, TrendingUp, BarChart3, ChevronLeft, ChevronRight
+  AlertTriangle, Timer, TrendingUp, BarChart3, ChevronLeft, ChevronRight, Archive
 } from "lucide-react";
 import { formatDistanceToNow, differenceInHours, subDays } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
