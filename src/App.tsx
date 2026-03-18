@@ -101,6 +101,8 @@ const ProfessionalProfile = lazy(() => import("./pages/ProfessionalProfile"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const ComparePage = lazy(() => import("./pages/Compare"));
 const Bookmarks = lazy(() => import("./pages/Bookmarks"));
+const Opinions = lazy(() => import("./pages/Opinions"));
+const AdminOpinionsPage = lazy(() => import("./pages/admin/AdminOpinionsPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
