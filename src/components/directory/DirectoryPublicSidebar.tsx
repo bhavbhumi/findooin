@@ -9,8 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   UserPlus, Shield, TrendingUp, Star, ArrowRight,
-  CheckCircle2, Sparkles, Users, Award, Zap, BarChart3
+  CheckCircle2, Sparkles, Users, Award, Zap, BarChart3,
+  Trophy, Medal, Crown
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -21,11 +24,44 @@ const fadeUp = {
 };
 
 interface DirectoryPublicSidebarProps {
-  totalProfessionals: number;
-  claimedCount: number;
+  tabTotal: number;
+  tabClaimed: number;
+  tabLabel: string;
 }
 
-export function DirectoryPublicSidebar({ totalProfessionals, claimedCount }: DirectoryPublicSidebarProps) {
+export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel }: DirectoryPublicSidebarProps) {
+  // Fetch top users by XP for leaderboard
+  const { data: topUsers = [] } = useQuery({
+    queryKey: ["directory-leaderboard"],
+    staleTime: 10 * 60 * 1000,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_xp")
+        .select("user_id, total_xp, level")
+        .order("total_xp", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      if (!data?.length) return [];
+      
+      const userIds = data.map(u => u.user_id);
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, display_name, avatar_url, headline, verification_status")
+        .in("id", userIds);
+      
+      const profileMap: Record<string, typeof profiles extends (infer T)[] | null ? T : never> = {};
+      profiles?.forEach(p => { profileMap[p.id] = p; });
+      
+      return data.map(u => ({
+        ...u,
+        profile: profileMap[u.user_id] || null,
+      })).filter(u => u.profile);
+    },
+  });
+
+  const rankIcons = [Crown, Medal, Award];
+  const rankColors = ["text-yellow-500", "text-muted-foreground", "text-amber-700"];
+
   return (
     <aside className="space-y-5">
       {/* Claim Your Profile CTA */}
@@ -61,26 +97,28 @@ export function DirectoryPublicSidebar({ totalProfessionals, claimedCount }: Dir
         </Card>
       </motion.div>
 
-      {/* Platform Stats */}
+      {/* Tab-specific Stats */}
       <motion.div custom={1} initial="hidden" animate="visible" variants={fadeUp}>
         <Card>
           <CardContent className="p-5">
             <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
               <BarChart3 className="h-3.5 w-3.5 text-primary" />
-              Directory Stats
+              {tabLabel} Stats
             </h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="text-center p-2.5 rounded-lg bg-muted/50">
-                <p className="text-lg font-bold text-foreground">{totalProfessionals.toLocaleString()}</p>
+                <p className="text-lg font-bold text-foreground">{tabTotal.toLocaleString()}</p>
                 <p className="text-[10px] text-muted-foreground">Professionals</p>
               </div>
               <div className="text-center p-2.5 rounded-lg bg-muted/50">
-                <p className="text-lg font-bold text-primary">{claimedCount}</p>
+                <p className="text-lg font-bold text-primary">{tabClaimed}</p>
                 <p className="text-[10px] text-muted-foreground">Verified</p>
               </div>
               <div className="text-center p-2.5 rounded-lg bg-muted/50">
-                <p className="text-lg font-bold text-foreground">5+</p>
-                <p className="text-[10px] text-muted-foreground">Regulators</p>
+                <p className="text-lg font-bold text-foreground">
+                  {tabTotal > 0 ? Math.round((tabClaimed / tabTotal) * 100) : 0}%
+                </p>
+                <p className="text-[10px] text-muted-foreground">Claimed</p>
               </div>
               <div className="text-center p-2.5 rounded-lg bg-muted/50">
                 <p className="text-lg font-bold text-foreground">Free</p>
@@ -91,8 +129,74 @@ export function DirectoryPublicSidebar({ totalProfessionals, claimedCount }: Dir
         </Card>
       </motion.div>
 
-      {/* Why Join FindOO */}
+      {/* Leaderboard Widget */}
       <motion.div custom={2} initial="hidden" animate="visible" variants={fadeUp}>
+        <Card className="overflow-hidden">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                <Trophy className="h-3.5 w-3.5 text-primary" />
+                Top Contributors
+              </h3>
+              <Link to="/leaderboard" className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
+                Full board <ArrowRight className="h-2.5 w-2.5" />
+              </Link>
+            </div>
+            {topUsers.length > 0 ? (
+              <div className="space-y-2">
+                {topUsers.map((user, i) => {
+                  const RankIcon = rankIcons[i] || Award;
+                  const rankColor = rankColors[i] || "text-muted-foreground";
+                  const name = user.profile?.display_name || user.profile?.full_name || "Member";
+                  const initial = name.charAt(0).toUpperCase();
+                  const isVerified = user.profile?.verification_status === "verified";
+                  return (
+                    <div
+                      key={user.user_id}
+                      className={`flex items-center gap-2.5 p-2 rounded-lg transition-colors ${
+                        i === 0 ? "bg-primary/5 border border-primary/10" : "hover:bg-muted/40"
+                      }`}
+                    >
+                      <span className="text-xs font-bold w-5 text-center shrink-0">
+                        <RankIcon className={`h-3.5 w-3.5 mx-auto ${rankColor}`} />
+                      </span>
+                      <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        {user.profile?.avatar_url ? (
+                          <img src={user.profile.avatar_url} alt="" className="h-7 w-7 rounded-full object-cover" />
+                        ) : (
+                          <span className="text-[10px] font-bold text-primary">{initial}</span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1">
+                          <p className="text-[11px] font-medium text-foreground truncate">{name}</p>
+                          {isVerified && <CheckCircle2 className="h-2.5 w-2.5 text-primary shrink-0" />}
+                        </div>
+                        <p className="text-[9px] text-muted-foreground truncate">
+                          {user.profile?.headline || `Level ${user.level}`}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="text-[9px] h-4 px-1.5 shrink-0">
+                        {user.total_xp} XP
+                      </Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <p className="text-[11px] text-muted-foreground">Be the first to earn XP!</p>
+              </div>
+            )}
+            <p className="text-[10px] text-muted-foreground mt-3 text-center">
+              Join FindOO to earn XP & climb the ranks
+            </p>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Why Join FindOO */}
+      <motion.div custom={3} initial="hidden" animate="visible" variants={fadeUp}>
         <Card>
           <CardContent className="p-5">
             <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
@@ -118,7 +222,7 @@ export function DirectoryPublicSidebar({ totalProfessionals, claimedCount }: Dir
       </motion.div>
 
       {/* Trending Opinions Teaser */}
-      <motion.div custom={3} initial="hidden" animate="visible" variants={fadeUp}>
+      <motion.div custom={4} initial="hidden" animate="visible" variants={fadeUp}>
         <Card className="overflow-hidden">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
@@ -156,34 +260,6 @@ export function DirectoryPublicSidebar({ totalProfessionals, claimedCount }: Dir
             <p className="text-[10px] text-muted-foreground mt-3 text-center">
               Sign up to vote & share your professional opinion
             </p>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      {/* Explore More */}
-      <motion.div custom={4} initial="hidden" animate="visible" variants={fadeUp}>
-        <Card>
-          <CardContent className="p-5">
-            <h3 className="text-xs font-semibold text-foreground mb-3">Explore More</h3>
-            <div className="space-y-1.5">
-              {[
-                { label: "Compare Platforms", to: "/compare", desc: "See how FindOO stacks up" },
-                { label: "Upcoming Events", to: "/events", desc: "BFSI meetups & webinars" },
-                { label: "Career Board", to: "/jobs", desc: "Finance jobs & opportunities" },
-              ].map(({ label, to, desc }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  className="flex items-center justify-between p-2.5 rounded-lg hover:bg-muted/50 transition-colors group"
-                >
-                  <div>
-                    <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors">{label}</p>
-                    <p className="text-[10px] text-muted-foreground">{desc}</p>
-                  </div>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </Link>
-              ))}
-            </div>
           </CardContent>
         </Card>
       </motion.div>

@@ -526,8 +526,9 @@ export default function ProfessionalDirectory() {
         <div className="hidden lg:block w-[300px] shrink-0">
           <div className="sticky top-28">
             <DirectoryPublicSidebar
-              totalProfessionals={allEntities.length}
-              claimedCount={allEntities.filter(e => !!e.matched_user_id).length}
+              tabTotal={tabEntities.length}
+              tabClaimed={tabEntities.filter(e => !!e.matched_user_id).length}
+              tabLabel={TABS.find(t => t.key === activeTab)?.label || "Directory"}
             />
           </div>
         </div>
