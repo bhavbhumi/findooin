@@ -31,6 +31,7 @@ export function JobDetailSheet({ job, open, onClose, isSaved, onToggleSave, hasA
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showApplyForm, setShowApplyForm] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   // Check if user is an entity (entities cannot apply)
   const { data: userProfile } = useQuery({
