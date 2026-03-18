@@ -86,6 +86,58 @@ export function EmployerDashboard() {
   );
 }
 
+/** Individual applicant card with activity status check */
+function ApplicantCard({ app, updateStatus, handleDownloadResume }: { app: any; updateStatus: any; handleDownloadResume: (url: string, name: string) => void }) {
+  const profile = app.applicant_profile;
+  const { data: activity } = useUserActivityStatus(app.applicant_id);
+  const isInactive = activity && (activity.status === "inactive" || activity.status === "dormant");
+
+  return (
+    <div className={`flex items-start gap-3 p-3 rounded-lg bg-muted/30 border border-border ${isInactive ? "border-l-2 border-l-amber-500" : ""}`}>
+      <Avatar className="h-9 w-9">
+        <AvatarImage src={profile?.avatar_url || undefined} />
+        <AvatarFallback>{(profile?.full_name || "?")[0]}</AvatarFallback>
+      </Avatar>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-medium truncate">{profile?.display_name || profile?.full_name}</span>
+          {profile?.verification_status === "verified" && <BadgeCheck className="h-3.5 w-3.5 text-primary" />}
+          {isInactive && (
+            <Badge variant="outline" className="text-[9px] h-4 px-1 gap-0.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20">
+              <AlertTriangle className="h-2.5 w-2.5" /> {activity.status === "dormant" ? "Dormant" : "Inactive"}
+            </Badge>
+          )}
+        </div>
+        {profile?.headline && <p className="text-[10px] text-muted-foreground truncate">{profile.headline}</p>}
+        {isInactive && (
+          <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-0.5">
+            Last active {activity.days_inactive}d ago — may not respond
+          </p>
+        )}
+        {app.cover_note && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{app.cover_note}</p>}
+        <div className="flex items-center gap-2 mt-2">
+          {app.resume_url && app.resume_name && (
+            <Button variant="outline" size="sm" className="h-6 text-[10px] gap-1" onClick={() => handleDownloadResume(app.resume_url!, app.resume_name!)}>
+              <FileText className="h-3 w-3" />Resume
+            </Button>
+          )}
+          <Select value={app.status} onValueChange={(v: string) => updateStatus.mutate({ id: app.id, status: v })}>
+            <SelectTrigger className="h-6 text-[10px] w-auto min-w-[100px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              {Object.entries(STATUS_LABELS).map(([k, v]) => (
+                <SelectItem key={k} value={k} className="text-xs">{v}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <span className="text-[10px] text-muted-foreground shrink-0">
+        {formatDistanceToNow(new Date(app.created_at), { addSuffix: true })}
+      </span>
+    </div>
+  );
+}
+
 function ApplicantsList({ jobId }: { jobId: string }) {
   const { data: applications, isLoading } = useJobApplications(jobId);
   const updateStatus = useUpdateApplicationStatus();
