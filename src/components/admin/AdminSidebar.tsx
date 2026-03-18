@@ -159,21 +159,21 @@ export function AdminSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
-      <SidebarHeader className="p-3">
+      <SidebarHeader className="p-3 border-b border-white/10">
         {!collapsed && (
           <div className="flex items-center gap-2 px-1">
-            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Shield className="h-4 w-4 text-primary" />
+            <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center">
+              <Shield className="h-4 w-4 text-[hsl(43,72%,53%)]" />
             </div>
             <div>
-              <p className="text-sm font-bold font-heading">Admin</p>
-              <p className="text-[10px] text-muted-foreground">Control Center</p>
+              <p className="text-sm font-bold font-heading text-white">Admin</p>
+              <p className="text-[10px] text-white/50">Control Center</p>
             </div>
           </div>
         )}
         {collapsed && (
           <div className="flex justify-center">
-            <Shield className="h-5 w-5 text-primary" />
+            <Shield className="h-5 w-5 text-[hsl(43,72%,53%)]" />
           </div>
         )}
       </SidebarHeader>
