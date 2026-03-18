@@ -227,7 +227,20 @@ export const ListingDetailSheet = ({ listing, open, onOpenChange }: ListingDetai
               <p className="text-xs text-muted-foreground text-center py-4">No reviews yet. Be the first to review!</p>
             )}
           </div>
+
+          {/* Report */}
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1.5 w-full" onClick={() => setShowReport(true)}>
+            <Flag className="h-3.5 w-3.5" /> Report this listing
+          </Button>
         </div>
+
+        <ReportDialog
+          open={showReport}
+          onOpenChange={setShowReport}
+          resourceType="listing"
+          resourceId={listing.id}
+          reportedUserId={listing.user_id}
+        />
       </SheetContent>
     </Sheet>
   );

@@ -181,7 +181,20 @@ export function EventDetailSheet({ event, open, onClose, onRegister, onCancelReg
               </Button>
             )}
           </div>
+
+          {/* Report */}
+          <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1.5 w-full" onClick={() => setShowReport(true)}>
+            <Flag className="h-3.5 w-3.5" /> Report this event
+          </Button>
         </div>
+
+        <ReportDialog
+          open={showReport}
+          onOpenChange={setShowReport}
+          resourceType="event"
+          resourceId={event.id}
+          reportedUserId={event.organizer_id}
+        />
       </SheetContent>
     </Sheet>
   );
