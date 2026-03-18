@@ -334,16 +334,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               <p className="text-[10px] text-muted-foreground leading-relaxed mb-3">
                 B/201 Hemu Classic Premises CS Ltd, S V Road, Malad West, Mumbai 400064
               </p>
-              <div className="w-full h-20 rounded-lg bg-muted/50 border border-border flex items-center justify-center overflow-hidden">
-                <img
-                  src="https://maps.googleapis.com/maps/api/staticmap?center=Mumbai,India&zoom=12&size=300x120&scale=2&style=feature:all|element:labels|visibility:off&style=feature:road|element:geometry|color:0xe0e0e0&style=feature:water|element:geometry|color:0xc9d1d9&style=feature:landscape|element:geometry|color:0xf0f0f0&key=none"
-                  alt="Location map"
-                  className="w-full h-full object-cover opacity-60"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                    (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="text-xs text-muted-foreground">Mumbai, India</div>';
-                  }}
-                />
+              <div className="w-full h-20 rounded-lg bg-muted/50 border border-border flex items-center justify-center">
+                <span className="text-xs text-muted-foreground">📍 Mumbai, India</span>
               </div>
             </div>
 
