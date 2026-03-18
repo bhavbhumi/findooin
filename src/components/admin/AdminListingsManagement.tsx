@@ -156,7 +156,7 @@ export function AdminListingsManagement() {
       {/* Listing list */}
       <div className="space-y-2">
         {paged.map((listing) => {
-          const owner = listing.profiles as any;
+          const owner = listing.owner_profile as any;
           return (
             <Card key={listing.id} className="border-border/50">
               <CardContent className="p-3">

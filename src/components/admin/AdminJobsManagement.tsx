@@ -165,7 +165,7 @@ export function AdminJobsManagement() {
       {/* Job list */}
       <div className="space-y-2">
         {paged.map((job) => {
-          const poster = job.profiles as any;
+          const poster = job.poster_profile as any;
           return (
             <Card key={job.id} className="border-border/50">
               <CardContent className="p-3">

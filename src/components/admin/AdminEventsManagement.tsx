@@ -163,7 +163,7 @@ export function AdminEventsManagement() {
       {/* Event list */}
       <div className="space-y-2">
         {paged.map((event) => {
-          const organizer = event.profiles as any;
+          const organizer = event.organizer_profile as any;
           const ModeIcon = modeIcons[event.event_mode] || Globe;
           const isUpcoming = !isPast(new Date(event.start_time));
 
