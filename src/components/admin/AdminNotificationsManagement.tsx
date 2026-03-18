@@ -263,7 +263,7 @@ function BroadcastDialog({ open, onOpenChange }: { open: boolean; onOpenChange: 
         const { data: roleUsers } = await supabase
           .from("user_roles")
           .select("user_id")
-          .eq("role", form.segment);
+          .eq("role", form.segment as "intermediary" | "issuer" | "investor");
         
         if (roleUsers) {
           const roleUserIds = new Set(roleUsers.map(r => r.user_id));
