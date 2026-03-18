@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import { Fragment } from "react";
 import { useState, useRef, useEffect } from "react";
 import { Menu, X, Globe, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
