@@ -42,6 +42,8 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { uploadFile, validateFile } from "@/lib/storage";
+import { useSubscription } from "@/hooks/useSubscription";
+import { AIComposeDialog } from "@/components/feed/AIComposeDialog";
 
 /* ── Post Categories for Issuers/Intermediaries ── */
 const POST_CATEGORIES = [
