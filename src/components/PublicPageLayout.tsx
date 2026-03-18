@@ -199,13 +199,19 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-3 py-2 text-sm font-medium transition-colors rounded-md hover:text-foreground hover:bg-muted/50 ${
+                className={`relative px-3 py-2 text-sm font-medium transition-colors rounded-md hover:text-foreground hover:bg-muted/50 ${
                   isActive(link.to)
                     ? "text-foreground"
                     : "text-muted-foreground"
-                }`}
+                } ${'featured' in link && link.featured ? "overflow-hidden" : ""}`}
               >
-                {link.label}
+                {'featured' in link && link.featured && (
+                  <span className="absolute inset-0 rounded-md bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-[shimmer_3s_ease-in-out_infinite] pointer-events-none" />
+                )}
+                <span className="relative">{link.label}</span>
+                {'featured' in link && link.featured && (
+                  <span className="relative ml-1 inline-block w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                )}
               </Link>
             ))}
 
