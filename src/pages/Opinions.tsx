@@ -1,7 +1,6 @@
 /**
- * Opinions — Public + authenticated professional sentiment hub.
- * Polymarket-inspired UI for BFSI India sentiment polling.
- * Uses AppLayout when logged in, PublicPageLayout when not.
+ * Opinions — Always renders in PublicPageLayout for consistent public browsing.
+ * App-view access is via Feed "Opinions" tab + sidebar widget.
  */
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
