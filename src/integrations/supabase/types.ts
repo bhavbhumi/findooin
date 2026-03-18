@@ -1064,6 +1064,7 @@ export type Database = {
           created_at: string
           created_by: string
           id: string
+          invite_channel: string
           last_reminder_at: string | null
           max_reminders: number
           next_reminder_at: string | null
@@ -1084,6 +1085,7 @@ export type Database = {
           created_at?: string
           created_by: string
           id?: string
+          invite_channel?: string
           last_reminder_at?: string | null
           max_reminders?: number
           next_reminder_at?: string | null
@@ -1104,6 +1106,7 @@ export type Database = {
           created_at?: string
           created_by?: string
           id?: string
+          invite_channel?: string
           last_reminder_at?: string | null
           max_reminders?: number
           next_reminder_at?: string | null
@@ -2943,6 +2946,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_contacts: {
+        Row: {
+          contact_name: string | null
+          created_at: string
+          email: string | null
+          id: string
+          invite_status: string
+          invited_at: string | null
+          invited_via: string | null
+          matched_user_id: string | null
+          phone_number: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          invite_status?: string
+          invited_at?: string | null
+          invited_via?: string | null
+          matched_user_id?: string | null
+          phone_number: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contact_name?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          invite_status?: string
+          invited_at?: string | null
+          invited_via?: string | null
+          matched_user_id?: string | null
+          phone_number?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

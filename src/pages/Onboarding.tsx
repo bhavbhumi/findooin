@@ -10,9 +10,10 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, UserCheck, BarChart3, ArrowRight, ArrowLeft, Loader2, CheckCircle2,
-  Upload, ShieldCheck, File, X,
+  Upload, ShieldCheck, File, X, Users, Smartphone,
 } from "lucide-react";
 import { uploadFile } from "@/lib/storage";
+import { ContactImportDialog } from "@/components/network/ContactImportDialog";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
 import { LanguageSelector } from "@/components/selectors/LanguageSelector";
@@ -85,6 +86,8 @@ const Onboarding = () => {
   const [verificationFiles, setVerificationFiles] = useState<Record<string, File | null>>({});
   const [initialLoading, setInitialLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [contactImportOpen, setContactImportOpen] = useState(false);
+  const [contactsImported, setContactsImported] = useState(0);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -495,7 +498,35 @@ const Onboarding = () => {
                       ))}
                     </div>
                   </div>
+
+                  {/* Invite Contacts CTA */}
+                  <div className="rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 p-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="h-5 w-5 text-primary" />
+                      <h3 className="text-sm font-semibold text-foreground">Find your contacts on FindOO</h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Import your phone contacts to discover who's already here and invite your professional network.
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setContactImportOpen(true)}>
+                        <Upload className="h-3.5 w-3.5" />
+                        Import Contacts
+                      </Button>
+                      {contactsImported > 0 && (
+                        <span className="text-xs text-green-600 flex items-center gap-1">
+                          <CheckCircle2 className="h-3 w-3" /> {contactsImported} imported
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
+
+                <ContactImportDialog
+                  open={contactImportOpen}
+                  onOpenChange={setContactImportOpen}
+                  onImportComplete={(count) => setContactsImported((prev) => prev + count)}
+                />
               </div>
             )}
 
