@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Send, MessageSquare, CheckCheck, Search, Filter, Circle } from "lucide-react";
+import { ArrowLeft, Send, MessageSquare, CheckCheck, Search, Filter, Circle, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow, format, isToday, isYesterday } from "date-fns";
 import { cn } from "@/lib/utils";
 
