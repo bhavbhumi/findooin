@@ -527,21 +527,53 @@ function generateCSV(modules: AuditModule[], section: string): string {
   return csv;
 }
 
+type LiveStats = {
+  posts_total: number;
+  posts_reported: number;
+  jobs_total: number;
+  jobs_active: number;
+  jobs_applications: number;
+  events_total: number;
+  events_published: number;
+  events_registrations: number;
+  listings_total: number;
+  listings_active: number;
+  listings_enquiries: number;
+  messages_total: number;
+  reports_pending: number;
+  users_total: number;
+  users_verified: number;
+  connections_total: number;
+} | null;
+
 export function AdminModuleAudit() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
+  const [liveStats, setLiveStats] = useState<LiveStats>(null);
   const allModules = [...WEBSITE_MODULES, ...APP_MODULES, ...ADMIN_MODULES];
   const overall = useMemo(() => getModuleStats(allModules), [refreshKey]);
 
-  const handleRefresh = () => {
+  const fetchLiveStats = async () => {
+    try {
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data, error } = await supabase.rpc("get_admin_module_stats");
+      if (error) throw error;
+      setLiveStats(data as unknown as LiveStats);
+    } catch {
+      // silently fail — stats are supplementary
+    }
+  };
+
+  const handleRefresh = async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
-      setRefreshKey(k => k + 1);
-      setLastRefreshed(new Date());
-      setIsRefreshing(false);
-      toast.success("Module Audit refreshed", { description: `${allModules.length} modules re-evaluated at ${new Date().toLocaleTimeString()}` });
-    }, 800);
+    await fetchLiveStats();
+    setRefreshKey(k => k + 1);
+    setLastRefreshed(new Date());
+    setIsRefreshing(false);
+    toast.success("Module Audit refreshed", {
+      description: `${allModules.length} modules re-evaluated with live data at ${new Date().toLocaleTimeString()}`
+    });
   };
 
   const handleDownload = () => {
