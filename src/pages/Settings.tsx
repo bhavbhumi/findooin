@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { SubscriptionSettings } from "@/components/settings/SubscriptionSettings";
 import { supabase } from "@/integrations/supabase/client";
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
