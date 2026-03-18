@@ -12,6 +12,8 @@ import {
   IndianRupee, Server, Search, FileText, LogOut, ExternalLink
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import findooLogo from "@/assets/findoo-logo-icon.png";
 import {
   Sidebar,
   SidebarContent,
@@ -40,6 +42,16 @@ export function AdminSidebar() {
     await supabase.auth.signOut();
     navigate("/auth");
   };
+
+  const { data: profile } = useQuery({
+    queryKey: ["admin-profile"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+      const { data } = await supabase.from("profiles").select("full_name, display_name, avatar_url").eq("id", user.id).single();
+      return { ...data, email: user.email };
+    },
+  });
 
   const { data: requests } = useVerificationQueue();
   const { data: reports } = useAdminReports();
@@ -166,13 +178,11 @@ export function AdminSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r-0 bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent">
-      {/* Header — branded logo block */}
-      <div className={`flex items-center gap-2.5 px-4 py-5 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[hsl(43,72%,53%)] to-[hsl(43,72%,40%)] shadow-lg shadow-[hsl(43,72%,53%)]/20">
-          <span className="text-sm font-bold text-[hsl(240,100%,15%)] font-heading">FO</span>
-        </div>
+      {/* Header — branded logo */}
+      <div className={`flex items-center gap-2.5 px-4 py-4 border-b border-white/10 ${collapsed ? "justify-center" : ""}`}>
+        <img src={findooLogo} alt="FindOO" className="h-8 w-8 shrink-0 rounded-lg" />
         {!collapsed && (
-          <div className="animate-slide-in-left">
+          <div>
             <h1 className="text-sm font-bold text-white tracking-tight font-heading">
               FindOO Admin
             </h1>
@@ -239,39 +249,43 @@ export function AdminSidebar() {
         })}
       </SidebarContent>
 
-      <SidebarFooter className="p-3 space-y-2 border-t border-white/10">
-        {/* Admin user card */}
-        <div className={`flex items-center gap-2.5 rounded-lg bg-white/10 p-2.5 ${collapsed ? "justify-center" : ""}`}>
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(43,72%,53%)]/20">
-            <Shield className="h-3.5 w-3.5 text-[hsl(43,72%,53%)]" />
+      <SidebarFooter className="p-3 border-t border-white/10">
+        {/* User info + inline actions */}
+        <div className={`flex items-center gap-2.5 rounded-lg bg-white/10 p-2 ${collapsed ? "justify-center" : ""}`}>
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(43,72%,53%)]/20 text-[hsl(43,72%,53%)]">
+            <span className="text-xs font-bold">
+              {profile?.display_name?.[0] || profile?.full_name?.[0] || "A"}
+            </span>
           </div>
           {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white truncate">Administrator</p>
-              <p className="text-[10px] text-white/40 truncate">Full access</p>
-            </div>
+            <>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-white truncate">
+                  {profile?.display_name || profile?.full_name || "Admin"}
+                </p>
+                <p className="text-[10px] text-white/40 truncate">{profile?.email}</p>
+              </div>
+              <div className="flex items-center gap-0.5 shrink-0">
+                <button
+                  onClick={() => navigate("/feed")}
+                  title="Back to App"
+                  className="p-1.5 rounded-md text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={handleSignOut}
+                  title="Sign Out"
+                  className="p-1.5 rounded-md text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            </>
           )}
         </div>
-
-        {/* Action links */}
         {!collapsed && (
-          <div className="space-y-0.5">
-            <button
-              onClick={() => navigate("/feed")}
-              className="flex items-center gap-2 text-[11px] text-white/50 hover:text-white transition-colors px-2.5 py-1.5 w-full rounded-md hover:bg-white/5"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              Back to App
-            </button>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-2 text-[11px] text-white/50 hover:text-white transition-colors px-2.5 py-1.5 w-full rounded-md hover:bg-white/5"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              Sign Out
-            </button>
-            <p className="text-[9px] text-white/20 text-center pt-1">FindOO Admin v2.0</p>
-          </div>
+          <p className="text-[9px] text-white/20 text-center mt-1.5">FindOO Admin v2.0</p>
         )}
       </SidebarFooter>
     </Sidebar>
