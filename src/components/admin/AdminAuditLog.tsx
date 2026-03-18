@@ -212,6 +212,12 @@ export function AdminAuditLog() {
         <Button variant="outline" size="sm" className="gap-1.5" onClick={exportCSV} disabled={filtered.length === 0}>
           <Download className="h-3.5 w-3.5" /> Export CSV
         </Button>
+        <div className="flex items-center gap-2">
+          <Switch id="audit-archive" checked={showArchived} onCheckedChange={v => { setShowArchived(v); setPage(1); }} />
+          <Label htmlFor="audit-archive" className="text-xs text-muted-foreground cursor-pointer flex items-center gap-1">
+            <Archive className="h-3 w-3" /> Show archived
+          </Label>
+        </div>
       </div>
 
       {/* Log entries */}
