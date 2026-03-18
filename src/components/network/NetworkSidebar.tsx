@@ -53,6 +53,9 @@ export function NetworkSidebar({
   onStatClick,
 }: NetworkSidebarProps) {
   const [recentlyActive, setRecentlyActive] = useState<NetworkUser[]>([]);
+  const [importOpen, setImportOpen] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const { stats: contactStats } = useContacts();
   const peopleYouMayKnow = suggestions.slice(0, 5);
 
   // Industry spotlight — group by user_type, pick one from each
