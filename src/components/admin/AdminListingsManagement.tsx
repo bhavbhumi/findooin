@@ -47,7 +47,7 @@ export function AdminListingsManagement() {
   });
 
   const updateListing = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: "active" | "archived" | "draft" | "paused" }) => {
       const { error } = await supabase.from("listings").update({ status }).eq("id", id);
       if (error) throw error;
     },

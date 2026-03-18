@@ -53,7 +53,7 @@ export function AdminEventsManagement() {
   });
 
   const updateEvent = useMutation({
-    mutationFn: async ({ id, status }: { id: string; status: string }) => {
+    mutationFn: async ({ id, status }: { id: string; status: "draft" | "published" | "cancelled" | "completed" }) => {
       const { error } = await supabase.from("events").update({ status }).eq("id", id);
       if (error) throw error;
     },
