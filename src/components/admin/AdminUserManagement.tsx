@@ -148,7 +148,7 @@ export function AdminUserManagement() {
     const paginated = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
     return { filtered: paginated, totalFiltered, totalPages };
-  }, [users, search, roleFilter, verificationFilter, typeFilter, sortField, sortDir, page]);
+  }, [users, search, roleFilter, verificationFilter, typeFilter, activityFilter, sortField, sortDir, page]);
 
   // Reset page when filters change
   const handleFilterChange = (setter: (v: string) => void) => (v: string) => {
