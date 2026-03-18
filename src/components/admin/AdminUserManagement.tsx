@@ -89,6 +89,7 @@ export function AdminUserManagement() {
     const entities = users.filter((u: any) => u.user_type === "entity").length;
     const individuals = total - entities;
     const withOnboarding = users.filter((u: any) => u.onboarding_completed).length;
+    const seedCount = users.filter((u: any) => u.is_seed).length;
 
     const roleCounts: Record<string, number> = {};
     users.forEach((u: any) => {
@@ -103,7 +104,7 @@ export function AdminUserManagement() {
       activityCounts[s] = (activityCounts[s] || 0) + 1;
     });
 
-    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts, activityCounts };
+    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts, activityCounts, seedCount };
   }, [users]);
 
   // ── Filter + Sort + Paginate ──
