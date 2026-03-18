@@ -215,6 +215,17 @@ const App = () => {
                       <Route path="/leaderboard" element={<ProtectedRoute><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/bookmarks" element={<ProtectedRoute><RouteErrorBoundary routeName="Bookmarks"><Bookmarks /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/vault" element={<ProtectedRoute><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></ProtectedRoute>} />
+                      {/* Dev-only: test system pages */}
+                      {import.meta.env.DEV && (
+                        <>
+                          <Route path="/dev/test-error" element={
+                            <RouteErrorBoundary routeName="Test Page">
+                              <DevErrorThrower />
+                            </RouteErrorBoundary>
+                          } />
+                          <Route path="/dev/test-404" element={<NotFound />} />
+                        </>
+                      )}
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </div>
