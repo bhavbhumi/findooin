@@ -439,6 +439,11 @@ const Landing = () => {
               View all Insights <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </motion.div>
+          {(!blogPosts || blogPosts.length === 0) ? (
+            <div className="md:col-span-3 text-center py-10">
+              <p className="text-muted-foreground text-sm">Insights coming soon. Stay tuned!</p>
+            </div>
+          ) : null}
           <div className="grid md:grid-cols-3 gap-5">
             {(blogPosts ?? []).map((post, i) => (
               <motion.div

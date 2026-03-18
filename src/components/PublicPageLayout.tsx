@@ -6,41 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 
-const PUBLIC_LABEL_MAP: Record<string, string> = {
-  about: "About", blog: "Blog", contact: "Contact", legal: "Legal",
-  privacy: "Privacy", terms: "Terms", guidelines: "Community Guidelines",
-  explore: "Explore", pitch: "Pitch", install: "Install", help: "Help Desk",
-  sitemap: "Site Map",
-};
-
-function PublicBreadcrumbs() {
-  const location = useLocation();
-  const segments = location.pathname.split("/").filter(Boolean);
-  if (segments.length < 1) return null;
-  return (
-    <Breadcrumb className="mb-2">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild><Link to="/">Home</Link></BreadcrumbLink>
-        </BreadcrumbItem>
-        {segments.map((seg, i) => {
-          const path = "/" + segments.slice(0, i + 1).join("/");
-          const label = PUBLIC_LABEL_MAP[seg] || seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, " ");
-          const isLast = i === segments.length - 1;
-          return (
-            <Fragment key={path}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {isLast ? <BreadcrumbPage>{label}</BreadcrumbPage> : <BreadcrumbLink asChild><Link to={path}>{label}</Link></BreadcrumbLink>}
-              </BreadcrumbItem>
-            </Fragment>
-          );
-        })}
-      </BreadcrumbList>
-    </Breadcrumb>
-  );
-}
-
 interface PublicPageLayoutProps {
   children: React.ReactNode;
 }
