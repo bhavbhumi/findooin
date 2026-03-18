@@ -282,4 +282,58 @@ const Feed = () => {
   );
 };
 
+/** FeedOpinionsTab — Inline opinions content within the Feed page */
+function FeedOpinionsTab() {
+  const { data: opinions, isLoading } = useOpinions(undefined, "active");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { data: selectedOpinion } = useOpinionDetail(selectedId);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="rounded-xl border p-4 space-y-3">
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-5 w-full" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!opinions?.length) {
+    return (
+      <EmptyState
+        icon={BarChart3}
+        title="No active opinions"
+        description="Professional sentiment polls will appear here when published by the FindOO team."
+      />
+    );
+  }
+
+  return (
+    <>
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/30 border border-border mb-4">
+        <BarChart3 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+        <p className="text-[11px] text-muted-foreground">
+          <span className="font-semibold text-foreground">Professional Opinions</span> — curated BFSI sentiment polls from verified industry experts
+        </p>
+      </div>
+      <div className="grid gap-4">
+        {opinions.map((op) => (
+          <OpinionCard key={op.id} opinion={op} onOpenDetail={setSelectedId} />
+        ))}
+      </div>
+      <OpinionDetailSheet
+        opinionId={selectedId}
+        opinion={selectedOpinion || null}
+        open={!!selectedId}
+        onClose={() => setSelectedId(null)}
+      />
+    </>
+  );
+}
+
 export default Feed;
