@@ -2916,6 +2916,7 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_intent_signals: { Args: never; Returns: undefined }
+      cleanup_stale_data: { Args: never; Returns: Json }
       cleanup_stale_sessions: { Args: never; Returns: undefined }
       compute_trustcircle_iq: {
         Args: { p_limit?: number; p_viewer_id: string }
