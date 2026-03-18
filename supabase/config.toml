@@ -11,3 +11,5 @@ project_id = "qvzvhmuosxdaqxwyokpg"
     verify_jwt = false
   [functions.purge-seed-data]
     verify_jwt = false
+  [functions.ai-compose]
+    verify_jwt = false

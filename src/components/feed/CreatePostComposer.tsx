@@ -42,6 +42,8 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { uploadFile, validateFile } from "@/lib/storage";
+import { useSubscription } from "@/hooks/useSubscription";
+import { AIComposeDialog } from "@/components/feed/AIComposeDialog";
 
 /* ── Post Categories for Issuers/Intermediaries ── */
 const POST_CATEGORIES = [
@@ -175,9 +177,12 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
 
   const queryClient = useQueryClient();
   const { saveDraft } = useDrafts(userId);
+  const { hasTier } = useSubscription();
+  const [aiComposeOpen, setAiComposeOpen] = useState(false);
 
   // Derive investor mode from active role context
   const isInvestorMode = activeRole === "investor";
+  const hasAICompose = hasTier("enterprise") && !isInvestorMode;
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -835,6 +840,21 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
             <TooltipContent side="bottom" className="text-xs">Add hashtag — type #topic in your post</TooltipContent>
           </Tooltip>
 
+          {/* AI Compose — Enterprise only, non-investor */}
+          {hasAICompose && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setAiComposeOpen(true)}
+                  className="p-1 rounded-md text-primary hover:bg-primary/10 transition-colors"
+                >
+                  <Sparkles className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">AI Compose (Enterprise)</TooltipContent>
+            </Tooltip>
+          )}
+
           <div className="flex-1" />
 
           {/* Schedule icon */}
@@ -881,6 +901,13 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
           </Button>
         </div>
       </div>
+      {hasAICompose && (
+        <AIComposeDialog
+          open={aiComposeOpen}
+          onOpenChange={setAiComposeOpen}
+          onInsert={(text) => setContent((prev) => prev ? prev + "\n\n" + text : text)}
+        />
+      )}
     </TooltipProvider>
   );
 }
