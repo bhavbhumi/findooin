@@ -1,4 +1,5 @@
 import { useLocation, Link } from "react-router-dom";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Home, ArrowLeft, Search, Compass } from "lucide-react";

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, Legend } from "recharts";
 
 const infraCostData = [

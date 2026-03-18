@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion } from "framer-motion";
 import { Download, Share, MoreVertical, Plus, Smartphone, Monitor, CheckCircle2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
