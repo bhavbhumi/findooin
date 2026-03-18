@@ -99,8 +99,6 @@ const Landing = () => {
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
       <section className="relative pt-12 pb-10 lg:pt-16 lg:pb-14 overflow-hidden">
-        {/* Layered background: gradient + dot grid + network mesh */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02]" />
         <NetworkMesh />
         
         {/* Glow blobs for depth */}
