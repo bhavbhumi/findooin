@@ -165,6 +165,7 @@ export interface AdminReport {
   created_at: string;
   reporter?: { full_name: string; avatar_url: string | null; roles?: string[] };
   reported_user?: { full_name: string; avatar_url: string | null; user_type?: string; verification_status?: string; organization?: string | null; roles?: string[] };
+  post?: { content: string; created_at: string; post_type?: string; hashtags?: string[] } | null;
 }
 
 export function useAdminReports() {
@@ -200,10 +201,22 @@ export function useAdminReports() {
 
       const profileMap = Object.fromEntries((profiles || []).map((p: any) => [p.id, p]));
 
+      // Fetch reported post content
+      const postIds = [...new Set((data || []).filter((r: any) => r.post_id).map((r: any) => r.post_id))];
+      let postMap: Record<string, any> = {};
+      if (postIds.length > 0) {
+        const { data: posts } = await supabase
+          .from("posts")
+          .select("id, content, created_at, post_type, hashtags")
+          .in("id", postIds);
+        postMap = Object.fromEntries((posts || []).map((p: any) => [p.id, p]));
+      }
+
       return (data || []).map((r: any) => ({
         ...r,
         reporter: profileMap[r.reporter_id] ? { ...profileMap[r.reporter_id], roles: roleMap[r.reporter_id] || [] } : null,
         reported_user: r.reported_user_id && profileMap[r.reported_user_id] ? { ...profileMap[r.reported_user_id], roles: roleMap[r.reported_user_id] || [] } : null,
+        post: r.post_id ? postMap[r.post_id] || null : null,
       }));
     },
     staleTime: 10_000,

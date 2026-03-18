@@ -5,14 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import {
   Flag, CheckCircle2, XCircle, Trash2, FileText, User, Search, Filter,
   AlertTriangle, ShieldAlert, AlertOctagon, Info, ChevronLeft, ChevronRight,
-  BarChart3, Clock, TrendingDown, Users, ShieldCheck, Building2
+  BarChart3, Users, ShieldCheck, Building2, MessageSquare, Eye
 } from "lucide-react";
-import { formatDistanceToNow, isToday, subDays } from "date-fns";
+import { formatDistanceToNow, isToday } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
 
 const statusColors: Record<string, string> = {
@@ -43,6 +44,20 @@ function getSeverity(reason: string) {
   return severityConfig.other;
 }
 
+function RoleBadges({ roles }: { roles?: string[] }) {
+  if (!roles?.length) return null;
+  return (
+    <>
+      {roles.map((role) => {
+        const rc = ROLE_CONFIG[role];
+        return rc ? (
+          <span key={role} className={`text-[9px] px-1.5 py-0 rounded-full font-medium ${rc.bgColor}`}>{rc.label}</span>
+        ) : null;
+      })}
+    </>
+  );
+}
+
 const PAGE_SIZE = 15;
 
 export function AdminContentModeration() {
@@ -54,13 +69,21 @@ export function AdminContentModeration() {
   const [statusFilter, setStatusFilter] = useState("pending");
   const [severityFilter, setSeverityFilter] = useState("all");
   const [page, setPage] = useState(1);
+  const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
+
+  const toggleExpand = (id: string) => {
+    setExpandedPosts(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
 
   // MIS Stats
   const stats = useMemo(() => {
     if (!reports) return { total: 0, pending: 0, resolvedToday: 0, repeatOffenders: 0 };
     const pending = reports.filter(r => r.status === "pending").length;
     const resolvedToday = reports.filter(r => r.status !== "pending" && isToday(new Date(r.created_at))).length;
-    // Repeat offenders: users reported more than once
     const offenderCounts: Record<string, number> = {};
     reports.forEach(r => { if (r.reported_user_id) offenderCounts[r.reported_user_id] = (offenderCounts[r.reported_user_id] || 0) + 1; });
     const repeatOffenders = Object.values(offenderCounts).filter(c => c > 1).length;
@@ -89,12 +112,12 @@ export function AdminContentModeration() {
           r.reason.toLowerCase().includes(s) ||
           r.description?.toLowerCase().includes(s) ||
           r.reporter?.full_name?.toLowerCase().includes(s) ||
-          r.reported_user?.full_name?.toLowerCase().includes(s)
+          r.reported_user?.full_name?.toLowerCase().includes(s) ||
+          r.post?.content?.toLowerCase().includes(s)
         );
       }
       return true;
     });
-    // Sort by severity priority (critical first) then by date
     list.sort((a, b) => {
       const sa = getSeverity(a.reason).priority;
       const sb = getSeverity(b.reason).priority;
@@ -139,7 +162,7 @@ export function AdminContentModeration() {
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search by reason, reporter, user..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9" />
+          <Input placeholder="Search reason, content, users..." value={search} onChange={e => { setSearch(e.target.value); setPage(1); }} className="pl-9" />
         </div>
         <Select value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(1); }}>
           <SelectTrigger className="w-[140px]"><Filter className="h-3.5 w-3.5 mr-1.5" /><SelectValue /></SelectTrigger>
@@ -165,124 +188,146 @@ export function AdminContentModeration() {
       {filtered.length === 0 ? (
         <Card><CardContent className="py-8 text-center text-muted-foreground text-sm">No reports match your filters</CardContent></Card>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {paginated.map(report => {
             const severity = getSeverity(report.reason);
             const SevIcon = severity.icon;
-            const isRepeat = report.reported_user_id && (offenderCounts[report.reported_user_id] || 0) > 1;
+            const repeatCount = report.reported_user_id ? (offenderCounts[report.reported_user_id] || 0) : 0;
+            const isRepeat = repeatCount > 1;
+            const isExpanded = expandedPosts.has(report.id);
+            const postContent = report.post?.content || "";
+            const isLongContent = postContent.length > 200;
+
             return (
-              <Card key={report.id} className={report.status !== "pending" ? "opacity-70" : ""}>
-                <CardContent className="py-4">
-                  <div className="flex items-start gap-3">
-                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${severity.className}`}>
-                      <SevIcon className="h-4 w-4" />
+              <Card
+                key={report.id}
+                className={`overflow-hidden ${report.status !== "pending" ? "opacity-60" : ""} ${severity.priority <= 2 && report.status === "pending" ? "border-l-2 border-l-destructive" : ""}`}
+              >
+                <CardContent className="p-0">
+                  {/* Row 1: Header — severity, reason, status, timestamp */}
+                  <div className="flex items-center gap-2 px-4 pt-3 pb-2 flex-wrap">
+                    <div className={`h-6 w-6 rounded flex items-center justify-center shrink-0 ${severity.className}`}>
+                      <SevIcon className="h-3.5 w-3.5" />
                     </div>
-                    <div className="flex-1 min-w-0 space-y-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Badge variant="outline" className={`text-[10px] ${severity.className}`}>{severity.label}</Badge>
-                        <Badge variant="outline" className={`text-[10px] ${statusColors[report.status]}`}>{report.status}</Badge>
-                        {isRepeat && (
-                          <Badge variant="outline" className="text-[10px] bg-destructive/10 text-destructive border-destructive/20">
-                            ⚠ {offenderCounts[report.reported_user_id!]} reports
-                          </Badge>
-                        )}
-                        <span className="text-xs text-muted-foreground">
-                          {formatDistanceToNow(new Date(report.created_at), { addSuffix: true })}
-                        </span>
-                      </div>
-                      <p className="text-sm font-medium">{report.reason}</p>
-                      {report.description && (
-                        <p className="text-xs text-muted-foreground bg-muted/50 rounded p-2 border border-border line-clamp-2">{report.description}</p>
-                      )}
-                      {/* Reporter & Reported User Cards */}
-                      <div className="flex flex-wrap gap-3 text-xs">
-                        {/* Reporter */}
-                        <div className="flex items-center gap-2 bg-muted/40 rounded-lg px-2.5 py-1.5 border border-border">
-                          <AvatarWithFallback
-                            src={report.reporter?.avatar_url || undefined}
-                            initials={(report.reporter?.full_name || "U").slice(0, 2).toUpperCase()}
-                            className="h-6 w-6 text-[9px]"
-                          />
-                          <div>
-                            <div className="flex items-center gap-1">
-                              <span className="text-muted-foreground">Reporter:</span>
-                              <span className="font-medium text-foreground">{report.reporter?.full_name || "Unknown"}</span>
-                            </div>
-                            {report.reporter?.roles?.length > 0 && (
-                              <div className="flex gap-1 mt-0.5">
-                                {report.reporter.roles.map((role: string) => {
-                                  const rc = ROLE_CONFIG[role];
-                                  return rc ? (
-                                    <span key={role} className={`text-[9px] px-1 py-0 rounded-full ${rc.bgColor}`}>{rc.label}</span>
-                                  ) : null;
-                                })}
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                    <Badge variant="outline" className={`text-[10px] ${severity.className}`}>{severity.label}</Badge>
+                    <span className="text-sm font-semibold text-foreground">{report.reason}</span>
+                    <Badge variant="outline" className={`text-[10px] ml-auto ${statusColors[report.status]}`}>{report.status}</Badge>
+                    <span className="text-[10px] text-muted-foreground">{formatDistanceToNow(new Date(report.created_at), { addSuffix: true })}</span>
+                  </div>
 
-                        {/* Reported User */}
-                        {report.reported_user && (
-                          <div className="flex items-center gap-2 bg-destructive/5 rounded-lg px-2.5 py-1.5 border border-destructive/20">
-                            <AvatarWithFallback
-                              src={report.reported_user.avatar_url || undefined}
-                              initials={(report.reported_user.full_name || "U").slice(0, 2).toUpperCase()}
-                              className="h-6 w-6 text-[9px]"
-                            />
-                            <div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-muted-foreground">Reported:</span>
-                                <span className="font-medium text-foreground">{report.reported_user.full_name}</span>
-                                {report.reported_user.verification_status === "verified" && (
-                                  <ShieldCheck className="h-3 w-3 text-accent" />
-                                )}
-                                {report.reported_user.user_type === "entity" ? (
-                                  <Building2 className="h-3 w-3 text-muted-foreground" />
-                                ) : (
-                                  <User className="h-3 w-3 text-muted-foreground" />
-                                )}
-                              </div>
-                              <div className="flex items-center gap-1 mt-0.5">
-                                {report.reported_user.organization && (
-                                  <span className="text-[9px] text-muted-foreground">{report.reported_user.organization}</span>
-                                )}
-                                {report.reported_user.roles?.length > 0 && report.reported_user.roles.map((role: string) => {
-                                  const rc = ROLE_CONFIG[role];
-                                  return rc ? (
-                                    <span key={role} className={`text-[9px] px-1 py-0 rounded-full ${rc.bgColor}`}>{rc.label}</span>
-                                  ) : null;
-                                })}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {report.post_id && (
-                          <span className="flex items-center gap-1 text-muted-foreground self-center">
-                            <FileText className="h-3 w-3" /> Post reported
-                          </span>
-                        )}
-                      </div>
-                      {report.status === "pending" && (
-                        <div className="flex gap-2 pt-1">
-                          <Button size="sm" variant="outline" className="gap-1 text-xs"
-                            onClick={() => updateStatus.mutate({ reportId: report.id, status: "dismissed" })} disabled={updateStatus.isPending}>
-                            <XCircle className="h-3 w-3" /> Dismiss
-                          </Button>
-                          <Button size="sm" variant="outline" className="gap-1 text-xs"
-                            onClick={() => updateStatus.mutate({ reportId: report.id, status: "reviewed" })} disabled={updateStatus.isPending}>
-                            <CheckCircle2 className="h-3 w-3" /> Mark Reviewed
-                          </Button>
-                          {report.post_id && (
-                            <Button size="sm" variant="destructive" className="gap-1 text-xs"
-                              onClick={() => { deletePost.mutate(report.post_id!); updateStatus.mutate({ reportId: report.id, status: "action_taken" }); }}
-                              disabled={deletePost.isPending}>
-                              <Trash2 className="h-3 w-3" /> Remove Post
-                            </Button>
+                  {/* Row 2: Offender identity — primary focus */}
+                  {report.reported_user && (
+                    <div className="flex items-center gap-2.5 px-4 py-2 bg-muted/30">
+                      <AvatarWithFallback
+                        src={report.reported_user.avatar_url || undefined}
+                        initials={(report.reported_user.full_name || "U").slice(0, 2).toUpperCase()}
+                        className="h-8 w-8 text-[10px]"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-sm font-semibold text-foreground">{report.reported_user.full_name}</span>
+                          {report.reported_user.verification_status === "verified" && <ShieldCheck className="h-3.5 w-3.5 text-accent" />}
+                          {report.reported_user.user_type === "entity" ? <Building2 className="h-3 w-3 text-muted-foreground" /> : <User className="h-3 w-3 text-muted-foreground" />}
+                          <RoleBadges roles={report.reported_user.roles} />
+                          {isRepeat && (
+                            <Badge variant="outline" className="text-[9px] bg-destructive/10 text-destructive border-destructive/20 font-semibold">
+                              ⚠ {repeatCount} reports
+                            </Badge>
                           )}
                         </div>
-                      )}
+                        {report.reported_user.organization && (
+                          <span className="text-[10px] text-muted-foreground">{report.reported_user.organization}</span>
+                        )}
+                      </div>
                     </div>
+                  )}
+
+                  {/* Row 3: Reported content preview — the most important part */}
+                  {report.post ? (
+                    <div className="px-4 py-2">
+                      <div className="rounded-md border border-border bg-background p-3">
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          <MessageSquare className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wide">Reported Content</span>
+                          {report.post.post_type && report.post.post_type !== "text" && (
+                            <Badge variant="secondary" className="text-[9px]">{report.post.post_type}</Badge>
+                          )}
+                        </div>
+                        <p className={`text-sm text-foreground whitespace-pre-wrap ${!isExpanded && isLongContent ? "line-clamp-3" : ""}`}>
+                          {postContent}
+                        </p>
+                        {isLongContent && (
+                          <button
+                            onClick={() => toggleExpand(report.id)}
+                            className="text-[11px] text-primary hover:underline mt-1 font-medium"
+                          >
+                            {isExpanded ? "Show less" : "Show full content"}
+                          </button>
+                        )}
+                        {report.post.hashtags && report.post.hashtags.length > 0 && (
+                          <div className="flex gap-1 mt-1.5 flex-wrap">
+                            {report.post.hashtags.map(tag => (
+                              <span key={tag} className="text-[9px] text-primary/70">#{tag}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : report.post_id ? (
+                    <div className="px-4 py-2">
+                      <div className="rounded-md border border-border bg-muted/30 p-2 flex items-center gap-2">
+                        <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground italic">Post content unavailable (may have been deleted)</span>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {/* Row 4: Reporter's complaint */}
+                  {report.description && (
+                    <div className="px-4 py-1.5">
+                      <div className="flex items-start gap-2 text-xs">
+                        <Flag className="h-3 w-3 text-muted-foreground mt-0.5 shrink-0" />
+                        <div>
+                          <span className="text-muted-foreground">Complaint: </span>
+                          <span className="text-foreground">{report.description}</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Row 5: Footer — reporter info + action buttons */}
+                  <div className="flex items-center gap-3 px-4 py-2.5 border-t border-border bg-muted/20">
+                    {/* Reporter mini info */}
+                    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground flex-1 min-w-0">
+                      <AvatarWithFallback
+                        src={report.reporter?.avatar_url || undefined}
+                        initials={(report.reporter?.full_name || "U").slice(0, 2).toUpperCase()}
+                        className="h-5 w-5 text-[8px]"
+                      />
+                      <span>Reported by <span className="font-medium text-foreground">{report.reporter?.full_name || "Unknown"}</span></span>
+                      <RoleBadges roles={report.reporter?.roles} />
+                    </div>
+
+                    {/* Action buttons */}
+                    {report.status === "pending" && (
+                      <div className="flex gap-1.5 shrink-0">
+                        <Button size="sm" variant="ghost" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => updateStatus.mutate({ reportId: report.id, status: "dismissed" })} disabled={updateStatus.isPending}>
+                          <XCircle className="h-3.5 w-3.5" /> Dismiss
+                        </Button>
+                        <Button size="sm" variant="outline" className="h-7 gap-1 text-xs"
+                          onClick={() => updateStatus.mutate({ reportId: report.id, status: "reviewed" })} disabled={updateStatus.isPending}>
+                          <Eye className="h-3.5 w-3.5" /> Reviewed
+                        </Button>
+                        {report.post_id && (
+                          <Button size="sm" variant="destructive" className="h-7 gap-1 text-xs"
+                            onClick={() => { deletePost.mutate(report.post_id!); updateStatus.mutate({ reportId: report.id, status: "action_taken" }); }}
+                            disabled={deletePost.isPending}>
+                            <Trash2 className="h-3.5 w-3.5" /> Remove Post
+                          </Button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
