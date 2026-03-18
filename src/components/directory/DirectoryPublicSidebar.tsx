@@ -27,17 +27,31 @@ interface DirectoryPublicSidebarProps {
   tabTotal: number;
   tabClaimed: number;
   tabLabel: string;
+  activeTab: "intermediaries" | "issuers";
 }
 
-export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel }: DirectoryPublicSidebarProps) {
-  // Fetch top users by XP for leaderboard
+export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel, activeTab }: DirectoryPublicSidebarProps) {
+  const roleFilter = activeTab === "intermediaries" ? "intermediary" : "issuer";
+
+  // Fetch top users by XP filtered by tab role
   const { data: topUsers = [] } = useQuery({
-    queryKey: ["directory-leaderboard"],
+    queryKey: ["directory-leaderboard", roleFilter],
     staleTime: 10 * 60 * 1000,
     queryFn: async () => {
+      // First get user_ids with the matching role
+      const { data: roleUsers, error: roleError } = await supabase
+        .from("user_roles")
+        .select("user_id")
+        .eq("role", roleFilter);
+      if (roleError) throw roleError;
+      if (!roleUsers?.length) return [];
+
+      const roleUserIds = roleUsers.map(r => r.user_id);
+
       const { data, error } = await supabase
         .from("user_xp")
         .select("user_id, total_xp, level")
+        .in("user_id", roleUserIds)
         .order("total_xp", { ascending: false })
         .limit(5);
       if (error) throw error;
@@ -71,7 +85,7 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel }: Direc
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                 <Trophy className="h-3.5 w-3.5 text-primary" />
-                Top Contributors
+                Top {tabLabel}
               </h3>
               <Link to="/leaderboard" className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
                 Full board <ArrowRight className="h-2.5 w-2.5" />

@@ -529,6 +529,7 @@ export default function ProfessionalDirectory() {
               tabTotal={tabEntities.length}
               tabClaimed={tabEntities.filter(e => !!e.matched_user_id).length}
               tabLabel={TABS.find(t => t.key === activeTab)?.label || "Directory"}
+              activeTab={activeTab}
             />
           </div>
         </div>
