@@ -141,7 +141,7 @@ export function AdminSidebar() {
             <span className="flex-1 flex items-center justify-between">
               <span className="text-sm">{item.title}</span>
               {item.soon && (
-                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0 border-sidebar-foreground/30 text-sidebar-foreground/60">
+                <Badge variant="outline" className="text-[8px] px-1 py-0 ml-1 shrink-0 border-white/30 text-white/60">
                   Soon
                 </Badge>
               )}
