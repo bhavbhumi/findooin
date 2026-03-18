@@ -124,10 +124,10 @@ export function AdminSidebar() {
         <NavLink
           to={item.url}
           end={item.end}
-          className={`hover:bg-sidebar-accent transition-colors relative text-sidebar-foreground ${
+          className={`hover:bg-white/10 transition-colors relative text-white/80 ${
             item.soon ? "opacity-60" : ""
           }`}
-          activeClassName="bg-sidebar-accent text-sidebar-primary-foreground font-medium"
+          activeClassName="bg-white/15 text-white font-medium"
         >
           <div className="relative mr-2 shrink-0">
             <item.icon className="h-4 w-4" />
