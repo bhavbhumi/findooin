@@ -193,7 +193,7 @@ export function AdminSidebar() {
         )}
       </div>
 
-      <SidebarContent className="[&>div]:py-1 [&_ul]:gap-0.5">
+      <SidebarContent className="[&>div]:py-0.5 [&_ul]:gap-0 [&_[data-sidebar=group-label]]:py-1 [&_[data-sidebar=menu-button]]:h-7 [&_[data-sidebar=group]]:px-1.5">
         {NAV_SECTIONS.map((section) => {
           const sectionHasActive = section.items.some((item) =>
             item.end ? location.pathname === item.url : location.pathname.startsWith(item.url)
