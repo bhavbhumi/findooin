@@ -606,7 +606,9 @@ export function AdminModuleAudit() {
           </p>
           <p className="text-xs text-muted-foreground mt-1">
             <Clock className="inline h-3 w-3 mr-1" />
-            Last refreshed: {lastRefreshed.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+            {lastRefreshed
+              ? `Last refreshed: ${lastRefreshed.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })}`
+              : "Click Refresh to fetch live stats"}
           </p>
         </div>
         <div className="flex items-center gap-2 print:hidden">
