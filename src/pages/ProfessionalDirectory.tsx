@@ -259,8 +259,10 @@ export default function ProfessionalDirectory() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="container py-8">
+        <div className="flex gap-8">
+        {/* Main content */}
+        <div className="flex-1 min-w-0">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
