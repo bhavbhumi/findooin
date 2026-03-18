@@ -24,7 +24,7 @@ import {
   OPINION_CATEGORIES,
 } from "@/hooks/useOpinions";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRole } from "@/contexts/RoleContext";
+
 
 const CATEGORY_ALL = "all" as const;
 type CategoryFilter = OpinionCategory | typeof CATEGORY_ALL;
