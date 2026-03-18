@@ -280,6 +280,19 @@ export function AdminUserManagement() {
             <SelectItem value="entity">Entity</SelectItem>
           </SelectContent>
         </Select>
+
+        <Select value={activityFilter} onValueChange={handleFilterChange(setActivityFilter)}>
+          <SelectTrigger className="w-[130px] h-9 text-xs">
+            <SelectValue placeholder="Activity" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Activity</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="idle">Idle</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="dormant">Dormant</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* ── Sort Bar ── */}
