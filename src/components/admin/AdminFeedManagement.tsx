@@ -138,7 +138,7 @@ export function AdminFeedManagement() {
         {[
           { label: "Total Posts", value: stats.total, icon: FileText },
           { label: "Reported", value: stats.reported, icon: Flag, highlight: stats.reported > 0 },
-          { label: "Polls", value: stats.polls, icon: BarChart3 },
+          { label: "Queries", value: stats.polls, icon: BarChart3 },
           { label: "Likes", value: stats.totalLikes, icon: Heart },
           { label: "Comments", value: stats.totalComments, icon: MessageSquare },
         ].map((s) => (
