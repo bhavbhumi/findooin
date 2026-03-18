@@ -56,9 +56,9 @@ interface PublicPageLayoutProps {
 const navLinks = [
   { label: "Directory", to: "/professionals" },
   { label: "Opinions", to: "/opinions" },
+  { label: "Compare", to: "/compare" },
   { label: "Explore", to: "/explore" },
   { label: "Blog", to: "/blog" },
-  { label: "Contact", to: "/contact" },
 ];
 
 const languages = [
