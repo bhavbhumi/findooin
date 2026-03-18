@@ -279,7 +279,7 @@ export function useAdminUsers() {
     queryFn: async () => {
       const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("id, full_name, display_name, avatar_url, organization, user_type, verification_status, is_staff, onboarding_completed, created_at")
+        .select("id, full_name, display_name, avatar_url, organization, user_type, verification_status, is_staff, onboarding_completed, created_at, location")
         .order("created_at", { ascending: false })
         .limit(200);
       if (error) throw error;
@@ -287,23 +287,48 @@ export function useAdminUsers() {
       const userIds = (profiles || []).map((p: any) => p.id);
       if (userIds.length === 0) return [];
 
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("user_id, role, sub_type")
-        .in("user_id", userIds);
+      const [rolesRes, activityRes] = await Promise.all([
+        supabase
+          .from("user_roles")
+          .select("user_id, role, sub_type")
+          .in("user_id", userIds),
+        supabase.rpc("get_users_activity_status", { p_user_ids: userIds }),
+      ]);
 
       const roleMap: Record<string, any[]> = {};
-      (roles || []).forEach((r: any) => {
+      (rolesRes.data || []).forEach((r: any) => {
         if (!roleMap[r.user_id]) roleMap[r.user_id] = [];
         roleMap[r.user_id].push(r);
+      });
+
+      const activityMap: Record<string, { status: string; last_active_at: string; days_inactive: number }> = {};
+      ((activityRes.data as any[]) || []).forEach((a: any) => {
+        activityMap[a.user_id] = { status: a.status, last_active_at: a.last_active_at, days_inactive: Number(a.days_inactive) };
       });
 
       return (profiles || []).map((p: any) => ({
         ...p,
         roles: roleMap[p.id] || [],
+        activity: activityMap[p.id] || { status: "dormant", last_active_at: p.created_at, days_inactive: 999 },
       }));
     },
     ...ADMIN_CACHE,
+  });
+}
+
+/** Hook to check a single user's activity status (for messaging, jobs, etc.) */
+export function useUserActivityStatus(userId: string | null) {
+  return useQuery({
+    queryKey: ["user-activity-status", userId],
+    queryFn: async () => {
+      if (!userId) return null;
+      const { data, error } = await supabase.rpc("compute_user_activity_status", { p_user_id: userId });
+      if (error) throw error;
+      return data as { status: string; last_active_at: string; days_inactive: number };
+    },
+    enabled: !!userId,
+    staleTime: 120_000,
+    gcTime: 300_000,
   });
 }
 

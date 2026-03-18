@@ -43,6 +43,13 @@ const verificationBadge: Record<string, { label: string; className: string }> = 
   unverified: { label: "Unverified", className: "bg-muted text-muted-foreground border-border" },
 };
 
+const activityBadge: Record<string, { label: string; icon: React.ComponentType<{ className?: string }>; className: string }> = {
+  active: { label: "Active", icon: Zap, className: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" },
+  idle: { label: "Idle", icon: Clock, className: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" },
+  inactive: { label: "Inactive", icon: Moon, className: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20" },
+  dormant: { label: "Dormant", icon: AlertTriangle, className: "bg-destructive/10 text-destructive border-destructive/20" },
+};
+
 type SortField = "name" | "created_at" | "verification";
 type SortDir = "asc" | "desc";
 
