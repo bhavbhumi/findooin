@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeText } from "@/lib/sanitize";
 import { useRole } from "@/contexts/RoleContext";
+import { useUserActivityStatus } from "@/hooks/useAdmin";
 import AppNavbar from "@/components/AppNavbar";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Send, MessageSquare, CheckCheck, Search, Filter, Circle } from "lucide-react";
+import { ArrowLeft, Send, MessageSquare, CheckCheck, Search, Filter, Circle, AlertTriangle } from "lucide-react";
 import { formatDistanceToNow, format, isToday, isYesterday } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -79,6 +80,7 @@ const Messages = () => {
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<{ full_name: string; display_name: string | null; avatar_url: string | null } | null>(null);
   const [recipientRoles, setRecipientRoles] = useState<string[]>([]);
+  const { data: recipientActivity } = useUserActivityStatus(selectedUserId);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -447,7 +449,17 @@ const Messages = () => {
                     {otherTyping && (
                       <p className="text-[10px] text-accent animate-pulse">typing...</p>
                     )}
+                </div>
+
+                {/* Inactive user warning */}
+                {recipientActivity && (recipientActivity.status === "inactive" || recipientActivity.status === "dormant") && (
+                  <div className="mx-2.5 mt-1.5 px-2.5 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20 flex items-center gap-2">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                    <p className="text-[11px] text-amber-600 dark:text-amber-400">
+                      This user has been {recipientActivity.status} for {recipientActivity.days_inactive} days and may not respond.
+                    </p>
                   </div>
+                )}
                 </div>
 
                 {/* Category tabs */}

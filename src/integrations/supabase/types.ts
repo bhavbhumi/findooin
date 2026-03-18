@@ -2932,6 +2932,10 @@ export type Database = {
           trust_proximity: number
         }[]
       }
+      compute_user_activity_status: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
       create_notification: {
         Args: {
           p_actor_id: string
@@ -2969,6 +2973,15 @@ export type Database = {
         Returns: Json
       }
       get_staff_permissions: { Args: { _user_id: string }; Returns: string[] }
+      get_users_activity_status: {
+        Args: { p_user_ids: string[] }
+        Returns: {
+          days_inactive: number
+          last_active_at: string
+          status: string
+          user_id: string
+        }[]
+      }
       grant_moderator_defaults: {
         Args: { _granted_by: string; _user_id: string }
         Returns: undefined

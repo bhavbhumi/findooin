@@ -25,7 +25,8 @@ import {
 import {
   Search, ShieldCheck, Clock, User, Building2, Users, UserCheck,
   MoreHorizontal, Eye, Mail, ShieldOff, ArrowUpDown, ChevronLeft,
-  ChevronRight, TrendingUp, UserPlus, Shield, CheckCircle,
+  ChevronRight, TrendingUp, UserPlus, Shield, CheckCircle, Activity,
+  Zap, Moon, AlertTriangle,
 } from "lucide-react";
 import { formatDistanceToNow, subDays, isAfter } from "date-fns";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -42,6 +43,13 @@ const verificationBadge: Record<string, { label: string; className: string }> = 
   unverified: { label: "Unverified", className: "bg-muted text-muted-foreground border-border" },
 };
 
+const activityBadge: Record<string, { label: string; icon: React.ComponentType<{ className?: string }>; className: string }> = {
+  active: { label: "Active", icon: Zap, className: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" },
+  idle: { label: "Idle", icon: Clock, className: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" },
+  inactive: { label: "Inactive", icon: Moon, className: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20" },
+  dormant: { label: "Dormant", icon: AlertTriangle, className: "bg-destructive/10 text-destructive border-destructive/20" },
+};
+
 type SortField = "name" | "created_at" | "verification";
 type SortDir = "asc" | "desc";
 
@@ -52,6 +60,7 @@ export function AdminUserManagement() {
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [verificationFilter, setVerificationFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [activityFilter, setActivityFilter] = useState<string>("all");
   const [sortField, setSortField] = useState<SortField>("created_at");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [page, setPage] = useState(1);
@@ -74,7 +83,13 @@ export function AdminUserManagement() {
       });
     });
 
-    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts };
+    const activityCounts: Record<string, number> = { active: 0, idle: 0, inactive: 0, dormant: 0 };
+    users.forEach((u: any) => {
+      const s = u.activity?.status || "dormant";
+      activityCounts[s] = (activityCounts[s] || 0) + 1;
+    });
+
+    return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts, activityCounts };
   }, [users]);
 
   // ── Filter + Sort + Paginate ──
@@ -109,6 +124,11 @@ export function AdminUserManagement() {
       list = list.filter((u: any) => u.user_type === typeFilter);
     }
 
+    // Activity filter
+    if (activityFilter !== "all") {
+      list = list.filter((u: any) => (u.activity?.status || "dormant") === activityFilter);
+    }
+
     // Sort
     list.sort((a: any, b: any) => {
       let cmp = 0;
@@ -128,7 +148,7 @@ export function AdminUserManagement() {
     const paginated = list.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
     return { filtered: paginated, totalFiltered, totalPages };
-  }, [users, search, roleFilter, verificationFilter, typeFilter, sortField, sortDir, page]);
+  }, [users, search, roleFilter, verificationFilter, typeFilter, activityFilter, sortField, sortDir, page]);
 
   // Reset page when filters change
   const handleFilterChange = (setter: (v: string) => void) => (v: string) => {
@@ -177,7 +197,7 @@ export function AdminUserManagement() {
         </div>
       )}
 
-      {/* Role distribution mini-bar */}
+      {/* Role + Activity distribution mini-bar */}
       {stats && (
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs text-muted-foreground font-medium">Roles:</span>
@@ -198,6 +218,18 @@ export function AdminUserManagement() {
           <Badge variant="outline" className="text-[10px] gap-1">
             Onboarded · {stats.withOnboarding}/{stats.total}
           </Badge>
+          <span className="text-[10px] text-muted-foreground mx-1">|</span>
+          <span className="text-xs text-muted-foreground font-medium">Activity:</span>
+          {Object.entries(stats.activityCounts).map(([status, count]) => {
+            const ab = activityBadge[status];
+            if (!ab || !count) return null;
+            const AbIcon = ab.icon;
+            return (
+              <Badge key={status} variant="outline" className={`text-[10px] gap-1 ${ab.className}`}>
+                <AbIcon className="h-2.5 w-2.5" /> {ab.label} · {count}
+              </Badge>
+            );
+          })}
         </div>
       )}
 
@@ -248,6 +280,19 @@ export function AdminUserManagement() {
             <SelectItem value="entity">Entity</SelectItem>
           </SelectContent>
         </Select>
+
+        <Select value={activityFilter} onValueChange={handleFilterChange(setActivityFilter)}>
+          <SelectTrigger className="w-[130px] h-9 text-xs">
+            <SelectValue placeholder="Activity" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Activity</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="idle">Idle</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="dormant">Dormant</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* ── Sort Bar ── */}
@@ -278,8 +323,10 @@ export function AdminUserManagement() {
       <div className="space-y-1.5">
         {filtered.map((u: any) => {
           const vBadge = verificationBadge[u.verification_status] || verificationBadge.unverified;
+          const aBadge = activityBadge[u.activity?.status || "dormant"] || activityBadge.dormant;
+          const ActivityIcon = aBadge.icon;
           return (
-            <Card key={u.id} className="hover:bg-muted/30 transition-colors">
+            <Card key={u.id} className={`hover:bg-muted/30 transition-colors ${u.activity?.status === "dormant" ? "opacity-60" : ""}`}>
               <CardContent className="py-2.5 px-3">
                 <div className="flex items-center gap-3">
                   {/* Avatar */}
@@ -312,6 +359,9 @@ export function AdminUserManagement() {
                           <Shield className="h-2.5 w-2.5" /> Staff
                         </Badge>
                       )}
+                      <Badge variant="outline" className={`text-[9px] h-4 px-1 gap-0.5 ${aBadge.className}`}>
+                        <ActivityIcon className="h-2.5 w-2.5" /> {aBadge.label}
+                      </Badge>
                     </div>
                     <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                       {u.roles?.map((r: any) => {
@@ -324,8 +374,14 @@ export function AdminUserManagement() {
                       })}
                       <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                         <Clock className="h-2.5 w-2.5" />
-                        {formatDistanceToNow(new Date(u.created_at), { addSuffix: true })}
+                        Joined {formatDistanceToNow(new Date(u.created_at), { addSuffix: true })}
                       </span>
+                      {u.activity?.last_active_at && (
+                        <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                          · <Activity className="h-2.5 w-2.5" />
+                          Last active {formatDistanceToNow(new Date(u.activity.last_active_at), { addSuffix: true })}
+                        </span>
+                      )}
                       {u.location && (
                         <span className="text-[10px] text-muted-foreground">· {u.location}</span>
                       )}
