@@ -46,10 +46,24 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { isEnabled, isFetched } = useFeatureFlags();
-  const showJobs = !isFetched || isEnabled("jobs_board");
 
-  const navigationItems = showJobs ? NAVIGATION_ITEMS : NAVIGATION_ITEMS.filter((item) => item.path !== "/jobs");
-  const quickActions = showJobs ? QUICK_ACTIONS : QUICK_ACTIONS.filter((item) => item.path !== "/jobs");
+  // Map paths to their feature flag keys
+  const FLAG_MAP: Record<string, string> = {
+    "/jobs": "jobs_board",
+    "/events": "events_module",
+    "/showcase": "directory_listings",
+    "/messages": "messaging",
+    "/vault": "vault_storage",
+  };
+
+  const isPathEnabled = (path: string) => {
+    const flagKey = FLAG_MAP[path];
+    if (!flagKey) return true; // no flag = always visible
+    return !isFetched || isEnabled(flagKey);
+  };
+
+  const navigationItems = NAVIGATION_ITEMS.filter((item) => isPathEnabled(item.path));
+  const quickActions = QUICK_ACTIONS.filter((item) => isPathEnabled(item.path));
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

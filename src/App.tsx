@@ -13,7 +13,7 @@ import { FindooLoader } from "@/components/FindooLoader";
 import { CommandPalette } from "@/components/CommandPalette";
 import { SkipNav } from "@/components/SkipNav";
 import { useOfflineDetector } from "@/hooks/useOfflineDetector";
-import { useFeatureFlags } from "@/hooks/useFeatureFlags";
+
 
 /** Dev-only component that throws to test error boundaries */
 const DevErrorThrower = () => {
@@ -124,19 +124,8 @@ const LazyFallback = () => (
   </div>
 );
 
-const JobsRouteGate = () => {
-  const { isEnabled, isFetched } = useFeatureFlags();
-
-  if (!isFetched) {
-    return <LazyFallback />;
-  }
-
-  if (!isEnabled("jobs_board")) {
-    return <NotFound />;
-  }
-
-  return <RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary>;
-};
+// Lazy-load the gate component to keep the bundle lean
+import { FeatureFlagGate } from "@/components/FeatureFlagGate";
 
 const App = () => {
   useOfflineDetector();
@@ -200,7 +189,7 @@ const App = () => {
                       <Route path="/discover" element={<ProtectedRoute><RouteErrorBoundary routeName="Discover"><Discover /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/analytics" element={<ProtectedRoute><RouteErrorBoundary routeName="Analytics"><PostAnalytics /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/notifications" element={<ProtectedRoute><RouteErrorBoundary routeName="Notifications"><Notifications /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/messages" element={<ProtectedRoute><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></ProtectedRoute>} />
+                      {/* Messages route moved to feature-flag-gated section below */}
                       <Route path="/settings" element={<ProtectedRoute><RouteErrorBoundary routeName="Settings"><Settings /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/admin" element={<ProtectedRoute><RouteErrorBoundary routeName="Admin"><Admin /></RouteErrorBoundary></ProtectedRoute>}>
                         <Route index element={<Suspense fallback={<LazyFallback />}><AdminOverviewPage /></Suspense>} />
@@ -236,12 +225,13 @@ const App = () => {
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
                       </Route>
-                      <Route path="/jobs" element={<ProtectedRoute><JobsRouteGate /></ProtectedRoute>} />
-                      <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/showcase" element={<ProtectedRoute><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/leaderboard" element={<ProtectedRoute><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/jobs" element={<ProtectedRoute><FeatureFlagGate flagKey="jobs_board"><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/events" element={<ProtectedRoute><FeatureFlagGate flagKey="events_module"><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/showcase" element={<ProtectedRoute><FeatureFlagGate flagKey="directory_listings"><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/leaderboard" element={<ProtectedRoute><FeatureFlagGate flagKey="leaderboard"><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/bookmarks" element={<ProtectedRoute><RouteErrorBoundary routeName="Bookmarks"><Bookmarks /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/vault" element={<ProtectedRoute><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/vault" element={<ProtectedRoute><FeatureFlagGate flagKey="vault_storage"><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/messages" element={<ProtectedRoute><FeatureFlagGate flagKey="messaging"><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       {/* Dev-only: test system pages */}
                       {import.meta.env.DEV && (
                         <>

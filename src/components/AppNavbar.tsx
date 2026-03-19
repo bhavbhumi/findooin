@@ -37,6 +37,11 @@ const AppNavbar = () => {
   const { data: xp } = useUserXP(currentUserId || undefined);
   const { isEnabled, isFetched } = useFeatureFlags();
   const showJobs = !isFetched || isEnabled("jobs_board");
+  const showEvents = !isFetched || isEnabled("events_module");
+  const showShowcase = !isFetched || isEnabled("directory_listings");
+  const showMessages = !isFetched || isEnabled("messaging");
+  const showLeaderboard = !isFetched || isEnabled("leaderboard");
+  const showVault = !isFetched || isEnabled("vault_storage");
 
   useEffect(() => {
     let channel: any;
@@ -120,18 +125,22 @@ const AppNavbar = () => {
                   </Link>
                 </Button>
               )}
-              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
-                <Link to="/events">
-                  <CalendarDays className="h-4 w-4 lg:mr-1.5" />
-                  <span className="hidden lg:inline">Events</span>
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
-                <Link to="/showcase">
-                  <Store className="h-4 w-4 lg:mr-1.5" />
-                  <span className="hidden lg:inline">Showcase</span>
-                </Link>
-              </Button>
+              {showEvents && (
+                <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
+                  <Link to="/events">
+                    <CalendarDays className="h-4 w-4 lg:mr-1.5" />
+                    <span className="hidden lg:inline">Events</span>
+                  </Link>
+                </Button>
+              )}
+              {showShowcase && (
+                <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
+                  <Link to="/showcase">
+                    <Store className="h-4 w-4 lg:mr-1.5" />
+                    <span className="hidden lg:inline">Showcase</span>
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -151,18 +160,22 @@ const AppNavbar = () => {
             )}
 
             {/* Leaderboard */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Leaderboard">
-              <Link to="/leaderboard">
-                <Trophy className="h-5 w-5" />
-              </Link>
-            </Button>
+            {showLeaderboard && (
+              <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Leaderboard">
+                <Link to="/leaderboard">
+                  <Trophy className="h-5 w-5" />
+                </Link>
+              </Button>
+            )}
 
             {/* Messages icon */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Messages">
-              <Link to="/messages">
-                <MessageSquare className="h-5 w-5" />
-              </Link>
-            </Button>
+            {showMessages && (
+              <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Messages">
+                <Link to="/messages">
+                  <MessageSquare className="h-5 w-5" />
+                </Link>
+              </Button>
+            )}
 
             {/* Notifications icon */}
             <Button variant="ghost" size="icon" className="text-muted-foreground relative" asChild aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}>
@@ -196,12 +209,14 @@ const AppNavbar = () => {
                     Analytics
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/vault" className="flex items-center gap-2 cursor-pointer">
-                    <FolderLock className="h-4 w-4" />
-                    My Vault
-                  </Link>
-                </DropdownMenuItem>
+                {showVault && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/vault" className="flex items-center gap-2 cursor-pointer">
+                      <FolderLock className="h-4 w-4" />
+                      My Vault
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild>
                   <Link to="/bookmarks" className="flex items-center gap-2 cursor-pointer">
                     <Bookmark className="h-4 w-4" />
@@ -297,7 +312,7 @@ const AppNavbar = () => {
             { icon: Home, label: "Feed", href: "/feed" },
             { icon: Users, label: "Network", href: "/network" },
             ...(showJobs ? [{ icon: Briefcase, label: "Jobs", href: "/jobs" }] : []),
-            { icon: CalendarDays, label: "Events", href: "/events" },
+            ...(showEvents ? [{ icon: CalendarDays, label: "Events", href: "/events" }] : []),
             { icon: Compass, label: "Discover", href: "/discover" },
             { icon: User, label: "Profile", href: "/profile" },
           ].map((item) => {

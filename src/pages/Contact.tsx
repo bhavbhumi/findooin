@@ -49,9 +49,19 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+
+    // Honeypot anti-spam check — bots fill this hidden field
+    const honeypot = formData.get("website_url") as string;
+    if (honeypot) {
+      // Silently reject — looks like success to bots
+      toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
+      form.reset();
+      return;
+    }
+
+    setSubmitting(true);
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const subject = formData.get("subject") as string || "General inquiry";
@@ -166,6 +176,11 @@ const Contact = () => {
                     <div className="space-y-2">
                       <Label htmlFor="message">Message *</Label>
                       <Textarea id="message" required rows={5} placeholder="Tell us how we can help..." />
+                    </div>
+                    {/* Honeypot field — hidden from humans, catches bots */}
+                    <div aria-hidden="true" className="absolute opacity-0 h-0 w-0 overflow-hidden" style={{ position: 'absolute', left: '-9999px' }}>
+                      <label htmlFor="website_url">Website</label>
+                      <input type="text" id="website_url" name="website_url" tabIndex={-1} autoComplete="off" />
                     </div>
                     <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
                       {submitting ? "Sending..." : "Send Message"}
