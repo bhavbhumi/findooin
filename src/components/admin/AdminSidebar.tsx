@@ -126,6 +126,7 @@ export function AdminSidebar() {
     {
       label: "Infrastructure",
       items: [
+        { title: "Security Hub", url: "/admin/security", icon: ShieldAlert, permission: "view_monitoring" },
         { title: "Module Audit", url: "/admin/module-audit", icon: ClipboardList, permission: "view_module_audit" },
         { title: "SEO Audit", url: "/admin/seo", icon: Search, permission: "view_seo" },
         { title: "TrustCircle IQ™", url: "/admin/patent", icon: FileText, permission: "view_patent" },
