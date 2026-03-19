@@ -1,5 +1,5 @@
 import {
-  Award, Hash, GraduationCap, Languages, Star, Globe, ExternalLink,
+  Award, Hash, GraduationCap, Globe, ExternalLink,
   Link2, MapPin, Briefcase, TrendingUp,
 } from "lucide-react";
 import type { ProfileData, RoleData, ProfileStats } from "./ProfileHeader";
