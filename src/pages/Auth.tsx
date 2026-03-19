@@ -32,6 +32,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const handledSessionRef = useRef<string | null>(null);
 
   // Login attempt tracking
   const [loginAttempts, setLoginAttempts] = useState(0);
