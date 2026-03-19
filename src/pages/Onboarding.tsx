@@ -91,30 +91,62 @@ const Onboarding = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Check auth + guard against re-onboarding
+  // Check auth + guard against re-onboarding (with retry for DB timeouts)
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth", { replace: true });
-        return;
+    let cancelled = false;
+    let retries = 0;
+    const MAX_RETRIES = 3;
+
+    const check = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (cancelled) return;
+
+        if (!session) {
+          navigate("/auth", { replace: true });
+          return;
+        }
+
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("onboarding_completed")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        // On DB error, retry instead of showing blank page
+        if (error) {
+          console.warn("Onboarding profile check failed:", error.message);
+          if (retries < MAX_RETRIES) {
+            retries++;
+            setTimeout(check, 1500);
+            return;
+          }
+          // After retries, proceed to onboarding (user can complete it)
+        }
+
+        if (profile?.onboarding_completed) {
+          navigate("/feed", { replace: true });
+          return;
+        }
+
+        setUserId(session.user.id);
+        setDisplayName(session.user.user_metadata?.full_name || "");
+        setInitialLoading(false);
+      } catch (err) {
+        console.error("Onboarding session check failed:", err);
+        if (!cancelled && retries < MAX_RETRIES) {
+          retries++;
+          setTimeout(check, 1500);
+          return;
+        }
+        if (!cancelled) navigate("/auth", { replace: true });
       }
+    };
 
-      // Guard: if already onboarded, redirect to feed
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("onboarding_completed")
-        .eq("id", session.user.id)
-        .maybeSingle();
-
-      if (profile?.onboarding_completed) {
-        navigate("/feed", { replace: true });
-        return;
-      }
-
-      setUserId(session.user.id);
-      setDisplayName(session.user.user_metadata?.full_name || "");
-      setInitialLoading(false);
-    });
+    check();
+    return () => { cancelled = true; };
   }, [navigate]);
 
   const toggleRole = (role: Role) => {
