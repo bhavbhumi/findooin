@@ -3,12 +3,12 @@ import { isDisposableEmail, DISPOSABLE_EMAIL_ERROR } from "@/lib/disposable-emai
 
 describe("isDisposableEmail", () => {
   it("blocks known disposable domains", () => {
-    expect(isDisposableEmail("test@tempmail.com")).toBe(true);
     expect(isDisposableEmail("test@guerrillamail.com")).toBe(true);
     expect(isDisposableEmail("test@mailinator.com")).toBe(true);
     expect(isDisposableEmail("test@yopmail.com")).toBe(true);
-    expect(isDisposableEmail("test@throwaway.email")).toBe(true);
     expect(isDisposableEmail("test@10minutemail.com")).toBe(true);
+    expect(isDisposableEmail("test@trashmail.com")).toBe(true);
+    expect(isDisposableEmail("test@maildrop.cc")).toBe(true);
   });
 
   it("allows legitimate email providers", () => {
