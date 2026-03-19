@@ -147,7 +147,7 @@ export function useLoginStreak() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        (supabase.rpc("update_login_streak", { p_user_id: session.user.id }) as unknown as Promise<void>).catch(() => {});
+        Promise.resolve(supabase.rpc("update_login_streak", { p_user_id: session.user.id })).catch(() => {});
       }
     });
   }, []);
