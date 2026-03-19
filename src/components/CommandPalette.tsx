@@ -17,6 +17,7 @@ import {
   Settings, Search, BarChart3, FolderOpen, Compass, Shield,
   FileText, Globe,
 } from "lucide-react";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 const NAVIGATION_ITEMS = [
   { label: "Feed", icon: MessageSquare, path: "/feed", group: "Navigate" },

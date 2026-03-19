@@ -13,6 +13,7 @@ import { FindooLoader } from "@/components/FindooLoader";
 import { CommandPalette } from "@/components/CommandPalette";
 import { SkipNav } from "@/components/SkipNav";
 import { useOfflineDetector } from "@/hooks/useOfflineDetector";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 /** Dev-only component that throws to test error boundaries */
 const DevErrorThrower = () => {
