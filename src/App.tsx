@@ -124,19 +124,8 @@ const LazyFallback = () => (
   </div>
 );
 
-const JobsRouteGate = () => {
-  const { isEnabled, isFetched } = useFeatureFlags();
-
-  if (!isFetched) {
-    return <LazyFallback />;
-  }
-
-  if (!isEnabled("jobs_board")) {
-    return <NotFound />;
-  }
-
-  return <RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary>;
-};
+// Lazy-load the gate component to keep the bundle lean
+import { FeatureFlagGate } from "@/components/FeatureFlagGate";
 
 const App = () => {
   useOfflineDetector();
