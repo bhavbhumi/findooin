@@ -556,6 +556,54 @@ export type Database = {
           },
         ]
       }
+      compliance_items: {
+        Row: {
+          control_id: string
+          created_at: string
+          description: string
+          evidence_url: string | null
+          framework: string
+          id: string
+          next_review_date: string | null
+          notes: string | null
+          owner: string | null
+          review_date: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          control_id: string
+          created_at?: string
+          description?: string
+          evidence_url?: string | null
+          framework?: string
+          id?: string
+          next_review_date?: string | null
+          notes?: string | null
+          owner?: string | null
+          review_date?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          control_id?: string
+          created_at?: string
+          description?: string
+          evidence_url?: string | null
+          framework?: string
+          id?: string
+          next_review_date?: string | null
+          notes?: string | null
+          owner?: string | null
+          review_date?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       connections: {
         Row: {
           connection_type: Database["public"]["Enums"]["connection_type"]
@@ -2507,6 +2555,110 @@ export type Database = {
           },
         ]
       }
+      security_alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          description: string
+          id: string
+          is_acknowledged: boolean
+          metadata: Json | null
+          related_incident_id: string | null
+          source: string
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_acknowledged?: boolean
+          metadata?: Json | null
+          related_incident_id?: string | null
+          source?: string
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          description?: string
+          id?: string
+          is_acknowledged?: boolean
+          metadata?: Json | null
+          related_incident_id?: string | null
+          source?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_alerts_related_incident_id_fkey"
+            columns: ["related_incident_id"]
+            isOneToOne: false
+            referencedRelation: "security_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_incidents: {
+        Row: {
+          affected_systems: string[] | null
+          assigned_to: string | null
+          category: string
+          created_at: string
+          description: string
+          detected_at: string
+          id: string
+          impact_assessment: string | null
+          reported_by: string | null
+          resolution_notes: string | null
+          resolved_at: string | null
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          affected_systems?: string[] | null
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          detected_at?: string
+          id?: string
+          impact_assessment?: string | null
+          reported_by?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          affected_systems?: string[] | null
+          assigned_to?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          detected_at?: string
+          id?: string
+          impact_assessment?: string | null
+          reported_by?: string | null
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       social_proof_events: {
         Row: {
           created_at: string
@@ -3171,6 +3323,63 @@ export type Database = {
           total_xp?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      vapt_scans: {
+        Row: {
+          completed_at: string | null
+          conducted_by: string | null
+          created_at: string
+          findings_critical: number
+          findings_high: number
+          findings_info: number
+          findings_low: number
+          findings_medium: number
+          id: string
+          next_scheduled_at: string | null
+          report_url: string | null
+          scan_type: string
+          scanner_name: string
+          started_at: string | null
+          status: string
+          summary: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          conducted_by?: string | null
+          created_at?: string
+          findings_critical?: number
+          findings_high?: number
+          findings_info?: number
+          findings_low?: number
+          findings_medium?: number
+          id?: string
+          next_scheduled_at?: string | null
+          report_url?: string | null
+          scan_type?: string
+          scanner_name?: string
+          started_at?: string | null
+          status?: string
+          summary?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          conducted_by?: string | null
+          created_at?: string
+          findings_critical?: number
+          findings_high?: number
+          findings_info?: number
+          findings_low?: number
+          findings_medium?: number
+          id?: string
+          next_scheduled_at?: string | null
+          report_url?: string | null
+          scan_type?: string
+          scanner_name?: string
+          started_at?: string | null
+          status?: string
+          summary?: string | null
         }
         Relationships: []
       }
