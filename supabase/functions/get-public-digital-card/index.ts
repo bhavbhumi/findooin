@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,6 +7,7 @@ const corsHeaders = {
 };
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const DB_TIMEOUT_MS = 6000;
 
 const maskRegulatoryIds = (raw: unknown): Record<string, string> | null => {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
@@ -49,18 +50,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    const admin = createClient(supabaseUrl, serviceRoleKey);
+    const admin = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+
+    const querySignal = AbortSignal.timeout(DB_TIMEOUT_MS);
 
     const [profileRes, rolesRes] = await Promise.all([
       admin
         .from("profiles")
         .select("id, full_name, display_name, designation, organization, headline, location, website, avatar_url, verification_status, user_type, social_links, specializations, certifications, regulatory_ids, digital_card_fields")
         .eq("id", rawUserId)
+        .abortSignal(querySignal)
         .maybeSingle(),
       admin
         .from("user_roles")
         .select("role, sub_type")
-        .eq("user_id", rawUserId),
+        .eq("user_id", rawUserId)
+        .abortSignal(querySignal),
     ]);
 
     if (profileRes.error) {
