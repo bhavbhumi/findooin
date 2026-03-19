@@ -289,6 +289,19 @@ export function AdminOpinionsManagement() {
                 )}
               </div>
 
+              {/* Content Intent (SEBI 2026) */}
+              <div>
+                <Label className="text-xs">Content Intent (SEBI 2026)</Label>
+                <Select value={contentIntent} onValueChange={(v) => setContentIntent(v as ContentIntent)}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(CONTENT_INTENT_LABELS).map(([k, v]) => (
+                      <SelectItem key={k} value={k}>{v.icon} {v.label} — {v.description}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs">Status</Label>
