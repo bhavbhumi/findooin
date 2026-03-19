@@ -35,6 +35,16 @@ interface CardProfile {
   digital_card_fields: Record<string, boolean> | null;
 }
 
+interface CardRole {
+  role: string;
+  sub_type: string | null;
+}
+
+interface PublicDigitalCardResponse {
+  profile: CardProfile | null;
+  roles: CardRole[];
+}
+
 const DEFAULT_FIELDS: Record<string, boolean> = {
   full_name: true, designation: true, organization: true, headline: true,
   location: true, website: true, social_links: true, certifications: true,
@@ -52,7 +62,7 @@ const DigitalCard = () => {
   const [searchParams] = useSearchParams();
   const eventContext = searchParams.get("event");
   const [profile, setProfile] = useState<CardProfile | null>(null);
-  const [roles, setRoles] = useState<{ role: string; sub_type: string | null }[]>([]);
+  const [roles, setRoles] = useState<CardRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
@@ -66,35 +76,48 @@ const DigitalCard = () => {
   }, []);
 
   useEffect(() => {
-    if (!userId) { setError(true); setLoading(false); return; }
-    
-    // Validate UUID format to avoid unnecessary API calls
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(userId)) { setError(true); setLoading(false); return; }
-
-    Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).single(),
-      supabase.from("user_roles").select("role, sub_type").eq("user_id", userId),
-    ]).then(([profileRes, rolesRes]) => {
-      if (profileRes.data) {
-        const d = profileRes.data as any;
-        setProfile({
-          id: d.id, full_name: d.full_name, display_name: d.display_name,
-          designation: d.designation, organization: d.organization,
-          headline: d.headline, location: d.location, website: d.website,
-          avatar_url: d.avatar_url, verification_status: d.verification_status,
-          user_type: d.user_type, social_links: d.social_links,
-          specializations: d.specializations, certifications: d.certifications,
-          regulatory_ids: d.regulatory_ids,
-          digital_card_fields: d.digital_card_fields,
-        });
-        setRoles(rolesRes.data || []);
-      } else {
-        console.error("[DigitalCard] Profile not found for userId:", userId, profileRes.error);
-        setError(true);
-      }
+    if (!userId) {
+      setError(true);
       setLoading(false);
-    }).catch((err) => {
+      return;
+    }
+
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
+      setError(true);
+      setLoading(false);
+      return;
+    }
+
+    const loadPublicCard = async () => {
+      setError(false);
+      setLoading(true);
+
+      const { data, error: invokeError } = await supabase.functions.invoke("get-public-digital-card", {
+        body: { userId },
+      });
+
+      if (invokeError) {
+        console.error("[DigitalCard] Public fetch failed:", userId, invokeError);
+        setError(true);
+        setLoading(false);
+        return;
+      }
+
+      const payload = (data ?? null) as PublicDigitalCardResponse | null;
+      if (!payload?.profile) {
+        console.error("[DigitalCard] Profile not found for userId:", userId, payload);
+        setError(true);
+        setLoading(false);
+        return;
+      }
+
+      setProfile(payload.profile);
+      setRoles(Array.isArray(payload.roles) ? payload.roles : []);
+      setLoading(false);
+    };
+
+    loadPublicCard().catch((err) => {
       console.error("[DigitalCard] Fetch error:", err);
       setError(true);
       setLoading(false);
@@ -279,7 +302,7 @@ const DigitalCard = () => {
                       val ? (
                         <Badge key={key} variant="outline" className="text-[10px] border-[hsl(var(--gold)/0.4)] bg-[hsl(var(--gold)/0.08)]">
                           <FileText className="h-3 w-3 mr-1" />
-                          {REGULATOR_LABELS[key] || key.toUpperCase()}: {String(val).slice(0, 4)}••••
+                          {REGULATOR_LABELS[key] || key.toUpperCase()}: {String(val)}
                         </Badge>
                       ) : null
                     )}
