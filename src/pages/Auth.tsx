@@ -149,9 +149,11 @@ const Auth = () => {
   );
 
   useEffect(() => {
+    // Set up listener BEFORE getSession (Supabase best practice)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
-        handleSignedInSession(session);
+        // Defer async work to avoid deadlocking the auth state change callback
+        setTimeout(() => handleSignedInSession(session), 0);
       }
     });
 
