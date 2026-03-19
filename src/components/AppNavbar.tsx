@@ -35,6 +35,9 @@ const AppNavbar = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const { data: isAdmin } = useIsAdmin();
   const { data: xp } = useUserXP(currentUserId || undefined);
+  const { isEnabled, isFetched } = useFeatureFlags();
+  const showJobs = !isFetched || isEnabled("jobs_board");
+
   useEffect(() => {
     let channel: any;
 
