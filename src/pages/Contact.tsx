@@ -177,6 +177,11 @@ const Contact = () => {
                       <Label htmlFor="message">Message *</Label>
                       <Textarea id="message" required rows={5} placeholder="Tell us how we can help..." />
                     </div>
+                    {/* Honeypot field — hidden from humans, catches bots */}
+                    <div aria-hidden="true" className="absolute opacity-0 h-0 w-0 overflow-hidden" style={{ position: 'absolute', left: '-9999px' }}>
+                      <label htmlFor="website_url">Website</label>
+                      <input type="text" id="website_url" name="website_url" tabIndex={-1} autoComplete="off" />
+                    </div>
                     <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
                       {submitting ? "Sending..." : "Send Message"}
                     </Button>

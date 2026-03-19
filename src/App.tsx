@@ -189,7 +189,7 @@ const App = () => {
                       <Route path="/discover" element={<ProtectedRoute><RouteErrorBoundary routeName="Discover"><Discover /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/analytics" element={<ProtectedRoute><RouteErrorBoundary routeName="Analytics"><PostAnalytics /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/notifications" element={<ProtectedRoute><RouteErrorBoundary routeName="Notifications"><Notifications /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/messages" element={<ProtectedRoute><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></ProtectedRoute>} />
+                      {/* Messages route moved to feature-flag-gated section below */}
                       <Route path="/settings" element={<ProtectedRoute><RouteErrorBoundary routeName="Settings"><Settings /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/admin" element={<ProtectedRoute><RouteErrorBoundary routeName="Admin"><Admin /></RouteErrorBoundary></ProtectedRoute>}>
                         <Route index element={<Suspense fallback={<LazyFallback />}><AdminOverviewPage /></Suspense>} />
