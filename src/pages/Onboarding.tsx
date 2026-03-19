@@ -16,8 +16,6 @@ import { uploadFile } from "@/lib/storage";
 import { ContactImportDialog } from "@/components/network/ContactImportDialog";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
-import { LanguageSelector } from "@/components/selectors/LanguageSelector";
-import type { UserLanguage } from "@/data/languages";
 
 type UserType = "individual" | "entity";
 type Role = "investor" | "intermediary" | "issuer";
