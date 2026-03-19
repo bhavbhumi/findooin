@@ -15,29 +15,7 @@ import { memo } from "react";
 
 const MemoizedPostCard = memo(PostCard);
 
-interface FeedPost {
-  id: string;
-  content: string;
-  post_type: string;
-  post_kind: string;
-  query_category: string | null;
-  hashtags: string[] | null;
-  attachment_url: string | null;
-  attachment_name: string | null;
-  attachment_type: string | null;
-  created_at: string;
-  author: {
-    id: string;
-    full_name: string;
-    display_name: string | null;
-    avatar_url: string | null;
-    verification_status: string;
-  };
-  roles: any[];
-  like_count: number;
-  comment_count: number;
-  bookmark_count: number;
-}
+import type { FeedPost } from "@/hooks/useFeedPosts";
 
 const Bookmarks = () => {
   usePageMeta({ title: "Bookmarks" });
