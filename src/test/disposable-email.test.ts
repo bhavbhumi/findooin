@@ -9,6 +9,10 @@ describe("isDisposableEmail", () => {
     expect(isDisposableEmail("test@10minutemail.com")).toBe(true);
     expect(isDisposableEmail("test@trashmail.com")).toBe(true);
     expect(isDisposableEmail("test@maildrop.cc")).toBe(true);
+    // Domains found in real abuse logs
+    expect(isDisposableEmail("test@onbap.com")).toBe(true);
+    expect(isDisposableEmail("test@soco7.com")).toBe(true);
+    expect(isDisposableEmail("test@qvmao.com")).toBe(true);
   });
 
   it("allows legitimate email providers", () => {
