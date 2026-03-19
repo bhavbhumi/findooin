@@ -153,7 +153,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
         experience_years: experienceYears ? parseInt(experienceYears) : null,
         specializations: specializations.length > 0 ? specializations : null,
         certifications: certifications.length > 0 ? certifications : null,
-        languages: languages.length > 0 ? languages : null,
+        
         regulatory_ids: Object.keys(regulatoryIds).length > 0 ? regulatoryIds : null,
         social_links: Object.keys(socialLinks).length > 0 ? socialLinks : null,
         updated_at: new Date().toISOString(),
