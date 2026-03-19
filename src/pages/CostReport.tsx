@@ -39,10 +39,11 @@ const PLATFORM_COSTS = {
     upgradePath: [
       { tier: "Pico (Free)", from: "2026-02-25", to: "2026-03-19", monthlyINR: 0 },
       { tier: "Nano", from: "2026-03-19", to: "2026-03-19", monthlyINR: 420 },
-      { tier: "Micro (Current)", from: "2026-03-19", to: "Present", monthlyINR: 840 },
+      { tier: "Micro", from: "2026-03-19", to: "2026-03-19", monthlyINR: 840 },
+      { tier: "Mini (Current)", from: "2026-03-19", to: "Present", monthlyINR: 2100 },
     ],
-    currentTier: "Micro",
-    currentMonthlyINR: 840,
+    currentTier: "Mini",
+    currentMonthlyINR: 2100, // $25/mo × ₹84
   },
   analytics: {
     totalVisitors: 119,
@@ -66,13 +67,14 @@ const SUBSCRIPTION_COST_USD = PLATFORM_COSTS.lovable.monthlyUSD * Math.ceil(MONT
 const TOPUP_COST_USD = OVERAGE_CREDITS * PLATFORM_COSTS.lovable.creditCostPerUnit;
 const TOTAL_LOVABLE_USD = SUBSCRIPTION_COST_USD + TOPUP_COST_USD;
 const TOTAL_LOVABLE_INR = Math.round(TOTAL_LOVABLE_USD * USD_TO_INR);
-const TOTAL_CLOUD_COST = Math.round(PLATFORM_COSTS.cloud.currentMonthlyINR * 0.03); // Micro just started today
+const TOTAL_CLOUD_COST = Math.round(PLATFORM_COSTS.cloud.currentMonthlyINR * 0.03); // Mini just started today
 const TOTAL_SUNK_COST = TOTAL_LOVABLE_INR + TOTAL_CLOUD_COST;
+const MONTHLY_BASE = PLATFORM_COSTS.lovable.monthlyINR + PLATFORM_COSTS.cloud.currentMonthlyINR; // ₹3,780/mo
 
 // ── Infra Cost Model (₹/mo at scale — includes platform base) ──
 const INFRA_COSTS = [
-  { users: 100, label: "100", db: 0, auth: 0, storage: 0, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 840, total: 2520 },
-  { users: 1000, label: "1K", db: 0, auth: 0, storage: 500, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 840, total: 3020 },
+  { users: 100, label: "100", db: 0, auth: 0, storage: 0, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 2100, total: 3780 },
+  { users: 1000, label: "1K", db: 0, auth: 0, storage: 500, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 2100, total: 4280 },
   { users: 5000, label: "5K", db: 2000, auth: 0, storage: 1500, edge: 500, cdn: 0, cache: 2000, lovable: 1680, cloud: 2520, total: 10200 },
   { users: 10000, label: "10K", db: 5000, auth: 2000, storage: 3000, edge: 1500, cdn: 1500, cache: 2000, lovable: 1680, cloud: 4200, total: 20880 },
   { users: 25000, label: "25K", db: 12000, auth: 3000, storage: 5000, edge: 3000, cdn: 2000, cache: 4000, lovable: 1680, cloud: 8400, total: 39080 },
@@ -313,7 +315,7 @@ const CostReport = () => {
         <div className="mt-4 bg-primary/5 border-l-4 border-primary p-4 text-sm">
           <p className="font-semibold">Cost Summary:</p>
           <p>Development to date: <strong>{INR(TOTAL_SUNK_COST)}</strong> (~${Math.round(TOTAL_LOVABLE_USD)}) across {PLATFORM_COSTS.lovable.creditsConsumed} credits, {PLATFORM_COSTS.lovable.messages} messages, {PLATFORM_COSTS.lovable.aiEdits} AI edits.</p>
-          <p className="mt-1">Ongoing monthly: Lovable Pro ({INR(1680)}) + Cloud Micro ({INR(840)}) = <strong>{INR(2520)}/mo</strong> base cost.</p>
+          <p className="mt-1">Ongoing monthly: Lovable Pro ({INR(1680)}) + Cloud Mini ({INR(2100)}) = <strong>{INR(MONTHLY_BASE)}/mo</strong> base cost.</p>
         </div>
       </section>
 
@@ -399,7 +401,7 @@ const CostReport = () => {
         </h2>
         <p className="text-sm text-muted-foreground mb-2">
           {(ADOPTION.proConversionRate * 100).toFixed(0)}% Pro, {(ADOPTION.enterpriseConversionRate * 100).toFixed(0)}% Enterprise, {(ADOPTION.churnRateMonthly * 100).toFixed(0)}% churn.
-          <strong> All costs include Lovable Pro (₹1,680/mo) + Cloud instance.</strong>
+          <strong> All costs include Lovable Pro ({INR(1680)}/mo) + Cloud Mini ({INR(2100)}/mo).</strong>
         </p>
         <div className="overflow-x-auto mb-4">
           <table className="w-full border-collapse border border-border text-sm">
@@ -608,7 +610,7 @@ const CostReport = () => {
         <div className="bg-primary/5 border-l-4 border-primary p-4 text-sm leading-relaxed">
           <p className="mb-2"><strong>With verified platform costs, FindOO remains financially sustainable from Month 1.</strong></p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Fixed platform base: <strong>{INR(2520)}/mo</strong> (Lovable Pro + Cloud Micro) — becomes negligible at scale</li>
+            <li>Fixed platform base: <strong>{INR(MONTHLY_BASE)}/mo</strong> (Lovable Pro + Cloud Mini) — becomes negligible at scale</li>
             <li>Total development cost to date ({DAYS_ACTIVE} days): <strong>{INR(TOTAL_SUNK_COST)}</strong></li>
             <li>At 25K users: revenue <strong>{INR(targetRev.total)}/mo</strong> vs cost <strong>₹39K/mo</strong></li>
             <li>Platform costs become &lt;1% of total burn beyond 10K users</li>
