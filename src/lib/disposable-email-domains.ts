@@ -605,7 +605,7 @@ const DISPOSABLE_DOMAINS: ReadonlySet<string> = new Set([
   "pastebitch.com", "pastryofistanbul.com", "patity.com", "patonce.com", "pavilionx2.com", "paxlys.com",
   "payperex2.com", "payspun.com", "pazuric.com", "pckage.com", "pdf-cutter.com", "pe.hu",
   "peakinbox.net", "pecinan.com", "pecinan.net", "pecinan.org", "penisgoes.in", "penoto.tk",
-  "pepamail.com", "pepbot.com", "percyfx.com", "pertera.com", "peterdethier.com", "petloca.com",
+  "pazard.com", "paylaar.com", "pepamail.com", "pepbot.com", "percyfx.com", "pertera.com", "peterdethier.com", "petloca.com",
   "petrzilka.net", "pewpewpewpew.pw", "pflege-schoene-haut.de", "pfui.ru", "phamay.com", "phanmembanhang24h.com",
   "philipdowney.com", "phimib.com", "phone-elkey.ru", "photo-impact.eu", "photobrex.com", "photomark.net",
   "phucmmo.com", "phyones.com", "physcroenmail.com", "physicaladithama.io", "pi.vu", "piaa.me",
