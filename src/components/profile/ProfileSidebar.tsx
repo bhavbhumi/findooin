@@ -1,5 +1,5 @@
 import {
-  Award, Hash, GraduationCap, Languages, Star, Globe, ExternalLink,
+  Award, Hash, GraduationCap, Globe, ExternalLink,
   Link2, MapPin, Briefcase, TrendingUp,
 } from "lucide-react";
 import type { ProfileData, RoleData, ProfileStats } from "./ProfileHeader";
@@ -17,8 +17,6 @@ export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigate
   const hasRegulatoryIds = profile.regulatory_ids && Object.keys(profile.regulatory_ids).length > 0;
   const hasCertifications = profile.certifications && profile.certifications.length > 0;
   const hasSpecializations = profile.specializations && profile.specializations.length > 0;
-  const langArray: any[] = Array.isArray(profile.languages) ? profile.languages : [];
-  const hasLanguages = langArray.length > 0;
   const hasSocialLinks = profile.social_links && Object.keys(profile.social_links).length > 0;
 
   return (
@@ -63,7 +61,7 @@ export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigate
       </div>
 
       {/* Expertise & Credentials */}
-      {(hasSpecializations || hasCertifications || hasLanguages) && (
+      {(hasSpecializations || hasCertifications) && (
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           <div className="px-4 py-3 border-b border-border flex items-center gap-2">
             <Award className="h-3.5 w-3.5 text-muted-foreground" />
@@ -92,25 +90,6 @@ export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigate
                       <span className="text-[10px] font-medium text-card-foreground">{c}</span>
                     </div>
                   ))}
-                </div>
-              </div>
-            )}
-            {hasLanguages && (
-              <div className={(hasSpecializations || hasCertifications) ? "pt-2 border-t border-border" : ""}>
-                <p className="text-[10px] font-medium text-muted-foreground mb-1.5">Languages</p>
-                <div className="flex flex-wrap gap-1">
-                  {langArray.map((l: any, i: number) => {
-                    const name = typeof l === "string" ? l : l.name;
-                    const proficiency = typeof l === "object" ? l.proficiency : null;
-                    const isMotherTongue = typeof l === "object" ? l.isMotherTongue : false;
-                    return (
-                      <span key={i} className="inline-flex items-center gap-0.5 text-[10px] font-medium bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">
-                        {isMotherTongue ? <Star className="h-2.5 w-2.5 fill-current text-gold" /> : <Languages className="h-2.5 w-2.5" />}
-                        {name}
-                        {proficiency && <span className="opacity-60 capitalize">· {proficiency}</span>}
-                      </span>
-                    );
-                  })}
                 </div>
               </div>
             )}

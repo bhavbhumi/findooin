@@ -17,6 +17,7 @@ import {
   Settings, Search, BarChart3, FolderOpen, Compass, Shield,
   FileText, Globe,
 } from "lucide-react";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 const NAVIGATION_ITEMS = [
   { label: "Feed", icon: MessageSquare, path: "/feed", group: "Navigate" },
@@ -44,6 +45,11 @@ const QUICK_ACTIONS = [
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { isEnabled, isFetched } = useFeatureFlags();
+  const showJobs = !isFetched || isEnabled("jobs_board");
+
+  const navigationItems = showJobs ? NAVIGATION_ITEMS : NAVIGATION_ITEMS.filter((item) => item.path !== "/jobs");
+  const quickActions = showJobs ? QUICK_ACTIONS : QUICK_ACTIONS.filter((item) => item.path !== "/jobs");
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -67,7 +73,7 @@ export function CommandPalette() {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Quick Actions">
-          {QUICK_ACTIONS.map((item) => (
+          {quickActions.map((item) => (
             <CommandItem
               key={item.label}
               onSelect={() => handleSelect(item.path)}
@@ -80,7 +86,7 @@ export function CommandPalette() {
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Navigate">
-          {NAVIGATION_ITEMS.map((item) => (
+          {navigationItems.map((item) => (
             <CommandItem
               key={item.label}
               onSelect={() => handleSelect(item.path)}

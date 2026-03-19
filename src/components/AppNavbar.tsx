@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { StreakIndicator } from "@/components/gamification/StreakIndicator";
 import { useUserXP } from "@/hooks/useGamification";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,6 +35,9 @@ const AppNavbar = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const { data: isAdmin } = useIsAdmin();
   const { data: xp } = useUserXP(currentUserId || undefined);
+  const { isEnabled, isFetched } = useFeatureFlags();
+  const showJobs = !isFetched || isEnabled("jobs_board");
+
   useEffect(() => {
     let channel: any;
 
@@ -108,12 +112,14 @@ const AppNavbar = () => {
                   <span className="hidden lg:inline">Network</span>
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
-                <Link to="/jobs">
-                  <Briefcase className="h-4 w-4 lg:mr-1.5" />
-                  <span className="hidden lg:inline">Jobs</span>
-                </Link>
-              </Button>
+              {showJobs && (
+                <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
+                  <Link to="/jobs">
+                    <Briefcase className="h-4 w-4 lg:mr-1.5" />
+                    <span className="hidden lg:inline">Jobs</span>
+                  </Link>
+                </Button>
+              )}
               <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
                 <Link to="/events">
                   <CalendarDays className="h-4 w-4 lg:mr-1.5" />
@@ -290,7 +296,7 @@ const AppNavbar = () => {
           {[
             { icon: Home, label: "Feed", href: "/feed" },
             { icon: Users, label: "Network", href: "/network" },
-            { icon: Briefcase, label: "Jobs", href: "/jobs" },
+            ...(showJobs ? [{ icon: Briefcase, label: "Jobs", href: "/jobs" }] : []),
             { icon: CalendarDays, label: "Events", href: "/events" },
             { icon: Compass, label: "Discover", href: "/discover" },
             { icon: User, label: "Profile", href: "/profile" },

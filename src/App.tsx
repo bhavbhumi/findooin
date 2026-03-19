@@ -13,6 +13,7 @@ import { FindooLoader } from "@/components/FindooLoader";
 import { CommandPalette } from "@/components/CommandPalette";
 import { SkipNav } from "@/components/SkipNav";
 import { useOfflineDetector } from "@/hooks/useOfflineDetector";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 /** Dev-only component that throws to test error boundaries */
 const DevErrorThrower = () => {
@@ -123,6 +124,20 @@ const LazyFallback = () => (
   </div>
 );
 
+const JobsRouteGate = () => {
+  const { isEnabled, isFetched } = useFeatureFlags();
+
+  if (!isFetched) {
+    return <LazyFallback />;
+  }
+
+  if (!isEnabled("jobs_board")) {
+    return <NotFound />;
+  }
+
+  return <RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary>;
+};
+
 const App = () => {
   useOfflineDetector();
 
@@ -221,7 +236,7 @@ const App = () => {
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
                       </Route>
-                      <Route path="/jobs" element={<ProtectedRoute><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/jobs" element={<ProtectedRoute><JobsRouteGate /></ProtectedRoute>} />
                       <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/showcase" element={<ProtectedRoute><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/leaderboard" element={<ProtectedRoute><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></ProtectedRoute>} />

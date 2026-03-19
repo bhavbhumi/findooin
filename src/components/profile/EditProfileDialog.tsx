@@ -4,7 +4,7 @@
  * Provides a tabbed editing interface for user profiles:
  * - **Basic**: Name, display name, headline, bio, user type
  * - **Professional**: Organization, designation, experience, specializations
- * - **Credentials**: Certifications, regulatory IDs, languages
+ * - **Credentials**: Certifications, regulatory IDs
  * - **Links**: Website, social links (LinkedIn, Twitter/X, GitHub)
  * - **Media**: Avatar and banner image upload
  *
@@ -30,14 +30,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  User, Building2, Briefcase, MapPin, Globe, Award, Languages,
+  User, Building2, Briefcase, MapPin, Globe, Award,
   GraduationCap, Landmark, Save, X, Plus, Trash2, Upload, Loader2,
 } from "lucide-react";
 import type { ProfileData } from "./ProfileHeader";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
-import { LanguageSelector } from "@/components/selectors/LanguageSelector";
-import type { UserLanguage } from "@/data/languages";
 import { uploadFile, validateFile } from "@/lib/storage";
 
 interface EditProfileDialogProps {
@@ -73,19 +71,6 @@ const socialOptions = [
   { key: "youtube", label: "YouTube" },
 ];
 
-/** Parse languages from DB — handles both old text[] and new jsonb format */
-function parseLanguages(raw: any): UserLanguage[] {
-  if (!raw) return [];
-  if (Array.isArray(raw)) {
-    return raw.map((item: any) => {
-      if (typeof item === "string") {
-        return { code: "", name: item, proficiency: "fluent" as const, isMotherTongue: false };
-      }
-      return item as UserLanguage;
-    });
-  }
-  return [];
-}
 
 export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: EditProfileDialogProps) => {
   const [saving, setSaving] = useState(false);
@@ -109,7 +94,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
   // Expertise
   const [specializations, setSpecializations] = useState<string[]>(profile.specializations || []);
   const [certifications, setCertifications] = useState<string[]>(profile.certifications || []);
-  const [languages, setLanguages] = useState<UserLanguage[]>(parseLanguages(profile.languages));
+  
   const [newSpec, setNewSpec] = useState("");
 
   // Regulatory
@@ -137,7 +122,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
     setExperienceYears(profile.experience_years?.toString() || "");
     setSpecializations(profile.specializations || []);
     setCertifications(profile.certifications || []);
-    setLanguages(parseLanguages(profile.languages));
+    
     setRegulatoryIds((profile.regulatory_ids as Record<string, string>) || {});
     setSocialLinks((profile.social_links as Record<string, string>) || {});
   }, [profile]);
@@ -168,7 +153,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
         experience_years: experienceYears ? parseInt(experienceYears) : null,
         specializations: specializations.length > 0 ? specializations : null,
         certifications: certifications.length > 0 ? certifications : null,
-        languages: languages.length > 0 ? languages : null,
+        
         regulatory_ids: Object.keys(regulatoryIds).length > 0 ? regulatoryIds : null,
         social_links: Object.keys(socialLinks).length > 0 ? socialLinks : null,
         updated_at: new Date().toISOString(),
@@ -361,11 +346,6 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
               <CertificationSelector value={certifications} onChange={setCertifications} />
             </div>
 
-            {/* Languages — with proficiency & mother tongue */}
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground mb-1 block">Languages</Label>
-              <LanguageSelector value={languages} onChange={setLanguages} />
-            </div>
           </TabsContent>
 
           {/* Regulatory Tab */}

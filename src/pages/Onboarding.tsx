@@ -16,8 +16,6 @@ import { uploadFile } from "@/lib/storage";
 import { ContactImportDialog } from "@/components/network/ContactImportDialog";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
-import { LanguageSelector } from "@/components/selectors/LanguageSelector";
-import type { UserLanguage } from "@/data/languages";
 
 type UserType = "individual" | "entity";
 type Role = "investor" | "intermediary" | "issuer";
@@ -81,7 +79,7 @@ const Onboarding = () => {
   const [designation, setDesignation] = useState("");
   const [location, setLocation] = useState("");
   const [certifications, setCertifications] = useState<string[]>([]);
-  const [languages, setLanguages] = useState<UserLanguage[]>([]);
+  
   const [loading, setLoading] = useState(false);
   const [verificationFiles, setVerificationFiles] = useState<Record<string, File | null>>({});
   const [initialLoading, setInitialLoading] = useState(true);
@@ -200,7 +198,7 @@ const Onboarding = () => {
           designation: designation || null,
           location: location || null,
           certifications: certifications.length > 0 ? certifications : null,
-          languages: languages.length > 0 ? languages : null,
+          
           onboarding_completed: true,
           verification_status: Object.values(verificationFiles).some(f => f) ? "pending" : "unverified",
         } as any, { onConflict: "id" });
@@ -498,10 +496,6 @@ const Onboarding = () => {
                     <CertificationSelector value={certifications} onChange={setCertifications} />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Languages <span className="text-muted-foreground">(optional)</span></Label>
-                    <LanguageSelector value={languages} onChange={setLanguages} />
-                  </div>
 
                   <div className="rounded-lg bg-secondary p-4">
                     <p className="text-sm text-muted-foreground mb-2">Your roles:</p>
