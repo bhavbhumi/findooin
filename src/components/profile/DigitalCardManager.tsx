@@ -42,7 +42,7 @@ const DEFAULT_FIELDS: Record<string, boolean> = {
   specializations: true, email: false, phone: false,
 };
 
-export const DigitalCardManager = ({ profileId, digitalCardFields, onFieldsUpdated }: DigitalCardManagerProps) => {
+export const DigitalCardManager = ({ profileId, profileName, digitalCardFields, onFieldsUpdated }: DigitalCardManagerProps) => {
   const [fields, setFields] = useState<Record<string, boolean>>(digitalCardFields ?? DEFAULT_FIELDS);
   const [saving, setSaving] = useState(false);
   const [nfcSupported, setNfcSupported] = useState(false);
