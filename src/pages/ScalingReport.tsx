@@ -156,8 +156,8 @@ const ScalingReport = () => {
               </CardContent></Card>
               <Card className="border"><CardContent className="p-3">
                 <div className="flex items-center gap-2 mb-1"><Database className="h-4 w-4 text-muted-foreground" /><span className="text-xs text-muted-foreground">Cloud Instance</span></div>
-                <p className="text-2xl font-bold">Micro</p>
-                <p className="text-xs text-muted-foreground">Upgraded 19 Mar 2026</p>
+                <p className="text-2xl font-bold">Mini</p>
+                <p className="text-xs text-muted-foreground">$25/mo · Upgraded 19 Mar 2026</p>
               </CardContent></Card>
             </>
           )}
