@@ -107,6 +107,17 @@ export function AdminUserManagement() {
     return { total, verified, last7, last30, entities, individuals, withOnboarding, roleCounts, activityCounts, seedCount };
   }, [users]);
 
+  // Helps admins disambiguate repeated names (not the same email — different accounts)
+  const fullNameCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    (users || []).forEach((u: any) => {
+      const key = (u.full_name || "").trim().toLowerCase();
+      if (!key) return;
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    return counts;
+  }, [users]);
+
   // ── Filter + Sort + Paginate ──
   const { filtered, totalFiltered, totalPages } = useMemo(() => {
     if (!users) return { filtered: [], totalFiltered: 0, totalPages: 1 };
