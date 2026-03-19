@@ -48,7 +48,8 @@ export function AdminOpinionsManagement() {
   const [options, setOptions] = useState<OpinionOption[]>(FORMAT_DEFAULTS.binary);
   const [status, setStatus] = useState<"draft" | "active">("draft");
   const [isFeatured, setIsFeatured] = useState(false);
-  const [durationPreset, setDurationPreset] = useState<number>(168); // 1 week
+  const [contentIntent, setContentIntent] = useState<ContentIntent>("sentiment_signal");
+  const [durationPreset, setDurationPreset] = useState<number>(168);
   const [customDate, setCustomDate] = useState<Date | undefined>(undefined);
   const [useCustomDate, setUseCustomDate] = useState(false);
   const [disclaimer, setDisclaimer] = useState(DEFAULT_DISCLAIMER);
