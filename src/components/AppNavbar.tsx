@@ -209,12 +209,14 @@ const AppNavbar = () => {
                     Analytics
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/vault" className="flex items-center gap-2 cursor-pointer">
-                    <FolderLock className="h-4 w-4" />
-                    My Vault
-                  </Link>
-                </DropdownMenuItem>
+                {showVault && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/vault" className="flex items-center gap-2 cursor-pointer">
+                      <FolderLock className="h-4 w-4" />
+                      My Vault
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild>
                   <Link to="/bookmarks" className="flex items-center gap-2 cursor-pointer">
                     <Bookmark className="h-4 w-4" />
