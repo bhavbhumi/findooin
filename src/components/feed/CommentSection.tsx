@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { sanitizeText } from "@/lib/sanitize";
+import { useCodedMessagingGuard } from "@/hooks/useCodedMessagingGuard";
 
 function CommentAvatar({ src, name }: { src: string | null; name: string }) {
   const [err, setErr] = useState(false);
@@ -51,6 +52,7 @@ export function CommentSection({ postId }: { postId: string }) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
   const queryClient = useQueryClient();
+  const { scanAndFlag } = useCodedMessagingGuard();
   const MAX_VISIBLE = 5;
 
   useEffect(() => {
@@ -124,11 +126,16 @@ export function CommentSection({ postId }: { postId: string }) {
     setComments((prev) => [optimisticComment, ...prev]);
     setText("");
 
-    const { error } = await supabase.from("comments").insert({
+    const { data: commentData, error } = await supabase.from("comments").insert({
       post_id: postId,
       author_id: currentUserId,
       content: commentText,
-    });
+    }).select("id").single();
+
+    // SEBI 2026: scan for coded messaging
+    if (commentData && currentUserId) {
+      scanAndFlag({ resourceType: 'comment', resourceId: commentData.id, authorId: currentUserId, content: commentText });
+    }
 
     if (!error) {
       // Refresh with real data

@@ -19,6 +19,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { sanitizeText } from "@/lib/sanitize";
+import { useCodedMessagingGuard } from "@/hooks/useCodedMessagingGuard";
 import { useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -127,6 +128,7 @@ interface CreatePostComposerProps {
 export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostComposerProps = {}) {
   const isMobile = useIsMobile();
   const { activeRole, loaded: roleLoaded, userId: roleUserId } = useRole();
+  const { scanAndFlag } = useCodedMessagingGuard();
   const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
@@ -365,6 +367,11 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
       } as any).select("id").single();
 
       if (error) throw error;
+
+      // SEBI 2026: scan for coded messaging and auto-flag if detected
+      if (postData) {
+        scanAndFlag({ resourceType: 'post', resourceId: postData.id, authorId: userId, content: content.trim() });
+      }
 
       if (postKind === "poll" && postData) {
         const filled = pollOptions.filter((o) => o.text.trim());

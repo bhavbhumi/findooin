@@ -431,14 +431,33 @@ export function useCreateOpinion() {
     mutationFn: async (opinion: Partial<Opinion> & { title: string; ends_at: string }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
-      const { error } = await supabase.from("opinions").insert({
+      const { data, error } = await supabase.from("opinions").insert({
         ...opinion,
         created_by: user.id,
         content_intent: opinion.content_intent || "sentiment_signal",
         disclaimer_text: opinion.disclaimer_text || DEFAULT_DISCLAIMER,
         options: JSON.stringify(opinion.options || FORMAT_DEFAULTS.binary),
-      });
+      }).select("id").single();
       if (error) throw error;
+
+      // SEBI 2026: scan title + description for coded messaging
+      if (data) {
+        const { detectCodedMessaging } = await import("@/lib/coded-messaging-detector");
+        const scanText = `${opinion.title} ${opinion.description || ''}`;
+        const result = detectCodedMessaging(scanText);
+        if (result.flagged) {
+          await supabase.from("moderation_flags" as any).insert({
+            resource_type: 'opinion',
+            resource_id: (data as any).id,
+            author_id: user.id,
+            content_excerpt: scanText.slice(0, 500),
+            detection_summary: result.summary,
+            matched_patterns: result.matches,
+            severity: result.severity,
+            status: 'pending',
+          } as any);
+        }
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["opinions"] });

@@ -3,6 +3,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeText } from "@/lib/sanitize";
+import { useCodedMessagingGuard } from "@/hooks/useCodedMessagingGuard";
 import { useRole } from "@/contexts/RoleContext";
 import { useUserActivityStatus } from "@/hooks/useAdmin";
 import AppNavbar from "@/components/AppNavbar";
@@ -81,6 +82,7 @@ const Messages = () => {
   const [selectedProfile, setSelectedProfile] = useState<{ full_name: string; display_name: string | null; avatar_url: string | null } | null>(null);
   const [recipientRoles, setRecipientRoles] = useState<string[]>([]);
   const { data: recipientActivity } = useUserActivityStatus(selectedUserId);
+  const { scanAndFlag } = useCodedMessagingGuard();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -271,12 +273,17 @@ const Messages = () => {
     setSending(true);
     setIsTyping(false);
     broadcastTyping(false);
-    await supabase.from("messages").insert({
+    const { data: msgData } = await supabase.from("messages").insert({
       sender_id: currentUserId,
       receiver_id: selectedUserId,
       content: sanitizeText(newMessage.trim()),
       category: activeCategory,
-    } as any);
+    } as any).select("id").single();
+
+    // SEBI 2026: scan for coded messaging
+    if (msgData) {
+      scanAndFlag({ resourceType: 'message', resourceId: (msgData as any).id, authorId: currentUserId, content: newMessage.trim() });
+    }
     setNewMessage("");
     setSending(false);
   }, [currentUserId, selectedUserId, newMessage, sending, activeCategory, broadcastTyping]);

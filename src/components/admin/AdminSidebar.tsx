@@ -116,9 +116,10 @@ export function AdminSidebar() {
       ],
     },
     {
-      label: "Content & Support",
+      label: "Content & Compliance",
       items: [
         { title: "Blog", url: "/admin/blog", icon: BookOpen, permission: "manage_blog" },
+        { title: "Coded Messaging", url: "/admin/coded-messaging", icon: ShieldAlert, permission: "manage_moderation" },
         { title: "Support Tickets", url: "/admin/support", icon: LifeBuoy, permission: "manage_support" },
         { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen, permission: "manage_kb" },
       ],

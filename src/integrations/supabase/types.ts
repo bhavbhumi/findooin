@@ -1560,6 +1560,57 @@ export type Database = {
         }
         Relationships: []
       }
+      moderation_flags: {
+        Row: {
+          author_id: string
+          content_excerpt: string
+          created_at: string
+          detection_summary: string
+          id: string
+          matched_patterns: Json
+          resource_id: string
+          resource_type: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          severity: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          content_excerpt?: string
+          created_at?: string
+          detection_summary?: string
+          id?: string
+          matched_patterns?: Json
+          resource_id: string
+          resource_type: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          content_excerpt?: string
+          created_at?: string
+          detection_summary?: string
+          id?: string
+          matched_patterns?: Json
+          resource_id?: string
+          resource_type?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           actor_id: string | null

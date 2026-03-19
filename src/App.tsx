@@ -106,6 +106,7 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const AdminOpinionsPage = lazy(() => import("./pages/admin/AdminOpinionsPage"));
 const AdminPremiumFeaturesPage = lazy(() => import("./pages/admin/AdminPremiumFeaturesPage"));
 const AdminSecurityPage = lazy(() => import("./pages/admin/AdminSecurityPage"));
+const AdminCodedMessagingPage = lazy(() => import("./pages/admin/AdminCodedMessagingPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -221,6 +222,7 @@ const App = () => {
                         <Route path="messages" element={<Suspense fallback={<LazyFallback />}><AdminMessagesPage /></Suspense>} />
                         <Route path="opinions" element={<Suspense fallback={<LazyFallback />}><AdminOpinionsPage /></Suspense>} />
                         <Route path="security" element={<Suspense fallback={<LazyFallback />}><AdminSecurityPage /></Suspense>} />
+                        <Route path="coded-messaging" element={<Suspense fallback={<LazyFallback />}><AdminCodedMessagingPage /></Suspense>} />
                         <Route path="premium-features" element={<Suspense fallback={<LazyFallback />}><AdminPremiumFeaturesPage /></Suspense>} />
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
