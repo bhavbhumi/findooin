@@ -895,6 +895,19 @@ const DISPOSABLE_DOMAINS: ReadonlySet<string> = new Set([
   "zoomintens.com", "zorg.fr.nf", "zouz.fr.nf", "zozozo123.com", "zsero.com", "zudpck.com",
   "zumpul.com", "zv68.com", "zvvzuv.com", "zx81.ovh", "zxcv.com", "zxcvbnm.com",
   "zymuying.com", "zyns.com", "zzi.us", "zzrgg.com", "zzz.com",
+  // Additional disposable domains discovered in abuse logs
+  "onbap.com", "soco7.com", "qvmao.com", "tmail.com", "tmpmail.org",
+  "tmpmail.net", "tempr.email", "discard.email", "discardmail.com",
+  "discardmail.de", "emailna.co", "mailnesia.com", "inboxkitten.com",
+  "33mail.com", "maildrop.cc", "mailsac.com", "burnermail.io",
+  "sharklasers.com", "grr.la", "guerrillamailblock.com", "pokemail.net",
+  "spam4.me", "bccto.me", "chacuo.net", "dispostable.com",
+  "emailondeck.com", "fakeinbox.com", "getnada.com", "harakirimail.com",
+  "jetable.org", "mailcatch.com", "mailexpire.com", "mailforspam.com",
+  "mohmal.com", "mytemp.email", "nospam.zone", "spamgourmet.com",
+  "temp-mail.org", "tempail.com", "tempmailaddress.com", "throwam.com",
+  "trashmail.io", "trashmail.me", "trashmail.net", "wegwerfmail.de",
+  "wegwerfmail.net", "yepmail.co",
 ]);
 
 /**
