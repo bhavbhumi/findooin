@@ -122,7 +122,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
     setExperienceYears(profile.experience_years?.toString() || "");
     setSpecializations(profile.specializations || []);
     setCertifications(profile.certifications || []);
-    setLanguages(parseLanguages(profile.languages));
+    
     setRegulatoryIds((profile.regulatory_ids as Record<string, string>) || {});
     setSocialLinks((profile.social_links as Record<string, string>) || {});
   }, [profile]);
