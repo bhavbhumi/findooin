@@ -51,6 +51,7 @@ const mockPost: FeedPost = {
   attachment_name: null,
   attachment_type: null,
   created_at: new Date().toISOString(),
+  posted_as_role: "investor",
   author: {
     id: "user-1",
     full_name: "Jane Doe",
