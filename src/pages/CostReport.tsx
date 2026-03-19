@@ -401,7 +401,7 @@ const CostReport = () => {
         </h2>
         <p className="text-sm text-muted-foreground mb-2">
           {(ADOPTION.proConversionRate * 100).toFixed(0)}% Pro, {(ADOPTION.enterpriseConversionRate * 100).toFixed(0)}% Enterprise, {(ADOPTION.churnRateMonthly * 100).toFixed(0)}% churn.
-          <strong> All costs include Lovable Pro (₹1,680/mo) + Cloud instance.</strong>
+          <strong> All costs include Lovable Pro ({INR(1680)}/mo) + Cloud Mini ({INR(2100)}/mo).</strong>
         </p>
         <div className="overflow-x-auto mb-4">
           <table className="w-full border-collapse border border-border text-sm">
