@@ -361,7 +361,8 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
         attachment_url: attachmentUrl,
         scheduled_at: scheduledAt,
         query_category: isInvestorMode ? queryCategory as any : null,
-      }).select("id").single();
+        posted_as_role: activeRole || null,
+      } as any).select("id").single();
 
       if (error) throw error;
 

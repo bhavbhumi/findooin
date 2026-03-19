@@ -54,6 +54,7 @@ function normalizePosts(data: any[]): FeedPost[] {
     attachment_name: p.attachment_name,
     attachment_type: p.attachment_type,
     created_at: p.created_at,
+    posted_as_role: p.posted_as_role || null,
     author: {
       id: p.author?.id || "",
       full_name: p.author?.full_name || "Unknown",

@@ -70,7 +70,10 @@ export function PostCard({ post }: { post: FeedPost }) {
   const [reportOpen, setReportOpen] = useState(false);
   const typeConfig = postTypeConfig[post.post_type] || postTypeConfig.text;
   const TypeIcon = typeConfig.icon;
-  const primaryRole = post.roles[0];
+  // Use posted_as_role if available, otherwise fall back to first role
+  const primaryRole = post.posted_as_role
+    ? post.roles.find(r => r.role === post.posted_as_role) || (post.posted_as_role ? { role: post.posted_as_role, sub_type: null } : post.roles[0])
+    : post.roles[0];
   const roleConf = primaryRole ? ROLE_CONFIG[primaryRole.role] : null;
   const RoleIcon = roleConf?.icon ?? null;
   const AttachIcon = getAttachmentIcon(post.attachment_type);
