@@ -365,6 +365,7 @@ const Profile = () => {
                 <TabsContent value="digital-card" className="mt-0">
                   <DigitalCardManager
                     profileId={profile.id}
+                    profileName={profile.display_name || profile.full_name}
                     digitalCardFields={(profile as any).digital_card_fields ?? null}
                     onFieldsUpdated={handleProfileSaved}
                   />

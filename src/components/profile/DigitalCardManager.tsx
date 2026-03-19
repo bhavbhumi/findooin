@@ -17,6 +17,7 @@ import { LeadCaptureDashboard } from "./LeadCaptureDashboard";
 
 interface DigitalCardManagerProps {
   profileId: string;
+  profileName?: string;
   digitalCardFields: Record<string, boolean> | null;
   onFieldsUpdated: () => void;
 }
