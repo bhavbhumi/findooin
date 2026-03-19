@@ -198,7 +198,7 @@ const Onboarding = () => {
           designation: designation || null,
           location: location || null,
           certifications: certifications.length > 0 ? certifications : null,
-          languages: languages.length > 0 ? languages : null,
+          
           onboarding_completed: true,
           verification_status: Object.values(verificationFiles).some(f => f) ? "pending" : "unverified",
         } as any, { onConflict: "id" });
