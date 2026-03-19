@@ -93,25 +93,6 @@ export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigate
                 </div>
               </div>
             )}
-            {hasLanguages && (
-              <div className={(hasSpecializations || hasCertifications) ? "pt-2 border-t border-border" : ""}>
-                <p className="text-[10px] font-medium text-muted-foreground mb-1.5">Languages</p>
-                <div className="flex flex-wrap gap-1">
-                  {langArray.map((l: any, i: number) => {
-                    const name = typeof l === "string" ? l : l.name;
-                    const proficiency = typeof l === "object" ? l.proficiency : null;
-                    const isMotherTongue = typeof l === "object" ? l.isMotherTongue : false;
-                    return (
-                      <span key={i} className="inline-flex items-center gap-0.5 text-[10px] font-medium bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">
-                        {isMotherTongue ? <Star className="h-2.5 w-2.5 fill-current text-gold" /> : <Languages className="h-2.5 w-2.5" />}
-                        {name}
-                        {proficiency && <span className="opacity-60 capitalize">· {proficiency}</span>}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
