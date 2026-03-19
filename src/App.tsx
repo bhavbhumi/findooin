@@ -225,12 +225,13 @@ const App = () => {
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
                       </Route>
-                      <Route path="/jobs" element={<ProtectedRoute><JobsRouteGate /></ProtectedRoute>} />
-                      <Route path="/events" element={<ProtectedRoute><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/showcase" element={<ProtectedRoute><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/leaderboard" element={<ProtectedRoute><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/jobs" element={<ProtectedRoute><FeatureFlagGate flagKey="jobs_board"><RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/events" element={<ProtectedRoute><FeatureFlagGate flagKey="events_module"><RouteErrorBoundary routeName="Events"><Events /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/showcase" element={<ProtectedRoute><FeatureFlagGate flagKey="directory_listings"><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/leaderboard" element={<ProtectedRoute><FeatureFlagGate flagKey="leaderboard"><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/bookmarks" element={<ProtectedRoute><RouteErrorBoundary routeName="Bookmarks"><Bookmarks /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/vault" element={<ProtectedRoute><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/vault" element={<ProtectedRoute><FeatureFlagGate flagKey="vault_storage"><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
+                      <Route path="/messages" element={<ProtectedRoute><FeatureFlagGate flagKey="messaging"><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       {/* Dev-only: test system pages */}
                       {import.meta.env.DEV && (
                         <>
