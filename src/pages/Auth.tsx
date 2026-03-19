@@ -20,7 +20,7 @@ import {
 
 const MAX_LOGIN_ATTEMPTS = 3;
 const LOCKOUT_DURATION_MS = 60_000; // 1 minute
-const REQUEST_TIMEOUT_MS = 30_000;
+const REQUEST_TIMEOUT_MS = 10_000;
 
 const Auth = () => {
   usePageMeta({ title: "Sign In", description: "Sign in or create your FindOO account.", path: "/auth" });
