@@ -124,7 +124,9 @@ export const DigitalCardManager = ({ profileId, profileName, digitalCardFields, 
       ctx?.drawImage(img, 0, 0, 512, 512);
       const pngUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");
-      a.download = "findoo-card-qr.png";
+      const datestamp = new Date().toISOString().slice(0, 10);
+      const safeName = (profileName || "findoo-card").replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-_]/g, "").toLowerCase();
+      a.download = `findoo-qr-${safeName}-${datestamp}.png`;
       a.href = pngUrl;
       a.click();
     };
