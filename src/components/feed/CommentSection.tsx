@@ -52,6 +52,7 @@ export function CommentSection({ postId }: { postId: string }) {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
   const queryClient = useQueryClient();
+  const { scanAndFlag } = useCodedMessagingGuard();
   const MAX_VISIBLE = 5;
 
   useEffect(() => {
