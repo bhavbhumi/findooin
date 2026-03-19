@@ -315,7 +315,7 @@ const CostReport = () => {
         <div className="mt-4 bg-primary/5 border-l-4 border-primary p-4 text-sm">
           <p className="font-semibold">Cost Summary:</p>
           <p>Development to date: <strong>{INR(TOTAL_SUNK_COST)}</strong> (~${Math.round(TOTAL_LOVABLE_USD)}) across {PLATFORM_COSTS.lovable.creditsConsumed} credits, {PLATFORM_COSTS.lovable.messages} messages, {PLATFORM_COSTS.lovable.aiEdits} AI edits.</p>
-          <p className="mt-1">Ongoing monthly: Lovable Pro ({INR(1680)}) + Cloud Micro ({INR(840)}) = <strong>{INR(2520)}/mo</strong> base cost.</p>
+          <p className="mt-1">Ongoing monthly: Lovable Pro ({INR(1680)}) + Cloud Mini ({INR(2100)}) = <strong>{INR(MONTHLY_BASE)}/mo</strong> base cost.</p>
         </div>
       </section>
 
