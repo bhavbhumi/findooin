@@ -221,21 +221,23 @@ const CostReport = () => {
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <CreditCard className="h-4 w-4 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">Lovable Pro Subscription</span>
+                <span className="text-xs font-medium text-muted-foreground">Total Development Cost</span>
               </div>
-              <p className="text-2xl font-bold">{INR(PLATFORM_COSTS.lovable.monthlyINR)}<span className="text-sm font-normal text-muted-foreground">/mo</span></p>
-              <p className="text-xs text-muted-foreground mt-1">${PLATFORM_COSTS.lovable.monthlyUSD}/mo · {PLATFORM_COSTS.lovable.creditsPerMonth} credits/mo</p>
+              <p className="text-2xl font-bold">{INR(TOTAL_SUNK_COST)}</p>
+              <p className="text-xs text-muted-foreground mt-1">~${Math.round(TOTAL_LOVABLE_USD)} USD · {DAYS_ACTIVE} days of development</p>
             </CardContent>
           </Card>
 
           <Card className="border border-primary/30 bg-primary/5">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Cloud className="h-4 w-4 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">Cloud Instance ({PLATFORM_COSTS.cloud.currentTier})</span>
+                <Zap className="h-4 w-4 text-primary" />
+                <span className="text-xs font-medium text-muted-foreground">Credits Consumed</span>
               </div>
-              <p className="text-2xl font-bold">{INR(PLATFORM_COSTS.cloud.currentMonthlyINR)}<span className="text-sm font-normal text-muted-foreground">/mo</span></p>
-              <p className="text-xs text-muted-foreground mt-1">Upgraded 19 Mar: Pico → Nano → Micro</p>
+              <p className="text-2xl font-bold">{PLATFORM_COSTS.lovable.creditsConsumed.toLocaleString("en-IN")}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {INCLUDED_CREDITS} included · {OVERAGE_CREDITS.toFixed(1)} overage @ $0.30/credit
+              </p>
             </CardContent>
           </Card>
 
@@ -243,44 +245,54 @@ const CostReport = () => {
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Activity className="h-4 w-4 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">Total Cost to Date ({DAYS_ACTIVE} days)</span>
+                <span className="text-xs font-medium text-muted-foreground">Development Activity</span>
               </div>
-              <p className="text-2xl font-bold">{INR(TOTAL_SUNK_COST)}</p>
-              <p className="text-xs text-muted-foreground mt-1">~{PLATFORM_COSTS.lovable.creditsConsumed} credits consumed across billing cycles</p>
+              <p className="text-2xl font-bold">{PLATFORM_COSTS.lovable.messages}</p>
+              <p className="text-xs text-muted-foreground mt-1">messages · {PLATFORM_COSTS.lovable.aiEdits} AI edits</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Cost breakdown table */}
+        {/* Detailed cost breakdown table */}
         <div className="overflow-x-auto mb-4">
           <table className="w-full border-collapse border border-border text-sm">
             <thead>
               <tr className="bg-muted/50">
-                <th className="border border-border px-3 py-2 text-left">Item</th>
+                <th className="border border-border px-3 py-2 text-left">Cost Item</th>
                 <th className="border border-border px-3 py-2 text-left">Details</th>
-                <th className="border border-border px-3 py-2">Monthly Cost</th>
-                <th className="border border-border px-3 py-2">Status</th>
+                <th className="border border-border px-3 py-2">Amount (USD)</th>
+                <th className="border border-border px-3 py-2">Amount (INR)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className="border border-border px-3 py-2 font-medium">Lovable Pro Plan</td>
-                <td className="border border-border px-3 py-2">$20/mo, 100 credits/month, custom domain, analytics</td>
-                <td className="border border-border px-3 py-2 text-center font-semibold">{INR(1680)}</td>
-                <td className="border border-border px-3 py-2 text-center"><Badge className="text-xs">Active</Badge></td>
+                <td className="border border-border px-3 py-2 font-medium">Lovable Pro Subscription</td>
+                <td className="border border-border px-3 py-2">${PLATFORM_COSTS.lovable.monthlyUSD}/mo × {Math.ceil(MONTHS_ACTIVE)} month(s), 100 credits/mo included</td>
+                <td className="border border-border px-3 py-2 text-center font-semibold">${SUBSCRIPTION_COST_USD}</td>
+                <td className="border border-border px-3 py-2 text-center font-semibold">{INR(SUBSCRIPTION_COST_USD * USD_TO_INR)}</td>
+              </tr>
+              <tr className="bg-muted/30">
+                <td className="border border-border px-3 py-2 font-medium">Credit Top-ups (Overage)</td>
+                <td className="border border-border px-3 py-2">{OVERAGE_CREDITS.toFixed(1)} extra credits × $0.30/credit ($15 per 50)</td>
+                <td className="border border-border px-3 py-2 text-center font-semibold">${Math.round(TOPUP_COST_USD)}</td>
+                <td className="border border-border px-3 py-2 text-center font-semibold">{INR(Math.round(TOPUP_COST_USD * USD_TO_INR))}</td>
               </tr>
               {PLATFORM_COSTS.cloud.upgradePath.map((u, i) => (
-                <tr key={i} className="even:bg-muted/30">
+                <tr key={i} className={i % 2 === 0 ? "" : "bg-muted/30"}>
                   <td className="border border-border px-3 py-2 font-medium">Cloud: {u.tier}</td>
                   <td className="border border-border px-3 py-2">{u.from} → {u.to}</td>
-                  <td className="border border-border px-3 py-2 text-center font-semibold">{u.monthlyINR === 0 ? "Free" : INR(u.monthlyINR)}</td>
+                  <td className="border border-border px-3 py-2 text-center">{u.monthlyINR === 0 ? "Free" : `$${Math.round(u.monthlyINR / USD_TO_INR)}/mo`}</td>
                   <td className="border border-border px-3 py-2 text-center">
-                    <Badge variant={u.to === "Present" ? "default" : "secondary"} className="text-xs">
-                      {u.to === "Present" ? "Current" : "Replaced"}
-                    </Badge>
+                    {u.monthlyINR === 0 ? "Free" : `${INR(u.monthlyINR)}/mo`}
+                    {u.to === "Present" && <Badge className="ml-2 text-xs">Current</Badge>}
                   </td>
                 </tr>
               ))}
+              <tr className="bg-primary/10 font-bold">
+                <td className="border border-border px-3 py-2" colSpan={2}>Total Development Spend to Date</td>
+                <td className="border border-border px-3 py-2 text-center">${Math.round(TOTAL_LOVABLE_USD)}</td>
+                <td className="border border-border px-3 py-2 text-center">{INR(TOTAL_SUNK_COST)}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -299,8 +311,9 @@ const CostReport = () => {
         </div>
 
         <div className="mt-4 bg-primary/5 border-l-4 border-primary p-4 text-sm">
-          <p className="font-semibold">Current Monthly Recurring Platform Cost:</p>
-          <p>Lovable Pro ({INR(1680)}) + Cloud Micro ({INR(840)}) = <strong>{INR(2520)}/mo</strong> — fixed base cost regardless of user count.</p>
+          <p className="font-semibold">Cost Summary:</p>
+          <p>Development to date: <strong>{INR(TOTAL_SUNK_COST)}</strong> (~${Math.round(TOTAL_LOVABLE_USD)}) across {PLATFORM_COSTS.lovable.creditsConsumed} credits, {PLATFORM_COSTS.lovable.messages} messages, {PLATFORM_COSTS.lovable.aiEdits} AI edits.</p>
+          <p className="mt-1">Ongoing monthly: Lovable Pro ({INR(1680)}) + Cloud Micro ({INR(840)}) = <strong>{INR(2520)}/mo</strong> base cost.</p>
         </div>
       </section>
 
