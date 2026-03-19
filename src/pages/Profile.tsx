@@ -104,6 +104,7 @@ function useUserPosts(profileId: string | undefined) {
         attachment_name: p.attachment_name,
         attachment_type: p.attachment_type,
         created_at: p.created_at,
+        posted_as_role: (p as any).posted_as_role || null,
         author: {
           id: profile?.id || profileId,
           full_name: profile?.full_name || "Unknown",
@@ -504,6 +505,7 @@ function BookmarkedPosts({ currentUserId }: { currentUserId: string | null }) {
           attachment_name: p.attachment_name,
           attachment_type: p.attachment_type,
           created_at: p.created_at,
+          posted_as_role: (p as any).posted_as_role || null,
           author: {
             id: author?.id || p.author_id,
             full_name: author?.full_name || "Unknown",

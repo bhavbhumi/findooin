@@ -92,6 +92,7 @@ export function useTrendingPosts() {
           attachment_name: post.attachment_name,
           attachment_type: post.attachment_type,
           created_at: post.created_at,
+          posted_as_role: (post as any).posted_as_role || null,
           author: {
             id: post.author_id,
             full_name: profile?.full_name || "Unknown",

@@ -16,6 +16,7 @@ describe("optimistic update logic", () => {
     attachment_name: null,
     attachment_type: null,
     created_at: "2026-01-01T00:00:00Z",
+    posted_as_role: null,
     author: {
       id: "user-1",
       full_name: "Test",

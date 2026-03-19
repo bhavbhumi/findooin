@@ -1946,6 +1946,7 @@ export type Database = {
           id: string
           post_kind: Database["public"]["Enums"]["post_kind"]
           post_type: Database["public"]["Enums"]["post_type"]
+          posted_as_role: string | null
           query_category: Database["public"]["Enums"]["query_category"] | null
           scheduled_at: string | null
           updated_at: string
@@ -1962,6 +1963,7 @@ export type Database = {
           id?: string
           post_kind?: Database["public"]["Enums"]["post_kind"]
           post_type?: Database["public"]["Enums"]["post_type"]
+          posted_as_role?: string | null
           query_category?: Database["public"]["Enums"]["query_category"] | null
           scheduled_at?: string | null
           updated_at?: string
@@ -1978,6 +1980,7 @@ export type Database = {
           id?: string
           post_kind?: Database["public"]["Enums"]["post_kind"]
           post_type?: Database["public"]["Enums"]["post_type"]
+          posted_as_role?: string | null
           query_category?: Database["public"]["Enums"]["query_category"] | null
           scheduled_at?: string | null
           updated_at?: string
