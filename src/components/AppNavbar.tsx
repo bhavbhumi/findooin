@@ -296,7 +296,7 @@ const AppNavbar = () => {
           {[
             { icon: Home, label: "Feed", href: "/feed" },
             { icon: Users, label: "Network", href: "/network" },
-            { icon: Briefcase, label: "Jobs", href: "/jobs" },
+            ...(showJobs ? [{ icon: Briefcase, label: "Jobs", href: "/jobs" }] : []),
             { icon: CalendarDays, label: "Events", href: "/events" },
             { icon: Compass, label: "Discover", href: "/discover" },
             { icon: User, label: "Profile", href: "/profile" },
