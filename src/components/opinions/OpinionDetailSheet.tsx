@@ -35,6 +35,8 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
   const { userId } = useRole();
   const [comment, setComment] = useState("");
   const [tab, setTab] = useState("results");
+  const trustScore = useMemo(() => computeSentimentTrustScore(votes), [votes]);
+  const voterCredentials = useMemo(() => extractVoterCredentials(votes), [votes]);
 
   if (!opinion) return null;
 
@@ -42,8 +44,6 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
   const cat = OPINION_CATEGORIES[opinion.category];
   const intentMeta = CONTENT_INTENT_LABELS[opinion.content_intent || "sentiment_signal"];
   const isClosed = opinion.status === "closed" || isPast(new Date(opinion.ends_at));
-  const trustScore = useMemo(() => computeSentimentTrustScore(votes), [votes]);
-  const voterCredentials = useMemo(() => extractVoterCredentials(votes), [votes]);
 
   const pieData = opinion.options.map((opt) => ({
     name: opt.label,
