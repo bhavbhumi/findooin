@@ -4,7 +4,7 @@
  * Provides a tabbed editing interface for user profiles:
  * - **Basic**: Name, display name, headline, bio, user type
  * - **Professional**: Organization, designation, experience, specializations
- * - **Credentials**: Certifications, regulatory IDs, languages
+ * - **Credentials**: Certifications, regulatory IDs
  * - **Links**: Website, social links (LinkedIn, Twitter/X, GitHub)
  * - **Media**: Avatar and banner image upload
  *
