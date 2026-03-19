@@ -79,7 +79,7 @@ const Onboarding = () => {
   const [designation, setDesignation] = useState("");
   const [location, setLocation] = useState("");
   const [certifications, setCertifications] = useState<string[]>([]);
-  const [languages, setLanguages] = useState<UserLanguage[]>([]);
+  
   const [loading, setLoading] = useState(false);
   const [verificationFiles, setVerificationFiles] = useState<Record<string, File | null>>({});
   const [initialLoading, setInitialLoading] = useState(true);
