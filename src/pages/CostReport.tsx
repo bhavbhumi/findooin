@@ -21,15 +21,19 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 
-// ── Actual Platform Costs (Real Data) ──
+// ── Actual Platform Costs (Real Data — verified 19 Mar 2026) ──
 const PLATFORM_COSTS = {
   lovable: {
-    plan: "Pro",
+    plan: "Pro (Annual Billing)",
     monthlyUSD: 20,
-    monthlyINR: 1680,
+    monthlyINR: 1680, // ~₹84/USD
     startDate: "2026-02-25",
     creditsPerMonth: 100,
-    creditsConsumed: 387,
+    creditsConsumed: 1503.5,
+    messages: 797,
+    aiEdits: 471,
+    creditTopUpRate: 15, // $15 per 50 credits
+    creditCostPerUnit: 0.30, // $0.30 per credit
   },
   cloud: {
     upgradePath: [
@@ -53,9 +57,17 @@ const PROJECT_START = new Date("2026-02-25");
 const TODAY = new Date();
 const DAYS_ACTIVE = Math.ceil((TODAY.getTime() - PROJECT_START.getTime()) / (1000 * 60 * 60 * 24));
 const MONTHS_ACTIVE = DAYS_ACTIVE / 30;
-const TOTAL_LOVABLE_COST = Math.round(PLATFORM_COSTS.lovable.monthlyINR * MONTHS_ACTIVE);
-const TOTAL_CLOUD_COST = Math.round(PLATFORM_COSTS.cloud.currentMonthlyINR * 0.03);
-const TOTAL_SUNK_COST = TOTAL_LOVABLE_COST + TOTAL_CLOUD_COST;
+const USD_TO_INR = 84;
+
+// Development cost calculation
+const INCLUDED_CREDITS = Math.ceil(MONTHS_ACTIVE) * PLATFORM_COSTS.lovable.creditsPerMonth;
+const OVERAGE_CREDITS = Math.max(0, PLATFORM_COSTS.lovable.creditsConsumed - INCLUDED_CREDITS);
+const SUBSCRIPTION_COST_USD = PLATFORM_COSTS.lovable.monthlyUSD * Math.ceil(MONTHS_ACTIVE);
+const TOPUP_COST_USD = OVERAGE_CREDITS * PLATFORM_COSTS.lovable.creditCostPerUnit;
+const TOTAL_LOVABLE_USD = SUBSCRIPTION_COST_USD + TOPUP_COST_USD;
+const TOTAL_LOVABLE_INR = Math.round(TOTAL_LOVABLE_USD * USD_TO_INR);
+const TOTAL_CLOUD_COST = Math.round(PLATFORM_COSTS.cloud.currentMonthlyINR * 0.03); // Micro just started today
+const TOTAL_SUNK_COST = TOTAL_LOVABLE_INR + TOTAL_CLOUD_COST;
 
 // ── Infra Cost Model (₹/mo at scale — includes platform base) ──
 const INFRA_COSTS = [
