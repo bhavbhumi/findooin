@@ -496,10 +496,6 @@ const Onboarding = () => {
                     <CertificationSelector value={certifications} onChange={setCertifications} />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Languages <span className="text-muted-foreground">(optional)</span></Label>
-                    <LanguageSelector value={languages} onChange={setLanguages} />
-                  </div>
 
                   <div className="rounded-lg bg-secondary p-4">
                     <p className="text-sm text-muted-foreground mb-2">Your roles:</p>
