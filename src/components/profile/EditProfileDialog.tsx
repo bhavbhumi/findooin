@@ -36,8 +36,6 @@ import {
 import type { ProfileData } from "./ProfileHeader";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
-import { LanguageSelector } from "@/components/selectors/LanguageSelector";
-import type { UserLanguage } from "@/data/languages";
 import { uploadFile, validateFile } from "@/lib/storage";
 
 interface EditProfileDialogProps {
