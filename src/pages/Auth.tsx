@@ -173,7 +173,7 @@ const Auth = () => {
 
   const submitWithRetry = async <T,>(
     action: () => Promise<{ error: { message?: string } | null; data?: T }>,
-    maxAttempts = 3,
+    maxAttempts = 1,
   ) => {
     let lastError: any = null;
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
