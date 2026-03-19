@@ -379,7 +379,7 @@ const Settings = () => {
                 <p className="text-sm font-medium text-destructive">Delete account</p>
                 <p className="text-xs text-muted-foreground">Permanently delete your account and all data</p>
               </div>
-              <Button variant="outline" size="sm" onClick={() => toast.info("Account deletion coming soon")} className="text-destructive border-destructive/30 hover:bg-destructive/10">
+              <Button variant="outline" size="sm" onClick={() => { setDeleteConfirmText(""); setShowDeleteConfirm(true); }} className="text-destructive border-destructive/30 hover:bg-destructive/10">
                 <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
               </Button>
             </div>
