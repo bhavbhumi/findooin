@@ -112,12 +112,14 @@ const AppNavbar = () => {
                   <span className="hidden lg:inline">Network</span>
                 </Link>
               </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
-                <Link to="/jobs">
-                  <Briefcase className="h-4 w-4 lg:mr-1.5" />
-                  <span className="hidden lg:inline">Jobs</span>
-                </Link>
-              </Button>
+              {showJobs && (
+                <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
+                  <Link to="/jobs">
+                    <Briefcase className="h-4 w-4 lg:mr-1.5" />
+                    <span className="hidden lg:inline">Jobs</span>
+                  </Link>
+                </Button>
+              )}
               <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
                 <Link to="/events">
                   <CalendarDays className="h-4 w-4 lg:mr-1.5" />
