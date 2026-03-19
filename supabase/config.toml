@@ -13,3 +13,23 @@ project_id = "qvzvhmuosxdaqxwyokpg"
     verify_jwt = false
   [functions.ai-compose]
     verify_jwt = false
+  [functions.trustcircle-iq]
+    verify_jwt = false
+  [functions.get-public-digital-card]
+    verify_jwt = false
+  [functions.seed-data]
+    verify_jwt = false
+  [functions.seed-users]
+    verify_jwt = false
+  [functions.upload-file]
+    verify_jwt = false
+  [functions.scrape-amfi]
+    verify_jwt = false
+  [functions.create-razorpay-subscription]
+    verify_jwt = false
+  [functions.manage-subscription]
+    verify_jwt = false
+  [functions.razorpay-webhook]
+    verify_jwt = false
+  [functions.publish-scheduled-posts]
+    verify_jwt = false
