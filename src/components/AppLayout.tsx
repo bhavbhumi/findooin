@@ -57,7 +57,7 @@ export default function AppLayout({
         {fullBleed ? (
           <div className={className}>{children}</div>
         ) : (
-          <div className={`container py-6 ${maxWidth} mx-auto ${className}`}>
+          <div className={`py-4 px-0 md:container md:py-6 ${maxWidth} mx-auto ${className}`}>
             {!hideBreadcrumbs && <AppBreadcrumbs />}
             {children}
           </div>
