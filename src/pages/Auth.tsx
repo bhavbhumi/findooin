@@ -89,58 +89,63 @@ const Auth = () => {
     async (session: any) => {
       if (!session) return;
 
-      try {
-        await registerSession(session.user.id);
-      } catch (err) {
-        console.warn("Session registration skipped:", err);
-      }
+      const sessionKey = `${session.user.id}:${session.expires_at ?? "na"}`;
+      if (handledSessionRef.current === sessionKey) return;
+      handledSessionRef.current = sessionKey;
 
-      // Handle referral connections if ref param exists
-      if (referrerId && referrerId !== session.user.id) {
-        await createReferralConnections(session.user.id, referrerId);
-
-        // Log referral attribution in card_exchanges
+      // Non-critical writes should never block navigation
+      Promise.resolve().then(async () => {
         try {
-          await supabase.from("card_exchanges").insert({
-            card_owner_id: referrerId,
-            viewer_id: session.user.id,
-            context: "referral",
-            action: "signup",
-          } as any);
+          await registerSession(session.user.id);
         } catch (err) {
-          console.warn("Referral attribution log failed:", err);
+          console.warn("Session registration skipped:", err);
         }
-      }
+
+        if (referrerId && referrerId !== session.user.id) {
+          await createReferralConnections(session.user.id, referrerId);
+
+          try {
+            await supabase.from("card_exchanges").insert({
+              card_owner_id: referrerId,
+              viewer_id: session.user.id,
+              context: "referral",
+              action: "signup",
+            } as any);
+          } catch (err) {
+            console.warn("Referral attribution log failed:", err);
+          }
+        }
+      });
 
       try {
-        const { data: profile, error } = await supabase
+        const profilePromise = supabase
           .from("profiles")
           .select("onboarding_completed")
           .eq("id", session.user.id)
           .maybeSingle();
 
+        const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
+          setTimeout(() => resolve({ data: null, error: new Error("Profile check timeout") }), 4000),
+        );
+
+        const { data: profile, error } = (await Promise.race([profilePromise, timeoutPromise])) as {
+          data: { onboarding_completed?: boolean } | null;
+          error: Error | null;
+        };
+
         if (error) {
-          console.error("Profile fetch error:", error);
+          console.warn("Profile fetch delayed/failed, defaulting to onboarding:", error.message);
           navigate("/onboarding");
           return;
         }
 
-        if (profile?.onboarding_completed) {
-          navigate(redirectPath || "/feed");
-        } else {
-          navigate("/onboarding");
-        }
+        navigate(profile?.onboarding_completed ? redirectPath || "/feed" : "/onboarding");
       } catch (err) {
         console.error("Session check failed:", err);
-        toast({
-          title: "Connection issue",
-          description: "Signed in but couldn't load your profile. Redirecting...",
-          variant: "destructive",
-        });
-        setTimeout(() => navigate("/onboarding"), 1500);
+        navigate("/onboarding");
       }
     },
-    [navigate, toast, referrerId],
+    [navigate, referrerId, redirectPath],
   );
 
   useEffect(() => {
