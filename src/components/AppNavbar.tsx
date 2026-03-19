@@ -160,18 +160,22 @@ const AppNavbar = () => {
             )}
 
             {/* Leaderboard */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Leaderboard">
-              <Link to="/leaderboard">
-                <Trophy className="h-5 w-5" />
-              </Link>
-            </Button>
+            {showLeaderboard && (
+              <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Leaderboard">
+                <Link to="/leaderboard">
+                  <Trophy className="h-5 w-5" />
+                </Link>
+              </Button>
+            )}
 
             {/* Messages icon */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Messages">
-              <Link to="/messages">
-                <MessageSquare className="h-5 w-5" />
-              </Link>
-            </Button>
+            {showMessages && (
+              <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Messages">
+                <Link to="/messages">
+                  <MessageSquare className="h-5 w-5" />
+                </Link>
+              </Button>
+            )}
 
             {/* Notifications icon */}
             <Button variant="ghost" size="icon" className="text-muted-foreground relative" asChild aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ""}`}>
