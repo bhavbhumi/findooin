@@ -1,17 +1,18 @@
 /**
  * OpinionCard — Polymarket-inspired sentiment card with login gating.
+ * SEBI 2026 compliant: content intent tags, RE disclosure badges, credential indicators.
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageSquare, Share2, Clock, Users, Lock, Eye, EyeOff, AlertTriangle } from "lucide-react";
+import { Heart, MessageSquare, Share2, Clock, Users, Lock, Eye, EyeOff, AlertTriangle, ShieldCheck, GraduationCap } from "lucide-react";
 import { formatDistanceToNow, isPast, differenceInHours } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   type Opinion, type OpinionVote, type VoteResults,
-  OPINION_CATEGORIES, computeVoteResults,
+  OPINION_CATEGORIES, CONTENT_INTENT_LABELS, computeVoteResults, extractVoterCredentials,
   useOpinionVotes, useCastVote, useRemoveVote, useOpinionInteraction,
 } from "@/hooks/useOpinions";
 import { useRole } from "@/contexts/RoleContext";
@@ -44,12 +45,17 @@ export function OpinionCard({ opinion, onOpenDetail, compact }: OpinionCardProps
   }, []);
 
   const cat = OPINION_CATEGORIES[opinion.category];
+  const intentMeta = CONTENT_INTENT_LABELS[opinion.content_intent || "sentiment_signal"];
   const isExpired = isPast(new Date(opinion.ends_at));
   const isClosed = opinion.status === "closed" || isExpired;
   const hoursLeft = differenceInHours(new Date(opinion.ends_at), new Date());
   const results = computeVoteResults(votes, opinion.options);
   const totalVotes = votes.length;
   const myVote = votes.find((v) => v.user_id === userId);
+
+  // RE disclosure: count verified voters & extract credentials
+  const verifiedCount = useMemo(() => votes.filter((v) => v.voter_profile?.verification_status === "verified").length, [votes]);
+  const voterCredentials = useMemo(() => extractVoterCredentials(votes), [votes]);
 
   const canVote = loggedIn && !isClosed && !myVote && (
     hasRole("intermediary") || hasRole("issuer") || hasRole("admin")
@@ -102,11 +108,19 @@ export function OpinionCard({ opinion, onOpenDetail, compact }: OpinionCardProps
         onClick={() => onOpenDetail?.(opinion.id)}
       >
         <CardContent className={cn("p-4", compact && "p-3")}>
-          {/* Category + Status */}
-          <div className="flex items-center gap-2 mb-2">
+          {/* Category + Intent + Status */}
+          <div className="flex items-center gap-1.5 mb-2 flex-wrap">
             <Badge variant="secondary" className="text-[10px] font-normal gap-1">
               {cat.icon} {cat.label}
             </Badge>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="outline" className="text-[10px] font-normal gap-0.5 border-primary/30 text-primary/80">
+                  {intentMeta.icon} {intentMeta.label}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent className="text-[10px]">{intentMeta.description}</TooltipContent>
+            </Tooltip>
             {opinion.is_featured && (
               <Badge className="text-[10px] bg-primary/10 text-primary border-primary/20">🔥 Featured</Badge>
             )}
@@ -150,7 +164,6 @@ export function OpinionCard({ opinion, onOpenDetail, compact }: OpinionCardProps
                     !loggedIn && "cursor-pointer hover:border-primary/30"
                   )}
                 >
-                  {/* Background bar */}
                   <motion.div
                     className="absolute inset-0 rounded-lg opacity-15"
                     style={{ backgroundColor: opt.color }}
@@ -212,6 +225,31 @@ export function OpinionCard({ opinion, onOpenDetail, compact }: OpinionCardProps
               >
                 <Lock className="h-3 w-3" /> Sign in to participate
               </Button>
+            </div>
+          )}
+
+          {/* RE Disclosure: Verified voter credentials */}
+          {totalVotes > 0 && !compact && voterCredentials.length > 0 && (
+            <div className="flex items-center gap-1.5 mb-2 flex-wrap">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-1 text-[10px] text-accent font-medium">
+                    <ShieldCheck className="h-3 w-3" />
+                    {verifiedCount}/{totalVotes} verified
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="text-[10px] max-w-[200px]">
+                  {verifiedCount} of {totalVotes} voters are platform-verified professionals with regulatory registrations
+                </TooltipContent>
+              </Tooltip>
+              {voterCredentials.slice(0, 3).map((cred) => (
+                <Badge key={cred} variant="outline" className="text-[8px] h-4 px-1.5 border-accent/30 text-accent/80">
+                  {cred}
+                </Badge>
+              ))}
+              {voterCredentials.length > 3 && (
+                <span className="text-[9px] text-muted-foreground">+{voterCredentials.length - 3} more</span>
+              )}
             </div>
           )}
 

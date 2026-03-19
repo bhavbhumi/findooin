@@ -1,24 +1,25 @@
 /**
- * OpinionDetailSheet — Full detail view with charts, comments, and role-split analysis.
+ * OpinionDetailSheet — Full detail view with charts, comments, role-split analysis,
+ * RE disclosure, and Sentiment Trust Score. SEBI 2026 compliant.
  */
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { AlertTriangle, Users, Send, BarChart3, PieChart, TrendingUp } from "lucide-react";
+import { AlertTriangle, Users, Send, BarChart3, PieChart, TrendingUp, ShieldCheck, Award, GraduationCap } from "lucide-react";
 import { formatDistanceToNow, format, isPast } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
-  type Opinion, OPINION_CATEGORIES,
-  useOpinionVotes, useOpinionComments, useAddOpinionComment, computeVoteResults,
+  type Opinion, OPINION_CATEGORIES, CONTENT_INTENT_LABELS,
+  useOpinionVotes, useOpinionComments, useAddOpinionComment,
+  computeVoteResults, computeSentimentTrustScore, extractVoterCredentials,
 } from "@/hooks/useOpinions";
 import { useRole } from "@/contexts/RoleContext";
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { AvatarWithFallback } from "@/components/ui/avatar-with-fallback";
-import { OpinionCard } from "./OpinionCard";
 
 interface OpinionDetailSheetProps {
   opinionId: string | null;
@@ -34,11 +35,14 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
   const { userId } = useRole();
   const [comment, setComment] = useState("");
   const [tab, setTab] = useState("results");
+  const trustScore = useMemo(() => computeSentimentTrustScore(votes), [votes]);
+  const voterCredentials = useMemo(() => extractVoterCredentials(votes), [votes]);
 
   if (!opinion) return null;
 
   const results = computeVoteResults(votes, opinion.options);
   const cat = OPINION_CATEGORIES[opinion.category];
+  const intentMeta = CONTENT_INTENT_LABELS[opinion.content_intent || "sentiment_signal"];
   const isClosed = opinion.status === "closed" || isPast(new Date(opinion.ends_at));
 
   const pieData = opinion.options.map((opt) => ({
@@ -53,7 +57,6 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
     setComment("");
   };
 
-  // Role-wise split
   const roleLabels: Record<string, string> = {
     issuer: "Issuers",
     intermediary: "Intermediaries",
@@ -64,9 +67,12 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent side="right" className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader className="pb-4 border-b">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             <Badge variant="secondary" className="text-[10px] gap-1">
               {cat.icon} {cat.label}
+            </Badge>
+            <Badge variant="outline" className="text-[10px] gap-0.5 border-primary/30 text-primary/80">
+              {intentMeta.icon} {intentMeta.label}
             </Badge>
             {isClosed && <Badge variant="outline" className="text-[10px]">Closed</Badge>}
           </div>
@@ -119,11 +125,64 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
                 );
               })}
             </div>
+
+            {/* Sentiment Trust Score */}
+            {votes.length > 0 && (
+              <div className="rounded-lg border p-3 bg-card">
+                <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
+                  <Award className="h-3.5 w-3.5 text-primary" /> Sentiment Trust Score
+                </h4>
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "h-12 w-12 rounded-full border-2 flex items-center justify-center shrink-0",
+                    trustScore.score >= 70 ? "border-accent bg-accent/10" :
+                    trustScore.score >= 40 ? "border-primary bg-primary/10" :
+                    "border-muted bg-muted"
+                  )}>
+                    <span className={cn(
+                      "text-base font-bold",
+                      trustScore.score >= 70 ? "text-accent" :
+                      trustScore.score >= 40 ? "text-primary" :
+                      "text-muted-foreground"
+                    )}>{trustScore.score}</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className={cn(
+                      "text-xs font-semibold",
+                      trustScore.score >= 70 ? "text-accent" :
+                      trustScore.score >= 40 ? "text-primary" :
+                      "text-muted-foreground"
+                    )}>{trustScore.level}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                      {trustScore.verifiedVoterPct}% verified · {trustScore.certifiedVoterPct}% hold certifications
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* RE Disclosure: Voter Credentials */}
+            {voterCredentials.length > 0 && (
+              <div className="rounded-lg border border-accent/20 bg-accent/5 p-3">
+                <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5 text-accent">
+                  <ShieldCheck className="h-3.5 w-3.5" /> Regulated Entity Disclosures
+                </h4>
+                <p className="text-[10px] text-muted-foreground mb-2">
+                  This sentiment signal includes votes from professionals holding the following registrations:
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {voterCredentials.map((cred) => (
+                    <Badge key={cred} variant="outline" className="text-[10px] border-accent/30 text-accent/90 bg-accent/5">
+                      {cred}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           {/* Analysis Tab: Pie chart + Role split */}
           <TabsContent value="analysis" className="mt-4 space-y-6">
-            {/* Donut chart */}
             {votes.length > 0 ? (
               <>
                 <div className="h-48">
@@ -156,11 +215,19 @@ export function OpinionDetailSheet({ opinionId, opinion, open, onClose }: Opinio
                     {Object.entries(roleLabels).map(([role, label]) => {
                       const roleVotes = votes.filter((v) => v.voter_role === role);
                       if (!roleVotes.length) return null;
+                      const verifiedInRole = roleVotes.filter((v) => v.voter_profile?.verification_status === "verified").length;
                       return (
                         <div key={role} className="rounded-lg border p-3">
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-medium">{label}</span>
-                            <Badge variant="secondary" className="text-[10px]">{roleVotes.length} votes</Badge>
+                            <div className="flex items-center gap-1.5">
+                              {verifiedInRole > 0 && (
+                                <span className="text-[9px] text-accent flex items-center gap-0.5">
+                                  <ShieldCheck className="h-2.5 w-2.5" /> {verifiedInRole} verified
+                                </span>
+                              )}
+                              <Badge variant="secondary" className="text-[10px]">{roleVotes.length} votes</Badge>
+                            </div>
                           </div>
                           <div className="flex gap-1">
                             {opinion.options.map((opt) => {

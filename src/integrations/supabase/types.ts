@@ -1702,6 +1702,7 @@ export type Database = {
         Row: {
           category: Database["public"]["Enums"]["opinion_category"]
           comment_count: number
+          content_intent: Database["public"]["Enums"]["content_intent"]
           created_at: string
           created_by: string
           description: string
@@ -1722,6 +1723,7 @@ export type Database = {
         Insert: {
           category?: Database["public"]["Enums"]["opinion_category"]
           comment_count?: number
+          content_intent?: Database["public"]["Enums"]["content_intent"]
           created_at?: string
           created_by: string
           description?: string
@@ -1742,6 +1744,7 @@ export type Database = {
         Update: {
           category?: Database["public"]["Enums"]["opinion_category"]
           comment_count?: number
+          content_intent?: Database["public"]["Enums"]["content_intent"]
           created_at?: string
           created_by?: string
           description?: string
@@ -3781,6 +3784,7 @@ export type Database = {
       blog_post_type: "article" | "survey" | "poll" | "bulletin"
       connection_status: "pending" | "accepted" | "rejected"
       connection_type: "follow" | "connect"
+      content_intent: "education" | "sentiment_signal" | "awareness"
       event_category:
         | "webinar"
         | "investor_meet"
@@ -4038,6 +4042,7 @@ export const Constants = {
       blog_post_type: ["article", "survey", "poll", "bulletin"],
       connection_status: ["pending", "accepted", "rejected"],
       connection_type: ["follow", "connect"],
+      content_intent: ["education", "sentiment_signal", "awareness"],
       event_category: [
         "webinar",
         "investor_meet",

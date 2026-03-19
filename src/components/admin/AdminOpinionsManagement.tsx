@@ -20,8 +20,8 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import {
   useOpinions, useCreateOpinion, useUpdateOpinion, useDeleteOpinion,
-  type Opinion, type OpinionFormat, type OpinionCategory, type OpinionOption,
-  OPINION_CATEGORIES, DURATION_PRESETS, FORMAT_DEFAULTS, DEFAULT_DISCLAIMER,
+  type Opinion, type OpinionFormat, type OpinionCategory, type OpinionOption, type ContentIntent,
+  OPINION_CATEGORIES, DURATION_PRESETS, FORMAT_DEFAULTS, DEFAULT_DISCLAIMER, CONTENT_INTENT_LABELS,
 } from "@/hooks/useOpinions";
 
 const FORMAT_LABELS: Record<OpinionFormat, string> = {
@@ -48,7 +48,8 @@ export function AdminOpinionsManagement() {
   const [options, setOptions] = useState<OpinionOption[]>(FORMAT_DEFAULTS.binary);
   const [status, setStatus] = useState<"draft" | "active">("draft");
   const [isFeatured, setIsFeatured] = useState(false);
-  const [durationPreset, setDurationPreset] = useState<number>(168); // 1 week
+  const [contentIntent, setContentIntent] = useState<ContentIntent>("sentiment_signal");
+  const [durationPreset, setDurationPreset] = useState<number>(168);
   const [customDate, setCustomDate] = useState<Date | undefined>(undefined);
   const [useCustomDate, setUseCustomDate] = useState(false);
   const [disclaimer, setDisclaimer] = useState(DEFAULT_DISCLAIMER);
@@ -61,6 +62,7 @@ export function AdminOpinionsManagement() {
     setOptions(FORMAT_DEFAULTS.binary);
     setStatus("draft");
     setIsFeatured(false);
+    setContentIntent("sentiment_signal");
     setDurationPreset(168);
     setCustomDate(undefined);
     setUseCustomDate(false);
@@ -82,6 +84,7 @@ export function AdminOpinionsManagement() {
     setOptions(op.options);
     setStatus(op.status as "draft" | "active");
     setIsFeatured(op.is_featured);
+    setContentIntent(op.content_intent || "sentiment_signal");
     setDisclaimer(op.disclaimer_text || DEFAULT_DISCLAIMER);
     setDialogOpen(true);
   };
@@ -122,6 +125,7 @@ export function AdminOpinionsManagement() {
       format: opFormat,
       options,
       status,
+      content_intent: contentIntent,
       is_featured: isFeatured,
       ends_at: endsAt,
       disclaimer_text: disclaimer.trim() || DEFAULT_DISCLAIMER,
@@ -285,6 +289,19 @@ export function AdminOpinionsManagement() {
                 )}
               </div>
 
+              {/* Content Intent (SEBI 2026) */}
+              <div>
+                <Label className="text-xs">Content Intent (SEBI 2026)</Label>
+                <Select value={contentIntent} onValueChange={(v) => setContentIntent(v as ContentIntent)}>
+                  <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(CONTENT_INTENT_LABELS).map(([k, v]) => (
+                      <SelectItem key={k} value={k}>{v.icon} {v.label} — {v.description}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs">Status</Label>
@@ -329,6 +346,7 @@ export function AdminOpinionsManagement() {
               <TableRow>
                 <TableHead>Title</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead>Intent</TableHead>
                 <TableHead>Format</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-center">Votes</TableHead>
@@ -339,11 +357,11 @@ export function AdminOpinionsManagement() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading...</TableCell>
+                   <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading...</TableCell>
                 </TableRow>
               ) : opinions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No opinions yet</TableCell>
+                   <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No opinions yet</TableCell>
                 </TableRow>
               ) : opinions.map((op) => (
                 <TableRow key={op.id}>
@@ -354,6 +372,11 @@ export function AdminOpinionsManagement() {
                   <TableCell>
                     <Badge variant="secondary" className="text-[10px]">
                       {OPINION_CATEGORIES[op.category]?.icon} {OPINION_CATEGORIES[op.category]?.label}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px] border-primary/30 text-primary/80">
+                      {CONTENT_INTENT_LABELS[op.content_intent || "sentiment_signal"]?.icon} {CONTENT_INTENT_LABELS[op.content_intent || "sentiment_signal"]?.label}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-xs">{FORMAT_LABELS[op.format]}</TableCell>
