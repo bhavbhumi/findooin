@@ -14,9 +14,20 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Select,
   SelectContent,
@@ -75,6 +86,11 @@ const Settings = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
+
+  // Account deletion
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -135,6 +151,23 @@ const Settings = () => {
     await removeSession();
     await supabase.auth.signOut();
     window.location.href = "/";
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== "DELETE") return;
+    setDeleteLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("delete-account");
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast.success("Account deleted successfully. Goodbye!");
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete account");
+    } finally {
+      setDeleteLoading(false);
+    }
   };
 
   const handleEmailChange = async (e: React.FormEvent) => {
@@ -363,7 +396,7 @@ const Settings = () => {
                 <p className="text-sm font-medium text-destructive">Delete account</p>
                 <p className="text-xs text-muted-foreground">Permanently delete your account and all data</p>
               </div>
-              <Button variant="outline" size="sm" onClick={() => toast.info("Account deletion coming soon")} className="text-destructive border-destructive/30 hover:bg-destructive/10">
+              <Button variant="outline" size="sm" onClick={() => { setDeleteConfirmText(""); setShowDeleteConfirm(true); }} className="text-destructive border-destructive/30 hover:bg-destructive/10">
                 <Trash2 className="h-3.5 w-3.5 mr-1" /> Delete
               </Button>
             </div>
@@ -418,6 +451,36 @@ const Settings = () => {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Account Confirmation */}
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-destructive font-heading">Delete your account?</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <span className="block">This action is <strong>permanent and irreversible</strong>. All your data — posts, connections, messages, vault files, and profile — will be permanently erased.</span>
+              <span className="block text-xs">To confirm, type <strong>DELETE</strong> below.</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <Input
+            value={deleteConfirmText}
+            onChange={(e) => setDeleteConfirmText(e.target.value)}
+            placeholder='Type "DELETE" to confirm'
+            className="mt-2"
+          />
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              disabled={deleteConfirmText !== "DELETE" || deleteLoading}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleteLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Permanently Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   );
 };
