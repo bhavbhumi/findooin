@@ -3,6 +3,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { registerSession } from "@/lib/session-manager";
+import { isDisposableEmail, DISPOSABLE_EMAIL_ERROR } from "@/lib/disposable-email-domains";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -198,6 +199,16 @@ const Auth = () => {
       toast({
         title: "Too many attempts",
         description: `Please wait ${lockCountdown} seconds before trying again.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Block disposable emails on signup
+    if (isSignUp && isDisposableEmail(email.trim())) {
+      toast({
+        title: "Email not allowed",
+        description: DISPOSABLE_EMAIL_ERROR,
         variant: "destructive",
       });
       return;
