@@ -125,6 +125,7 @@ export function AdminOpinionsManagement() {
       format: opFormat,
       options,
       status,
+      content_intent: contentIntent,
       is_featured: isFeatured,
       ends_at: endsAt,
       disclaimer_text: disclaimer.trim() || DEFAULT_DISCLAIMER,
