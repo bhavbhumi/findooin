@@ -17,6 +17,7 @@ import { LeadCaptureDashboard } from "./LeadCaptureDashboard";
 
 interface DigitalCardManagerProps {
   profileId: string;
+  profileName?: string;
   digitalCardFields: Record<string, boolean> | null;
   onFieldsUpdated: () => void;
 }
@@ -41,7 +42,7 @@ const DEFAULT_FIELDS: Record<string, boolean> = {
   specializations: true, email: false, phone: false,
 };
 
-export const DigitalCardManager = ({ profileId, digitalCardFields, onFieldsUpdated }: DigitalCardManagerProps) => {
+export const DigitalCardManager = ({ profileId, profileName, digitalCardFields, onFieldsUpdated }: DigitalCardManagerProps) => {
   const [fields, setFields] = useState<Record<string, boolean>>(digitalCardFields ?? DEFAULT_FIELDS);
   const [saving, setSaving] = useState(false);
   const [nfcSupported, setNfcSupported] = useState(false);
@@ -123,7 +124,9 @@ export const DigitalCardManager = ({ profileId, digitalCardFields, onFieldsUpdat
       ctx?.drawImage(img, 0, 0, 512, 512);
       const pngUrl = canvas.toDataURL("image/png");
       const a = document.createElement("a");
-      a.download = "findoo-card-qr.png";
+      const datestamp = new Date().toISOString().slice(0, 10);
+      const safeName = (profileName || "findoo-card").replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-_]/g, "").toLowerCase();
+      a.download = `findoo-qr-${safeName}-${datestamp}.png`;
       a.href = pngUrl;
       a.click();
     };
