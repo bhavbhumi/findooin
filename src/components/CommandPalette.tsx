@@ -73,7 +73,7 @@ export function CommandPalette() {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Quick Actions">
-          {QUICK_ACTIONS.map((item) => (
+          {quickActions.map((item) => (
             <CommandItem
               key={item.label}
               onSelect={() => handleSelect(item.path)}
