@@ -346,6 +346,7 @@ export function AdminOpinionsManagement() {
               <TableRow>
                 <TableHead>Title</TableHead>
                 <TableHead>Category</TableHead>
+                <TableHead>Intent</TableHead>
                 <TableHead>Format</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-center">Votes</TableHead>
