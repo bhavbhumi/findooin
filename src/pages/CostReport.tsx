@@ -610,7 +610,7 @@ const CostReport = () => {
         <div className="bg-primary/5 border-l-4 border-primary p-4 text-sm leading-relaxed">
           <p className="mb-2"><strong>With verified platform costs, FindOO remains financially sustainable from Month 1.</strong></p>
           <ul className="list-disc pl-5 space-y-1">
-            <li>Fixed platform base: <strong>{INR(2520)}/mo</strong> (Lovable Pro + Cloud Micro) — becomes negligible at scale</li>
+            <li>Fixed platform base: <strong>{INR(MONTHLY_BASE)}/mo</strong> (Lovable Pro + Cloud Mini) — becomes negligible at scale</li>
             <li>Total development cost to date ({DAYS_ACTIVE} days): <strong>{INR(TOTAL_SUNK_COST)}</strong></li>
             <li>At 25K users: revenue <strong>{INR(targetRev.total)}/mo</strong> vs cost <strong>₹39K/mo</strong></li>
             <li>Platform costs become &lt;1% of total burn beyond 10K users</li>
