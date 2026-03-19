@@ -392,12 +392,16 @@ export function AdminUserManagement() {
         </div>
       </div>
 
-      {/* ── User List ── */}
+       {/* ── User List ── */}
       <div className="space-y-1.5">
         {filtered.map((u: any) => {
           const vBadge = verificationBadge[u.verification_status] || verificationBadge.unverified;
           const aBadge = activityBadge[u.activity?.status || "dormant"] || activityBadge.dormant;
           const ActivityIcon = aBadge.icon;
+
+          const fullNameKey = (u.full_name || "").trim().toLowerCase();
+          const sameNameCount = fullNameKey ? (fullNameCounts[fullNameKey] || 0) : 0;
+
           return (
             <Card key={u.id} className={`hover:bg-muted/30 transition-colors ${u.activity?.status === "dormant" ? "opacity-60" : ""} ${u.is_seed ? "border-dashed border-violet-500/30" : ""}`}>
               <CardContent className="py-2.5 px-3">
@@ -419,6 +423,14 @@ export function AdminUserManagement() {
                       <span className="font-semibold text-sm truncate max-w-[200px]">
                         {u.user_type === "entity" && u.organization ? u.organization : (u.display_name || u.full_name)}
                       </span>
+                      <span className="text-[10px] text-muted-foreground font-mono">#{u.id.slice(0, 6)}</span>
+
+                      {sameNameCount > 1 && (
+                        <Badge variant="outline" className="text-[9px] h-4 px-1 bg-status-warning/10 text-status-warning border-status-warning/20">
+                          Duplicate name · {sameNameCount}
+                        </Badge>
+                      )}
+
                       {u.is_seed && (
                         <Badge variant="outline" className="text-[9px] h-4 px-1 bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20 gap-0.5">
                           <FlaskConical className="h-2.5 w-2.5" /> Test
