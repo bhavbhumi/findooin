@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +20,7 @@ import {
 
 const MAX_LOGIN_ATTEMPTS = 3;
 const LOCKOUT_DURATION_MS = 60_000; // 1 minute
-const REQUEST_TIMEOUT_MS = 30_000;
+const REQUEST_TIMEOUT_MS = 10_000;
 
 const Auth = () => {
   usePageMeta({ title: "Sign In", description: "Sign in or create your FindOO account.", path: "/auth" });
@@ -32,6 +32,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const handledSessionRef = useRef<string | null>(null);
 
   // Login attempt tracking
   const [loginAttempts, setLoginAttempts] = useState(0);
@@ -88,58 +89,63 @@ const Auth = () => {
     async (session: any) => {
       if (!session) return;
 
-      try {
-        await registerSession(session.user.id);
-      } catch (err) {
-        console.warn("Session registration skipped:", err);
-      }
+      const sessionKey = `${session.user.id}:${session.expires_at ?? "na"}`;
+      if (handledSessionRef.current === sessionKey) return;
+      handledSessionRef.current = sessionKey;
 
-      // Handle referral connections if ref param exists
-      if (referrerId && referrerId !== session.user.id) {
-        await createReferralConnections(session.user.id, referrerId);
-
-        // Log referral attribution in card_exchanges
+      // Non-critical writes should never block navigation
+      Promise.resolve().then(async () => {
         try {
-          await supabase.from("card_exchanges").insert({
-            card_owner_id: referrerId,
-            viewer_id: session.user.id,
-            context: "referral",
-            action: "signup",
-          } as any);
+          await registerSession(session.user.id);
         } catch (err) {
-          console.warn("Referral attribution log failed:", err);
+          console.warn("Session registration skipped:", err);
         }
-      }
+
+        if (referrerId && referrerId !== session.user.id) {
+          await createReferralConnections(session.user.id, referrerId);
+
+          try {
+            await supabase.from("card_exchanges").insert({
+              card_owner_id: referrerId,
+              viewer_id: session.user.id,
+              context: "referral",
+              action: "signup",
+            } as any);
+          } catch (err) {
+            console.warn("Referral attribution log failed:", err);
+          }
+        }
+      });
 
       try {
-        const { data: profile, error } = await supabase
+        const profilePromise = supabase
           .from("profiles")
           .select("onboarding_completed")
           .eq("id", session.user.id)
           .maybeSingle();
 
+        const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
+          setTimeout(() => resolve({ data: null, error: new Error("Profile check timeout") }), 4000),
+        );
+
+        const { data: profile, error } = (await Promise.race([profilePromise, timeoutPromise])) as {
+          data: { onboarding_completed?: boolean } | null;
+          error: Error | null;
+        };
+
         if (error) {
-          console.error("Profile fetch error:", error);
+          console.warn("Profile fetch delayed/failed, defaulting to onboarding:", error.message);
           navigate("/onboarding");
           return;
         }
 
-        if (profile?.onboarding_completed) {
-          navigate(redirectPath || "/feed");
-        } else {
-          navigate("/onboarding");
-        }
+        navigate(profile?.onboarding_completed ? redirectPath || "/feed" : "/onboarding");
       } catch (err) {
         console.error("Session check failed:", err);
-        toast({
-          title: "Connection issue",
-          description: "Signed in but couldn't load your profile. Redirecting...",
-          variant: "destructive",
-        });
-        setTimeout(() => navigate("/onboarding"), 1500);
+        navigate("/onboarding");
       }
     },
-    [navigate, toast, referrerId],
+    [navigate, referrerId, redirectPath],
   );
 
   useEffect(() => {
@@ -167,7 +173,7 @@ const Auth = () => {
 
   const submitWithRetry = async <T,>(
     action: () => Promise<{ error: { message?: string } | null; data?: T }>,
-    maxAttempts = 3,
+    maxAttempts = 1,
   ) => {
     let lastError: any = null;
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -214,30 +220,12 @@ const Auth = () => {
           description: "We sent you a verification link. Please confirm your email to continue.",
         });
       } else {
-        let result: any;
-
-        try {
-          result = await submitWithRetry(() =>
-            supabase.auth.signInWithPassword({
-              email: email.trim(),
-              password,
-            }),
-          );
-        } catch (submitError: any) {
-          const isTimeoutOrNetwork = /load failed|failed to fetch|network|timed out/i.test(
-            submitError?.message ?? "",
-          );
-
-          if (!isTimeoutOrNetwork) throw submitError;
-
-          // Fallback: one direct attempt without local timeout wrapper for slow mobile networks
-          const fallbackResult = await supabase.auth.signInWithPassword({
+        const result = await submitWithRetry(() =>
+          supabase.auth.signInWithPassword({
             email: email.trim(),
             password,
-          });
-          if (fallbackResult.error) throw fallbackResult.error;
-          result = fallbackResult;
-        }
+          }),
+        );
 
         // Handle success immediately (mobile resilience) instead of relying only on auth event listeners
         const signedInSession = result?.data?.session;
