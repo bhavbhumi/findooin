@@ -145,7 +145,7 @@ const AppNavbar = () => {
             )}
 
             {/* Leaderboard */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground hidden sm:inline-flex" asChild aria-label="Leaderboard">
+            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild aria-label="Leaderboard">
               <Link to="/leaderboard">
                 <Trophy className="h-5 w-5" />
               </Link>
