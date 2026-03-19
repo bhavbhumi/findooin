@@ -5,6 +5,7 @@
  */
 import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import { FindooLoader } from "@/components/FindooLoader";
+import NotFound from "@/pages/NotFound";
 import { ReactNode } from "react";
 
 interface FeatureFlagGateProps {
@@ -26,8 +27,6 @@ export function FeatureFlagGate({ flagKey, children, fallback }: FeatureFlagGate
 
   if (!isEnabled(flagKey)) {
     if (fallback) return <>{fallback}</>;
-    // Lazy import NotFound to avoid circular deps
-    const NotFound = require("@/pages/NotFound").default;
     return <NotFound />;
   }
 
