@@ -83,13 +83,19 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "SIGNED_OUT") {
-        setAvailableRoles([]);
-        setActiveRoleState("investor");
-        setUserId(null);
-        setLoaded(true);
-      }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Defer to avoid deadlocking Supabase auth internals
+      setTimeout(() => {
+        if (event === "SIGNED_OUT") {
+          setAvailableRoles([]);
+          setActiveRoleState("investor");
+          setUserId(null);
+          setLoaded(true);
+        } else if (event === "SIGNED_IN" && session) {
+          setUserId(session.user.id);
+          fetchRoles(session.user.id).then(() => setLoaded(true));
+        }
+      }, 0);
     });
 
     return () => subscription.unsubscribe();
