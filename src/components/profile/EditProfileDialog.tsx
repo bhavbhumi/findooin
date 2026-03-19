@@ -346,11 +346,6 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
               <CertificationSelector value={certifications} onChange={setCertifications} />
             </div>
 
-            {/* Languages — with proficiency & mother tongue */}
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground mb-1 block">Languages</Label>
-              <LanguageSelector value={languages} onChange={setLanguages} />
-            </div>
           </TabsContent>
 
           {/* Regulatory Tab */}
