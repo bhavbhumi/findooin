@@ -84,6 +84,7 @@ export function AdminOpinionsManagement() {
     setOptions(op.options);
     setStatus(op.status as "draft" | "active");
     setIsFeatured(op.is_featured);
+    setContentIntent(op.content_intent || "sentiment_signal");
     setDisclaimer(op.disclaimer_text || DEFAULT_DISCLAIMER);
     setDialogOpen(true);
   };
