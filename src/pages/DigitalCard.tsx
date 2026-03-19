@@ -66,7 +66,12 @@ const DigitalCard = () => {
   }, []);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) { setError(true); setLoading(false); return; }
+    
+    // Validate UUID format to avoid unnecessary API calls
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) { setError(true); setLoading(false); return; }
+
     Promise.all([
       supabase.from("profiles").select("*").eq("id", userId).single(),
       supabase.from("user_roles").select("role, sub_type").eq("user_id", userId),
@@ -85,8 +90,13 @@ const DigitalCard = () => {
         });
         setRoles(rolesRes.data || []);
       } else {
+        console.error("[DigitalCard] Profile not found for userId:", userId, profileRes.error);
         setError(true);
       }
+      setLoading(false);
+    }).catch((err) => {
+      console.error("[DigitalCard] Fetch error:", err);
+      setError(true);
       setLoading(false);
     });
   }, [userId]);
