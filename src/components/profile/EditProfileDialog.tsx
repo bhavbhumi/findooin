@@ -71,19 +71,6 @@ const socialOptions = [
   { key: "youtube", label: "YouTube" },
 ];
 
-/** Parse languages from DB — handles both old text[] and new jsonb format */
-function parseLanguages(raw: any): UserLanguage[] {
-  if (!raw) return [];
-  if (Array.isArray(raw)) {
-    return raw.map((item: any) => {
-      if (typeof item === "string") {
-        return { code: "", name: item, proficiency: "fluent" as const, isMotherTongue: false };
-      }
-      return item as UserLanguage;
-    });
-  }
-  return [];
-}
 
 export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: EditProfileDialogProps) => {
   const [saving, setSaving] = useState(false);
