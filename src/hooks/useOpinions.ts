@@ -1,5 +1,6 @@
 /**
  * useOpinions — Hook for fetching, voting, and managing professional opinions.
+ * SEBI 2026 compliant: content_intent classification, voter credential enrichment.
  */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +9,7 @@ import { toast } from "sonner";
 
 export type OpinionFormat = "binary" | "multiple_choice" | "scale" | "over_under";
 export type OpinionStatus = "draft" | "active" | "closed" | "archived";
+export type ContentIntent = "education" | "sentiment_signal" | "awareness";
 export type OpinionCategory =
   | "rbi_monetary_policy"
   | "markets_indices"
@@ -31,6 +33,7 @@ export interface Opinion {
   format: OpinionFormat;
   options: OpinionOption[];
   status: OpinionStatus;
+  content_intent: ContentIntent;
   created_by: string;
   starts_at: string;
   ends_at: string;
@@ -52,6 +55,13 @@ export interface OpinionVote {
   voter_role: string;
   is_public: boolean;
   created_at: string;
+  /** Enriched voter profile for credential display */
+  voter_profile?: {
+    verification_status: string;
+    certifications: string[] | null;
+    regulatory_ids: Record<string, string> | null;
+    user_type: string;
+  };
 }
 
 export interface OpinionComment {
@@ -74,6 +84,21 @@ export interface VoteResults {
     byRole: { [role: string]: number };
   };
 }
+
+/** Sentiment Trust Score — credential-weighted quality of the aggregate signal */
+export interface SentimentTrustScore {
+  score: number; // 0-100
+  level: string; // "High Authority" | "Moderate Authority" | "Low Authority"
+  verifiedVoterPct: number;
+  certifiedVoterPct: number;
+  totalCredentialWeight: number;
+}
+
+export const CONTENT_INTENT_LABELS: Record<ContentIntent, { label: string; icon: string; description: string }> = {
+  education: { label: "Education", icon: "📚", description: "Educational content for awareness" },
+  sentiment_signal: { label: "Sentiment Signal", icon: "📊", description: "Aggregated professional sentiment" },
+  awareness: { label: "Awareness", icon: "💡", description: "Industry awareness and discussion" },
+};
 
 export const OPINION_CATEGORIES: Record<OpinionCategory, { label: string; icon: string }> = {
   rbi_monetary_policy: { label: "RBI & Monetary Policy", icon: "🏦" },
@@ -136,6 +161,7 @@ export function useOpinions(category?: OpinionCategory, status?: OpinionStatus) 
       if (error) throw error;
       return (data || []).map((d: any) => ({
         ...d,
+        content_intent: d.content_intent || "sentiment_signal",
         options: typeof d.options === "string" ? JSON.parse(d.options) : d.options,
       })) as Opinion[];
     },
@@ -155,6 +181,7 @@ export function useOpinionDetail(opinionId: string | null) {
       if (error) throw error;
       return {
         ...data,
+        content_intent: data.content_intent || "sentiment_signal",
         options: typeof data.options === "string" ? JSON.parse(data.options) : data.options,
       } as Opinion;
     },
@@ -171,7 +198,22 @@ export function useOpinionVotes(opinionId: string | null) {
         .select("*")
         .eq("opinion_id", opinionId!);
       if (error) throw error;
-      return (data || []) as OpinionVote[];
+
+      if (!data?.length) return [] as OpinionVote[];
+
+      // Enrich with voter credentials for RE disclosure & trust scoring
+      const voterIds = [...new Set(data.map((v: any) => v.user_id))];
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, verification_status, certifications, regulatory_ids, user_type")
+        .in("id", voterIds);
+
+      const profileMap = new Map(profiles?.map((p: any) => [p.id, p]));
+
+      return (data || []).map((v: any) => ({
+        ...v,
+        voter_profile: profileMap.get(v.user_id) || undefined,
+      })) as OpinionVote[];
     },
   });
 }
@@ -223,6 +265,64 @@ export function computeVoteResults(votes: OpinionVote[], options: OpinionOption[
   return results;
 }
 
+/** Compute Sentiment Trust Score based on voter credentials */
+export function computeSentimentTrustScore(votes: OpinionVote[]): SentimentTrustScore {
+  if (!votes.length) return { score: 0, level: "No Data", verifiedVoterPct: 0, certifiedVoterPct: 0, totalCredentialWeight: 0 };
+
+  let totalWeight = 0;
+  let verifiedCount = 0;
+  let certifiedCount = 0;
+
+  votes.forEach((v) => {
+    let weight = 1; // base
+    if (v.voter_profile?.verification_status === "verified") {
+      weight += 2;
+      verifiedCount++;
+    }
+    if (v.voter_profile?.certifications?.length) {
+      weight += 1;
+      certifiedCount++;
+    }
+    if (v.voter_profile?.regulatory_ids && Object.keys(v.voter_profile.regulatory_ids).length > 0) {
+      weight += 1.5;
+    }
+    totalWeight += weight;
+  });
+
+  const maxPossibleWeight = votes.length * 5.5; // max per voter
+  const score = Math.min(Math.round((totalWeight / maxPossibleWeight) * 100), 100);
+  const verifiedVoterPct = Math.round((verifiedCount / votes.length) * 100);
+  const certifiedVoterPct = Math.round((certifiedCount / votes.length) * 100);
+
+  let level = "Low Authority";
+  if (score >= 70) level = "High Authority";
+  else if (score >= 40) level = "Moderate Authority";
+
+  return { score, level, verifiedVoterPct, certifiedVoterPct, totalCredentialWeight: Math.round(totalWeight * 10) / 10 };
+}
+
+/** Extract unique license types from voter profiles for RE disclosure */
+export function extractVoterCredentials(votes: OpinionVote[]): string[] {
+  const creds = new Set<string>();
+  votes.forEach((v) => {
+    if (v.voter_profile?.regulatory_ids) {
+      const ids = v.voter_profile.regulatory_ids;
+      if (ids.amfi_arn) creds.add("AMFI ARN");
+      if (ids.sebi_ria) creds.add("SEBI RIA");
+      if (ids.sebi_ra) creds.add("SEBI RA");
+      if (ids.irdai_license) creds.add("IRDAI Licensed");
+      if (ids.ca_membership) creds.add("ICAI CA");
+      if (ids.rbi_license) creds.add("RBI Licensed");
+      if (ids.nism_cert) creds.add("NISM Certified");
+      if (ids.cfa_charter) creds.add("CFA Charter");
+    }
+    if (v.voter_profile?.certifications?.length) {
+      v.voter_profile.certifications.forEach((c) => creds.add(c));
+    }
+  });
+  return Array.from(creds).slice(0, 8); // cap display
+}
+
 export function useCastVote() {
   const qc = useQueryClient();
   const { activeRole } = useRole();
@@ -240,8 +340,6 @@ export function useCastVote() {
         is_public: isPublic,
       });
       if (error) throw error;
-
-      // participation count updated via query invalidation
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ["opinion-votes", vars.opinionId] });
@@ -312,7 +410,6 @@ export function useOpinionInteraction() {
       });
       if (error) {
         if (error.message?.includes("duplicate")) {
-          // Remove interaction (toggle)
           await supabase
             .from("opinion_interactions")
             .delete()
@@ -337,6 +434,7 @@ export function useCreateOpinion() {
       const { error } = await supabase.from("opinions").insert({
         ...opinion,
         created_by: user.id,
+        content_intent: opinion.content_intent || "sentiment_signal",
         disclaimer_text: opinion.disclaimer_text || DEFAULT_DISCLAIMER,
         options: JSON.stringify(opinion.options || FORMAT_DEFAULTS.binary),
       });

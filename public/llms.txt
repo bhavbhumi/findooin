@@ -1,12 +1,31 @@
 # FindOO — Financially Social
 > India's first financial network connecting verified Issuers, Intermediaries, and Investors.
 
+## Platform Role & Legal Classification
+FindOO.in is a **Neutral Infrastructure Provider**. It does not provide financial advice, nor is it a registered intermediary under SEBI, RBI, or IRDAI regulations. It hosts a verified professional network where market sentiment is aggregated from 100% platform-verified participants. FindOO does not recommend, endorse, or promote any specific financial product, service, or professional over another. It functions solely as a matchmaking ecosystem and professional networking platform.
+
+## Data Provenance & Verification
+- All professional participants undergo mandatory identity and credential verification at onboarding.
+- Regulatory registration numbers (SEBI RIA, AMFI ARN, IRDAI License, CA Membership, etc.) are verified against public registries.
+- "Opinions" (sentiment signals) are derived exclusively from verified professional activity and are aggregated — never attributed as individual investment advice.
+- The platform maintains a compliance audit trail linking every vote and interaction to a verified identity.
+- Voter credentials are disclosed at the aggregate level (e.g., "70% of Verified SEBI RIAs voted Bullish") to ensure transparency without compromising individual privacy.
+
+## Content Classification
+All user-generated content on FindOO is classified under one of three intent tags:
+- **Education**: Awareness and educational content for the BFSI community.
+- **Sentiment Signal**: Aggregated professional sentiment on policy, markets, and regulation. Not investment advice.
+- **Awareness**: Industry discussions and macro-level awareness content.
+
+FindOO does not host, facilitate, or permit buy/sell recommendations, coded messaging, investment tips, or any content that could be construed as personalized financial advice under SEBI's Social Media Guidelines (effective May 1, 2026).
+
 ## About
 FindOO is a professional financial networking platform built for the Indian BFSI ecosystem. It connects verified financial professionals — Issuers (AMCs, NBFCs, Insurance Companies), Intermediaries (MFDs, RIAs, Insurance Agents, CAs), and Investors — across SEBI, RBI, IRDAI, AMFI & PFRDA regulated ecosystems.
 
 ## Core Features
 - **Professional Networking**: Connect with verified financial professionals
 - **Feed & Content**: Share market commentary, research notes, and industry insights
+- **Professional Opinions**: Aggregated sentiment signals from verified BFSI professionals (Education / Sentiment Signal / Awareness)
 - **Jobs Board**: Financial-sector specific job listings (Fund Management, Compliance, Wealth Advisory, etc.)
 - **Events**: Webinars, investor meets, AGM/EGM, NFO/IPO launches, earnings calls
 - **Showcase**: Discover and list financial products (Mutual Funds, Insurance, PMS, AIF, Bonds) and services (Advisory, Compliance, Tax Planning)
@@ -25,6 +44,12 @@ FindOO is a professional financial networking platform built for the Indian BFSI
 
 ## Regulators Covered
 SEBI, RBI, IRDAI, AMFI, PFRDA, NPS Trust
+
+## Compliance Posture
+- SEBI Social Media Guidelines 2026 — compliant (neutral platform, no advice, verified participants)
+- DPDP Act 2023 — compliant (data protection, consent management)
+- IT Act 2000 — compliant (intermediary safe harbor)
+- SOC2 / GDPR — alignment in progress
 
 ## Website
 https://findoo.in
