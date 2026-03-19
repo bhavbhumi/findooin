@@ -23,8 +23,8 @@ describe("isDisposableEmail", () => {
   });
 
   it("is case-insensitive", () => {
-    expect(isDisposableEmail("test@TEMPMAIL.COM")).toBe(true);
-    expect(isDisposableEmail("test@TempMail.Com")).toBe(true);
+    expect(isDisposableEmail("test@GUERRILLAMAIL.COM")).toBe(true);
+    expect(isDisposableEmail("test@Mailinator.Com")).toBe(true);
     expect(isDisposableEmail("test@GMAIL.COM")).toBe(false);
   });
 
