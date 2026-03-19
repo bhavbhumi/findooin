@@ -3518,6 +3518,13 @@ export type Database = {
         Returns: boolean
       }
       is_seed_user: { Args: { p_user_id: string }; Returns: boolean }
+      manage_own_role: {
+        Args: {
+          _action: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
