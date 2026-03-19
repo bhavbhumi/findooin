@@ -67,13 +67,14 @@ const SUBSCRIPTION_COST_USD = PLATFORM_COSTS.lovable.monthlyUSD * Math.ceil(MONT
 const TOPUP_COST_USD = OVERAGE_CREDITS * PLATFORM_COSTS.lovable.creditCostPerUnit;
 const TOTAL_LOVABLE_USD = SUBSCRIPTION_COST_USD + TOPUP_COST_USD;
 const TOTAL_LOVABLE_INR = Math.round(TOTAL_LOVABLE_USD * USD_TO_INR);
-const TOTAL_CLOUD_COST = Math.round(PLATFORM_COSTS.cloud.currentMonthlyINR * 0.03); // Micro just started today
+const TOTAL_CLOUD_COST = Math.round(PLATFORM_COSTS.cloud.currentMonthlyINR * 0.03); // Mini just started today
 const TOTAL_SUNK_COST = TOTAL_LOVABLE_INR + TOTAL_CLOUD_COST;
+const MONTHLY_BASE = PLATFORM_COSTS.lovable.monthlyINR + PLATFORM_COSTS.cloud.currentMonthlyINR; // ₹3,780/mo
 
 // ── Infra Cost Model (₹/mo at scale — includes platform base) ──
 const INFRA_COSTS = [
-  { users: 100, label: "100", db: 0, auth: 0, storage: 0, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 840, total: 2520 },
-  { users: 1000, label: "1K", db: 0, auth: 0, storage: 500, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 840, total: 3020 },
+  { users: 100, label: "100", db: 0, auth: 0, storage: 0, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 2100, total: 3780 },
+  { users: 1000, label: "1K", db: 0, auth: 0, storage: 500, edge: 0, cdn: 0, cache: 0, lovable: 1680, cloud: 2100, total: 4280 },
   { users: 5000, label: "5K", db: 2000, auth: 0, storage: 1500, edge: 500, cdn: 0, cache: 2000, lovable: 1680, cloud: 2520, total: 10200 },
   { users: 10000, label: "10K", db: 5000, auth: 2000, storage: 3000, edge: 1500, cdn: 1500, cache: 2000, lovable: 1680, cloud: 4200, total: 20880 },
   { users: 25000, label: "25K", db: 12000, auth: 3000, storage: 5000, edge: 3000, cdn: 2000, cache: 4000, lovable: 1680, cloud: 8400, total: 39080 },
