@@ -82,6 +82,7 @@ const Messages = () => {
   const [selectedProfile, setSelectedProfile] = useState<{ full_name: string; display_name: string | null; avatar_url: string | null } | null>(null);
   const [recipientRoles, setRecipientRoles] = useState<string[]>([]);
   const { data: recipientActivity } = useUserActivityStatus(selectedUserId);
+  const { scanAndFlag } = useCodedMessagingGuard();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
