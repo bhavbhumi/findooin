@@ -220,30 +220,12 @@ const Auth = () => {
           description: "We sent you a verification link. Please confirm your email to continue.",
         });
       } else {
-        let result: any;
-
-        try {
-          result = await submitWithRetry(() =>
-            supabase.auth.signInWithPassword({
-              email: email.trim(),
-              password,
-            }),
-          );
-        } catch (submitError: any) {
-          const isTimeoutOrNetwork = /load failed|failed to fetch|network|timed out/i.test(
-            submitError?.message ?? "",
-          );
-
-          if (!isTimeoutOrNetwork) throw submitError;
-
-          // Fallback: one direct attempt without local timeout wrapper for slow mobile networks
-          const fallbackResult = await supabase.auth.signInWithPassword({
+        const result = await submitWithRetry(() =>
+          supabase.auth.signInWithPassword({
             email: email.trim(),
             password,
-          });
-          if (fallbackResult.error) throw fallbackResult.error;
-          result = fallbackResult;
-        }
+          }),
+        );
 
         // Handle success immediately (mobile resilience) instead of relying only on auth event listeners
         const signedInSession = result?.data?.session;
