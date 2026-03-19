@@ -30,7 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  User, Building2, Briefcase, MapPin, Globe, Award, Languages,
+  User, Building2, Briefcase, MapPin, Globe, Award,
   GraduationCap, Landmark, Save, X, Plus, Trash2, Upload, Loader2,
 } from "lucide-react";
 import type { ProfileData } from "./ProfileHeader";
