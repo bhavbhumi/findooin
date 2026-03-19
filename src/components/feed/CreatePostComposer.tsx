@@ -128,6 +128,7 @@ interface CreatePostComposerProps {
 export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostComposerProps = {}) {
   const isMobile = useIsMobile();
   const { activeRole, loaded: roleLoaded, userId: roleUserId } = useRole();
+  const { scanAndFlag } = useCodedMessagingGuard();
   const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
