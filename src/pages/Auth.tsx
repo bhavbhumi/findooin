@@ -204,6 +204,16 @@ const Auth = () => {
       return;
     }
 
+    // Block disposable emails on signup
+    if (isSignUp && isDisposableEmail(email.trim())) {
+      toast({
+        title: "Email not allowed",
+        description: DISPOSABLE_EMAIL_ERROR,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
