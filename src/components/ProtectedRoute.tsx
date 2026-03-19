@@ -1,15 +1,10 @@
 /**
  * ProtectedRoute — Auth guard for authenticated pages.
  *
- * Flow:
- * 1. Checks for active Supabase session → redirects to /auth if none
- * 2. Checks `profiles.onboarding_completed` → redirects to /onboarding if false
- * 3. Listens for SIGNED_OUT events to redirect immediately
- *
- * The `requireOnboarding` prop can be set to false for pages that
- * should be accessible before onboarding (e.g., the onboarding page itself).
+ * Includes retry logic for database timeouts (504s) that can occur
+ * under load when checking profiles.onboarding_completed.
  */
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { FindooLoader } from "@/components/FindooLoader";
@@ -19,9 +14,13 @@ interface Props {
   requireOnboarding?: boolean;
 }
 
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1500;
+
 export default function ProtectedRoute({ children, requireOnboarding = true }: Props) {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
+  const retriesRef = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,7 +43,21 @@ export default function ProtectedRoute({ children, requireOnboarding = true }: P
             .eq("id", session.user.id)
             .maybeSingle();
 
-          if (error || !profile?.onboarding_completed) {
+          // On DB timeout/error, retry instead of redirecting to onboarding
+          if (error) {
+            console.warn("Profile check failed, retrying...", error.message);
+            if (retriesRef.current < MAX_RETRIES && !cancelled) {
+              retriesRef.current++;
+              setTimeout(check, RETRY_DELAY_MS);
+              return;
+            }
+            // After max retries, let them through rather than blocking
+            console.error("Profile check failed after retries, allowing access");
+            if (!cancelled) setReady(true);
+            return;
+          }
+
+          if (!profile?.onboarding_completed) {
             navigate("/onboarding", { replace: true });
             return;
           }
@@ -55,6 +68,11 @@ export default function ProtectedRoute({ children, requireOnboarding = true }: P
         }
       } catch (error) {
         console.error("Protected route session check failed:", error);
+        if (retriesRef.current < MAX_RETRIES && !cancelled) {
+          retriesRef.current++;
+          setTimeout(check, RETRY_DELAY_MS);
+          return;
+        }
         navigate("/auth", { replace: true });
       }
     };
