@@ -49,9 +49,19 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+
+    // Honeypot anti-spam check — bots fill this hidden field
+    const honeypot = formData.get("website_url") as string;
+    if (honeypot) {
+      // Silently reject — looks like success to bots
+      toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
+      form.reset();
+      return;
+    }
+
+    setSubmitting(true);
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const subject = formData.get("subject") as string || "General inquiry";
