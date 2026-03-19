@@ -307,7 +307,7 @@ const ScalingReport = () => {
           <p><strong>Current architecture handles up to ~5K concurrent users with zero infrastructure changes.</strong></p>
           <p>The first intervention (connection pooling) is a <strong>zero-cost configuration change</strong>. This gives the platform a long runway to validate product-market fit before significant infra spend.</p>
           <p>At 10K users, total burn (infra + marketing) of <strong>~₹2.2L/mo</strong> is extremely efficient for a B2B fintech platform.</p>
-          <p className="font-semibold text-green-600">Bottom line: Marketing is the dominant cost driver (70–85% of total burn), not infrastructure. Platform base cost (Lovable Pro + Cloud) is ₹2,520/mo — negligible at any scale.</p>
+          <p className="font-semibold text-green-600">Bottom line: Marketing is the dominant cost driver (70–85% of total burn), not infrastructure. Platform base cost (Lovable Pro + Cloud Mini) is ₹3,780/mo ($45/mo) — negligible at any scale.</p>
         </div>
       </section>
 
