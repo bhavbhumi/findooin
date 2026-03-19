@@ -87,6 +87,11 @@ const Settings = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
 
+  // Account deletion
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) return;
