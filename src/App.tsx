@@ -124,6 +124,20 @@ const LazyFallback = () => (
   </div>
 );
 
+const JobsRouteGate = () => {
+  const { isEnabled, isFetched } = useFeatureFlags();
+
+  if (!isFetched) {
+    return <LazyFallback />;
+  }
+
+  if (!isEnabled("jobs_board")) {
+    return <NotFound />;
+  }
+
+  return <RouteErrorBoundary routeName="Jobs"><Jobs /></RouteErrorBoundary>;
+};
+
 const App = () => {
   useOfflineDetector();
 
