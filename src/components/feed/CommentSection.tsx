@@ -126,11 +126,16 @@ export function CommentSection({ postId }: { postId: string }) {
     setComments((prev) => [optimisticComment, ...prev]);
     setText("");
 
-    const { error } = await supabase.from("comments").insert({
+    const { data: commentData, error } = await supabase.from("comments").insert({
       post_id: postId,
       author_id: currentUserId,
       content: commentText,
-    });
+    }).select("id").single();
+
+    // SEBI 2026: scan for coded messaging
+    if (commentData && currentUserId) {
+      scanAndFlag({ resourceType: 'comment', resourceId: commentData.id, authorId: currentUserId, content: commentText });
+    }
 
     if (!error) {
       // Refresh with real data

@@ -273,12 +273,17 @@ const Messages = () => {
     setSending(true);
     setIsTyping(false);
     broadcastTyping(false);
-    await supabase.from("messages").insert({
+    const { data: msgData } = await supabase.from("messages").insert({
       sender_id: currentUserId,
       receiver_id: selectedUserId,
       content: sanitizeText(newMessage.trim()),
       category: activeCategory,
-    } as any);
+    } as any).select("id").single();
+
+    // SEBI 2026: scan for coded messaging
+    if (msgData) {
+      scanAndFlag({ resourceType: 'message', resourceId: (msgData as any).id, authorId: currentUserId, content: newMessage.trim() });
+    }
     setNewMessage("");
     setSending(false);
   }, [currentUserId, selectedUserId, newMessage, sending, activeCategory, broadcastTyping]);

@@ -368,6 +368,11 @@ export function CreatePostComposer({ draftToLoad, onDraftLoaded }: CreatePostCom
 
       if (error) throw error;
 
+      // SEBI 2026: scan for coded messaging and auto-flag if detected
+      if (postData) {
+        scanAndFlag({ resourceType: 'post', resourceId: postData.id, authorId: userId, content: content.trim() });
+      }
+
       if (postKind === "poll" && postData) {
         const filled = pollOptions.filter((o) => o.text.trim());
         await supabase.from("poll_options").insert(
