@@ -86,7 +86,7 @@ export function CommandPalette() {
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Navigate">
-          {NAVIGATION_ITEMS.map((item) => (
+          {navigationItems.map((item) => (
             <CommandItem
               key={item.label}
               onSelect={() => handleSelect(item.path)}
