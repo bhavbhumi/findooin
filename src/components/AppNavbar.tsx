@@ -125,18 +125,22 @@ const AppNavbar = () => {
                   </Link>
                 </Button>
               )}
-              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
-                <Link to="/events">
-                  <CalendarDays className="h-4 w-4 lg:mr-1.5" />
-                  <span className="hidden lg:inline">Events</span>
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
-                <Link to="/showcase">
-                  <Store className="h-4 w-4 lg:mr-1.5" />
-                  <span className="hidden lg:inline">Showcase</span>
-                </Link>
-              </Button>
+              {showEvents && (
+                <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
+                  <Link to="/events">
+                    <CalendarDays className="h-4 w-4 lg:mr-1.5" />
+                    <span className="hidden lg:inline">Events</span>
+                  </Link>
+                </Button>
+              )}
+              {showShowcase && (
+                <Button variant="ghost" size="sm" className="text-muted-foreground px-2 lg:px-3" asChild>
+                  <Link to="/showcase">
+                    <Store className="h-4 w-4 lg:mr-1.5" />
+                    <span className="hidden lg:inline">Showcase</span>
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
 
