@@ -62,6 +62,7 @@ export function AdminOpinionsManagement() {
     setOptions(FORMAT_DEFAULTS.binary);
     setStatus("draft");
     setIsFeatured(false);
+    setContentIntent("sentiment_signal");
     setDurationPreset(168);
     setCustomDate(undefined);
     setUseCustomDate(false);
