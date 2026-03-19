@@ -94,7 +94,7 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
   // Expertise
   const [specializations, setSpecializations] = useState<string[]>(profile.specializations || []);
   const [certifications, setCertifications] = useState<string[]>(profile.certifications || []);
-  const [languages, setLanguages] = useState<UserLanguage[]>(parseLanguages(profile.languages));
+  
   const [newSpec, setNewSpec] = useState("");
 
   // Regulatory
