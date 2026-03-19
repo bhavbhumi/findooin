@@ -58,7 +58,6 @@ export function useSubscription() {
     queryFn: async () => {
       if (!userId) return null;
 
-      // Build query — filter by role's matching plan when activeRole is set
       let query = supabase
         .from("user_subscriptions")
         .select(`
@@ -66,7 +65,8 @@ export function useSubscription() {
           trial_starts_at, trial_ends_at,
           current_period_start, current_period_end,
           cancelled_at, cancel_at_period_end,
-          subscription_plans!inner (
+          target_role,
+          subscription_plans (
             id, name, slug, description, tier, target_role,
             billing_interval, price_amount, price_currency,
             trial_days, features, limits, sort_order
@@ -76,7 +76,7 @@ export function useSubscription() {
         .in("status", ["active", "trialing", "past_due", "paused"]);
 
       if (activeRole) {
-        query = query.eq("subscription_plans.target_role", activeRole);
+        query = query.eq("target_role", activeRole);
       }
 
       const { data, error } = await query.limit(1).maybeSingle();
