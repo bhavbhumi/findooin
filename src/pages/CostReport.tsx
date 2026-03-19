@@ -39,10 +39,11 @@ const PLATFORM_COSTS = {
     upgradePath: [
       { tier: "Pico (Free)", from: "2026-02-25", to: "2026-03-19", monthlyINR: 0 },
       { tier: "Nano", from: "2026-03-19", to: "2026-03-19", monthlyINR: 420 },
-      { tier: "Micro (Current)", from: "2026-03-19", to: "Present", monthlyINR: 840 },
+      { tier: "Micro", from: "2026-03-19", to: "2026-03-19", monthlyINR: 840 },
+      { tier: "Mini (Current)", from: "2026-03-19", to: "Present", monthlyINR: 2100 },
     ],
-    currentTier: "Micro",
-    currentMonthlyINR: 840,
+    currentTier: "Mini",
+    currentMonthlyINR: 2100, // $25/mo × ₹84
   },
   analytics: {
     totalVisitors: 119,
