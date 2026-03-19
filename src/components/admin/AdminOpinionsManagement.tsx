@@ -20,8 +20,8 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import {
   useOpinions, useCreateOpinion, useUpdateOpinion, useDeleteOpinion,
-  type Opinion, type OpinionFormat, type OpinionCategory, type OpinionOption,
-  OPINION_CATEGORIES, DURATION_PRESETS, FORMAT_DEFAULTS, DEFAULT_DISCLAIMER,
+  type Opinion, type OpinionFormat, type OpinionCategory, type OpinionOption, type ContentIntent,
+  OPINION_CATEGORIES, DURATION_PRESETS, FORMAT_DEFAULTS, DEFAULT_DISCLAIMER, CONTENT_INTENT_LABELS,
 } from "@/hooks/useOpinions";
 
 const FORMAT_LABELS: Record<OpinionFormat, string> = {
