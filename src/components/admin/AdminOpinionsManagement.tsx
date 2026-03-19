@@ -357,11 +357,11 @@ export function AdminOpinionsManagement() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Loading...</TableCell>
+                   <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">Loading...</TableCell>
                 </TableRow>
               ) : opinions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No opinions yet</TableCell>
+                   <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No opinions yet</TableCell>
                 </TableRow>
               ) : opinions.map((op) => (
                 <TableRow key={op.id}>
@@ -372,6 +372,11 @@ export function AdminOpinionsManagement() {
                   <TableCell>
                     <Badge variant="secondary" className="text-[10px]">
                       {OPINION_CATEGORIES[op.category]?.icon} {OPINION_CATEGORIES[op.category]?.label}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px] border-primary/30 text-primary/80">
+                      {CONTENT_INTENT_LABELS[op.content_intent || "sentiment_signal"]?.icon} {CONTENT_INTENT_LABELS[op.content_intent || "sentiment_signal"]?.label}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-xs">{FORMAT_LABELS[op.format]}</TableCell>
