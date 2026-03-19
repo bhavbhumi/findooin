@@ -726,9 +726,9 @@ export function AdminMonitoring() {
               <CardContent>
                 <div className="space-y-3">
                   {[
-                    { action: "Posts", limit: "10/hr per user", icon: FileText },
-                    { action: "Messages", limit: "60/5min per user", icon: MessageSquare },
-                    { action: "Connections", limit: "30/hr per user", icon: Users },
+                    { action: "Posts", limit: "3/hr per user", icon: FileText },
+                    { action: "Messages", limit: "20/5min per user", icon: MessageSquare },
+                    { action: "Connections", limit: "10/hr per user", icon: Users },
                   ].map((item) => {
                     const Icon = item.icon;
                     return (
