@@ -176,10 +176,28 @@ describe("Auth Page Integration", () => {
         );
       });
     });
+
+    it("does not submit signup when full name is blank spaces", async () => {
+      const user = userEvent.setup();
+      mockSignUp.mockResolvedValue({ data: {}, error: null });
+
+      renderAuth("?mode=signup");
+
+      await user.type(screen.getByLabelText("Full Name"), "   ");
+      await user.type(screen.getByLabelText("Email"), "new@example.com");
+      await user.type(screen.getByLabelText("Password"), "securepass123");
+
+      const form = screen.getByRole("button", { name: /create account/i }).closest("form")!;
+      fireEvent.submit(form);
+
+      await waitFor(() => {
+        expect(mockSignUp).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe("Magic Link Flow", () => {
-    it("sends magic link when email is provided", async () => {
+    it("sends magic link only for existing users", async () => {
       const user = userEvent.setup();
       mockSignInWithOtp.mockResolvedValue({ error: null });
 
@@ -190,8 +208,25 @@ describe("Auth Page Integration", () => {
 
       await waitFor(() => {
         expect(mockSignInWithOtp).toHaveBeenCalledWith(
-          expect.objectContaining({ email: "magic@example.com" })
+          expect.objectContaining({
+            email: "magic@example.com",
+            options: expect.objectContaining({ shouldCreateUser: false }),
+          })
         );
+      });
+    });
+
+    it("blocks disposable emails in magic link flow", async () => {
+      const user = userEvent.setup();
+      mockSignInWithOtp.mockResolvedValue({ error: null });
+
+      renderAuth();
+
+      await user.type(screen.getByLabelText("Email"), "spam@onbap.com");
+      await user.click(screen.getByRole("button", { name: /magic link/i }));
+
+      await waitFor(() => {
+        expect(mockSignInWithOtp).not.toHaveBeenCalled();
       });
     });
   });

@@ -194,6 +194,9 @@ const Auth = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedFullName = fullName.trim();
+
     // Check lockout
     if (isLockedOut) {
       toast({
@@ -204,8 +207,18 @@ const Auth = () => {
       return;
     }
 
+    // Validate required signup fields
+    if (isSignUp && !normalizedFullName) {
+      toast({
+        title: "Full name required",
+        description: "Please enter your full name to create your account.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Block disposable emails on signup
-    if (isSignUp && isDisposableEmail(email.trim())) {
+    if (isSignUp && isDisposableEmail(normalizedEmail)) {
       toast({
         title: "Email not allowed",
         description: DISPOSABLE_EMAIL_ERROR,
@@ -220,10 +233,10 @@ const Auth = () => {
       if (isSignUp) {
         await submitWithRetry(() =>
           supabase.auth.signUp({
-            email: email.trim(),
+            email: normalizedEmail,
             password,
             options: {
-              data: { full_name: fullName.trim() },
+              data: { full_name: normalizedFullName },
               emailRedirectTo: window.location.origin,
             },
           }),
@@ -235,7 +248,7 @@ const Auth = () => {
       } else {
         const result = await submitWithRetry(() =>
           supabase.auth.signInWithPassword({
-            email: email.trim(),
+            email: normalizedEmail,
             password,
           }),
         );
@@ -317,7 +330,9 @@ const Auth = () => {
   };
 
   const handleMagicLinkSignIn = async () => {
-    if (!email.trim()) {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail) {
       toast({
         title: "Email required",
         description: "Enter your email first, then tap Magic Link.",
@@ -327,7 +342,7 @@ const Auth = () => {
     }
 
     // Block disposable emails on magic link sign-in too
-    if (isDisposableEmail(email.trim())) {
+    if (isDisposableEmail(normalizedEmail)) {
       toast({
         title: "Email not allowed",
         description: DISPOSABLE_EMAIL_ERROR,
@@ -339,9 +354,10 @@ const Auth = () => {
     setMagicLinkLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim(),
+        email: normalizedEmail,
         options: {
           emailRedirectTo: window.location.origin,
+          shouldCreateUser: false,
         },
       });
 
