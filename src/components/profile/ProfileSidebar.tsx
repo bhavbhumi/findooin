@@ -61,7 +61,7 @@ export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigate
       </div>
 
       {/* Expertise & Credentials */}
-      {(hasSpecializations || hasCertifications || hasLanguages) && (
+      {(hasSpecializations || hasCertifications) && (
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           <div className="px-4 py-3 border-b border-border flex items-center gap-2">
             <Award className="h-3.5 w-3.5 text-muted-foreground" />
