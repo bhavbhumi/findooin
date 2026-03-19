@@ -19,6 +19,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { sanitizeText } from "@/lib/sanitize";
+import { useCodedMessagingGuard } from "@/hooks/useCodedMessagingGuard";
 import { useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";

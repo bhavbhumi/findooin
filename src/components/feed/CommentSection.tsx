@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { sanitizeText } from "@/lib/sanitize";
+import { useCodedMessagingGuard } from "@/hooks/useCodedMessagingGuard";
 
 function CommentAvatar({ src, name }: { src: string | null; name: string }) {
   const [err, setErr] = useState(false);

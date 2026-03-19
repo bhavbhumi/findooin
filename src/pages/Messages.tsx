@@ -3,6 +3,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeText } from "@/lib/sanitize";
+import { useCodedMessagingGuard } from "@/hooks/useCodedMessagingGuard";
 import { useRole } from "@/contexts/RoleContext";
 import { useUserActivityStatus } from "@/hooks/useAdmin";
 import AppNavbar from "@/components/AppNavbar";
