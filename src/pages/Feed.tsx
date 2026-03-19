@@ -98,8 +98,8 @@ const Feed = () => {
         const tier = post.author.id === feedUserId ? 1 : (authorTierMap.get(post.author.id) || 5);
         return { post, score: computeAffinityFeedScore(post, tier), tier };
       })
-      .sort((a, b) => b.score - a.score);
-  }, [flatPosts, trustData]);
+    .sort((a, b) => b.score - a.score);
+  }, [flatPosts, trustData, feedUserId]);
 
   const visiblePosts = filter === "affinity"
     ? affinityPosts.map((a) => a.post)
