@@ -1,0 +1,2 @@
+DELETE FROM public.profiles WHERE id IN ('78f30884-ea9f-45c4-8c7e-d4bc6e37bf2e','7eb1a95e-6192-4f77-a154-09a1502abe5b','1da8ecd0-cc1e-4f9d-baf0-b41806c2b465');
+DELETE FROM auth.users WHERE id IN ('78f30884-ea9f-45c4-8c7e-d4bc6e37bf2e','7eb1a95e-6192-4f77-a154-09a1502abe5b','1da8ecd0-cc1e-4f9d-baf0-b41806c2b465');
