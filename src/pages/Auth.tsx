@@ -326,6 +326,16 @@ const Auth = () => {
       return;
     }
 
+    // Block disposable emails on magic link sign-in too
+    if (isDisposableEmail(email.trim())) {
+      toast({
+        title: "Email not allowed",
+        description: DISPOSABLE_EMAIL_ERROR,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setMagicLinkLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
