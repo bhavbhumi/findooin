@@ -94,7 +94,8 @@ const Feed = () => {
 
     return [...flatPosts]
       .map((post) => {
-        const tier = authorTierMap.get(post.author.id) || 5;
+        // Own posts always rank as Inner Circle (tier 1)
+        const tier = post.author.id === feedUserId ? 1 : (authorTierMap.get(post.author.id) || 5);
         return { post, score: computeAffinityFeedScore(post, tier), tier };
       })
       .sort((a, b) => b.score - a.score);
