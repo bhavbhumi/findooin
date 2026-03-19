@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { StreakIndicator } from "@/components/gamification/StreakIndicator";
 import { useUserXP } from "@/hooks/useGamification";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import {
   DropdownMenu,
   DropdownMenuContent,
