@@ -153,6 +153,23 @@ const Settings = () => {
     window.location.href = "/";
   };
 
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== "DELETE") return;
+    setDeleteLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("delete-account");
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      toast.success("Account deleted successfully. Goodbye!");
+      await supabase.auth.signOut();
+      window.location.href = "/";
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete account");
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   const handleEmailChange = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newEmail.trim()) return;
