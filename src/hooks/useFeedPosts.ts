@@ -28,6 +28,7 @@ export interface FeedPost {
   attachment_name: string | null;
   attachment_type: string | null;
   created_at: string;
+  posted_as_role: string | null;
   author: {
     id: string;
     full_name: string;
