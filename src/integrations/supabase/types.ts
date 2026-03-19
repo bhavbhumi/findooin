@@ -3072,6 +3072,7 @@ export type Database = {
           razorpay_customer_id: string | null
           razorpay_subscription_id: string | null
           status: Database["public"]["Enums"]["subscription_status"]
+          target_role: string | null
           trial_ends_at: string | null
           trial_starts_at: string | null
           updated_at: string
@@ -3090,6 +3091,7 @@ export type Database = {
           razorpay_customer_id?: string | null
           razorpay_subscription_id?: string | null
           status?: Database["public"]["Enums"]["subscription_status"]
+          target_role?: string | null
           trial_ends_at?: string | null
           trial_starts_at?: string | null
           updated_at?: string
@@ -3108,6 +3110,7 @@ export type Database = {
           razorpay_customer_id?: string | null
           razorpay_subscription_id?: string | null
           status?: Database["public"]["Enums"]["subscription_status"]
+          target_role?: string | null
           trial_ends_at?: string | null
           trial_starts_at?: string | null
           updated_at?: string

@@ -54,17 +54,18 @@ export function useSubscription() {
   const { userId, activeRole } = useRole();
 
   const { data: subscription, isLoading, refetch } = useQuery({
-    queryKey: ["user-subscription", userId],
+    queryKey: ["user-subscription", userId, activeRole],
     queryFn: async () => {
       if (!userId) return null;
 
-      const { data, error } = await supabase
+      let query = supabase
         .from("user_subscriptions")
         .select(`
           id, plan_id, status, billing_interval,
           trial_starts_at, trial_ends_at,
           current_period_start, current_period_end,
           cancelled_at, cancel_at_period_end,
+          target_role,
           subscription_plans (
             id, name, slug, description, tier, target_role,
             billing_interval, price_amount, price_currency,
@@ -72,9 +73,13 @@ export function useSubscription() {
           )
         `)
         .eq("user_id", userId)
-        .in("status", ["active", "trialing", "past_due", "paused"])
-        .limit(1)
-        .maybeSingle();
+        .in("status", ["active", "trialing", "past_due", "paused"]);
+
+      if (activeRole) {
+        query = query.eq("target_role", activeRole);
+      }
+
+      const { data, error } = await query.limit(1).maybeSingle();
 
       if (error) {
         console.error("Failed to fetch subscription:", error);
