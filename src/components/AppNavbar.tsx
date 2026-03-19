@@ -37,6 +37,11 @@ const AppNavbar = () => {
   const { data: xp } = useUserXP(currentUserId || undefined);
   const { isEnabled, isFetched } = useFeatureFlags();
   const showJobs = !isFetched || isEnabled("jobs_board");
+  const showEvents = !isFetched || isEnabled("events_module");
+  const showShowcase = !isFetched || isEnabled("directory_listings");
+  const showMessages = !isFetched || isEnabled("messaging");
+  const showLeaderboard = !isFetched || isEnabled("leaderboard");
+  const showVault = !isFetched || isEnabled("vault_storage");
 
   useEffect(() => {
     let channel: any;
