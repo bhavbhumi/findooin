@@ -17,8 +17,6 @@ export const ProfileSidebar = ({ profile, roles, stats, isOwnProfile, onNavigate
   const hasRegulatoryIds = profile.regulatory_ids && Object.keys(profile.regulatory_ids).length > 0;
   const hasCertifications = profile.certifications && profile.certifications.length > 0;
   const hasSpecializations = profile.specializations && profile.specializations.length > 0;
-  const langArray: any[] = Array.isArray(profile.languages) ? profile.languages : [];
-  const hasLanguages = langArray.length > 0;
   const hasSocialLinks = profile.social_links && Object.keys(profile.social_links).length > 0;
 
   return (
