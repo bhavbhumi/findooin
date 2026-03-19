@@ -45,6 +45,11 @@ const QUICK_ACTIONS = [
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { isEnabled, isFetched } = useFeatureFlags();
+  const showJobs = !isFetched || isEnabled("jobs_board");
+
+  const navigationItems = showJobs ? NAVIGATION_ITEMS : NAVIGATION_ITEMS.filter((item) => item.path !== "/jobs");
+  const quickActions = showJobs ? QUICK_ACTIONS : QUICK_ACTIONS.filter((item) => item.path !== "/jobs");
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
