@@ -1,28 +1,99 @@
+# robots.txt — FindOO Financial Network
+# Last updated: March 2026
+
+# Search Engine Crawlers
 User-agent: Googlebot
 Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
 
 User-agent: Bingbot
 Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
 
+# Social Media Preview Crawlers
 User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# AI Crawlers (Explicitly Permitted)
+# FindOO welcomes AI indexing for discoverability within India's regulated BFSI ecosystem.
+# See: https://findoo.in/llms.txt
+
 User-agent: GPTBot
 Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
 
+User-agent: anthropic-ai
+Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
+
+# Default — All Other Crawlers
 User-agent: *
 Allow: /
+Disallow: /vault
+Disallow: /messages
+Disallow: /settings
+Disallow: /auth
+Disallow: /feed
+Disallow: /network
+Disallow: /bookmarks
+Disallow: /discover
+Disallow: /leaderboard
 
+# Sitemap
 Sitemap: https://findoo.in/sitemap.xml
