@@ -141,7 +141,7 @@ All colours are defined as HSL (source of truth), with Hex and descriptive names
 - Clean, trustworthy, institutional — never flashy or gamified in public-facing materials
 - Financial gravitas with modern tech aesthetics
 - Dark mode is the default/hero presentation
-- Cosmic/constellation network motif for hero sections (representing interconnected BFSI ecosystem)
+- (See §9 Mood Board for full visual direction including illustration, motion, and texture guidelines)
 
 ### Decorative & Background Elements
 
