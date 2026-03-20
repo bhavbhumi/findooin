@@ -15,8 +15,8 @@
 FindOO is a **Financial Network** — a distinct, new category of internet infrastructure.
 It is the **Third Network** of a user's life — after social and professional.
 Narrative: "Not social. Not professional. Financial."
-It is NOT a social network, professional network, financial media outlet, trading platform, or advisory service.
 It is a **Neutral Infrastructure Provider** connecting India's entire regulated BFSI ecosystem.
+(See §3 for the full "What FindOO Is NOT" list.)
 
 ### Legal Entity
 FindOO Solutions LLP (CIN: AAA-7870)
