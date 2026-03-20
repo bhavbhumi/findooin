@@ -15,8 +15,8 @@
 FindOO is a **Financial Network** — a distinct, new category of internet infrastructure.
 It is the **Third Network** of a user's life — after social and professional.
 Narrative: "Not social. Not professional. Financial."
-It is NOT a social network, professional network, financial media outlet, trading platform, or advisory service.
 It is a **Neutral Infrastructure Provider** connecting India's entire regulated BFSI ecosystem.
+(See §3 for the full "What FindOO Is NOT" list.)
 
 ### Legal Entity
 FindOO Solutions LLP (CIN: AAA-7870)
@@ -126,8 +126,8 @@ All colours are defined as HSL (source of truth), with Hex and descriptive names
 | Name | Indicator | HSL | Hex | Usage |
 |------|-----------|-----|-----|-------|
 | Royal Blue | Issuers | hsl(220, 90%, 56%) | #2563EB | Issuer identity colour |
-| Deep Emerald | Intermediaries | hsl(155, 50%, 33%) | #339978 | Intermediary identity colour |
-| Amber Gold | Investors | hsl(38, 92%, 50%) | #F59E0B | Investor identity colour |
+| Deep Emerald | Intermediaries (= Tertiary) | hsl(155, 50%, 33%) | #339978 | Intermediary identity colour |
+| Amber Gold | Investors (= Warning) | hsl(38, 92%, 50%) | #F59E0B | Investor identity colour |
 
 ### Typography
 
@@ -141,7 +141,7 @@ All colours are defined as HSL (source of truth), with Hex and descriptive names
 - Clean, trustworthy, institutional — never flashy or gamified in public-facing materials
 - Financial gravitas with modern tech aesthetics
 - Dark mode is the default/hero presentation
-- Cosmic/constellation network motif for hero sections (representing interconnected BFSI ecosystem)
+- (See §9 Mood Board for full visual direction including illustration, motion, and texture guidelines)
 
 ### Decorative & Background Elements
 
