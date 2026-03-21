@@ -252,28 +252,29 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-12 relative overflow-hidden space-void-blue">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-void-blue">
         <SpaceDust count={15} />
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         
         
         <div className="container max-w-5xl relative">
           <motion.div
-            className="text-center mb-8"
+            className="text-center mb-6"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground mb-3">
               A full-stack financial network
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-base max-w-2xl mx-auto">
               Not just networking — FindOO is a complete operating system for India's financial professionals.
             </p>
           </motion.div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Horizontal scroll on mobile, grid on desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible md:pb-0">
             {platformFeatures.map((feat, i) => (
               <motion.div
                 key={feat.title}
