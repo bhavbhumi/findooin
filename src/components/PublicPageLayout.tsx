@@ -245,21 +245,39 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                 Financially Social
               </p>
               <p className="text-xs text-muted-foreground leading-relaxed mb-1">
+                📍 Mumbai, India
+              </p>
+              <p className="text-[10px] text-muted-foreground leading-relaxed mb-4">
                 CIN : AAA-7870
               </p>
-              <p className="text-[10px] text-muted-foreground leading-relaxed mb-3">
-                B/201 Hemu Classic Premises CS Ltd, S V Road, Malad West, Mumbai 400064
-              </p>
-              <div className="w-full h-24 rounded-lg overflow-hidden border border-border">
-                <iframe
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=72.83%2C19.17%2C72.86%2C19.20&layer=mapnik&marker=19.186,72.845"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  loading="lazy"
-                  title="FindOO office — Malad West, Mumbai"
+
+              {/* Newsletter signup */}
+              <p className="text-xs font-medium text-foreground mb-2">Stay in the loop</p>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.currentTarget;
+                  const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+                  if (emailInput?.value) {
+                    emailInput.value = "";
+                    // TODO: wire to backend
+                  }
+                }}
+                className="flex gap-1.5"
+              >
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  required
+                  className="flex-1 min-w-0 px-3 py-1.5 rounded-lg border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
                 />
-              </div>
+                <button
+                  type="submit"
+                  className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors shrink-0"
+                >
+                  Subscribe
+                </button>
+              </form>
             </div>
 
             {/* Columns 2-4: Link sections */}
