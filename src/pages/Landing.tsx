@@ -209,6 +209,7 @@ const Landing = () => {
                 { src: amfiLogo, name: "AMFI" },
                 { src: irdaiLogo, name: "IRDAI" },
                 { src: rbiLogo, name: "RBI" },
+                { src: pfrdaLogo, name: "PFRDA" },
               ].map((reg) => (
                 <div key={reg.name} className="flex items-center gap-2 select-none">
                   <img
