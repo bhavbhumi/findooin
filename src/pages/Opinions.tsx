@@ -90,7 +90,8 @@ function OpinionsContent() {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <PulseWaves className="!fixed !inset-0 !z-0" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid lg:grid-cols-[240px_1fr] gap-6">
           {/* Category Sidebar */}
           <aside className="hidden lg:block">
