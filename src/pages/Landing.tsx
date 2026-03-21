@@ -100,7 +100,7 @@ const Landing = () => {
   return (
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-10 pb-8 lg:pt-14 lg:pb-10 overflow-hidden space-void-blue">
+      <section className="relative pt-8 pb-6 lg:pt-10 lg:pb-8 overflow-hidden space-void-blue">
         {/* Subtle glow — no geometric mesh */}
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
