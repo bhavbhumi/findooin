@@ -12,74 +12,13 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { sanitizeText } from "@/lib/sanitize";
+import { isDisposableEmail, DISPOSABLE_EMAIL_ERROR } from "@/lib/disposable-email-domains";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.08, duration: 0.45, ease: "easeOut" as const },
-  }),
-};
-
-const tabs = ["Ask Us", "Visit Us"];
-
-const expectations = [
-  "Confirmation via email",
-  "Response within 24–48 hours",
-  "No obligation, completely free",
-  "Personalised recommendations",
-];
-
-const offices = [
-  {
-    city: "Mumbai",
-    label: "Head Office",
-    address: "B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064",
-    phone: "+91 999 999 9999",
-    email: "hello@findoo.in",
-    hours: "Mon–Sat, 9:00 AM – 6:00 PM IST",
-    mapUrl: "https://www.openstreetmap.org/export/embed.html?bbox=72.83%2C19.17%2C72.86%2C19.20&layer=mapnik&marker=19.186,72.845",
-  },
-];
-
-const Contact = () => {
-  usePageMeta({ title: "Contact Us", description: "Get in touch with FindOO — reach us via form or visit our office.", path: "/contact" });
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("Ask Us");
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-
-    // Honeypot anti-spam check — bots fill this hidden field
-    const honeypot = formData.get("website_url") as string;
-    if (honeypot) {
-      // Silently reject — looks like success to bots
-      toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
-      form.reset();
-      return;
-    }
-
-    setSubmitting(true);
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const subject = formData.get("subject") as string || "General inquiry";
-
-    // Send confirmation email (fire and forget)
-    supabase.functions.invoke("send-transactional-email", {
-      body: {
-        type: "contact-confirmation",
-        to: email,
-        data: { recipientName: name, subject },
-      },
-    }).catch(() => {});
-
-    toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
-    setSubmitting(false);
-    form.reset();
-  };
+const MAX_NAME_LEN = 100;
+const MAX_EMAIL_LEN = 255;
+const MAX_PHONE_LEN = 20;
+const MAX_MSG_LEN = 2000;
 
   return (
     <PublicPageLayout>
