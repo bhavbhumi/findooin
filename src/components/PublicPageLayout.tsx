@@ -256,31 +256,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
 
               {/* Newsletter signup */}
               <p className="text-xs font-medium text-foreground mb-2">Stay in the loop</p>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const form = e.currentTarget;
-                  const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
-                  if (emailInput?.value) {
-                    emailInput.value = "";
-                    // TODO: wire to backend
-                  }
-                }}
-                className="flex gap-1.5"
-              >
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  required
-                  className="flex-1 min-w-0 px-3 py-1.5 rounded-lg border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                />
-                <button
-                  type="submit"
-                  className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors shrink-0"
-                >
-                  Subscribe
-                </button>
-              </form>
+              <NewsletterForm />
             </div>
 
             {/* Columns 2-4: Link sections */}
