@@ -9,8 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink, FileUp, Globe, Clock, CheckCircle2, XCircle, Loader2, Shield, Landmark, Umbrella, PiggyBank, ChevronDown, ChevronRight } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Database, Search, RefreshCw, MoreHorizontal, Send, Mail, ExternalLink, FileUp, Globe, Clock, CheckCircle2, XCircle, Loader2, Shield, Landmark, Umbrella, PiggyBank, ChevronRight } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateInvitation } from "@/hooks/useInvitations";
 import { toast } from "sonner";
@@ -24,63 +24,63 @@ const SOURCES = [
   { id: "pfrda", label: "PFRDA", icon: PiggyBank, color: "text-purple-600", desc: "Points of Presence", url: "https://pfrda.org.in/list-of-pops" },
 ] as const;
 
-// SEBI sub-types for granular sync
+// SEBI sub-types for granular sync — expected_count is reference only, actual comes from DB
 const SEBI_TYPE_GROUPS = [
   {
     group: "Issuers",
     types: [
-      { intmId: 16, label: "Alternative Investment Funds", count: 1830 },
-      { intmId: 20, label: "Infrastructure Investment Trusts", count: 28 },
-      { intmId: 23, label: "Mutual Funds", count: 56 },
-      { intmId: 33, label: "Portfolio Managers", count: 505 },
-      { intmId: 21, label: "Venture Capital Funds", count: 149 },
-      { intmId: 48, label: "SM REITs", count: 6 },
-      { intmId: 42, label: "Real Estate Investment Trust", count: 6 },
+      { intmId: 16, label: "Alternative Investment Funds", regCategory: "Alternative Investment Fund", expected: 1830 },
+      { intmId: 20, label: "Infrastructure Investment Trusts", regCategory: "Infrastructure Investment Trust", expected: 28 },
+      { intmId: 23, label: "Mutual Funds", regCategory: "Mutual Fund", expected: 56 },
+      { intmId: 33, label: "Portfolio Managers", regCategory: "Portfolio Manager", expected: 505 },
+      { intmId: 21, label: "Venture Capital Funds", regCategory: "Venture Capital Fund", expected: 149 },
+      { intmId: 48, label: "SM REITs", regCategory: "SM REIT", expected: 6 },
+      { intmId: 42, label: "Real Estate Investment Trust", regCategory: "REIT", expected: 6 },
     ],
   },
   {
     group: "Intermediaries",
     types: [
-      { intmId: 30, label: "Stock Brokers - Equity", count: 4946 },
-      { intmId: 31, label: "Stock Brokers - Equity Derivative", count: 3737 },
-      { intmId: 32, label: "Stock Brokers - Currency Derivative", count: 2730 },
-      { intmId: 38, label: "Stock Brokers - Interest Rate Derivative", count: 1521 },
-      { intmId: 37, label: "Stock Brokers - Debt", count: 742 },
-      { intmId: 2, label: "Stock Brokers - Commodity Derivative", count: 2017 },
-      { intmId: 5, label: "Banker to an Issue", count: 60 },
-      { intmId: 7, label: "Credit Rating Agency", count: 8 },
-      { intmId: 6, label: "Debentures Trustee", count: 26 },
-      { intmId: 4, label: "Designated Depository Participants", count: 17 },
-      { intmId: 15, label: "Qualified Depository Participants", count: 62 },
-      { intmId: 18, label: "Depository Participants - CDSL", count: 736 },
-      { intmId: 19, label: "Depository Participants - NSDL", count: 343 },
-      { intmId: 13, label: "Investment Adviser", count: 995 },
-      { intmId: 9, label: "Merchant Bankers", count: 241 },
-      { intmId: 14, label: "Research Analyst", count: 1844 },
+      { intmId: 30, label: "Stock Brokers - Equity", regCategory: "Stock Broker - Equity", expected: 4946 },
+      { intmId: 31, label: "Stock Brokers - Equity Derivative", regCategory: "Stock Broker - Equity Derivative", expected: 3737 },
+      { intmId: 32, label: "Stock Brokers - Currency Derivative", regCategory: "Stock Broker - Currency Derivative", expected: 2730 },
+      { intmId: 38, label: "Stock Brokers - Interest Rate Derivative", regCategory: "Stock Broker - Interest Rate Derivative", expected: 1521 },
+      { intmId: 37, label: "Stock Brokers - Debt", regCategory: "Stock Broker - Debt", expected: 742 },
+      { intmId: 2, label: "Stock Brokers - Commodity Derivative", regCategory: "Stock Broker - Commodity Derivative", expected: 2017 },
+      { intmId: 5, label: "Banker to an Issue", regCategory: "Banker to Issue", expected: 60 },
+      { intmId: 7, label: "Credit Rating Agency", regCategory: "Credit Rating Agency", expected: 8 },
+      { intmId: 6, label: "Debentures Trustee", regCategory: "Debentures Trustee", expected: 26 },
+      { intmId: 4, label: "Designated Depository Participants", regCategory: "Designated Depository Participant", expected: 17 },
+      { intmId: 15, label: "Qualified Depository Participants", regCategory: "Qualified Depository Participant", expected: 62 },
+      { intmId: 18, label: "Depository Participants - CDSL", regCategory: "Depository Participant - CDSL", expected: 736 },
+      { intmId: 19, label: "Depository Participants - NSDL", regCategory: "Depository Participant - NSDL", expected: 343 },
+      { intmId: 13, label: "Investment Adviser", regCategory: "Investment Adviser", expected: 995 },
+      { intmId: 9, label: "Merchant Bankers", regCategory: "Merchant Banker", expected: 241 },
+      { intmId: 14, label: "Research Analyst", regCategory: "Research Analyst", expected: 1844 },
     ],
   },
   {
     group: "Enablers",
     types: [
-      { intmId: 27, label: "Custodians", count: 17 },
-      { intmId: 8, label: "KYC Registration Agency", count: 6 },
-      { intmId: 10, label: "Registrars & Transfer Agents", count: 80 },
-      { intmId: 35, label: "SCSB - Syndicate ASBA (equity)", count: 54 },
-      { intmId: 34, label: "SCSB - Direct ASBA (equity)", count: 54 },
-      { intmId: 47, label: "ESG Rating Providers", count: 19 },
-      { intmId: 40, label: "SCSB - Issuer Banks UPI", count: 54 },
-      { intmId: 41, label: "SCSB - Sponsor Banks UPI", count: 8 },
-      { intmId: 43, label: "UPI Mobile Applications", count: 39 },
-      { intmId: 44, label: "SCSB - Direct ASBA (debt)", count: 38 },
-      { intmId: 45, label: "SCSB - Syndicate ASBA (debt)", count: 44 },
-      { intmId: 46, label: "Vault Managers", count: 3 },
+      { intmId: 27, label: "Custodians", regCategory: "Custodian", expected: 17 },
+      { intmId: 8, label: "KYC Registration Agency", regCategory: "KYC Registration Agency", expected: 6 },
+      { intmId: 10, label: "Registrars & Transfer Agents", regCategory: "Registrar & Transfer Agent", expected: 80 },
+      { intmId: 35, label: "SCSB - Syndicate ASBA (equity)", regCategory: "SCSB - Syndicate ASBA Equity", expected: 54 },
+      { intmId: 34, label: "SCSB - Direct ASBA (equity)", regCategory: "SCSB - Direct ASBA Equity", expected: 54 },
+      { intmId: 47, label: "ESG Rating Providers", regCategory: "ESG Rating Provider", expected: 19 },
+      { intmId: 40, label: "SCSB - Issuer Banks UPI", regCategory: "SCSB - Issuer Bank UPI", expected: 54 },
+      { intmId: 41, label: "SCSB - Sponsor Banks UPI", regCategory: "SCSB - Sponsor Bank UPI", expected: 8 },
+      { intmId: 43, label: "UPI Mobile Applications", regCategory: "UPI Mobile App", expected: 39 },
+      { intmId: 44, label: "SCSB - Direct ASBA (debt)", regCategory: "SCSB - Direct ASBA Debt", expected: 38 },
+      { intmId: 45, label: "SCSB - Syndicate ASBA (debt)", regCategory: "SCSB - Syndicate ASBA Debt", expected: 44 },
+      { intmId: 46, label: "Vault Managers", regCategory: "Vault Manager", expected: 3 },
     ],
   },
   {
     group: "Investors / Participants",
     types: [
-      { intmId: 29, label: "FPIs / Deemed FPIs", count: 11735 },
-      { intmId: 25, label: "Foreign Venture Capital Investors", count: 314 },
+      { intmId: 29, label: "FPIs / Deemed FPIs", regCategory: "Foreign Portfolio Investor", expected: 11735 },
+      { intmId: 25, label: "Foreign Venture Capital Investors", regCategory: "Foreign Venture Capital Investor", expected: 314 },
     ],
   },
 ];
@@ -129,7 +129,7 @@ export default function AdminRegistryPage() {
     refetchInterval: syncingSource ? 5000 : false,
   });
 
-  // Source stats
+  // Source stats — total per source
   const { data: sourceStats = {} } = useQuery({
     queryKey: ["admin-registry-stats"],
     queryFn: async () => {
@@ -151,6 +151,24 @@ export default function AdminRegistryPage() {
         .select("*", { count: "exact", head: true });
       stats.total = total || 0;
       return stats;
+    },
+  });
+
+  // Per-category counts from DB (for SEBI granular display)
+  const { data: categoryCounts = {} } = useQuery({
+    queryKey: ["admin-registry-category-counts"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("registry_entities")
+        .select("registration_category")
+        .eq("source", "sebi");
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      for (const row of data || []) {
+        const cat = row.registration_category || "Unknown";
+        counts[cat] = (counts[cat] || 0) + 1;
+      }
+      return counts;
     },
   });
 
@@ -177,6 +195,7 @@ export default function AdminRegistryPage() {
         refetch();
         queryClient.invalidateQueries({ queryKey: ["admin-sync-logs"] });
         queryClient.invalidateQueries({ queryKey: ["admin-registry-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["admin-registry-category-counts"] });
       } else {
         toast.error(data?.error || "Sync failed");
       }
@@ -206,6 +225,40 @@ export default function AdminRegistryPage() {
     return syncLogs.find((l: any) => l.source === source);
   };
 
+  // Find last sync for a specific SEBI type by checking metadata.sebi_type_ids or metadata.sub_source
+  const getLastSebiTypeSync = (intmId: number, regCategory: string) => {
+    return syncLogs.find((l: any) => {
+      if (l.source !== "sebi") return false;
+      const meta = l.metadata as any;
+      if (!meta) return false;
+      // Check if this log was for this specific type
+      if (meta.sebi_type_ids && Array.isArray(meta.sebi_type_ids)) {
+        return meta.sebi_type_ids.includes(intmId);
+      }
+      if (meta.sub_source && typeof meta.sub_source === "string") {
+        return meta.sub_source.includes(regCategory);
+      }
+      // Full SEBI sync — check details for this type's results
+      if (meta.details) {
+        try {
+          const details = typeof meta.details === "string" ? JSON.parse(meta.details) : meta.details;
+          return !!details[`${intmId}_${regCategory}`];
+        } catch { return false; }
+      }
+      return false;
+    });
+  };
+
+  // Extract per-type result from a sync log's metadata.details
+  const getTypeResultFromLog = (log: any, intmId: number, regCategory: string) => {
+    const meta = log?.metadata as any;
+    if (!meta?.details) return null;
+    try {
+      const details = typeof meta.details === "string" ? JSON.parse(meta.details) : meta.details;
+      return details[`${intmId}_${regCategory}`] || null;
+    } catch { return null; }
+  };
+
   const statusIcon = (status: string) => {
     if (status === "completed") return <CheckCircle2 className="h-3.5 w-3.5 text-primary" />;
     if (status === "failed") return <XCircle className="h-3.5 w-3.5 text-destructive" />;
@@ -224,7 +277,6 @@ export default function AdminRegistryPage() {
 
         {/* ─── Dashboard Tab ─── */}
         <TabsContent value="dashboard" className="space-y-4 mt-4">
-          {/* Global actions */}
           <div className="flex gap-2 flex-wrap">
             <Button
               onClick={() => triggerSync(SOURCES.map(s => s.id))}
@@ -262,14 +314,13 @@ export default function AdminRegistryPage() {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {/* Last sync info */}
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       {lastSync ? (
                         <>
                           {statusIcon(lastSync.status)}
                           <span>
                             Last sync {formatDistanceToNow(new Date(lastSync.started_at), { addSuffix: true })}
-                            {lastSync.status === "completed" && ` — ${lastSync.records_inserted} new, ${lastSync.records_updated} updated`}
+                            {lastSync.status === "completed" && ` — ${lastSync.records_found} found, ${lastSync.records_inserted} new, ${lastSync.records_updated} updated`}
                             {lastSync.status === "failed" && ` — ${lastSync.error_message || "Error"}`}
                             {lastSync.status === "no_data" && " — No data returned"}
                           </span>
@@ -305,7 +356,7 @@ export default function AdminRegistryPage() {
             })}
           </div>
 
-          {/* SEBI Sub-types breakdown */}
+          {/* SEBI Granular Sync */}
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
@@ -315,7 +366,7 @@ export default function AdminRegistryPage() {
                     SEBI Registry Types — Granular Sync
                   </CardTitle>
                   <CardDescription className="text-[10px]">
-                    37 categories across 4 Findoo buckets. Sync individual types or groups.
+                    37 categories across 4 Findoo buckets. Now with session-based pagination for full data capture.
                   </CardDescription>
                 </div>
                 <Button
@@ -329,55 +380,88 @@ export default function AdminRegistryPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-2">
-              {SEBI_TYPE_GROUPS.map((group) => (
-                <Collapsible key={group.group}>
-                  <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-md hover:bg-muted/50 transition-colors group">
-                    <div className="flex items-center gap-2">
-                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-data-[state=open]:rotate-90" />
-                      <span className="text-xs font-medium">{group.group}</span>
-                      <Badge variant="secondary" className="text-[9px]">
-                        {group.types.length} types · {group.types.reduce((s, t) => s + t.count, 0).toLocaleString()} entities
-                      </Badge>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="h-6 text-[10px] px-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        triggerSync(["sebi"], group.types.map(t => t.intmId));
-                      }}
-                      disabled={!!syncingSource}
-                    >
-                      <RefreshCw className="h-3 w-3 mr-1" /> Sync Group
-                    </Button>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <div className="ml-6 mt-1 space-y-1">
-                      {group.types.map((type) => (
-                        <div key={type.intmId} className="flex items-center justify-between py-1 px-2 text-xs rounded hover:bg-muted/30">
-                          <div className="flex items-center gap-2">
-                            <span className="text-muted-foreground font-mono w-6 text-right">{type.intmId}</span>
-                            <span>{type.label}</span>
-                            <span className="text-muted-foreground">({type.count.toLocaleString()})</span>
-                          </div>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-5 text-[9px] px-1.5"
-                            onClick={() => triggerSync(["sebi"], [type.intmId])}
-                            disabled={!!syncingSource}
-                          >
-                            <RefreshCw className="h-2.5 w-2.5 mr-1" /> Sync
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-              ))}
+              {SEBI_TYPE_GROUPS.map((group) => {
+                const groupDbCount = group.types.reduce((s, t) => s + ((categoryCounts as any)[t.regCategory] || 0), 0);
+                const groupExpected = group.types.reduce((s, t) => s + t.expected, 0);
+
+                return (
+                  <Collapsible key={group.group}>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-md hover:bg-muted/50 transition-colors group">
+                      <div className="flex items-center gap-2">
+                        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-data-[state=open]:rotate-90" />
+                        <span className="text-xs font-medium">{group.group}</span>
+                        <Badge variant="secondary" className="text-[9px]">
+                          {group.types.length} types
+                        </Badge>
+                        <span className="text-[9px] text-muted-foreground font-mono">
+                          {groupDbCount.toLocaleString()} / {groupExpected.toLocaleString()} scraped
+                        </span>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 text-[10px] px-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          triggerSync(["sebi"], group.types.map(t => t.intmId));
+                        }}
+                        disabled={!!syncingSource}
+                      >
+                        <RefreshCw className="h-3 w-3 mr-1" /> Sync Group
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="ml-6 mt-1 space-y-1">
+                        {group.types.map((type) => {
+                          const dbCount = (categoryCounts as any)[type.regCategory] || 0;
+                          const pct = type.expected > 0 ? Math.round((dbCount / type.expected) * 100) : 0;
+                          const lastTypeSync = getLastSebiTypeSync(type.intmId, type.regCategory);
+                          const typeResult = lastTypeSync ? getTypeResultFromLog(lastTypeSync, type.intmId, type.regCategory) : null;
+
+                          return (
+                            <div key={type.intmId} className="flex items-center justify-between py-1.5 px-2 text-xs rounded hover:bg-muted/30">
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <span className="text-muted-foreground font-mono w-6 text-right shrink-0">{type.intmId}</span>
+                                <span className="truncate">{type.label}</span>
+                                <Badge
+                                  variant={pct >= 90 ? "default" : pct > 0 ? "secondary" : "outline"}
+                                  className="text-[8px] font-mono shrink-0"
+                                >
+                                  {dbCount.toLocaleString()} / {type.expected.toLocaleString()}
+                                  {pct > 0 && pct < 100 && ` (${pct}%)`}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center gap-2 shrink-0">
+                                {/* Last sync status for this type */}
+                                {lastTypeSync && (
+                                  <span className="text-[9px] text-muted-foreground flex items-center gap-1">
+                                    {statusIcon(lastTypeSync.status)}
+                                    {typeResult
+                                      ? `${typeResult.found} found`
+                                      : formatDistanceToNow(new Date(lastTypeSync.started_at), { addSuffix: true })}
+                                  </span>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-5 text-[9px] px-1.5"
+                                  onClick={() => triggerSync(["sebi"], [type.intmId])}
+                                  disabled={!!syncingSource}
+                                >
+                                  <RefreshCw className="h-2.5 w-2.5 mr-1" /> Sync
+                                </Button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                );
+              })}
             </CardContent>
           </Card>
+
           {/* Summary stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Card>
@@ -550,7 +634,7 @@ export default function AdminRegistryPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead className="text-xs">Source</TableHead>
-                        <TableHead className="text-xs">Type</TableHead>
+                        <TableHead className="text-xs">Type / Scope</TableHead>
                         <TableHead className="text-xs">Status</TableHead>
                         <TableHead className="text-xs">Found</TableHead>
                         <TableHead className="text-xs">New</TableHead>
@@ -560,31 +644,43 @@ export default function AdminRegistryPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {syncLogs.map((log: any) => (
-                        <TableRow key={log.id}>
-                          <TableCell>
-                            <Badge variant="outline" className="text-[9px] uppercase">{log.source}</Badge>
-                          </TableCell>
-                          <TableCell className="text-xs capitalize">{log.sync_type}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-1.5">
-                              {statusIcon(log.status)}
-                              <span className="text-xs capitalize">{log.status}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-xs font-mono">{log.records_found}</TableCell>
-                          <TableCell className="text-xs font-mono text-primary">{log.records_inserted}</TableCell>
-                          <TableCell className="text-xs font-mono text-accent-foreground">{log.records_updated}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
-                            {format(new Date(log.started_at), "MMM d, HH:mm")}
-                          </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
-                            {log.completed_at
-                              ? `${Math.round((new Date(log.completed_at).getTime() - new Date(log.started_at).getTime()) / 1000)}s`
-                              : "—"}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {syncLogs.map((log: any) => {
+                        const meta = log.metadata as any;
+                        const subSource = meta?.sub_source;
+
+                        return (
+                          <TableRow key={log.id}>
+                            <TableCell>
+                              <Badge variant="outline" className="text-[9px] uppercase">{log.source}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-xs capitalize">{log.sync_type}</span>
+                              {subSource && (
+                                <p className="text-[9px] text-muted-foreground truncate max-w-[150px]" title={subSource}>
+                                  {subSource}
+                                </p>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1.5">
+                                {statusIcon(log.status)}
+                                <span className="text-xs capitalize">{log.status}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-xs font-mono">{log.records_found}</TableCell>
+                            <TableCell className="text-xs font-mono text-primary">{log.records_inserted}</TableCell>
+                            <TableCell className="text-xs font-mono text-accent-foreground">{log.records_updated}</TableCell>
+                            <TableCell className="text-xs text-muted-foreground">
+                              {format(new Date(log.started_at), "MMM d, HH:mm")}
+                            </TableCell>
+                            <TableCell className="text-xs text-muted-foreground">
+                              {log.completed_at
+                                ? `${Math.round((new Date(log.completed_at).getTime() - new Date(log.started_at).getTime()) / 1000)}s`
+                                : "—"}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </div>
@@ -600,6 +696,7 @@ export default function AdminRegistryPage() {
         onImportComplete={() => {
           refetch();
           queryClient.invalidateQueries({ queryKey: ["admin-registry-stats"] });
+          queryClient.invalidateQueries({ queryKey: ["admin-registry-category-counts"] });
         }}
       />
     </div>
