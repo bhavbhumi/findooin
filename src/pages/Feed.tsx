@@ -148,8 +148,8 @@ const Feed = () => {
   return (
     <AppLayout maxWidth="max-w-6xl">
       <PageTransition>
-      <SignalStreams className="!fixed" />
-      <div className="grid lg:grid-cols-[1fr_300px] gap-6">
+      <SignalStreams className="!fixed !inset-0 !z-0" />
+      <div className="relative z-10 grid lg:grid-cols-[1fr_300px] gap-6">
         <div className="space-y-4">
           <ErrorBoundary fallbackTitle="Error loading composer">
             <CreatePostComposer

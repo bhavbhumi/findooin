@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { SpaceDust, CometStreaks, DistantStars } from "@/components/decorative/SpaceElements";
+import { ConstellationWeb } from "@/components/decorative/ContextualSpaceElements";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -703,6 +704,7 @@ const Explore = () => {
 
   return (
     <PublicPageLayout>
+      <ConstellationWeb className="!fixed !inset-0 !z-0" />
       <PageHero
         breadcrumb="Explore"
         title="The Financial Network"

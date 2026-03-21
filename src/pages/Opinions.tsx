@@ -18,6 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Filter, BarChart3, TrendingUp, Clock, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { PulseWaves } from "@/components/decorative/ContextualSpaceElements";
 import {
   useOpinions, useOpinionDetail,
   type OpinionCategory, type OpinionStatus,
@@ -90,7 +91,8 @@ function OpinionsContent() {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <PulseWaves className="!fixed !inset-0 !z-0" />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid lg:grid-cols-[240px_1fr] gap-6">
           {/* Category Sidebar */}
           <aside className="hidden lg:block">
