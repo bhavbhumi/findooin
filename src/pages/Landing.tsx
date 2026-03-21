@@ -104,6 +104,9 @@ const Landing = () => {
         {/* Subtle glow — no geometric mesh */}
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
+        <CometStreaks count={4} />
+        <SpaceDust count={25} />
+        <DistantStars count={15} />
 
         <div className="container relative">
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 items-center">
