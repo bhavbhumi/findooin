@@ -119,6 +119,7 @@ const HelpDesk = () => {
         titleAccent="help you?"
         subtitle="Find answers to common questions, browse help articles, or reach out to our support team."
         variant="dots"
+        context="support"
       />
 
       {/* Search bar */}
