@@ -6,27 +6,125 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink, FileUp, Eye, Globe } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink, FileUp, Globe, Clock, CheckCircle2, XCircle, Loader2, Shield, Landmark, Umbrella, PiggyBank } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateInvitation } from "@/hooks/useInvitations";
 import { toast } from "sonner";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 import { RegistryImportWizard } from "@/components/admin/RegistryImportWizard";
+
+const SOURCES = [
+  { id: "amfi", label: "AMFI", icon: Landmark, color: "text-blue-600", desc: "Mutual Fund Distributors", url: "https://www.amfiindia.com/locate-distributor" },
+  { id: "sebi", label: "SEBI", icon: Shield, color: "text-emerald-600", desc: "Investment Advisers", url: "https://www.sebi.gov.in/sebiweb/other/OtherAction.do?doRecognisedFpi=yes&intmId=13" },
+  { id: "irdai", label: "IRDAI", icon: Umbrella, color: "text-orange-600", desc: "Insurance Brokers", url: "https://irdai.gov.in/list-of-brokers" },
+  { id: "pfrda", label: "PFRDA", icon: PiggyBank, color: "text-purple-600", desc: "Points of Presence", url: "https://pfrda.org.in/list-of-pops" },
+] as const;
 
 export default function AdminRegistryPage() {
   const [search, setSearch] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
-  const [syncing, setSyncing] = useState(false);
-  const [importing, setImporting] = useState(false);
   const [wizardOpen, setWizardOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [syncingSource, setSyncingSource] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const createInvite = useCreateInvitation();
+
+  // Registry entities
+  const { data: entities = [], isLoading, refetch } = useQuery({
+    queryKey: ["admin-registry", search, sourceFilter],
+    queryFn: async () => {
+      let query = supabase
+        .from("registry_entities")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (sourceFilter !== "all") query = query.eq("source", sourceFilter);
+      if (search) {
+        query = query.or(
+          `entity_name.ilike.%${search}%,registration_number.ilike.%${search}%,contact_email.ilike.%${search}%,city.ilike.%${search}%`
+        );
+      }
+      const { data, error } = await query;
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Sync logs
+  const { data: syncLogs = [] } = useQuery({
+    queryKey: ["admin-sync-logs"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("registry_sync_log")
+        .select("*")
+        .order("started_at", { ascending: false })
+        .limit(50);
+      if (error) throw error;
+      return data;
+    },
+    refetchInterval: syncingSource ? 5000 : false,
+  });
+
+  // Source stats
+  const { data: sourceStats = {} } = useQuery({
+    queryKey: ["admin-registry-stats"],
+    queryFn: async () => {
+      const stats: Record<string, number> = {};
+      for (const s of SOURCES) {
+        const { count } = await supabase
+          .from("registry_entities")
+          .select("*", { count: "exact", head: true })
+          .eq("source", s.id);
+        stats[s.id] = count || 0;
+      }
+      const { count: totalMatched } = await supabase
+        .from("registry_entities")
+        .select("*", { count: "exact", head: true })
+        .not("matched_user_id", "is", null);
+      stats.matched = totalMatched || 0;
+      const { count: total } = await supabase
+        .from("registry_entities")
+        .select("*", { count: "exact", head: true });
+      stats.total = total || 0;
+      return stats;
+    },
+  });
+
+  const triggerSync = async (sources: string[]) => {
+    const label = sources.length === 1 ? sources[0].toUpperCase() : "All Sources";
+    setSyncingSource(sources[0] || "all");
+    toast.info(`Syncing ${label}... This may take a few minutes.`);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("registry-sync", {
+        body: { sources, sync_type: "manual" },
+      });
+
+      if (error) throw error;
+      if (data?.success) {
+        const results = data.results || {};
+        const summaries = Object.entries(results).map(([src, r]: [string, any]) =>
+          `${src.toUpperCase()}: ${r.found} found, ${r.inserted} new, ${r.updated} updated`
+        );
+        toast.success(summaries.join(" | ") || "Sync complete");
+        refetch();
+        queryClient.invalidateQueries({ queryKey: ["admin-sync-logs"] });
+        queryClient.invalidateQueries({ queryKey: ["admin-registry-stats"] });
+      } else {
+        toast.error(data?.error || "Sync failed");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to sync");
+    } finally {
+      setSyncingSource(null);
+    }
+  };
 
   const handleCreateInvite = (entity: any, role: string) => {
     if (!entity.contact_email) {
-      toast.error("This entity has no email — cannot create invitation");
+      toast.error("No email on this entity");
       return;
     }
     createInvite.mutate({
@@ -39,223 +137,140 @@ export default function AdminRegistryPage() {
     });
   };
 
-  const { data: entities = [], isLoading, refetch } = useQuery({
-    queryKey: ["admin-registry", search, sourceFilter],
-    queryFn: async () => {
-      let query = supabase
-        .from("registry_entities")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(200);
-
-      if (sourceFilter !== "all") {
-        query = query.eq("source", sourceFilter);
-      }
-      if (search) {
-        query = query.or(
-          `entity_name.ilike.%${search}%,registration_number.ilike.%${search}%,contact_email.ilike.%${search}%,city.ilike.%${search}%`
-        );
-      }
-
-      const { data, error } = await query;
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  const handleAmfiSync = async () => {
-    setSyncing(true);
-    try {
-      const { data, error } = await supabase.functions.invoke("scrape-amfi", {
-        body: { max_cities: 5 },
-      });
-
-      if (error) throw error;
-      if (data?.success) {
-        if (data.api_accessible === false && data.summary.total_found === 0) {
-          toast.warning(
-            "AMFI's new website doesn't expose a public API. Please use the 'Import CSV' button with data downloaded from AMFI's Locate Distributor page.",
-            { duration: 8000 }
-          );
-        } else {
-          toast.success(
-            `Synced ${data.summary.cities_processed} cities: ${data.summary.total_inserted} new, ${data.summary.total_updated} updated`
-          );
-        }
-        refetch();
-      } else {
-        toast.error(data?.error || "Sync failed");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to sync AMFI data");
-    } finally {
-      setSyncing(false);
-    }
+  const getLastSync = (source: string) => {
+    return syncLogs.find((l: any) => l.source === source);
   };
 
-  const parseCSV = (text: string): Array<Record<string, string>> => {
-    const lines = text.split(/\r?\n/).filter((l) => l.trim());
-    if (lines.length < 2) return [];
-    
-    // Parse header - handle quoted values
-    const parseRow = (line: string): string[] => {
-      const result: string[] = [];
-      let current = "";
-      let inQuotes = false;
-      for (const char of line) {
-        if (char === '"') { inQuotes = !inQuotes; continue; }
-        if (char === "," && !inQuotes) { result.push(current.trim()); current = ""; continue; }
-        current += char;
-      }
-      result.push(current.trim());
-      return result;
-    };
-
-    const headers = parseRow(lines[0]).map((h) =>
-      h.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")
-    );
-
-    return lines.slice(1).map((line) => {
-      const values = parseRow(line);
-      const record: Record<string, string> = {};
-      headers.forEach((h, i) => { record[h] = values[i] || ""; });
-      return record;
-    }).filter((r) => Object.values(r).some((v) => v));
-  };
-
-  const handleCSVImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    setImporting(true);
-    try {
-      const text = await file.text();
-      const records = parseCSV(text);
-
-      if (records.length === 0) {
-        toast.error("No valid rows found in CSV");
-        return;
-      }
-
-      toast.info(`Importing ${records.length} records...`);
-
-      const { data, error } = await supabase.functions.invoke("scrape-amfi", {
-        body: { seed_data: records },
-      });
-
-      if (error) throw error;
-      if (data?.success) {
-        toast.success(
-          `Import complete: ${data.summary.inserted} new, ${data.summary.updated} updated, ${data.summary.skipped} skipped`
-        );
-        refetch();
-      } else {
-        toast.error(data?.error || "Import failed");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to import CSV");
-    } finally {
-      setImporting(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    }
-  };
-
-  const stats = {
-    total: entities.length,
-    amfi: entities.filter((e) => e.source === "amfi").length,
-    sebi: entities.filter((e) => e.source === "sebi").length,
-    manual: entities.filter((e) => e.source === "manual").length,
-    matched: entities.filter((e) => e.matched_user_id).length,
+  const statusIcon = (status: string) => {
+    if (status === "completed") return <CheckCircle2 className="h-3.5 w-3.5 text-primary" />;
+    if (status === "failed") return <XCircle className="h-3.5 w-3.5 text-destructive" />;
+    if (status === "running") return <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />;
+    return <Clock className="h-3.5 w-3.5 text-muted-foreground" />;
   };
 
   return (
     <div className="space-y-4">
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-        {[
-          { label: "Total Entities", value: stats.total, icon: Database },
-          { label: "AMFI", value: stats.amfi, icon: Building2 },
-          { label: "SEBI", value: stats.sebi, icon: Building2 },
-          { label: "Manual", value: stats.manual, icon: Hash },
-          { label: "Matched Users", value: stats.matched, icon: MapPin },
-        ].map((s) => (
-          <Card key={s.label}>
-            <CardContent className="p-3 flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-muted flex items-center justify-center shrink-0">
-                <s.icon className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-lg font-bold leading-none">{s.value}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{s.label}</p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <Tabs defaultValue="dashboard">
+        <TabsList>
+          <TabsTrigger value="dashboard">Sync Dashboard</TabsTrigger>
+          <TabsTrigger value="entities">Registry Entities</TabsTrigger>
+          <TabsTrigger value="logs">Sync Logs</TabsTrigger>
+        </TabsList>
 
-      {/* Sync Card */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <div>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Download className="h-4 w-4" /> Registry Sync
-              </CardTitle>
-              <CardDescription className="text-xs mt-1">
-                Import distributor data from AMFI's{" "}
-                <a
-                  href="https://www.amfiindia.com/locate-distributor"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline inline-flex items-center gap-0.5"
-                >
-                  Locate Distributor <ExternalLink className="h-3 w-3" />
-                </a>{" "}
-                page. Download the data as CSV from AMFI, then import it here.
-              </CardDescription>
-            </div>
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="default"
-                onClick={() => setWizardOpen(true)}
-              >
-                <FileUp className="h-3.5 w-3.5 mr-1.5" />
-                Import Data
-              </Button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".csv,.txt"
-                className="hidden"
-                onChange={handleCSVImport}
-              />
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={importing}
-              >
-                <Upload className={`h-3.5 w-3.5 mr-1.5 ${importing ? "animate-spin" : ""}`} />
-                {importing ? "Importing..." : "Quick CSV"}
-              </Button>
-              <Button size="sm" variant="outline" onClick={handleAmfiSync} disabled={syncing}>
-                <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${syncing ? "animate-spin" : ""}`} />
-                {syncing ? "Trying API..." : "Try API Sync"}
-              </Button>
-            </div>
+        {/* ─── Dashboard Tab ─── */}
+        <TabsContent value="dashboard" className="space-y-4 mt-4">
+          {/* Global actions */}
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              onClick={() => triggerSync(SOURCES.map(s => s.id))}
+              disabled={!!syncingSource}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${syncingSource ? "animate-spin" : ""}`} />
+              Sync All Sources
+            </Button>
+            <Button variant="outline" onClick={() => setWizardOpen(true)}>
+              <FileUp className="h-4 w-4 mr-2" /> Import from File
+            </Button>
           </div>
-        </CardHeader>
-      </Card>
 
-      {/* Registry Table */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Database className="h-4 w-4" /> Registry Entities
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+          {/* Source cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {SOURCES.map((src) => {
+              const lastSync = getLastSync(src.id);
+              const count = (sourceStats as any)[src.id] || 0;
+              const isSyncing = syncingSource === src.id;
+
+              return (
+                <Card key={src.id}>
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className={`h-8 w-8 rounded-lg bg-muted flex items-center justify-center ${src.color}`}>
+                          <src.icon className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-sm">{src.label}</CardTitle>
+                          <CardDescription className="text-[10px]">{src.desc}</CardDescription>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="text-xs font-mono">{count.toLocaleString()}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {/* Last sync info */}
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      {lastSync ? (
+                        <>
+                          {statusIcon(lastSync.status)}
+                          <span>
+                            Last sync {formatDistanceToNow(new Date(lastSync.started_at), { addSuffix: true })}
+                            {lastSync.status === "completed" && ` — ${lastSync.records_inserted} new, ${lastSync.records_updated} updated`}
+                            {lastSync.status === "failed" && ` — ${lastSync.error_message || "Error"}`}
+                            {lastSync.status === "no_data" && " — No data returned"}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="h-3.5 w-3.5" />
+                          <span>Never synced</span>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => triggerSync([src.id])}
+                        disabled={!!syncingSource}
+                        className="flex-1"
+                      >
+                        <RefreshCw className={`h-3 w-3 mr-1.5 ${isSyncing ? "animate-spin" : ""}`} />
+                        {isSyncing ? "Syncing..." : "Sync Now"}
+                      </Button>
+                      <Button size="sm" variant="ghost" asChild>
+                        <a href={src.url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Summary stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-2xl font-bold">{((sourceStats as any).total || 0).toLocaleString()}</p>
+                <p className="text-[10px] text-muted-foreground">Total Entities</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-2xl font-bold">{((sourceStats as any).matched || 0).toLocaleString()}</p>
+                <p className="text-[10px] text-muted-foreground">Claimed Profiles</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-2xl font-bold">{syncLogs.filter((l: any) => l.status === "completed").length}</p>
+                <p className="text-[10px] text-muted-foreground">Successful Syncs</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-3 text-center">
+                <p className="text-2xl font-bold">{syncLogs.filter((l: any) => l.status === "failed").length}</p>
+                <p className="text-[10px] text-muted-foreground">Failed Syncs</p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* ─── Entities Tab ─── */}
+        <TabsContent value="entities" className="space-y-4 mt-4">
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -270,8 +285,9 @@ export default function AdminRegistryPage() {
               <SelectTrigger className="w-[130px]"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Sources</SelectItem>
-                <SelectItem value="amfi">AMFI</SelectItem>
-                <SelectItem value="sebi">SEBI</SelectItem>
+                {SOURCES.map(s => (
+                  <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
+                ))}
                 <SelectItem value="manual">Manual</SelectItem>
               </SelectContent>
             </Select>
@@ -285,7 +301,6 @@ export default function AdminRegistryPage() {
             <div className="text-center py-12 text-muted-foreground">
               <Database className="h-8 w-8 mx-auto mb-2 opacity-40" />
               <p className="text-sm">No registry entities found</p>
-              <p className="text-xs mt-1">Use the Sync button above to import from AMFI</p>
             </div>
           ) : (
             <div className="border rounded-md overflow-auto">
@@ -298,10 +313,10 @@ export default function AdminRegistryPage() {
                     <TableHead className="text-xs">Location</TableHead>
                     <TableHead className="text-xs">Contact</TableHead>
                     <TableHead className="text-xs">Synced</TableHead>
-                     <TableHead className="text-xs">Status</TableHead>
-                     <TableHead className="text-xs w-[50px]"></TableHead>
-                   </TableRow>
-                 </TableHeader>
+                    <TableHead className="text-xs">Status</TableHead>
+                    <TableHead className="text-xs w-[50px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
                 <TableBody>
                   {entities.map((entity) => (
                     <TableRow key={entity.id}>
@@ -327,29 +342,24 @@ export default function AdminRegistryPage() {
                       <TableCell>
                         <p className="text-xs">{entity.city || "—"}</p>
                         {entity.state && <p className="text-[10px] text-muted-foreground">{entity.state}</p>}
-                        {entity.pincode && <p className="text-[10px] text-muted-foreground font-mono">{entity.pincode}</p>}
                       </TableCell>
                       <TableCell>
                         <p className="text-xs truncate max-w-[150px]">{entity.contact_email || "—"}</p>
-                        {entity.contact_phone && (
-                          <p className="text-[10px] text-muted-foreground">{entity.contact_phone}</p>
-                        )}
+                        {entity.contact_phone && <p className="text-[10px] text-muted-foreground">{entity.contact_phone}</p>}
                       </TableCell>
                       <TableCell>
                         {entity.last_synced_at ? (
                           <p className="text-xs text-muted-foreground">
                             {formatDistanceToNow(new Date(entity.last_synced_at), { addSuffix: true })}
                           </p>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">—</span>
-                        )}
+                        ) : <span className="text-xs text-muted-foreground">—</span>}
                       </TableCell>
                       <TableCell>
                         <Badge
                           variant={entity.matched_user_id ? "default" : entity.status === "active" ? "secondary" : "outline"}
                           className="text-[9px]"
                         >
-                          {entity.matched_user_id ? "Matched" : entity.status}
+                          {entity.matched_user_id ? "Claimed" : entity.status}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -383,13 +393,76 @@ export default function AdminRegistryPage() {
               </Table>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </TabsContent>
+
+        {/* ─── Sync Logs Tab ─── */}
+        <TabsContent value="logs" className="mt-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Clock className="h-4 w-4" /> Sync History
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {syncLogs.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-8">No sync runs yet</p>
+              ) : (
+                <div className="border rounded-md overflow-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-xs">Source</TableHead>
+                        <TableHead className="text-xs">Type</TableHead>
+                        <TableHead className="text-xs">Status</TableHead>
+                        <TableHead className="text-xs">Found</TableHead>
+                        <TableHead className="text-xs">New</TableHead>
+                        <TableHead className="text-xs">Updated</TableHead>
+                        <TableHead className="text-xs">Started</TableHead>
+                        <TableHead className="text-xs">Duration</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {syncLogs.map((log: any) => (
+                        <TableRow key={log.id}>
+                          <TableCell>
+                            <Badge variant="outline" className="text-[9px] uppercase">{log.source}</Badge>
+                          </TableCell>
+                          <TableCell className="text-xs capitalize">{log.sync_type}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-1.5">
+                              {statusIcon(log.status)}
+                              <span className="text-xs capitalize">{log.status}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-xs font-mono">{log.records_found}</TableCell>
+                          <TableCell className="text-xs font-mono text-primary">{log.records_inserted}</TableCell>
+                          <TableCell className="text-xs font-mono text-accent-foreground">{log.records_updated}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {format(new Date(log.started_at), "MMM d, HH:mm")}
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {log.completed_at
+                              ? `${Math.round((new Date(log.completed_at).getTime() - new Date(log.started_at).getTime()) / 1000)}s`
+                              : "—"}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       <RegistryImportWizard
         open={wizardOpen}
         onOpenChange={setWizardOpen}
-        onImportComplete={() => refetch()}
+        onImportComplete={() => {
+          refetch();
+          queryClient.invalidateQueries({ queryKey: ["admin-registry-stats"] });
+        }}
       />
     </div>
   );
