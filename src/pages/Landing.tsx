@@ -200,28 +200,30 @@ const Landing = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <div className="flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-10 gap-y-3">
-              <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider mr-2">
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest">
                 Built for India's regulated BFSI ecosystem
               </span>
-              {[
-                { src: sebiLogo, name: "SEBI" },
-                { src: amfiLogo, name: "AMFI" },
-                { src: irdaiLogo, name: "IRDAI" },
-                { src: rbiLogo, name: "RBI" },
-                { src: pfrdaLogo, name: "PFRDA" },
-              ].map((reg) => (
-                <div key={reg.name} className="flex items-center gap-2 select-none">
-                  <img
-                    src={reg.src}
-                    alt={`${reg.name} logo`}
-                    className="h-7 w-7 sm:h-8 sm:w-8 object-contain opacity-50 dark:opacity-40 grayscale dark:invert"
-                  />
-                  <span className="text-xs sm:text-sm font-heading font-semibold text-muted-foreground/50 tracking-wide">
-                    {reg.name}
-                  </span>
-                </div>
-              ))}
+              <div className="flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-2">
+                {[
+                  { src: sebiLogo, name: "SEBI" },
+                  { src: amfiLogo, name: "AMFI" },
+                  { src: irdaiLogo, name: "IRDAI" },
+                  { src: rbiLogo, name: "RBI" },
+                  { src: pfrdaLogo, name: "PFRDA" },
+                ].map((reg) => (
+                  <div key={reg.name} className="flex items-center gap-1.5 select-none">
+                    <img
+                      src={reg.src}
+                      alt={`${reg.name} logo`}
+                      className="h-6 w-auto max-w-[28px] object-contain opacity-40 dark:opacity-30 grayscale dark:invert"
+                    />
+                    <span className="text-[11px] font-heading font-semibold text-muted-foreground/40 tracking-wide">
+                      {reg.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
