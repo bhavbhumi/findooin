@@ -439,11 +439,25 @@ export default function ProfessionalDirectory() {
                                   {entity.entity_name}
                                 </FlairName>
                               </h3>
-                              {entity.registration_category && (
-                                <p className="text-[11px] text-muted-foreground truncate mb-2.5">
-                                  {entity.registration_category}
-                                </p>
-                              )}
+                              {(() => {
+                                const regs = entity.all_registrations as Array<{ registration_category?: string }> | null;
+                                const regCount = regs?.length || 0;
+                                const allCats = regCount > 1
+                                  ? [...new Set(regs?.map(r => r.registration_category).filter(Boolean))].join(" · ")
+                                  : entity.registration_category;
+                                return allCats ? (
+                                  <div className="flex items-center gap-1.5 mb-2.5">
+                                    <p className="text-[11px] text-muted-foreground truncate">
+                                      {allCats}
+                                    </p>
+                                    {regCount > 1 && (
+                                      <Badge variant="secondary" className="text-[9px] h-4 px-1 shrink-0">
+                                        {regCount} reg.
+                                      </Badge>
+                                    )}
+                                  </div>
+                                ) : null;
+                              })()}
                               <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                                 <div className="flex items-center gap-3">
                                   {entity.city && (
