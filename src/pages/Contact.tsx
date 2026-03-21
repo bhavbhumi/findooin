@@ -82,6 +82,7 @@ const Contact = () => {
 
   return (
     <PublicPageLayout>
+      <PulseWaves className="!fixed !inset-0 !z-0" />
       <PageHero
         breadcrumb="Contact"
         title="Get in touch"
