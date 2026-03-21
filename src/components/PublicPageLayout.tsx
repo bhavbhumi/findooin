@@ -180,20 +180,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
 
             <ThemeToggle />
 
-            <DropdownMenu
-              trigger={
-                <>
-                  <Globe className="h-4 w-4" />
-                  <span className="text-sm">{currentLangLabel}</span>
-                </>
-              }
-              items={languages.map((lang) => ({
-                label: lang.label,
-                onClick: () => setCurrentLang(lang.code),
-              }))}
-            />
 
-            <div className="w-px h-5 bg-border mx-1" />
+
 
             <Button variant="ghost" size="sm" asChild>
               <Link to="/auth" className="text-sm">Sign In</Link>
@@ -233,26 +221,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                 {link.label}
               </Link>
             ))}
-            {/* Language selector */}
-            <div className="h-px bg-border my-2" />
-            <div className="px-3 py-2">
-              <p className="text-xs text-muted-foreground mb-2 font-medium">Language</p>
-              <div className="flex flex-wrap gap-2">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => setCurrentLang(lang.code)}
-                    className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
-                      currentLang === lang.code
-                        ? "border-primary bg-primary/10 text-foreground"
-                        : "border-border text-muted-foreground hover:text-foreground hover:bg-muted"
-                    }`}
-                  >
-                    {lang.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+
+
             <div className="h-px bg-border my-2" />
             <div className="flex flex-col gap-2 pt-1">
               <Button variant="outline" size="sm" asChild className="w-full">

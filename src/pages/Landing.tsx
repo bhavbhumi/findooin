@@ -222,8 +222,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-12 border-y border-border relative overflow-hidden">
-        <GlowBlob position="bottom-left" color="primary" size="md" />
+      <section className="py-12 relative overflow-hidden">
         <div className="container relative">
           <CosmicValueSection />
         </div>
@@ -231,7 +230,6 @@ const Landing = () => {
 
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="py-12 relative overflow-hidden">
-        <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
           <TestimonialsSection />
