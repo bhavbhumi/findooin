@@ -101,15 +101,10 @@ const Landing = () => {
   return (
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-12 pb-10 lg:pt-16 lg:pb-14 overflow-hidden">
-        <NetworkMesh />
-        
-        {/* Glow blobs for depth */}
-        <GlowBlob position="top-left" color="primary" size="xl" />
-        <GlowBlob position="bottom-right" color="accent" size="lg" />
-        
-        {/* Decorative concentric rings */}
-        <ConcentricRings className="top-8 right-[5%] hidden lg:block" />
+      <section className="relative pt-10 pb-8 lg:pt-14 lg:pb-10 overflow-hidden">
+        {/* Subtle glow — no geometric mesh */}
+        <GlowBlob position="top-left" color="primary" size="lg" />
+        <GlowBlob position="bottom-right" color="accent" size="md" />
 
         <div className="container relative">
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 items-center">
