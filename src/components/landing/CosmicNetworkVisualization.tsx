@@ -300,7 +300,7 @@ const CosmicNetworkVisualization: React.FC<Props> = ({ highlightedOrbit }) => {
               }`}
               fill={ROLE_META[role].color}
             >
-              {ROLE_META[role].label}s
+              {ROLE_META[role].plural}
             </text>
           )
         )}
