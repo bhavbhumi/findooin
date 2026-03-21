@@ -124,6 +124,7 @@ const NewsletterForm = () => {
   );
 };
 
+const DropdownMenu = ({
   trigger,
   items,
   isActive,
