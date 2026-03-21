@@ -154,15 +154,18 @@ export default function AdminRegistryPage() {
     },
   });
 
-  const triggerSync = async (sources: string[]) => {
-    const label = sources.length === 1 ? sources[0].toUpperCase() : "All Sources";
+  const triggerSync = async (sources: string[], sebiTypeIds?: number[]) => {
+    const label = sebiTypeIds
+      ? `SEBI (${sebiTypeIds.length} type${sebiTypeIds.length > 1 ? "s" : ""})`
+      : sources.length === 1 ? sources[0].toUpperCase() : "All Sources";
     setSyncingSource(sources[0] || "all");
     toast.info(`Syncing ${label}... This may take a few minutes.`);
 
     try {
-      const { data, error } = await supabase.functions.invoke("registry-sync", {
-        body: { sources, sync_type: "manual" },
-      });
+      const body: Record<string, unknown> = { sources, sync_type: "manual" };
+      if (sebiTypeIds) body.sebi_type_ids = sebiTypeIds;
+
+      const { data, error } = await supabase.functions.invoke("registry-sync", { body });
 
       if (error) throw error;
       if (data?.success) {
