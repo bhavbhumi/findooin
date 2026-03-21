@@ -136,7 +136,7 @@ const App = () => {
       <ThemeProvider>
         <TooltipProvider>
           <RoleProvider>
-            <ErrorBoundary fallbackTitle="FindOO encountered an error">
+            <ErrorBoundary fallbackTitle="findoo encountered an error">
               {/* Splash screen removed – direct render */}
               <Toaster />
               <Sonner />

@@ -24,10 +24,10 @@ const logoUrl = 'https://qvzvhmuosxdaqxwyokpg.supabase.co/storage/v1/object/publ
 export const WelcomeEmail = ({ recipientName, siteUrl }: WelcomeEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Welcome aboard, {recipientName} — your FindOO journey starts now</Preview>
+    <Preview>Welcome aboard, {recipientName} — your findoo journey starts now</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
         <Heading style={h1}>Welcome aboard, {recipientName}!</Heading>
         <Text style={text}>
           You're now part of India's trusted financial network. Here's how to get started:

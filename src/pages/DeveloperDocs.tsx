@@ -855,7 +855,7 @@ const tabContentMap: Record<string, React.FC> = {
 const DeveloperDocs = () => {
   usePageMeta({
     title: "Developer Documentation",
-    description: "FindOO developer documentation — architecture, API reference, edge functions, and getting started guide.",
+    description: "findoo developer documentation — architecture, API reference, edge functions, and getting started guide.",
   });
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -886,7 +886,7 @@ const DeveloperDocs = () => {
         breadcrumb="Developer Docs"
         title="Developer"
         titleAccent="Documentation"
-        subtitle="Architecture guides, API references, and everything you need to build on FindOO."
+        subtitle="Architecture guides, API references, and everything you need to build on findoo."
         variant="dots"
         context="discover"
       />

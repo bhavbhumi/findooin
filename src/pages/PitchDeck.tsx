@@ -23,7 +23,7 @@ const PitchDeck = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   usePageMeta({
-    title: deck ? `${deck.persona} Pitch — FindOO` : "Pitch Deck",
+    title: deck ? `${deck.persona} Pitch — findoo` : "Pitch Deck",
     description: deck?.description || "",
   });
 

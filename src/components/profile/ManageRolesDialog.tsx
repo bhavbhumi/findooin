@@ -157,7 +157,7 @@ export function ManageRolesDialog({ userId, currentRoles, onRolesChanged, trigge
         <DialogHeader>
           <DialogTitle className="font-heading">Manage Your Roles</DialogTitle>
           <DialogDescription>
-            Add or remove roles to customize your FindOO experience. Each role unlocks different features and visibility.
+            Add or remove roles to customize your findoo experience. Each role unlocks different features and visibility.
           </DialogDescription>
         </DialogHeader>
 

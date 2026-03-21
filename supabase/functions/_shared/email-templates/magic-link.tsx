@@ -27,11 +27,11 @@ export const MagicLinkEmail = ({
 }: MagicLinkEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your FindOO sign-in link</Preview>
+    <Preview>Your findoo sign-in link</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
-        <Heading style={h1}>Sign in to FindOO</Heading>
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
+        <Heading style={h1}>Sign in to findoo</Heading>
         <Text style={text}>
           Click the button below to sign in. This link will expire shortly.
         </Text>

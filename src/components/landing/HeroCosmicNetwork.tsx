@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import findooLogoIcon from "@/assets/findoo-logo-icon.png";
 
 /* ── Laniakea Supercluster Visualization ──
-   Cosmic web of filaments flowing toward a central "Great Attractor" — FindOO.
+   Cosmic web of filaments flowing toward a central "Great Attractor" — findoo.
    Three distinct streams: Issuers, Intermediaries, Investors. */
 
 interface FilamentNode {
@@ -243,7 +243,7 @@ const HeroCosmicNetwork: React.FC = () => {
           </g>
         ))}
 
-        {/* ── Central core — FindOO logo ── */}
+        {/* ── Central core — findoo logo ── */}
         <circle cx={CX} cy={CY} r="34" fill="none"
           stroke="hsl(var(--primary))" strokeWidth="0.6" opacity="0.15">
           <animate attributeName="r" values="32;38;32" dur="4s" repeatCount="indefinite" />
@@ -254,7 +254,7 @@ const HeroCosmicNetwork: React.FC = () => {
         </circle>
         <circle cx={CX} cy={CY} r="18" fill="hsl(var(--primary))" opacity="1" />
 
-        {/* FindOO Logo — image mark */}
+        {/* findoo Logo — image mark */}
         <image
           href={findooLogoIcon}
           x={CX - 14}

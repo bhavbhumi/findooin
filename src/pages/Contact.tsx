@@ -50,7 +50,7 @@ const offices = [
 ];
 
 const Contact = () => {
-  usePageMeta({ title: "Contact Us", description: "Get in touch with FindOO — reach us via form or visit our office.", path: "/contact" });
+  usePageMeta({ title: "Contact Us", description: "Get in touch with findoo — reach us via form or visit our office.", path: "/contact" });
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("Ask Us");
   const [submitting, setSubmitting] = useState(false);

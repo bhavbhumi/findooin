@@ -2,9 +2,9 @@ import { ComparisonData } from "@/components/compare/ComparisonPage";
 import { Users, MessageCircle, Heart, TrendingUp, Shield, Award, Briefcase, Target } from "lucide-react";
 
 export const socialNetworkData: ComparisonData = {
-  heroTitle: "FindOO vs Social Networks",
+  heroTitle: "findoo vs Social Networks",
   heroSubtitle: "Why India's financial professionals need more than likes and followers",
-  heroDescription: "Generic social networks were built for entertainment and personal connections. FindOO is purpose-built for India's ₹400 Lakh Crore financial ecosystem — where trust, compliance, and professional credibility matter more than viral content.",
+  heroDescription: "Generic social networks were built for entertainment and personal connections. findoo is purpose-built for India's ₹400 Lakh Crore financial ecosystem — where trust, compliance, and professional credibility matter more than viral content.",
   competitor: "Social Networks",
   competitorExamples: "General-purpose social media platforms",
   stats: [
@@ -23,6 +23,6 @@ export const socialNetworkData: ComparisonData = {
     { icon: Users, feature: "Networking Intent", findoo: "Connect with verified professionals for referrals, partnerships & deals", competitor: "Follow celebrities, influencers, and brands", findooHas: true, competitorHas: false },
     { icon: Heart, feature: "Privacy Controls", findoo: "Granular tab privacy — control who sees Activity, Network & Vault", competitor: "Basic public/private toggle, data harvested for ads", findooHas: true, competitorHas: false },
   ],
-  verdict: { title: "Social networks broadcast. FindOO builds professional credibility.", description: "On social media, a financial advisor competes with cat videos for attention. On FindOO, every interaction strengthens your professional standing in India's regulated financial ecosystem. Your content reaches people who actually need your expertise — not an algorithm optimizing for engagement." },
+  verdict: { title: "Social networks broadcast. findoo builds professional credibility.", description: "On social media, a financial advisor competes with cat videos for attention. On findoo, every interaction strengthens your professional standing in India's regulated financial ecosystem. Your content reaches people who actually need your expertise — not an algorithm optimizing for engagement." },
   cta: { title: "Stop competing with cat videos.", subtitle: "Join the network where your SEBI registration matters more than your follower count." },
 };

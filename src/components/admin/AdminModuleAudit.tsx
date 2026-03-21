@@ -43,7 +43,7 @@ const WEBSITE_MODULES: AuditModule[] = [
     name: "Landing Page",
     items: [
       { feature: "Hero section with CTA", scope: "Cosmic network visualization, value props, CTA buttons", status: "completed" },
-      { feature: "Why FindOO section", scope: "Feature highlights with animated cards", status: "completed" },
+      { feature: "Why findoo section", scope: "Feature highlights with animated cards", status: "completed" },
       { feature: "Testimonials carousel", scope: "User testimonials with auto-rotation", status: "completed" },
       { feature: "Value proposition section", scope: "Role-based value cards (Issuer, Intermediary, Investor)", status: "completed" },
       { feature: "SEO meta tags & JSON-LD", scope: "Title, description, OG tags, structured data", status: "incomplete", note: "OG tags present; JSON-LD not yet added" },
@@ -60,7 +60,7 @@ const WEBSITE_MODULES: AuditModule[] = [
   {
     name: "Explore",
     items: [
-      { feature: "What is FindOO tab", scope: "Platform explanation", status: "completed" },
+      { feature: "What is findoo tab", scope: "Platform explanation", status: "completed" },
       { feature: "Why it exists tab", scope: "Problem statement", status: "completed" },
       { feature: "How it works tab", scope: "Step-by-step user journey", status: "completed" },
       { feature: "Who is it for tab", scope: "Target audience roles", status: "completed" },
@@ -727,7 +727,7 @@ export function AdminModuleAudit() {
 
       {/* Footer */}
       <p className="text-[10px] text-muted-foreground text-center print:mt-8">
-        Generated {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })} · FindOO Module Audit v1.0
+        Generated {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })} · findoo Module Audit v1.0
       </p>
     </div>
   );

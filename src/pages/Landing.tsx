@@ -95,7 +95,7 @@ const platformFeatures = [
 const Landing = () => {
   const { data: blogPosts } = useBlogPosts(3);
 
-  usePageMeta({ title: "India's First Financial Network", description: "FindOO is India's first financial network — Financially Social. Connecting verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA ecosystems.", path: "/" });
+  usePageMeta({ title: "India's First Financial Network", description: "findoo is India's first financial network — Financially Social. Connecting verified Issuers, Intermediaries, and Investors across SEBI, RBI, IRDAI, AMFI & PFRDA ecosystems.", path: "/" });
 
   return (
     <PublicPageLayout>
@@ -142,7 +142,7 @@ const Landing = () => {
                 <div className="flex items-center gap-3">
                   <Button size="lg" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
                     <Link to="/auth?mode=signup">
-                      Join FindOO
+                      Join findoo
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
@@ -270,7 +270,7 @@ const Landing = () => {
               A full-stack financial network
             </h2>
             <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-              Not just networking — FindOO is a complete operating system for India's financial professionals.
+              Not just networking — findoo is a complete operating system for India's financial professionals.
             </p>
           </motion.div>
           {/* Horizontal scroll on mobile, grid on desktop */}
@@ -429,7 +429,7 @@ const Landing = () => {
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground">Latest from FindOO</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground">Latest from findoo</h2>
             <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
               View all Insights <ArrowRight className="h-3.5 w-3.5" />
             </Link>

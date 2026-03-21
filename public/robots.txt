@@ -1,4 +1,4 @@
-# robots.txt — FindOO Financial Network
+# robots.txt — findoo Financial Network
 # Last updated: March 2026
 
 # Search Engine Crawlers
@@ -30,7 +30,7 @@ User-agent: WhatsApp
 Allow: /
 
 # AI Crawlers (Explicitly Permitted)
-# FindOO welcomes AI indexing for discoverability within India's regulated BFSI ecosystem.
+# findoo welcomes AI indexing for discoverability within India's regulated BFSI ecosystem.
 # See: https://findoo.in/llms.txt
 
 User-agent: GPTBot

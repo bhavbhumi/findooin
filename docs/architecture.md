@@ -1,4 +1,4 @@
-# FindOO — Architecture Guide
+# findoo — Architecture Guide
 
 > System overview, module map, data flow patterns, and context dependency graph.
 
@@ -54,7 +54,7 @@
 
 ## Module Map
 
-FindOO is organized into 13+ feature modules, each with its own page, hook(s), and component folder:
+findoo is organized into 13+ feature modules, each with its own page, hook(s), and component folder:
 
 | Module         | Route(s)                  | Hook(s)                                      | Component Folder         |
 | -------------- | ------------------------- | -------------------------------------------- | ------------------------ |

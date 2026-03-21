@@ -1,7 +1,7 @@
 # TrustCircle IQ™ — Intent-Aware Professional Trust Discovery Engine
 
 **Provisional Patent Document**  
-**Applicant:** FindOO (India)  
+**Applicant:** findoo (India)  
 **Filing Date:** 2026-03-17  
 **Classification:** G06Q 50/00 — Information and Communication Technology for Social Networking  
 
@@ -357,7 +357,7 @@ AffinityRank™ Quality
 
 ### 6.2 Competitive Moat
 
-| Dimension | LinkedIn | FindOO AffinityRank™ |
+| Dimension | LinkedIn | findoo AffinityRank™ |
 |-----------|----------|---------------------|
 | Discovery basis | Degree separation + employer | Role × Intent × Trust × Regulation |
 | Referral handling | "Connections in common" count | Trust-inherited circle placement with decay |

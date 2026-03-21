@@ -1,6 +1,6 @@
-# Contributing to FindOO
+# Contributing to findoo
 
-> Guidelines for contributing to the FindOO BFSI professional network platform.
+> Guidelines for contributing to the findoo BFSI professional network platform.
 
 Thank you for your interest in contributing! This guide covers everything you need to get started.
 

@@ -34,7 +34,7 @@ const sitemapData = [
   {
     title: "Explore",
     links: [
-      { label: "What is FindOO", to: "/explore" },
+      { label: "What is findoo", to: "/explore" },
       { label: "Why does it exist", to: "/explore?tab=why" },
       { label: "How it works", to: "/explore?tab=how" },
       { label: "Who is it for", to: "/explore?tab=who" },
@@ -118,14 +118,14 @@ const sitemapData = [
 ];
 
 const SiteMap = () => {
-  usePageMeta({ title: "Sitemap", description: "A complete overview of all pages and sections available on FindOO." });
+  usePageMeta({ title: "Sitemap", description: "A complete overview of all pages and sections available on findoo." });
   return (
   <PublicPageLayout>
     <PageHero
       breadcrumb="Sitemap"
       title="Site"
       titleAccent="Map"
-      subtitle="A complete overview of all pages and sections available on FindOO."
+      subtitle="A complete overview of all pages and sections available on findoo."
       variant="waves"
     />
 

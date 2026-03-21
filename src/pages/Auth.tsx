@@ -24,7 +24,7 @@ const LOCKOUT_DURATION_MS = 60_000; // 1 minute
 const REQUEST_TIMEOUT_MS = 10_000;
 
 const Auth = () => {
-  usePageMeta({ title: "Sign In", description: "Sign in or create your FindOO account.", path: "/auth" });
+  usePageMeta({ title: "Sign In", description: "Sign in or create your findoo account.", path: "/auth" });
   const [searchParams] = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(searchParams.get("mode") === "signup");
   const [email, setEmail] = useState("");
@@ -388,8 +388,8 @@ const Auth = () => {
         <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" style={{ background: 'rgba(50, 50, 200, 0.2)' }} />
 
         <Link to="/" className="flex items-center gap-3 relative z-10">
-          <img src={findooLogo} alt="FindOO" className="h-12 w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
-          <span className="text-2xl font-bold font-heading text-white tracking-tight">FindOO</span>
+          <img src={findooLogo} alt="findoo" className="h-12 w-auto" style={{ filter: 'brightness(0) invert(1)' }} />
+          <span className="text-2xl font-bold font-heading text-white tracking-tight">findoo</span>
         </Link>
 
         <div className="relative z-10 space-y-4">
@@ -425,7 +425,7 @@ const Auth = () => {
             <p className="text-muted-foreground mt-1">
               {isSignUp
                 ? "Join India's regulated financial network"
-                : "Sign in to continue to FindOO"
+                : "Sign in to continue to findoo"
               }
             </p>
           </div>

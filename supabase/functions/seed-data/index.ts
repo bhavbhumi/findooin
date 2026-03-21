@@ -131,7 +131,7 @@ Deno.serve(async (req) => {
       { author_id: priya, content: "🎙️ New podcast: \"Why Most Retail Investors Underperform\"\n\nBehavior gap, SIP vs lump-sum, common biases.\n\n#InvestorEducation #Podcast", post_type: "article", hashtags: ["InvestorEducation", "Podcast"] },
       { author_id: arjun, content: "🎥 CIO discusses H1 CY2026 outlook. Sector rotation, mid-cap allocation, top 5 conviction ideas.\n\n#MarketOutlook #AMC", post_type: "market_commentary", hashtags: ["MarketOutlook", "AMC"], attachment_type: "video", attachment_url: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800", attachment_name: "CIO_Outlook.mp4" },
       { author_id: anita, content: "Attended AMFI conference. MF industry grew from ₹10L Cr to ₹60L Cr AUM in 10 years. Incredible! 🙏\n\n#AMFI #MutualFunds", post_type: "text", hashtags: ["AMFI", "MutualFunds"] },
-      { author_id: rajesh, content: "6 months on FindOO — need help finding a SEBI-registered advisor for long-term equity portfolio review. Any recommendations? 💯\n\n#FindOO #RetailInvestor", post_type: "query", query_category: "expert_find", hashtags: ["FindOO", "RetailInvestor"] },
+      { author_id: rajesh, content: "6 months on findoo — need help finding a SEBI-registered advisor for long-term equity portfolio review. Any recommendations? 💯\n\n#findoo #RetailInvestor", post_type: "query", query_category: "expert_find", hashtags: ["findoo", "RetailInvestor"] },
       { author_id: vikram, content: "🏗️ Q3 FY26 Results — Revenue ₹1,840 Cr (+22%), PAT ₹142 Cr (+28%). Order Book ₹12,800 Cr.\n\n#QuarterlyResults #Earnings", post_type: "announcement", hashtags: ["QuarterlyResults", "Earnings"] },
     ];
 
@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
     const pollDefs = [
       { post: { author_id: priya, content: "📊 Poll: What's your primary investment vehicle in 2026?\n\n#InvestorPoll", post_type: "text", post_kind: "poll", hashtags: ["InvestorPoll"] }, options: ["Mutual Funds (SIP)", "Direct Equity", "ETFs / Index Funds", "Fixed Deposits / Bonds"] },
       { post: { author_id: arjun, content: "Which sector will outperform in H2 CY2026?\n\n#SectorOutlook", post_type: "market_commentary", post_kind: "poll", hashtags: ["SectorOutlook"] }, options: ["IT & Technology", "Banking & Financials", "Pharma & Healthcare", "Infrastructure"] },
-      { post: { author_id: meera, content: "How do you consume financial research?\n\n#ResearchPoll", post_type: "text", post_kind: "poll", hashtags: ["ResearchPoll"] }, options: ["Broker reports & apps", "Social media / FindOO", "Financial newspapers"] },
+      { post: { author_id: meera, content: "How do you consume financial research?\n\n#ResearchPoll", post_type: "text", post_kind: "poll", hashtags: ["ResearchPoll"] }, options: ["Broker reports & apps", "Social media / findoo", "Financial newspapers"] },
     ];
 
     let pollsCreated = 0;
@@ -539,7 +539,7 @@ Deno.serve(async (req) => {
       },
       {
         organizer_id: priya, title: "Webinar: Why Most Retail Investors Underperform",
-        description: "An educational webinar for retail investors based on behavioral finance research.\n\nTopics:\n• The behavior gap — why investors earn less than their funds\n• SIP vs lump-sum: data-driven analysis\n• Common cognitive biases in investing\n• Building a rules-based investment process\n\nFree for all FindOO members.",
+        description: "An educational webinar for retail investors based on behavioral finance research.\n\nTopics:\n• The behavior gap — why investors earn less than their funds\n• SIP vs lump-sum: data-driven analysis\n• Common cognitive biases in investing\n• Building a rules-based investment process\n\nFree for all findoo members.",
         category: "webinar", event_mode: "virtual",
         virtual_link: "https://meet.google.com/retail-investor-webinar",
         start_time: evDate(2, 19), end_time: evEnd(2, 20), capacity: 1000,
@@ -717,7 +717,7 @@ Deno.serve(async (req) => {
         cover_image_url: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200&q=80",
         tags: ["SIP", "Mutual Funds", "Beginners"],
         read_time_minutes: 6, published: true, featured: false,
-        author_name: "FindOO Team",
+        author_name: "findoo Team",
         published_at: d(12),
         content: `<h2>What is a SIP?</h2><p>A Systematic Investment Plan (SIP) allows you to invest a fixed amount regularly into a mutual fund scheme. Think of it as a recurring deposit — but for equity and debt markets.</p><h2>How Does SIP Work?</h2><p>When you invest via SIP, you buy units at the prevailing NAV. When the market is low, you get more units; when it's high, you get fewer. This is <strong>Rupee Cost Averaging</strong>.</p><h3>Example</h3><table><thead><tr><th>Month</th><th>NAV (₹)</th><th>Investment</th><th>Units</th></tr></thead><tbody><tr><td>January</td><td>100</td><td>₹5,000</td><td>50.00</td></tr><tr><td>February</td><td>90</td><td>₹5,000</td><td>55.56</td></tr><tr><td>March</td><td>110</td><td>₹5,000</td><td>45.45</td></tr><tr><td>April</td><td>95</td><td>₹5,000</td><td>52.63</td></tr></tbody></table><p>Average cost per unit: ₹98.39 — SIP naturally buys more when prices are low!</p><h2>Benefits of SIP</h2><ol><li><strong>Discipline:</strong> Automates your investing habit</li><li><strong>Rupee Cost Averaging:</strong> Reduces impact of volatility</li><li><strong>Power of Compounding:</strong> ₹10,000/month at 12% = ₹1 Cr in ~20 years</li><li><strong>Flexibility:</strong> Start with ₹500/month</li></ol><h2>How to Start</h2><ol><li>Complete KYC (Aadhaar + PAN — 10 minutes online)</li><li>Choose an Index Fund for beginners</li><li>Select Direct plan for lower expense ratio</li><li>Set up auto-debit</li><li>Stay invested for 5-7 years minimum</li></ol><h2>Common Mistakes</h2><ul><li>Stopping SIP during market crashes</li><li>Investing in too many funds (3-4 is sufficient)</li><li>Chasing past returns</li><li>Not increasing SIP amount annually</li></ul><p><strong>Start small, stay consistent, think long-term.</strong></p>`,
       },
@@ -731,7 +731,7 @@ Deno.serve(async (req) => {
         read_time_minutes: 6, published: true, featured: false,
         author_name: "Anita Desai", author_avatar_url: null,
         published_at: d(14),
-        content: `<h2>Industry Milestone</h2><p>AMFI's Q4 FY26 data confirms the Indian mutual fund industry crossed <strong>₹65 lakh crore AUM</strong> — a 22% YoY growth.</p><h2>Key Highlights</h2><ul><li><strong>SIP Flows:</strong> Monthly inflows hit ₹24,500 crore</li><li><strong>SIP Accounts:</strong> 9.8 crore active accounts</li><li><strong>Equity AUM:</strong> ₹32 lakh crore (49% of total)</li><li><strong>Debt AUM:</strong> ₹18 lakh crore (28%)</li></ul><h2>Growth Drivers</h2><ol><li>Digital-first distribution expanding to Tier-3/4 cities</li><li>Investor education campaigns showing results</li><li>New fund categories attracting younger investors</li><li>Equity market performance boosting AUM</li></ol><blockquote><p>"India's MF penetration is still only 18% of GDP vs 120% in the US. The runway is immense." — AMFI Chairman</p></blockquote><h2>What This Means for Distributors</h2><p>The expanding pie means opportunities for MFDs and RIAs, especially in under-penetrated geographies. Digital tools like FindOO are making client acquisition more efficient than ever.</p>`,
+        content: `<h2>Industry Milestone</h2><p>AMFI's Q4 FY26 data confirms the Indian mutual fund industry crossed <strong>₹65 lakh crore AUM</strong> — a 22% YoY growth.</p><h2>Key Highlights</h2><ul><li><strong>SIP Flows:</strong> Monthly inflows hit ₹24,500 crore</li><li><strong>SIP Accounts:</strong> 9.8 crore active accounts</li><li><strong>Equity AUM:</strong> ₹32 lakh crore (49% of total)</li><li><strong>Debt AUM:</strong> ₹18 lakh crore (28%)</li></ul><h2>Growth Drivers</h2><ol><li>Digital-first distribution expanding to Tier-3/4 cities</li><li>Investor education campaigns showing results</li><li>New fund categories attracting younger investors</li><li>Equity market performance boosting AUM</li></ol><blockquote><p>"India's MF penetration is still only 18% of GDP vs 120% in the US. The runway is immense." — AMFI Chairman</p></blockquote><h2>What This Means for Distributors</h2><p>The expanding pie means opportunities for MFDs and RIAs, especially in under-penetrated geographies. Digital tools like findoo are making client acquisition more efficient than ever.</p>`,
       },
       {
         title: "5 Red Flags to Watch Before Investing in Small-Cap Stocks",

@@ -10,7 +10,7 @@ import { Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 
 const ResetPassword = () => {
-  usePageMeta({ title: "Reset Password", description: "Reset your FindOO account password.", path: "/reset-password" });
+  usePageMeta({ title: "Reset Password", description: "Reset your findoo account password.", path: "/reset-password" });
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ const ResetPassword = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="w-full max-w-sm text-center">
-          <img src={findooLogo} alt="FindOO" className="h-10 w-10 mx-auto mb-4" />
+          <img src={findooLogo} alt="findoo" className="h-10 w-10 mx-auto mb-4" />
           <h1 className="text-xl font-bold font-heading text-foreground mb-2">Invalid Link</h1>
           <p className="text-sm text-muted-foreground mb-6">
             This password reset link is invalid or has expired.
@@ -98,7 +98,7 @@ const ResetPassword = () => {
         <Link to="/auth" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6">
           <ArrowLeft className="h-4 w-4" /> Back to Sign In
         </Link>
-        <img src={findooLogo} alt="FindOO" className="h-10 w-10 mb-4" />
+        <img src={findooLogo} alt="findoo" className="h-10 w-10 mb-4" />
         <h1 className="text-2xl font-bold font-heading text-foreground mb-2">Set New Password</h1>
         <p className="text-muted-foreground text-sm mb-6">Enter your new password below.</p>
 

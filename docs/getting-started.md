@@ -1,4 +1,4 @@
-# FindOO — Developer Getting Started Guide
+# findoo — Developer Getting Started Guide
 
 > Setup, folder conventions, design system, testing, and contribution guidelines.
 

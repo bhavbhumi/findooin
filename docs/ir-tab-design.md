@@ -1,7 +1,7 @@
 # IR (Investor Relations) Tab — Design Specification
 
 ## Overview
-The IR tab appears on **Issuer profiles only** and serves as a mini investor relations portal. It transforms Issuer profiles from simple business cards into comprehensive, trust-building transparency hubs — similar to the IR section on corporate websites but integrated directly into the FindOO network.
+The IR tab appears on **Issuer profiles only** and serves as a mini investor relations portal. It transforms Issuer profiles from simple business cards into comprehensive, trust-building transparency hubs — similar to the IR section on corporate websites but integrated directly into the findoo network.
 
 ---
 
@@ -124,6 +124,6 @@ RLS: Public read, owner write (with issuer role check).
 
 ## Notes
 - The IR tab gives Issuers a reason to maintain an active profile
-- It differentiates FindOO from LinkedIn by providing finance-specific transparency
+- It differentiates findoo from LinkedIn by providing finance-specific transparency
 - Documents in the IR section should be publicly accessible (unlike Vault which is private)
 - Future: AMFI API integration for automatic NAV/AUM updates

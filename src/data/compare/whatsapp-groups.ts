@@ -2,9 +2,9 @@ import { ComparisonData } from "@/components/compare/ComparisonPage";
 import { Shield, Search, FileText, Users, MessageCircle, Award, Eye, Layers } from "lucide-react";
 
 export const whatsappGroupsData: ComparisonData = {
-  heroTitle: "FindOO vs Informal Chat Groups",
+  heroTitle: "findoo vs Informal Chat Groups",
   heroSubtitle: "From unverified tips to verified professionals",
-  heroDescription: "Informal messaging groups have become the backbone of India's financial advisory world — MFD groups, insurance advisor circles, and stock tip channels. But they're unregulated, unverifiable, and unsearchable. FindOO brings structure, trust, and professionalism to the conversations that matter.",
+  heroDescription: "Informal messaging groups have become the backbone of India's financial advisory world — MFD groups, insurance advisor circles, and stock tip channels. But they're unregulated, unverifiable, and unsearchable. findoo brings structure, trust, and professionalism to the conversations that matter.",
   competitor: "Informal Chat Groups",
   competitorExamples: "Financial advisory messaging groups and tip channels",
   stats: [
@@ -23,6 +23,6 @@ export const whatsappGroupsData: ComparisonData = {
     { icon: Eye, feature: "Privacy & Compliance", findoo: "Granular privacy controls, audit trails, content moderation", competitor: "Phone number exposed to all group members, no content moderation", findooHas: true, competitorHas: false },
     { icon: Award, feature: "Professional Recognition", findoo: "XP, badges, leaderboard — your contributions are tracked and rewarded", competitor: "No recognition system — top contributors are invisible", findooHas: true, competitorHas: false },
   ],
-  verdict: { title: "Chat groups are conversations. FindOO is a professional ecosystem.", description: "The knowledge shared in financial chat groups is valuable — but it's trapped in an ephemeral, unstructured, unverifiable format. FindOO preserves that knowledge, verifies the people sharing it, and adds the professional infrastructure that messaging apps were never designed to provide." },
+  verdict: { title: "Chat groups are conversations. findoo is a professional ecosystem.", description: "The knowledge shared in financial chat groups is valuable — but it's trapped in an ephemeral, unstructured, unverifiable format. findoo preserves that knowledge, verifies the people sharing it, and adds the professional infrastructure that messaging apps were never designed to provide." },
   cta: { title: "Your expertise deserves more than a forwarded message.", subtitle: "Build a verified professional identity where your knowledge is preserved, discovered, and rewarded." },
 };

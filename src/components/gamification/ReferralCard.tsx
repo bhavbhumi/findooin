@@ -73,8 +73,8 @@ export function ReferralCard({ userId, className }: ReferralCardProps) {
   async function handleShare() {
     if (navigator.share) {
       await navigator.share({
-        title: "Join me on FindOO",
-        text: "Join FindOO — the professional network for financial services. Use my referral link!",
+        title: "Join me on findoo",
+        text: "Join findoo — the professional network for financial services. Use my referral link!",
         url: referralUrl,
       }).catch(() => {});
     } else {

@@ -12,7 +12,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. What Are Cookies",
-    content: `Cookies are small text files stored on your device (computer, tablet, or mobile phone) when you visit a website. They are widely used to make websites function efficiently, enhance user experience, and provide reporting information. FindOO Solutions LLP ("FindOO", "we", "us") uses cookies and similar technologies (web beacons, pixel tags, local storage) on the FindOO platform ("Platform") to provide, protect, and improve our services. This Cookie Policy should be read alongside our Privacy Policy and Terms of Service.`,
+    content: `Cookies are small text files stored on your device (computer, tablet, or mobile phone) when you visit a website. They are widely used to make websites function efficiently, enhance user experience, and provide reporting information. findoo Solutions LLP ("findoo", "we", "us") uses cookies and similar technologies (web beacons, pixel tags, local storage) on the findoo platform ("Platform") to provide, protect, and improve our services. This Cookie Policy should be read alongside our Privacy Policy and Terms of Service.`,
   },
   {
     title: "2. Types of Cookies We Use",
@@ -26,7 +26,7 @@ const sections = [
   },
   {
     title: "3. Cookies We Do NOT Use",
-    content: `FindOO is committed to user privacy. We explicitly do NOT use: (a) Third-party advertising cookies; (b) Cross-site tracking cookies; (c) Behavioral profiling cookies for ad targeting; (d) Social media tracking pixels from external platforms; (e) Fingerprinting technologies to identify users across sites. We do not sell or share cookie data with advertisers, data brokers, or any third parties for marketing purposes.`,
+    content: `findoo is committed to user privacy. We explicitly do NOT use: (a) Third-party advertising cookies; (b) Cross-site tracking cookies; (c) Behavioral profiling cookies for ad targeting; (d) Social media tracking pixels from external platforms; (e) Fingerprinting technologies to identify users across sites. We do not sell or share cookie data with advertisers, data brokers, or any third parties for marketing purposes.`,
   },
   {
     title: "4. Cookie Duration",
@@ -36,13 +36,13 @@ const sections = [
   },
   {
     title: "5. Managing Cookie Preferences",
-    content: `You have the right to control cookies: (a) Browser Settings — most browsers allow you to refuse or delete cookies through their settings (Chrome, Firefox, Safari, Edge); (b) Account Settings — you can manage functional and analytics cookie preferences in your FindOO account settings under Privacy & Data; (c) Opt-Out — you may opt out of analytics cookies at any time without affecting Platform functionality.
+    content: `You have the right to control cookies: (a) Browser Settings — most browsers allow you to refuse or delete cookies through their settings (Chrome, Firefox, Safari, Edge); (b) Account Settings — you can manage functional and analytics cookie preferences in your findoo account settings under Privacy & Data; (c) Opt-Out — you may opt out of analytics cookies at any time without affecting Platform functionality.
 
 Important: Disabling strictly necessary cookies may prevent you from signing in, posting content, or using core Platform features. Functional cookies being disabled may result in a less personalized experience.`,
   },
   {
     title: "6. Local Storage & Similar Technologies",
-    content: `In addition to cookies, FindOO uses: (a) Local Storage — to store theme preferences, cached feed data, and draft posts for offline resilience; (b) Session Storage — for temporary data during active browser sessions; (c) Web Beacons — invisible pixel-sized images used in emails to confirm delivery and open rates for service-related communications only (not marketing). These technologies are governed by the same principles outlined in this Cookie Policy and our Privacy Policy.`,
+    content: `In addition to cookies, findoo uses: (a) Local Storage — to store theme preferences, cached feed data, and draft posts for offline resilience; (b) Session Storage — for temporary data during active browser sessions; (c) Web Beacons — invisible pixel-sized images used in emails to confirm delivery and open rates for service-related communications only (not marketing). These technologies are governed by the same principles outlined in this Cookie Policy and our Privacy Policy.`,
   },
   {
     title: "7. Legal Basis (Indian Law)",
@@ -56,8 +56,8 @@ Important: Disabling strictly necessary cookies may prevent you from signing in,
 
 const CookiePolicy = () => {
   usePageMeta({
-    title: "Cookie Policy | FindOO",
-    description: "Learn how FindOO uses cookies and similar technologies on its platform. DPDP Act 2023 compliant.",
+    title: "Cookie Policy | findoo",
+    description: "Learn how findoo uses cookies and similar technologies on its platform. DPDP Act 2023 compliant.",
   });
 
   return (

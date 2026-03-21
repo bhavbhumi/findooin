@@ -281,7 +281,7 @@ export function RegistryImportWizard({ open, onOpenChange, onImportComplete }: P
             </div>
 
             <div>
-              <Label className="text-xs mb-2 block">Map your columns to FindOO fields</Label>
+              <Label className="text-xs mb-2 block">Map your columns to findoo fields</Label>
               <div className="space-y-2 max-h-[300px] overflow-y-auto">
                 {headers.map(header => (
                   <div key={header} className="flex items-center gap-3">

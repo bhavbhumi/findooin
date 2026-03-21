@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 
 const NotFound = () => {
-  usePageMeta({ title: "Page Not Found", description: "The page you're looking for doesn't exist on FindOO." });
+  usePageMeta({ title: "Page Not Found", description: "The page you're looking for doesn't exist on findoo." });
   const location = useLocation();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const NotFound = () => {
         {/* Logo */}
         <motion.img
           src={findooLogo}
-          alt="FindOO"
+          alt="findoo"
           className="mx-auto h-12 w-12 mb-6 opacity-60"
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}

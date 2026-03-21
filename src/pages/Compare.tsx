@@ -28,11 +28,11 @@ const tabs = [
 ];
 
 const metaMap: Record<string, { title: string; description: string }> = {
-  social: { title: "FindOO vs Social Networks — Why Financial Professionals Need a Dedicated Network", description: "Compare FindOO with general social networks. Discover why India's financial professionals choose a purpose-built network." },
-  professional: { title: "FindOO vs Professional Networks — Industry-Specific Networking for Finance", description: "Compare FindOO with generic professional networks. See why SEBI-registered advisors and MFDs prefer a dedicated financial network." },
-  media: { title: "FindOO vs Financial Media Portals — From Reader to Professional", description: "Compare FindOO with financial media portals. See why professionals choose active networking over passive consumption." },
-  terminals: { title: "FindOO vs Data Terminals — Professional Networking for Every Budget", description: "Compare FindOO with premium data terminals. A free financial network for the 99% excluded by terminal pricing." },
-  chatgroups: { title: "FindOO vs Informal Chat Groups — From Unverified Tips to Verified Professionals", description: "Compare FindOO with informal financial chat groups. Verified networking beats unstructured conversations." },
+  social: { title: "findoo vs Social Networks — Why Financial Professionals Need a Dedicated Network", description: "Compare findoo with general social networks. Discover why India's financial professionals choose a purpose-built network." },
+  professional: { title: "findoo vs Professional Networks — Industry-Specific Networking for Finance", description: "Compare findoo with generic professional networks. See why SEBI-registered advisors and MFDs prefer a dedicated financial network." },
+  media: { title: "findoo vs Financial Media Portals — From Reader to Professional", description: "Compare findoo with financial media portals. See why professionals choose active networking over passive consumption." },
+  terminals: { title: "findoo vs Data Terminals — Professional Networking for Every Budget", description: "Compare findoo with premium data terminals. A free financial network for the 99% excluded by terminal pricing." },
+  chatgroups: { title: "findoo vs Informal Chat Groups — From Unverified Tips to Verified Professionals", description: "Compare findoo with informal financial chat groups. Verified networking beats unstructured conversations." },
 };
 
 const Compare = () => {
@@ -60,7 +60,7 @@ const Compare = () => {
     <PublicPageLayout>
       <PageHero
         breadcrumb="Compare"
-        title="How FindOO Compares"
+        title="How findoo Compares"
         titleAccent="to Alternatives"
         subtitle="See why India's financial professionals choose a purpose-built financial network over generic platforms, media portals, and informal groups."
         variant="waves"

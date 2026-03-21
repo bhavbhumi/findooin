@@ -115,8 +115,8 @@ export const ProfileHeader = ({
   const handleShareExternal = () => {
     if (navigator.share) {
       navigator.share({
-        title: `${primaryName} on FindOO`,
-        text: profile.headline || `Check out ${primaryName}'s profile on FindOO`,
+        title: `${primaryName} on findoo`,
+        text: profile.headline || `Check out ${primaryName}'s profile on findoo`,
         url: profileUrl,
       }).catch(() => {});
     } else {
@@ -409,7 +409,7 @@ export const ProfileHeader = ({
           <DialogHeader>
             <DialogTitle>Report this profile</DialogTitle>
             <DialogDescription>
-              Help us keep FindOO safe. Let us know why you're reporting this profile.
+              Help us keep findoo safe. Let us know why you're reporting this profile.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2 pt-2">
@@ -426,9 +426,9 @@ export const ProfileHeader = ({
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Invite to FindOO</DialogTitle>
+            <DialogTitle>Invite to findoo</DialogTitle>
             <DialogDescription>
-              Invite a colleague or contact to join the FindOO platform.
+              Invite a colleague or contact to join the findoo platform.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 pt-2">

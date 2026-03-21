@@ -16,7 +16,7 @@ const SlideRenderer = ({ slide, deck, slideIndex, totalSlides }: SlideRendererPr
 
   const Footer = () => (
     <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-16 py-6">
-      <img src={findooLogoWhite} alt="FindOO" className="h-7 opacity-50" />
+      <img src={findooLogoWhite} alt="findoo" className="h-7 opacity-50" />
       <span className="text-white/30 text-sm font-medium tracking-wide">
         {slideIndex + 1} / {totalSlides}
       </span>
@@ -31,7 +31,7 @@ const SlideRenderer = ({ slide, deck, slideIndex, totalSlides }: SlideRendererPr
         <div className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full opacity-10" style={{ background: `radial-gradient(circle, ${accentColor}, transparent 70%)` }} />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full opacity-5" style={{ background: `radial-gradient(circle, white, transparent 70%)` }} />
         <div className="absolute top-20 left-20">
-          <img src={findooLogoWhite} alt="FindOO" className="h-12 opacity-80" />
+          <img src={findooLogoWhite} alt="findoo" className="h-12 opacity-80" />
         </div>
         <div className="flex flex-col justify-center h-full px-24 max-w-[1400px]">
           {slide.badge && (
@@ -198,7 +198,7 @@ const SlideRenderer = ({ slide, deck, slideIndex, totalSlides }: SlideRendererPr
               <div className="grid grid-cols-[1fr_200px_200px] text-center border-b border-white/10">
                 <div className="p-5 text-left text-lg font-semibold text-white/60">Feature</div>
                 <div className="p-5 text-lg font-semibold text-white/40">{slide.comparisonLabel || "Others"}</div>
-                <div className="p-5 text-lg font-bold" style={{ color: accentColor, background: accentBg }}>FindOO</div>
+                <div className="p-5 text-lg font-bold" style={{ color: accentColor, background: accentBg }}>findoo</div>
               </div>
               {slide.comparison.map((row, i) => (
                 <div key={i} className="grid grid-cols-[1fr_200px_200px] text-center border-b border-white/5 last:border-0">
@@ -240,7 +240,7 @@ const SlideRenderer = ({ slide, deck, slideIndex, totalSlides }: SlideRendererPr
       <div className="w-full h-full relative overflow-hidden" style={{ background: `linear-gradient(135deg, hsl(230 25% 12%), hsl(230 30% 18%), ${accentColor})` }}>
         <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         <div className="flex flex-col items-center justify-center h-full px-24 text-center">
-          <img src={findooLogoWhite} alt="FindOO" className="h-14 mb-10 opacity-80" />
+          <img src={findooLogoWhite} alt="findoo" className="h-14 mb-10 opacity-80" />
           <h2 className="text-6xl font-bold text-white mb-6 tracking-tight max-w-[1200px]">{slide.title}</h2>
           {slide.subtitle && <p className="text-2xl text-white/50 mb-12 max-w-[800px] leading-relaxed">{slide.subtitle}</p>}
           {slide.ctaText && (

@@ -57,7 +57,7 @@ const REGULATOR_LABELS: Record<string, string> = {
 };
 
 const DigitalCard = () => {
-  usePageMeta({ title: "Digital Business Card", description: "Professional digital business card on FindOO." });
+  usePageMeta({ title: "Digital Business Card", description: "Professional digital business card on findoo." });
   const { userId } = useParams<{ userId: string }>();
   const [searchParams] = useSearchParams();
   const eventContext = searchParams.get("event");
@@ -232,7 +232,7 @@ const DigitalCard = () => {
           <CardContent className="p-8">
             <p className="text-muted-foreground">This digital card doesn't exist.</p>
             <Link to="/">
-              <Button className="mt-4" size="sm">Go to FindOO</Button>
+              <Button className="mt-4" size="sm">Go to findoo</Button>
             </Link>
           </CardContent>
         </Card>
@@ -250,9 +250,9 @@ const DigitalCard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[hsl(224,55%,12%)] via-[hsl(240,100%,15%)] to-[hsl(224,55%,12%)] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* FindOO branding */}
+        {/* findoo branding */}
         <div className="text-center mb-6">
-          <img src={findooLogo} alt="FindOO" className="h-8 mx-auto opacity-80" />
+          <img src={findooLogo} alt="findoo" className="h-8 mx-auto opacity-80" />
         </div>
 
         {/* Card */}
@@ -294,7 +294,7 @@ const DigitalCard = () => {
                   <span className="text-sm font-semibold font-heading text-foreground">Verified Professional</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Identity and credentials verified by FindOO's compliance team.
+                  Identity and credentials verified by findoo's compliance team.
                 </p>
                 {hasRegulatoryIds && (
                   <div className="flex flex-wrap gap-1.5 pt-1">
@@ -408,7 +408,7 @@ const DigitalCard = () => {
                   ) : connectingStatus === "already" ? (
                     <><CheckCircle className="h-4 w-4 mr-1.5" /> Already Connected</>
                   ) : (
-                    <><UserPlus className="h-4 w-4 mr-1.5" /> Connect on FindOO</>
+                    <><UserPlus className="h-4 w-4 mr-1.5" /> Connect on findoo</>
                   )}
                 </Button>
               )}
@@ -436,7 +436,7 @@ const DigitalCard = () => {
 
         {/* Footer */}
         <p className="text-center text-xs text-white/40 mt-4">
-          Paperless professional identity • Powered by FindOO
+          Paperless professional identity • Powered by findoo
         </p>
       </div>
     </div>

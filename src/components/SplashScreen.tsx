@@ -210,7 +210,7 @@ export function SplashScreen({ onComplete, duration = 3200 }: SplashScreenProps)
           {/* Logo icon — spring entrance */}
           <motion.img
             src={findooLogoIcon}
-            alt="FindOO"
+            alt="findoo"
             className="w-20 h-20 sm:w-24 sm:h-24 relative z-10 drop-shadow-[0_0_30px_hsl(46,65%,52%,0.3)]"
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
@@ -232,7 +232,7 @@ export function SplashScreen({ onComplete, duration = 3200 }: SplashScreenProps)
               visible: { transition: { staggerChildren: 0.05, delayChildren: 0.6 } },
             }}
           >
-            {"FindOO".split("").map((letter, i) => (
+            {"findoo".split("").map((letter, i) => (
               <motion.span
                 key={i}
                 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight"

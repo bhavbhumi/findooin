@@ -25,23 +25,23 @@ const metrics = [
 const sections = [
   {
     title: "1. Purpose",
-    content: `This Transparency Report is published by FindOO Solutions LLP ("FindOO") in compliance with Rule 4(1)(d) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, which requires significant social media intermediaries to publish periodic compliance reports. FindOO voluntarily publishes this report to demonstrate our commitment to responsible platform governance, even where the mandatory threshold may not yet apply.`,
+    content: `This Transparency Report is published by findoo Solutions LLP ("findoo") in compliance with Rule 4(1)(d) of the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, which requires significant social media intermediaries to publish periodic compliance reports. findoo voluntarily publishes this report to demonstrate our commitment to responsible platform governance, even where the mandatory threshold may not yet apply.`,
   },
   {
     title: "2. Compliance Framework",
-    content: `FindOO operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000, and complies with: (a) IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021; (b) Digital Personal Data Protection Act, 2023; (c) SEBI regulations for financial content monitoring; (d) Consumer Protection Act, 2019.
+    content: `findoo operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000, and complies with: (a) IT (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021; (b) Digital Personal Data Protection Act, 2023; (c) SEBI regulations for financial content monitoring; (d) Consumer Protection Act, 2019.
 
 Appointed officers: Chief Compliance Officer, Nodal Contact Person (nodal@findoo.in), and Resident Grievance Officer (grievance@findoo.in), all based in India as required by law.`,
   },
   {
     title: "3. Content Moderation",
-    content: `FindOO employs a multi-layered approach: (a) Automated Filters — keyword, pattern, and URL-based screening; (b) Community Reporting — user-driven flagging with categorized report types; (c) Human Review — trained moderators review flagged content within 24 hours; (d) Appeals Process — users may appeal moderation decisions within 30 days; (e) Graduated Enforcement — warning → temporary restriction → suspension → permanent ban.
+    content: `findoo employs a multi-layered approach: (a) Automated Filters — keyword, pattern, and URL-based screening; (b) Community Reporting — user-driven flagging with categorized report types; (c) Human Review — trained moderators review flagged content within 24 hours; (d) Appeals Process — users may appeal moderation decisions within 30 days; (e) Graduated Enforcement — warning → temporary restriction → suspension → permanent ban.
 
 Financial content is additionally reviewed for regulatory compliance with SEBI PFUTP and Research Analyst regulations.`,
   },
   {
     title: "4. Government & Legal Requests",
-    content: `FindOO responds to lawful requests from authorized government agencies, courts, and regulators. We disclose user data only when: (a) required by valid legal process under Indian law; (b) ordered by a court of competent jurisdiction; (c) requested by SEBI, RBI, IRDAI, or other financial regulators with lawful authority; (d) necessary to prevent imminent harm or illegal activity.
+    content: `findoo responds to lawful requests from authorized government agencies, courts, and regulators. We disclose user data only when: (a) required by valid legal process under Indian law; (b) ordered by a court of competent jurisdiction; (c) requested by SEBI, RBI, IRDAI, or other financial regulators with lawful authority; (d) necessary to prevent imminent harm or illegal activity.
 
 We notify affected users of data requests unless prohibited by law or court order. Emergency disclosure requests for imminent threats to life or safety are processed on priority.`,
   },
@@ -51,7 +51,7 @@ We notify affected users of data requests unless prohibited by law or court orde
   },
   {
     title: "6. Data Protection",
-    content: `As a Data Fiduciary under the DPDP Act 2023: (a) Data Principal rights requests received and processed; (b) Data breach notifications (none to date); (c) Consent withdrawal requests honored; (d) Data deletion requests completed; (e) Cross-border data transfer disclosures — FindOO processes all user data within India. No cross-border transfers occur unless required for essential service operation with appropriate safeguards.`,
+    content: `As a Data Fiduciary under the DPDP Act 2023: (a) Data Principal rights requests received and processed; (b) Data breach notifications (none to date); (c) Consent withdrawal requests honored; (d) Data deletion requests completed; (e) Cross-border data transfer disclosures — findoo processes all user data within India. No cross-border transfers occur unless required for essential service operation with appropriate safeguards.`,
   },
   {
     title: "7. Report Schedule",
@@ -65,15 +65,15 @@ Compliance Officer: [To be appointed]
 
 For all inquiries: compliance@findoo.in
 
-FindOO Solutions LLP
+findoo Solutions LLP
 Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
   },
 ];
 
 const Transparency = () => {
   usePageMeta({
-    title: "Transparency Report | FindOO",
-    description: "FindOO's compliance and transparency report — IT Rules 2021 Rule 4(1)(d) compliant.",
+    title: "Transparency Report | findoo",
+    description: "findoo's compliance and transparency report — IT Rules 2021 Rule 4(1)(d) compliant.",
   });
 
   return (

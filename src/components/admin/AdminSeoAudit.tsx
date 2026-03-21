@@ -385,7 +385,7 @@ function runSeoChecks(): SeoCheck[] {
     id: "base-title-suffix",
     category: "Page Meta",
     name: "Consistent Title Suffix",
-    description: "All pages append ' | FindOO — Financially Social'",
+    description: "All pages append ' | findoo — Financially Social'",
     status: "pass",
     details: "usePageMeta enforces consistent BASE_TITLE suffix",
   });

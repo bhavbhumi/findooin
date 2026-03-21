@@ -17,7 +17,7 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    quote: "FindOO has completely transformed how I discover and connect with verified financial professionals. The trust badges give me confidence that I'm dealing with regulated entities.",
+    quote: "findoo has completely transformed how I discover and connect with verified financial professionals. The trust badges give me confidence that I'm dealing with regulated entities.",
     name: "Priya Mehta",
     role: "Wealth Advisor",
     location: "Mumbai",
@@ -25,7 +25,7 @@ const testimonials: Testimonial[] = [
     roleType: "intermediary",
   },
   {
-    quote: "As a SEBI-registered RIA, FindOO gives me the credibility platform I was looking for. My client inquiries increased 3x after getting verified on the network.",
+    quote: "As a SEBI-registered RIA, findoo gives me the credibility platform I was looking for. My client inquiries increased 3x after getting verified on the network.",
     name: "Varun Kapoor",
     role: "Registered Investment Adviser",
     location: "Delhi",
@@ -41,7 +41,7 @@ const testimonials: Testimonial[] = [
     roleType: "investor",
   },
   {
-    quote: "Our NFO reach increased significantly after listing on FindOO's verified directory. The quality of connections is unmatched compared to generic platforms.",
+    quote: "Our NFO reach increased significantly after listing on findoo's verified directory. The quality of connections is unmatched compared to generic platforms.",
     name: "Rajesh Sharma",
     role: "Product Head, AMC",
     location: "Mumbai",
@@ -49,7 +49,7 @@ const testimonials: Testimonial[] = [
     roleType: "issuer",
   },
   {
-    quote: "The BFSI job board on FindOO is exactly what the industry needed. We found pre-verified candidates with the right certifications in record time.",
+    quote: "The BFSI job board on findoo is exactly what the industry needed. We found pre-verified candidates with the right certifications in record time.",
     name: "Deepak Malhotra",
     role: "HR Director, NBFC",
     location: "Bangalore",
@@ -57,7 +57,7 @@ const testimonials: Testimonial[] = [
     roleType: "issuer",
   },
   {
-    quote: "What sets FindOO apart is accountability. Every profile, every post comes from a verified entity. No more anonymous noise — just signal.",
+    quote: "What sets findoo apart is accountability. Every profile, every post comes from a verified entity. No more anonymous noise — just signal.",
     name: "Karan Patel",
     role: "Research Analyst",
     location: "Mumbai",

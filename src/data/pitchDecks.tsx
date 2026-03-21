@@ -84,8 +84,8 @@ const regulatorSlides: PitchSlide[] = [
   {
     id: "reg-3",
     template: "solution",
-    title: "FindOO: Compliance by Design",
-    subtitle: "Every interaction on FindOO is anchored to verified regulatory credentials.",
+    title: "findoo: Compliance by Design",
+    subtitle: "Every interaction on findoo is anchored to verified regulatory credentials.",
     points: [
       { icon: Shield, title: "Identity Verification", desc: "Every professional verified against SEBI, AMFI, IRDAI, RBI, and PFRDA databases." },
       { icon: Database, title: "Full Audit Trail", desc: "Every post, connection, and interaction is logged with tamper-proof audit records." },
@@ -111,7 +111,7 @@ const regulatorSlides: PitchSlide[] = [
     id: "reg-5",
     template: "stats",
     title: "India's Financial Ecosystem in Numbers",
-    subtitle: "The scale of the opportunity FindOO addresses.",
+    subtitle: "The scale of the opportunity findoo addresses.",
     stats: [
       { value: "50,000+", label: "SEBI Intermediaries", sub: "Registered professionals" },
       { value: "44,000+", label: "AMFI Distributors", sub: "ARN holders nationwide" },
@@ -135,7 +135,7 @@ const regulatorSlides: PitchSlide[] = [
     id: "reg-7",
     template: "highlight",
     title: "Regulatory API Integration Roadmap",
-    subtitle: "FindOO is building direct integrations with India's financial regulators.",
+    subtitle: "findoo is building direct integrations with India's financial regulators.",
     highlightTitle: "Planned Integrations",
     highlightPoints: [
       "SEBI Registration Number Lookup — automated verification of intermediary credentials",
@@ -149,8 +149,8 @@ const regulatorSlides: PitchSlide[] = [
     id: "reg-8",
     template: "cta",
     title: "Let's Build a Safer Financial Ecosystem — Together",
-    subtitle: "FindOO is open to regulatory partnerships, API integrations, and collaborative frameworks that protect India's investors.",
-    ctaText: "Partner with FindOO",
+    subtitle: "findoo is open to regulatory partnerships, API integrations, and collaborative frameworks that protect India's investors.",
+    ctaText: "Partner with findoo",
     ctaLink: "/contact",
     ctaSub: "Reach out to discuss regulatory collaboration and ecosystem integration.",
   },
@@ -181,11 +181,11 @@ const issuerSlides: PitchSlide[] = [
   {
     id: "iss-3",
     template: "solution",
-    title: "FindOO Product Directory",
+    title: "findoo Product Directory",
     subtitle: "A marketplace where every viewer is a verified financial professional.",
     points: [
       { icon: Package, title: "Product Showcase", desc: "List mutual funds, insurance, PMS, AIF, bonds, FDs, NPS, and IPO/NFO products with rich detail." },
-      { icon: Target, title: "Verified Audience", desc: "Every intermediary on FindOO is credential-checked — your products reach genuine distributors." },
+      { icon: Target, title: "Verified Audience", desc: "Every intermediary on findoo is credential-checked — your products reach genuine distributors." },
       { icon: BarChart3, title: "Real-Time Analytics", desc: "Track views, enquiries, bookmarks, and engagement metrics for every listing." },
       { icon: Handshake, title: "Direct Lead Capture", desc: "Intermediaries can enquire directly — no middlemen, no cold calls." },
     ],
@@ -208,7 +208,7 @@ const issuerSlides: PitchSlide[] = [
     id: "iss-5",
     template: "stats",
     title: "The Distribution Opportunity",
-    subtitle: "India's financial distribution network is massive — and FindOO connects you to it.",
+    subtitle: "India's financial distribution network is massive — and findoo connects you to it.",
     stats: [
       { value: "44,000+", label: "AMFI Distributors", sub: "Verified ARN holders" },
       { value: "9", label: "Product Categories", sub: "MF, Insurance, PMS, AIF..." },
@@ -231,7 +231,7 @@ const issuerSlides: PitchSlide[] = [
   {
     id: "iss-7",
     template: "highlight",
-    title: "Why FindOO Over LinkedIn or WhatsApp?",
+    title: "Why findoo Over LinkedIn or WhatsApp?",
     subtitle: "A purpose-built platform vs. generic social tools.",
     comparison: [
       { feature: "Verified Financial Professionals", others: false, findoo: true },
@@ -279,7 +279,7 @@ const intermediarySlides: PitchSlide[] = [
   {
     id: "int-3",
     template: "solution",
-    title: "FindOO: Built for Financial Intermediaries",
+    title: "findoo: Built for Financial Intermediaries",
     subtitle: "Everything you need to build, grow, and manage your financial practice — in one verified platform.",
     points: [
       { icon: UserCheck, title: "Verified Peer Network", desc: "Every connection is credential-checked. Build a circle of trust with genuine professionals." },
@@ -306,7 +306,7 @@ const intermediarySlides: PitchSlide[] = [
     id: "int-5",
     template: "stats",
     title: "A Growing Ecosystem",
-    subtitle: "FindOO is building India's largest verified financial network.",
+    subtitle: "findoo is building India's largest verified financial network.",
     stats: [
       { value: "10,000+", label: "Verified Professionals", sub: "Across all roles" },
       { value: "500+", label: "BFSI Jobs", sub: "Active listings" },
@@ -330,7 +330,7 @@ const intermediarySlides: PitchSlide[] = [
     id: "int-7",
     template: "highlight",
     title: "Your Digital Identity, Elevated",
-    subtitle: "The FindOO Digital Card is your professional identity — verified, shareable, and always up to date.",
+    subtitle: "The findoo Digital Card is your professional identity — verified, shareable, and always up to date.",
     highlightTitle: "Digital Card Features",
     highlightPoints: [
       "QR code for instant sharing — at events, meetings, or in your email signature",
@@ -376,8 +376,8 @@ const investorSlides: PitchSlide[] = [
   {
     id: "inv-3",
     template: "solution",
-    title: "FindOO: Where Trust is Built In",
-    subtitle: "Every professional on FindOO has been verified against India's regulatory databases.",
+    title: "findoo: Where Trust is Built In",
+    subtitle: "Every professional on findoo has been verified against India's regulatory databases.",
     points: [
       { icon: Shield, title: "Verified Credentials", desc: "Every advisor, distributor, and issuer is checked against SEBI, AMFI, IRDAI, RBI, and PFRDA." },
       { icon: UserCheck, title: "Transparent Profiles", desc: "See registration numbers, experience years, specializations, and endorsements — all verified." },
@@ -403,7 +403,7 @@ const investorSlides: PitchSlide[] = [
     id: "inv-5",
     template: "stats",
     title: "A Network You Can Trust",
-    subtitle: "Numbers that demonstrate FindOO's commitment to verification and trust.",
+    subtitle: "Numbers that demonstrate findoo's commitment to verification and trust.",
     stats: [
       { value: "100%", label: "Verified Professionals", sub: "Every credential checked" },
       { value: "5", label: "Regulatory Databases", sub: "SEBI, AMFI, IRDAI, RBI, PFRDA" },
@@ -414,7 +414,7 @@ const investorSlides: PitchSlide[] = [
   {
     id: "inv-6",
     template: "steps",
-    title: "Your Journey on FindOO",
+    title: "Your Journey on findoo",
     subtitle: "From curious investor to informed decision-maker.",
     steps: [
       { num: 1, title: "Create Your Profile", desc: "Sign up as an Investor. Tell us your interests and investment preferences." },
@@ -427,7 +427,7 @@ const investorSlides: PitchSlide[] = [
     id: "inv-7",
     template: "highlight",
     title: "Every Badge Tells a Story",
-    subtitle: "Verification badges on FindOO are earned — not self-declared.",
+    subtitle: "Verification badges on findoo are earned — not self-declared.",
     highlightTitle: "What Verification Means",
     highlightPoints: [
       "SEBI Registered — Verified against the Securities and Exchange Board of India database",
@@ -456,7 +456,7 @@ export const pitchDecks: PitchDeckData[] = [
     persona: "Regulator",
     slug: "regulator",
     tagline: "Compliance by Design",
-    description: "How FindOO strengthens India's financial ecosystem through verified identities, audit trails, and regulatory infrastructure.",
+    description: "How findoo strengthens India's financial ecosystem through verified identities, audit trails, and regulatory infrastructure.",
     colorHsl: "260 45% 45%",
     icon: Scale,
     slides: regulatorSlides,
@@ -465,7 +465,7 @@ export const pitchDecks: PitchDeckData[] = [
     persona: "Issuer",
     slug: "issuer",
     tagline: "Verified Distribution",
-    description: "Reach India's credential-checked intermediaries and informed investors through FindOO's product directory and engagement tools.",
+    description: "Reach India's credential-checked intermediaries and informed investors through findoo's product directory and engagement tools.",
     colorHsl: "165 50% 40%",
     icon: Landmark,
     slides: issuerSlides,

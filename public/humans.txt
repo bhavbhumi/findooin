@@ -1,5 +1,5 @@
 /* TEAM */
-Product: FindOO — Financially Social
+Product: findoo — Financially Social
 Site: https://findoo.in
 Platform: React + Vite + TypeScript + Tailwind CSS
 Backend: Lovable Cloud (Supabase)

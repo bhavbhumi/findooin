@@ -87,7 +87,7 @@ function isIntermediary(entity: { registration_category: string | null; entity_t
 
 export default function ProfessionalDirectory() {
   usePageMeta({
-    title: "Financial Professionals Directory — FindOO",
+    title: "Financial Professionals Directory — findoo",
     description: "Browse AMFI & SEBI registered financial professionals across India. Find mutual fund distributors, investment advisers, and more.",
   });
 

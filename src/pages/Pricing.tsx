@@ -36,7 +36,7 @@ const TIER_CONFIG = {
 
 export default function Pricing() {
   usePageMeta({
-    title: "Pricing — FindOO",
+    title: "Pricing — findoo",
     description: "Choose the right plan for your BFSI networking needs. Free, Pro, and Enterprise tiers for Investors, Intermediaries, and Issuers.",
   });
 

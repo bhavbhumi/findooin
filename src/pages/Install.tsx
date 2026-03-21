@@ -13,7 +13,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const Install = () => {
-  usePageMeta({ title: "Install FindOO", description: "Install FindOO as a Progressive Web App on your device.", path: "/install" });
+  usePageMeta({ title: "Install findoo", description: "Install findoo as a Progressive Web App on your device.", path: "/install" });
   const navigate = useNavigate();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -50,17 +50,17 @@ const Install = () => {
     ios: [
       { icon: <Share className="h-5 w-5" />, title: "Tap the Share button", desc: "Open Safari and tap the share icon at the bottom of the screen" },
       { icon: <Plus className="h-5 w-5" />, title: "Add to Home Screen", desc: "Scroll down and tap \"Add to Home Screen\"" },
-      { icon: <CheckCircle2 className="h-5 w-5" />, title: "Confirm", desc: "Tap \"Add\" in the top right — FindOO will appear on your home screen" },
+      { icon: <CheckCircle2 className="h-5 w-5" />, title: "Confirm", desc: "Tap \"Add\" in the top right — findoo will appear on your home screen" },
     ],
     android: [
       { icon: <MoreVertical className="h-5 w-5" />, title: "Open browser menu", desc: "Tap the three-dot menu in Chrome (top right)" },
       { icon: <Download className="h-5 w-5" />, title: "Install app", desc: "Tap \"Install app\" or \"Add to Home screen\"" },
-      { icon: <CheckCircle2 className="h-5 w-5" />, title: "Confirm", desc: "Tap \"Install\" — FindOO is now on your home screen" },
+      { icon: <CheckCircle2 className="h-5 w-5" />, title: "Confirm", desc: "Tap \"Install\" — findoo is now on your home screen" },
     ],
     desktop: [
       { icon: <Monitor className="h-5 w-5" />, title: "Look for the install icon", desc: "In Chrome, click the install icon (⊕) in the address bar" },
       { icon: <Download className="h-5 w-5" />, title: "Click Install", desc: "Confirm the installation when prompted" },
-      { icon: <CheckCircle2 className="h-5 w-5" />, title: "Done!", desc: "FindOO opens as a standalone desktop app" },
+      { icon: <CheckCircle2 className="h-5 w-5" />, title: "Done!", desc: "findoo opens as a standalone desktop app" },
     ],
   };
 
@@ -74,7 +74,7 @@ const Install = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-xl font-bold text-foreground">Install FindOO</h1>
+          <h1 className="text-xl font-bold text-foreground">Install findoo</h1>
         </div>
 
         {/* Hero */}
@@ -83,9 +83,9 @@ const Install = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <img src={findooLogo} alt="FindOO" className="h-12 mx-auto mb-4" />
+          <img src={findooLogo} alt="findoo" className="h-12 mx-auto mb-4" />
           <p className="text-muted-foreground text-sm leading-relaxed">
-            Install FindOO on your device for instant access — no app store needed. 
+            Install findoo on your device for instant access — no app store needed. 
             Works offline, loads fast, feels native.
           </p>
         </motion.div>
@@ -99,7 +99,7 @@ const Install = () => {
           >
             <Button onClick={handleInstall} className="w-full gap-2 h-12 text-base font-semibold">
               <Download className="h-5 w-5" />
-              Install FindOO Now
+              Install findoo Now
             </Button>
           </motion.div>
         )}
@@ -112,7 +112,7 @@ const Install = () => {
             className="mb-8 p-4 rounded-xl bg-accent/10 border border-accent/20 text-center"
           >
             <CheckCircle2 className="h-8 w-8 text-accent mx-auto mb-2" />
-            <p className="font-semibold text-foreground">FindOO is installed!</p>
+            <p className="font-semibold text-foreground">findoo is installed!</p>
             <p className="text-sm text-muted-foreground">You can open it from your home screen.</p>
           </motion.div>
         )}

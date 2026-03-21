@@ -79,7 +79,7 @@ const severityBadge = (s: string) => {
 };
 
 const ScalingReport = () => {
-  usePageMeta({ title: "Scaling Report", description: "FindOO infrastructure scaling analysis.", path: "/scaling-report" });
+  usePageMeta({ title: "Scaling Report", description: "findoo infrastructure scaling analysis.", path: "/scaling-report" });
 
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
@@ -123,7 +123,7 @@ const ScalingReport = () => {
 
       {/* Header */}
       <div className="text-center mb-10 border-b-2 border-foreground/20 pb-6">
-        <h1 className="text-3xl font-bold mb-2">FindOO – Infrastructure Scaling Report</h1>
+        <h1 className="text-3xl font-bold mb-2">findoo – Infrastructure Scaling Report</h1>
         <p className="text-muted-foreground text-sm">Dynamic Report · Generated: {format(new Date(), "dd MMMM yyyy")}</p>
         <p className="text-muted-foreground text-sm">For: Co-Founders, Leadership & Investors</p>
       </div>
@@ -134,7 +134,7 @@ const ScalingReport = () => {
           <Zap className="h-5 w-5 text-primary" /> 1. Executive Summary
         </h2>
         <p className="mb-3 leading-relaxed text-sm">
-          This report provides a live analysis of infrastructure capacity, scaling breakpoints, and upgrade milestones for FindOO from current scale to 1M concurrent users. The architecture (React SPA + Lovable Cloud) is production-ready.
+          This report provides a live analysis of infrastructure capacity, scaling breakpoints, and upgrade milestones for findoo from current scale to 1M concurrent users. The architecture (React SPA + Lovable Cloud) is production-ready.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
@@ -313,7 +313,7 @@ const ScalingReport = () => {
 
       {/* Footer */}
       <div className="border-t-2 border-foreground/20 pt-4 mt-10 text-center text-xs text-muted-foreground">
-        <p>FindOO – Confidential Scaling Report | {format(new Date(), "dd MMMM yyyy")}</p>
+        <p>findoo – Confidential Scaling Report | {format(new Date(), "dd MMMM yyyy")}</p>
         <p>Dynamic report · Data refreshed on demand</p>
       </div>
 

@@ -31,7 +31,7 @@ export function generateVCard(data: VCardData): string {
   if (data.phone) lines.push(`TEL;TYPE=CELL:${data.phone}`);
   if (data.website) lines.push(`URL;TYPE=WORK:${data.website}`);
   if (data.location) lines.push(`ADR;TYPE=WORK:;;${data.location};;;;`);
-  if (data.profileUrl) lines.push(`URL;TYPE=FindOO:${data.profileUrl}`);
+  if (data.profileUrl) lines.push(`URL;TYPE=findoo:${data.profileUrl}`);
 
   if (data.socialLinks) {
     Object.entries(data.socialLinks).forEach(([key, url]) => {

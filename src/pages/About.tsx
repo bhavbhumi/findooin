@@ -33,14 +33,14 @@ const openings = [
 ];
 
 const pressItems = [
-  { title: "FindOO launches the world's first trust-verified financial network", source: "Economic Times", date: "Feb 2026", url: "#" },
-  { title: "Why India needs a dedicated financial network — and how FindOO is building it", source: "Mint", date: "Jan 2026", url: "#" },
-  { title: "FindOO raises seed funding to build India's financial professional ecosystem", source: "Inc42", date: "Dec 2025", url: "#" },
-  { title: "The future of financial networking: FindOO's regulatory-first approach", source: "Business Standard", date: "Nov 2025", url: "#" },
+  { title: "findoo launches the world's first trust-verified financial network", source: "Economic Times", date: "Feb 2026", url: "#" },
+  { title: "Why India needs a dedicated financial network — and how findoo is building it", source: "Mint", date: "Jan 2026", url: "#" },
+  { title: "findoo raises seed funding to build India's financial professional ecosystem", source: "Inc42", date: "Dec 2025", url: "#" },
+  { title: "The future of financial networking: findoo's regulatory-first approach", source: "Business Standard", date: "Nov 2025", url: "#" },
 ];
 
 const About = () => {
-  usePageMeta({ title: "About", description: "Learn about FindOO — India's first financial network. Company, careers, and press.", path: "/about" });
+  usePageMeta({ title: "About", description: "Learn about findoo — India's first financial network. Company, careers, and press.", path: "/about" });
   const [activeTab, setActiveTab] = useState("Company");
 
   return (
@@ -94,14 +94,14 @@ const About = () => {
                     had no dedicated network for its financial professionals and investors.
                   </p>
                   <p className="text-muted-foreground leading-relaxed">
-                    <span className="font-semibold text-foreground">FindOO</span> was born to fill this gap.
+                    <span className="font-semibold text-foreground">findoo</span> was born to fill this gap.
                     Not as a better version of something that exists — but as an entirely new category.
                     A <span className="font-semibold text-primary">financial network</span> where trust is built-in,
                     credentials are verified against SEBI, RBI, IRDAI, AMFI & PFRDA databases,
                     and every connection carries the weight of institutional credibility.
                   </p>
                   <p className="text-muted-foreground leading-relaxed">
-                    We named our platform <span className="font-semibold text-primary">FindOO</span> — representing
+                    We named our platform <span className="font-semibold text-primary">findoo</span> — representing
                     the ability to <em>Find</em> and connect with the right financial professionals through an
                     <em> Open Online</em> ecosystem. Every feature we build serves one purpose: making India's financial
                     ecosystem more transparent, accessible, and trustworthy.
@@ -113,7 +113,7 @@ const About = () => {
                     <div className="w-32 h-32 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
                       <span className="text-5xl font-bold font-heading text-primary">F</span>
                     </div>
-                    <h3 className="text-lg font-bold font-heading text-card-foreground">FindOO</h3>
+                    <h3 className="text-lg font-bold font-heading text-card-foreground">findoo</h3>
                     <p className="text-sm text-muted-foreground mt-1">Find · Open · Online</p>
                     <p className="text-xs text-muted-foreground mt-3 italic">"Financially Social"</p>
                   </div>
@@ -290,7 +290,7 @@ const About = () => {
               </div>
               <div>
                 <h3 className="text-base font-bold font-heading text-foreground">Press & Media</h3>
-                <p className="text-sm text-muted-foreground">Coverage about FindOO — the world's first financial network.</p>
+                <p className="text-sm text-muted-foreground">Coverage about findoo — the world's first financial network.</p>
               </div>
             </motion.div>
 

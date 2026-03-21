@@ -14,7 +14,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Introduction",
-    content: `This Privacy Policy describes how FindOO Solutions LLP ("FindOO") collects, uses, shares, protects, and retains your personal information. This Policy is published in compliance with the Information Technology Act, 2000, the IT (Reasonable Security Practices) Rules, 2011, the IT (Intermediary Guidelines) Rules, 2021, and the Digital Personal Data Protection Act, 2023 ("DPDP Act").`,
+    content: `This Privacy Policy describes how findoo Solutions LLP ("findoo") collects, uses, shares, protects, and retains your personal information. This Policy is published in compliance with the Information Technology Act, 2000, the IT (Reasonable Security Practices) Rules, 2011, the IT (Intermediary Guidelines) Rules, 2021, and the Digital Personal Data Protection Act, 2023 ("DPDP Act").`,
   },
   {
     title: "2. Information We Collect",
@@ -62,10 +62,10 @@ const sections = [
   },
   {
     title: "13. Grievance Officer & Contact",
-    content: `In compliance with the IT (Intermediary Guidelines) Rules, 2021 and the DPDP Act, 2023, FindOO has appointed a Grievance Officer:
+    content: `In compliance with the IT (Intermediary Guidelines) Rules, 2021 and the DPDP Act, 2023, findoo has appointed a Grievance Officer:
 
 Grievance Officer: [To be appointed]
-FindOO Solutions LLP
+findoo Solutions LLP
 B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064
 
 For all inquiries: compliance@findoo.in
@@ -75,7 +75,7 @@ The Grievance Officer shall acknowledge complaints within 24 hours and resolve t
 ];
 
 const Privacy = () => {
-  usePageMeta({ title: "Privacy Policy", description: "FindOO Privacy Policy — DPDP Act 2023 and IT Act compliant, Indian jurisdiction.", path: "/privacy" });
+  usePageMeta({ title: "Privacy Policy", description: "findoo Privacy Policy — DPDP Act 2023 and IT Act compliant, Indian jurisdiction.", path: "/privacy" });
   return (
     <PublicPageLayout>
       <PageHero

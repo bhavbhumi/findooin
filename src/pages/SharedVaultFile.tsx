@@ -33,7 +33,7 @@ const SharedVaultFile = () => {
 
   usePageMeta({
     title: file ? `Shared File: ${file.file_name}` : "Shared File",
-    description: "A file shared securely via FindOO Vault.",
+    description: "A file shared securely via findoo Vault.",
   });
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const SharedVaultFile = () => {
               This shared link is invalid, has expired, or the owner has disabled sharing.
             </p>
             <Button asChild variant="outline">
-              <Link to="/">Go to FindOO</Link>
+              <Link to="/">Go to findoo</Link>
             </Button>
           </div>
         </div>
@@ -144,7 +144,7 @@ const SharedVaultFile = () => {
 
             <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Shared securely via FindOO Vault
+              Shared securely via findoo Vault
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import findooLogo from "@/assets/findoo-logo-white.png";
 import { format } from "date-fns";
 
 const EventCheckin = () => {
-  usePageMeta({ title: "Event Check-in", description: "Check in to your registered FindOO event." });
+  usePageMeta({ title: "Event Check-in", description: "Check in to your registered findoo event." });
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -108,7 +108,7 @@ const EventCheckin = () => {
     <div className="min-h-screen bg-gradient-to-br from-[hsl(224,55%,12%)] via-[hsl(240,100%,15%)] to-[hsl(224,55%,12%)] flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-6">
-          <img src={findooLogo} alt="FindOO" className="h-8 mx-auto opacity-80" />
+          <img src={findooLogo} alt="findoo" className="h-8 mx-auto opacity-80" />
         </div>
 
         <Card className="overflow-hidden border-0 shadow-2xl bg-card/95 backdrop-blur-sm">
@@ -172,7 +172,7 @@ const EventCheckin = () => {
         </Card>
 
         <p className="text-center text-xs text-white/40 mt-6">
-          NFC Event Check-in • Powered by FindOO
+          NFC Event Check-in • Powered by findoo
         </p>
       </div>
     </div>

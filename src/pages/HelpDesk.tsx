@@ -78,7 +78,7 @@ function inlineMarkdown(text: string): string {
 }
 
 const HelpDesk = () => {
-  usePageMeta({ title: "Help Desk", description: "Find answers and support for using FindOO." });
+  usePageMeta({ title: "Help Desk", description: "Find answers and support for using findoo." });
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<KBArticle | null>(null);

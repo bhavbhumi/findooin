@@ -17,7 +17,7 @@ const corsHeaders = {
 };
 
 const SYSTEM_PROMPTS: Record<string, string> = {
-  draft: `You are a professional content writer for FindOO, India's trusted professional network for the financial services industry. 
+  draft: `You are a professional content writer for findoo, India's trusted professional network for the financial services industry. 
 Generate a compelling social media post based on the user's topic/prompt.
 
 Rules:
@@ -28,7 +28,7 @@ Rules:
 - DO NOT include any disclaimers or legal text — the platform handles that
 - Output ONLY the post content, no meta-commentary`,
 
-  repurpose: `You are a content strategist for FindOO, India's trusted professional network for financial services.
+  repurpose: `You are a content strategist for findoo, India's trusted professional network for financial services.
 Convert the provided content (article, report, research note, etc.) into a concise, engaging social media post.
 
 Rules:
@@ -40,7 +40,7 @@ Rules:
 - Use the specified tone if provided
 - Output ONLY the post content, no meta-commentary`,
 
-  auto_suggest: `You are a content calendar strategist for FindOO, India's professional financial services network.
+  auto_suggest: `You are a content calendar strategist for findoo, India's professional financial services network.
 Generate 5 post ideas for the coming week based on the user's role, expertise, and topics of interest.
 
 For each post, provide:

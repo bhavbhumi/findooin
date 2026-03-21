@@ -32,13 +32,13 @@ export const EmailChangeEmail = ({
 }: EmailChangeEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Confirm your email change on FindOO</Preview>
+    <Preview>Confirm your email change on findoo</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
         <Heading style={h1}>Confirm your email change</Heading>
         <Text style={text}>
-          You requested to change your FindOO email from{' '}
+          You requested to change your findoo email from{' '}
           <Link href={`mailto:${email}`} style={link}>{email}</Link> to{' '}
           <Link href={`mailto:${newEmail}`} style={link}>{newEmail}</Link>.
         </Text>

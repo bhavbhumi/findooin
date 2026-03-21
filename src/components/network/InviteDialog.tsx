@@ -20,7 +20,7 @@ interface InviteDialogProps {
 }
 
 const INVITE_MESSAGE =
-  "Join FindOO — India's trust-first financial network for verified Issuers, Intermediaries & Investors.";
+  "Join findoo — India's trust-first financial network for verified Issuers, Intermediaries & Investors.";
 
 export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
   const [emails, setEmails] = useState("");
@@ -53,7 +53,7 @@ export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
   const handleWebShare = async () => {
     try {
       await navigator.share({
-        title: "Join FindOO",
+        title: "Join findoo",
         text: INVITE_MESSAGE,
         url: inviteLink,
       });
@@ -79,7 +79,7 @@ export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
     setSending(true);
 
     // Generate mailto link as a fallback (no backend email service required)
-    const subject = encodeURIComponent("Join me on FindOO");
+    const subject = encodeURIComponent("Join me on findoo");
     const body = encodeURIComponent(
       `${INVITE_MESSAGE}\n\nSign up here: ${inviteLink}`
     );
@@ -98,7 +98,7 @@ export function InviteDialog({ open, onOpenChange }: InviteDialogProps) {
         <DialogHeader>
           <DialogTitle className="font-heading flex items-center gap-2">
             <UserPlus className="h-5 w-5 text-accent" />
-            Invite to FindOO
+            Invite to findoo
           </DialogTitle>
           <DialogDescription>
             Grow your professional network by inviting colleagues and associates.
