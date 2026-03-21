@@ -51,6 +51,7 @@ const About = () => {
         titleAccent="Financial Network"
         subtitle="Connecting verified Issuers, Intermediaries, and Investors within a regulated, transparent ecosystem — because finance deserved its own network."
         variant="hexagons"
+        context="about"
       />
 
       {/* Tabs */}

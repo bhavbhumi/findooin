@@ -709,6 +709,7 @@ const Explore = () => {
         titleAccent="India Needed"
         subtitle="Not social. Not professional. Financial. Discover what makes FindOO the first network built exclusively for India's regulated financial ecosystem."
         variant="hexagons"
+        context="about"
       />
 
       <div className="border-b border-border bg-background sticky top-16 z-30">

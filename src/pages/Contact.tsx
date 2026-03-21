@@ -88,6 +88,7 @@ const Contact = () => {
         titleAccent="with us"
         subtitle="Send us a message, or visit our office — we're here to help."
         variant="squares"
+        context="support"
       />
 
       {/* Tabs */}

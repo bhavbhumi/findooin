@@ -236,6 +236,7 @@ const Blog = () => {
         titleAccent="Insights"
         subtitle="Articles, market analysis, research reports, and important bulletins — all in one place."
         variant="waves"
+        context="blog"
       />
 
       {/* ── Primary Tabs (sticky) ── */}

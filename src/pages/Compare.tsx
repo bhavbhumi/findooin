@@ -64,6 +64,7 @@ const Compare = () => {
         titleAccent="to Alternatives"
         subtitle="See why India's financial professionals choose a purpose-built financial network over generic platforms, media portals, and informal groups."
         variant="waves"
+        context="compare"
       />
 
       {/* Sticky Tabs */}
