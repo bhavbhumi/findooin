@@ -27,13 +27,13 @@ export const RecoveryEmail = ({
 }: RecoveryEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Reset your FindOO password</Preview>
+    <Preview>Reset your findoo password</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
         <Heading style={h1}>Reset your password</Heading>
         <Text style={text}>
-          We received a request to reset your FindOO password. Click the button
+          We received a request to reset your findoo password. Click the button
           below to choose a new password.
         </Text>
         <Button style={button} href={confirmationUrl}>

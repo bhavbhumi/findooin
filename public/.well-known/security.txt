@@ -1,4 +1,4 @@
-# FindOO Security Contact
+# findoo Security Contact
 # https://securitytxt.org/
 
 Contact: mailto:security@findoo.in

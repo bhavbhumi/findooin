@@ -30,14 +30,14 @@ export const InviteEmail = ({
 }: InviteEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>You're invited to join FindOO</Preview>
+    <Preview>You're invited to join findoo</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
-        <Heading style={h1}>You're invited to FindOO</Heading>
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
+        <Heading style={h1}>You're invited to findoo</Heading>
         <Text style={text}>
           You've been invited to join{' '}
-          <Link href={siteUrl} style={link}><strong>FindOO</strong></Link>
+          <Link href={siteUrl} style={link}><strong>findoo</strong></Link>
           , India's trusted financial network. Click below to accept and create
           your account.
         </Text>

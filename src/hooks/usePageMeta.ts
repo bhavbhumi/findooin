@@ -1,7 +1,7 @@
 /**
  * usePageMeta — Dynamic page title, meta tags, and canonical URL management.
  *
- * Sets `document.title` with the FindOO base suffix, updates
+ * Sets `document.title` with the findoo base suffix, updates
  * Open Graph / Twitter Card meta tags, and sets the canonical URL.
  * Resets to base values on unmount.
  *
@@ -18,10 +18,10 @@ interface PageMeta {
   ogImage?: string;
 }
 
-const BASE_TITLE = "FindOO — Financially Social";
+const BASE_TITLE = "findoo — Financially Social";
 const BASE_URL = "https://findoo.in";
 const DEFAULT_DESCRIPTION =
-  "FindOO — India's first Financially Social network. Connect with verified Issuers, Intermediaries & Investors across SEBI, AMFI & IRDAI.";
+  "findoo — India's first Financially Social network. Connect with verified Issuers, Intermediaries & Investors across SEBI, AMFI & IRDAI.";
 
 export function usePageMeta({ title, description, path, ogImage }: PageMeta) {
   useEffect(() => {

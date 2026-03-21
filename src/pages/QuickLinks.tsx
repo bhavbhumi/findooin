@@ -21,7 +21,7 @@ const linkGroups = [
   {
     title: "Company",
     links: [
-      { icon: Building2, label: "About FindOO", to: "/about", desc: "Our story, mission, and values" },
+      { icon: Building2, label: "About findoo", to: "/about", desc: "Our story, mission, and values" },
       { icon: Briefcase, label: "Careers", to: "/about?tab=career", desc: "Join our growing team" },
       { icon: Newspaper, label: "Press & Media", to: "/about?tab=press", desc: "News and media coverage" },
       { icon: BookOpen, label: "Blog", to: "/blog", desc: "Articles, insights, and updates" },
@@ -30,7 +30,7 @@ const linkGroups = [
   {
     title: "Product",
     links: [
-      { icon: Globe, label: "What is FindOO", to: "/explore", desc: "Learn about our platform" },
+      { icon: Globe, label: "What is findoo", to: "/explore", desc: "Learn about our platform" },
       { icon: TrendingUp, label: "How it Works", to: "/explore?tab=how", desc: "Getting started guide" },
       { icon: UserCheck, label: "Who is it For", to: "/explore?tab=who", desc: "Issuers, intermediaries & investors" },
       { icon: Shield, label: "Verification", to: "/explore?tab=what", desc: "Trust badge & credential checks" },
@@ -39,7 +39,7 @@ const linkGroups = [
   {
     title: "Compare",
     links: [
-      { icon: TrendingUp, label: "vs Social Networks", to: "/compare?tab=social", desc: "How FindOO differs from social media" },
+      { icon: TrendingUp, label: "vs Social Networks", to: "/compare?tab=social", desc: "How findoo differs from social media" },
       { icon: Users, label: "vs Professional Networks", to: "/compare?tab=professional", desc: "Compare with LinkedIn and peers" },
       { icon: Globe, label: "vs Financial Media", to: "/compare?tab=media", desc: "Compare with financial media platforms" },
     ],
@@ -80,7 +80,7 @@ const linkGroups = [
   {
     title: "Account",
     links: [
-      { icon: Users, label: "Sign Up", to: "/auth?mode=signup", desc: "Create your FindOO account" },
+      { icon: Users, label: "Sign Up", to: "/auth?mode=signup", desc: "Create your findoo account" },
       { icon: UserCheck, label: "Sign In", to: "/auth", desc: "Access your dashboard" },
       { icon: Settings, label: "Settings", to: "/settings", desc: "Manage your preferences" },
       { icon: Bell, label: "Notifications", to: "/notifications", desc: "Stay updated" },
@@ -89,14 +89,14 @@ const linkGroups = [
 ];
 
 const QuickLinks = () => {
-  usePageMeta({ title: "Quick Links", description: "Quick access to all FindOO pages and resources." });
+  usePageMeta({ title: "Quick Links", description: "Quick access to all findoo pages and resources." });
   return (
   <PublicPageLayout>
     <PageHero
       breadcrumb="Quick Links"
       title="Quick"
       titleAccent="Links"
-      subtitle="Navigate to any section of FindOO quickly. Everything you need, in one place."
+      subtitle="Navigate to any section of findoo quickly. Everything you need, in one place."
       variant="squares"
     />
 

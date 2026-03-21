@@ -25,10 +25,10 @@ const logoUrl = 'https://qvzvhmuosxdaqxwyokpg.supabase.co/storage/v1/object/publ
 export const ConnectionAcceptedEmail = ({ recipientName, acceptorName, siteUrl }: ConnectionAcceptedEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>{acceptorName} accepted your connection request on FindOO</Preview>
+    <Preview>{acceptorName} accepted your connection request on findoo</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
         <Heading style={h1}>You're now connected!</Heading>
         <Text style={text}>
           Hi {recipientName}, great news — <strong>{acceptorName}</strong> accepted
@@ -39,7 +39,7 @@ export const ConnectionAcceptedEmail = ({ recipientName, acceptorName, siteUrl }
           View Your Network
         </Button>
         <Text style={footer}>
-          You're receiving this because you have connection notifications enabled on FindOO.
+          You're receiving this because you have connection notifications enabled on findoo.
         </Text>
       </Container>
     </Body>

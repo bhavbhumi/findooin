@@ -82,7 +82,7 @@ export const DigitalCardManager = ({ profileId, profileName, digitalCardFields, 
 
   const handleShare = async () => {
     if (navigator.share) {
-      await navigator.share({ title: "My FindOO Digital Card", url: cardUrl });
+      await navigator.share({ title: "My findoo Digital Card", url: cardUrl });
     } else {
       handleCopyLink();
     }

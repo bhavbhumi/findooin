@@ -21,7 +21,7 @@ const SITE_URL = 'https://findooin.lovable.app'
 type TemplateType = 'welcome' | 'contact-confirmation' | 'connection-accepted' | 'event-registration'
 
 const EMAIL_SUBJECTS: Record<TemplateType, string> = {
-  'welcome': 'Welcome to FindOO!',
+  'welcome': 'Welcome to findoo!',
   'contact-confirmation': 'We received your message',
   'connection-accepted': 'Connection accepted!',
   'event-registration': 'Event registration confirmed',

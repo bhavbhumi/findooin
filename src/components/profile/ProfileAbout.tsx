@@ -297,7 +297,7 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged, cur
           </div>
           <p className="text-sm font-medium text-card-foreground">Complete your profile to build trust</p>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
-            Add your professional details, regulatory registrations, specializations, and certifications to establish credibility on FindOO.
+            Add your professional details, regulatory registrations, specializations, and certifications to establish credibility on findoo.
           </p>
         </div>
       )}

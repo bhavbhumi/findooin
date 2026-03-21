@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>FindOO Blog — Financially Social</title>
+    <title>findoo Blog — Financially Social</title>
     <link>https://findoo.in/blog</link>
     <description>Insights, analysis, and updates from India's first financial network. Covering mutual funds, insurance, wealth management, compliance, and the BFSI ecosystem.</description>
     <language>en-in</language>
-    <managingEditor>editorial@findoo.in (FindOO Editorial)</managingEditor>
-    <webMaster>tech@findoo.in (FindOO Tech)</webMaster>
-    <copyright>© 2026 FindOO. All rights reserved.</copyright>
+    <managingEditor>editorial@findoo.in (findoo Editorial)</managingEditor>
+    <webMaster>tech@findoo.in (findoo Tech)</webMaster>
+    <copyright>© 2026 findoo. All rights reserved.</copyright>
     <lastBuildDate>Mon, 17 Mar 2026 00:00:00 +0530</lastBuildDate>
     <atom:link href="https://findoo.in/feed.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://findoo.in/icons/icon-512x512.png</url>
-      <title>FindOO Blog</title>
+      <title>findoo Blog</title>
       <link>https://findoo.in/blog</link>
     </image>
     <category>Finance</category>
@@ -20,10 +20,10 @@
     <category>BFSI</category>
 
     <item>
-      <title>Introducing FindOO — India's First Trust-Based Financial Network</title>
+      <title>Introducing findoo — India's First Trust-Based Financial Network</title>
       <link>https://findoo.in/blog/introducing-findoo</link>
-      <description>FindOO connects investors, intermediaries, and issuers on a single verified platform. Discover how trust-first networking transforms the Indian BFSI ecosystem.</description>
-      <dc:creator>FindOO Editorial</dc:creator>
+      <description>findoo connects investors, intermediaries, and issuers on a single verified platform. Discover how trust-first networking transforms the Indian BFSI ecosystem.</description>
+      <dc:creator>findoo Editorial</dc:creator>
       <pubDate>Mon, 17 Mar 2026 00:00:00 +0530</pubDate>
       <guid isPermaLink="true">https://findoo.in/blog/introducing-findoo</guid>
       <category>Platform</category>
@@ -32,8 +32,8 @@
     <item>
       <title>TrustCircle IQ — How We Rank Your Professional Network</title>
       <link>https://findoo.in/blog/trustcircle-iq-explained</link>
-      <description>A deep dive into FindOO's patented affinity ranking algorithm that scores connections based on role relevance, trust proximity, activity resonance, and intent signals.</description>
-      <dc:creator>FindOO Editorial</dc:creator>
+      <description>A deep dive into findoo's patented affinity ranking algorithm that scores connections based on role relevance, trust proximity, activity resonance, and intent signals.</description>
+      <dc:creator>findoo Editorial</dc:creator>
       <pubDate>Mon, 10 Mar 2026 00:00:00 +0530</pubDate>
       <guid isPermaLink="true">https://findoo.in/blog/trustcircle-iq-explained</guid>
       <category>Technology</category>
@@ -43,7 +43,7 @@
       <title>Why BFSI Professionals Need a Dedicated Network</title>
       <link>https://findoo.in/blog/why-bfsi-needs-findoo</link>
       <description>Generic professional networks fall short for financial services. Learn why India's BFSI ecosystem deserves a specialized platform with regulatory awareness and role-based features.</description>
-      <dc:creator>FindOO Editorial</dc:creator>
+      <dc:creator>findoo Editorial</dc:creator>
       <pubDate>Mon, 03 Mar 2026 00:00:00 +0530</pubDate>
       <guid isPermaLink="true">https://findoo.in/blog/why-bfsi-needs-findoo</guid>
       <category>Industry</category>
@@ -52,8 +52,8 @@
     <item>
       <title>Gamification in Professional Networking — XP, Badges, and Streaks</title>
       <link>https://findoo.in/blog/gamification-professional-networking</link>
-      <description>How FindOO uses gamification mechanics — experience points, achievement badges, weekly challenges, and login streaks — to drive meaningful professional engagement.</description>
-      <dc:creator>FindOO Editorial</dc:creator>
+      <description>How findoo uses gamification mechanics — experience points, achievement badges, weekly challenges, and login streaks — to drive meaningful professional engagement.</description>
+      <dc:creator>findoo Editorial</dc:creator>
       <pubDate>Mon, 24 Feb 2026 00:00:00 +0530</pubDate>
       <guid isPermaLink="true">https://findoo.in/blog/gamification-professional-networking</guid>
       <category>Product</category>
@@ -62,8 +62,8 @@
     <item>
       <title>The Showcase Marketplace — Products and Services for the BFSI Ecosystem</title>
       <link>https://findoo.in/blog/showcase-marketplace</link>
-      <description>Explore FindOO's Showcase module where issuers list financial products and intermediaries offer professional services — with reviews, ratings, and smart suggestions.</description>
-      <dc:creator>FindOO Editorial</dc:creator>
+      <description>Explore findoo's Showcase module where issuers list financial products and intermediaries offer professional services — with reviews, ratings, and smart suggestions.</description>
+      <dc:creator>findoo Editorial</dc:creator>
       <pubDate>Mon, 17 Feb 2026 00:00:00 +0530</pubDate>
       <guid isPermaLink="true">https://findoo.in/blog/showcase-marketplace</guid>
       <category>Product</category>

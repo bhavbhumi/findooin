@@ -311,7 +311,7 @@ function FeedOpinionsTab() {
       <EmptyState
         icon={BarChart3}
         title="No active opinions"
-        description="Professional sentiment polls will appear here when published by the FindOO team."
+        description="Professional sentiment polls will appear here when published by the findoo team."
       />
     );
   }

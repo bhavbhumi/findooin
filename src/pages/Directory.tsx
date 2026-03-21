@@ -274,7 +274,7 @@ const Directory = () => {
                 isLoading,
                 "No listings yet",
                 canCreate
-                  ? "Be the first to showcase your products or services to the FindOO community."
+                  ? "Be the first to showcase your products or services to the findoo community."
                   : "Financial products and services from verified professionals will appear here."
               )}
               {canCreate && !isLoading && !listings?.length && (

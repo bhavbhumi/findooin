@@ -19,7 +19,7 @@ const RANK_ICONS = [Crown, Medal, Trophy];
 const RANK_COLORS = ["hsl(46, 65%, 52%)", "hsl(220, 10%, 65%)", "hsl(30, 50%, 50%)"];
 
 export default function Leaderboard() {
-  usePageMeta({ title: "Leaderboard | FindOO", description: "Top contributors on FindOO" });
+  usePageMeta({ title: "Leaderboard | findoo", description: "Top contributors on findoo" });
   const { data: entries, isLoading } = useLeaderboard(50);
 
   return (

@@ -32,11 +32,11 @@ export const SignupEmail = ({
 }: SignupEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Welcome to FindOO — verify your email to get started</Preview>
+    <Preview>Welcome to findoo — verify your email to get started</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
-        <Heading style={h1}>Welcome to FindOO!</Heading>
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
+        <Heading style={h1}>Welcome to findoo!</Heading>
         <Text style={text}>
           Thanks for joining India's trusted financial network. Verify your email
           address (<Link href={`mailto:${recipient}`} style={link}>{recipient}</Link>)
@@ -46,7 +46,7 @@ export const SignupEmail = ({
           Verify Email
         </Button>
         <Text style={footer}>
-          If you didn't create an account on FindOO, you can safely ignore this email.
+          If you didn't create an account on findoo, you can safely ignore this email.
         </Text>
       </Container>
     </Body>

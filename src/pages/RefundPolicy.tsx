@@ -12,7 +12,7 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Applicability",
-    content: `This Refund and Cancellation Policy applies to all paid features, subscription plans, and premium services offered by FindOO Solutions LLP ("FindOO") through the FindOO platform ("Platform"). As of the current date, FindOO's core networking features are free to use. This policy will govern future premium offerings including, but not limited to: (a) FindOO Pro subscriptions; (b) FindOO Enterprise plans; (c) Promoted listings and sponsored content; (d) Premium event hosting features; (e) Enhanced analytics and lead capture tools; (f) Any other paid features introduced on the Platform.`,
+    content: `This Refund and Cancellation Policy applies to all paid features, subscription plans, and premium services offered by findoo Solutions LLP ("findoo") through the findoo platform ("Platform"). As of the current date, findoo's core networking features are free to use. This policy will govern future premium offerings including, but not limited to: (a) findoo Pro subscriptions; (b) findoo Enterprise plans; (c) Promoted listings and sponsored content; (d) Premium event hosting features; (e) Enhanced analytics and lead capture tools; (f) Any other paid features introduced on the Platform.`,
   },
   {
     title: "2. Subscription Plans",
@@ -20,7 +20,7 @@ const sections = [
 
 2.2 Auto-Renewal: All subscriptions auto-renew at the end of each billing cycle unless cancelled before the renewal date. You will receive a reminder notification at least 7 days before renewal.
 
-2.3 Price Changes: FindOO reserves the right to modify subscription pricing. Any price increase will be communicated at least 30 days before it takes effect and will apply only from your next billing cycle.`,
+2.3 Price Changes: findoo reserves the right to modify subscription pricing. Any price increase will be communicated at least 30 days before it takes effect and will apply only from your next billing cycle.`,
   },
   {
     title: "3. Cancellation Policy",
@@ -34,7 +34,7 @@ const sections = [
     title: "4. Refund Policy",
     content: `4.1 Cooling-Off Period: You may request a full refund within 7 days of your initial subscription purchase if you have not substantially used premium features (accessing on more than 3 separate days).
 
-4.2 Annual Subscriptions: Cancelled after the 7-day cooling-off period, FindOO may provide a pro-rated refund for unused months at its discretion, less a 10% administrative fee.
+4.2 Annual Subscriptions: Cancelled after the 7-day cooling-off period, findoo may provide a pro-rated refund for unused months at its discretion, less a 10% administrative fee.
 
 4.3 Monthly Subscriptions: Cancelled after the cooling-off period are not eligible for refunds. The subscription remains active until the end of the current billing cycle.
 
@@ -65,15 +65,15 @@ const sections = [
     content: `For billing inquiries, refund requests, or cancellation assistance:
 Email: legal@findoo.in
 
-FindOO Solutions LLP
+findoo Solutions LLP
 Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064`,
   },
 ];
 
 const RefundPolicy = () => {
   usePageMeta({
-    title: "Refund & Cancellation Policy | FindOO",
-    description: "FindOO's refund and cancellation terms for premium features and subscriptions. GST compliant.",
+    title: "Refund & Cancellation Policy | findoo",
+    description: "findoo's refund and cancellation terms for premium features and subscriptions. GST compliant.",
   });
 
   return (

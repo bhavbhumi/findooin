@@ -27,7 +27,7 @@ const INVITE_BASE_URL = "https://findooin.lovable.app";
 
 function getInviteMessage(senderName?: string): string {
   const name = senderName || "A professional";
-  return `${name} has invited you to join FindOO — India's trusted professional network for the financial services industry. Join now: ${INVITE_BASE_URL}`;
+  return `${name} has invited you to join findoo — India's trusted professional network for the financial services industry. Join now: ${INVITE_BASE_URL}`;
 }
 
 function getWhatsAppUrl(phone: string, message: string): string {
@@ -66,7 +66,7 @@ export function ContactInviteSheet({ open, onOpenChange }: ContactInviteSheetPro
     }
     try {
       await navigator.share({
-        title: "Join FindOO",
+        title: "Join findoo",
         text: inviteMessage,
         url: INVITE_BASE_URL,
       });
@@ -126,7 +126,7 @@ export function ContactInviteSheet({ open, onOpenChange }: ContactInviteSheetPro
             Invite Contacts
           </SheetTitle>
           <SheetDescription>
-            Invite your imported contacts to join FindOO.
+            Invite your imported contacts to join findoo.
             {invitedCount > 0 && (
               <Badge variant="secondary" className="ml-2 text-[10px]">
                 {invitedCount} already invited
@@ -147,7 +147,7 @@ export function ContactInviteSheet({ open, onOpenChange }: ContactInviteSheetPro
             className="gap-1.5 text-xs h-auto py-2 flex-col"
             onClick={() => {
               if (navigator.share) {
-                navigator.share({ title: "Join FindOO", text: inviteMessage, url: INVITE_BASE_URL });
+                navigator.share({ title: "Join findoo", text: inviteMessage, url: INVITE_BASE_URL });
               } else {
                 handleCopyLink();
               }
@@ -219,7 +219,7 @@ export function ContactInviteSheet({ open, onOpenChange }: ContactInviteSheetPro
                     {contact.matched_user_id ? (
                       <Badge variant="secondary" className="text-[10px] shrink-0">
                         <CheckCircle2 className="h-2.5 w-2.5 mr-0.5" />
-                        On FindOO
+                        On findoo
                       </Badge>
                     ) : (
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

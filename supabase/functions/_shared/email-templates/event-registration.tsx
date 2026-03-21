@@ -33,10 +33,10 @@ export const EventRegistrationEmail = ({
 }: EventRegistrationEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>You're registered for {eventTitle} on FindOO</Preview>
+    <Preview>You're registered for {eventTitle} on findoo</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
         <Heading style={h1}>Registration confirmed!</Heading>
         <Text style={text}>
           Hi {recipientName}, you're all set for:

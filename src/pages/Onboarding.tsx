@@ -64,7 +64,7 @@ const needsVerification = (roles: Role[]) =>
 const TOTAL_STEPS = 5; // Step 5 = verification nudge (conditional)
 
 const Onboarding = () => {
-  usePageMeta({ title: "Onboarding", description: "Complete your FindOO profile setup.", path: "/onboarding" });
+  usePageMeta({ title: "Onboarding", description: "Complete your findoo profile setup.", path: "/onboarding" });
   const [step, setStep] = useState(1);
   const [userType, setUserType] = useState<UserType | null>(null);
   const [selectedRoles, setSelectedRoles] = useState<Role[]>(["investor"]);
@@ -233,7 +233,7 @@ const Onboarding = () => {
       const { error: rolesError } = await supabase.from("user_roles").insert(roleInserts);
       if (rolesError) throw rolesError;
 
-      toast({ title: "Profile created!", description: "Welcome to FindOO." });
+      toast({ title: "Profile created!", description: "Welcome to findoo." });
       navigate("/feed");
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -298,7 +298,7 @@ const Onboarding = () => {
             {step === 1 && (
               <div>
                 <h1 className="text-2xl font-bold font-heading text-foreground mb-2">
-                  How will you use FindOO?
+                  How will you use findoo?
                 </h1>
                 <p className="text-muted-foreground mb-8">
                   This helps us tailor your experience. You can add more roles later.
@@ -436,7 +436,7 @@ const Onboarding = () => {
                   Complete your profile
                 </h1>
                 <p className="text-muted-foreground mb-8">
-                  This is how others will see you on FindOO.
+                  This is how others will see you on findoo.
                 </p>
                 <div className="space-y-4">
                   <div className="space-y-2">
@@ -529,7 +529,7 @@ const Onboarding = () => {
                   <div className="rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 p-4 space-y-2">
                     <div className="flex items-center gap-2">
                       <Smartphone className="h-5 w-5 text-primary" />
-                      <h3 className="text-sm font-semibold text-foreground">Find your contacts on FindOO</h3>
+                      <h3 className="text-sm font-semibold text-foreground">Find your contacts on findoo</h3>
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Import your phone contacts to discover who's already here and invite your professional network.
@@ -565,7 +565,7 @@ const Onboarding = () => {
                   </div>
                 </div>
                 <h1 className="text-2xl font-bold font-heading text-foreground mb-2 text-center">
-                  Get verified on FindOO
+                  Get verified on findoo
                 </h1>
                 <p className="text-muted-foreground mb-8 text-center">
                   Verified profiles earn more trust and visibility. Upload your regulatory registration certificate to get started.
@@ -664,7 +664,7 @@ const Onboarding = () => {
               )}
               <Button onClick={handleNext} disabled={loading || !canProceed()}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {step === 5 ? "Submit & Verify" : "Launch FindOO"}
+                {step === 5 ? "Submit & Verify" : "Launch findoo"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

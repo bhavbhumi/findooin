@@ -130,7 +130,7 @@ export function ContactImportDialog({ open, onOpenChange, onImportComplete }: Co
             Import Contacts
           </DialogTitle>
           <DialogDescription>
-            Add your phone contacts to find people on FindOO and invite others to join.
+            Add your phone contacts to find people on findoo and invite others to join.
           </DialogDescription>
         </DialogHeader>
 

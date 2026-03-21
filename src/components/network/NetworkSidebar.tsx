@@ -133,7 +133,7 @@ export function NetworkSidebar({
           Grow Your Network
         </h3>
         <p className="text-xs text-muted-foreground">
-          Import your phone contacts to find people on FindOO and invite others.
+          Import your phone contacts to find people on findoo and invite others.
         </p>
         <div className="grid grid-cols-2 gap-2">
           <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => setImportOpen(true)}>
@@ -154,7 +154,7 @@ export function NetworkSidebar({
         {contactStats.total > 0 && (
           <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
             <span>{contactStats.invited} invited</span>
-            <span>{contactStats.matched} on FindOO</span>
+            <span>{contactStats.matched} on findoo</span>
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-# FindOO — India's BFSI Professional Network
+# findoo — India's BFSI Professional Network
 
 > A full-stack professional networking platform for India's Banking, Financial Services & Insurance (BFSI) ecosystem. Built with React, TypeScript, Tailwind CSS, and Lovable Cloud.
 
@@ -37,7 +37,7 @@
 
 ## Overview
 
-FindOO connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AMCs, insurance companies) on a single verified platform. It provides:
+findoo connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AMCs, insurance companies) on a single verified platform. It provides:
 
 - **Role-based access** — 4 roles: Investor, Intermediary, Issuer, Admin
 - **Verified profiles** — KYC document upload + admin verification queue

@@ -82,8 +82,8 @@ export default function ProfessionalProfile() {
   usePageMeta({
     title: entity ? `${displayName} — ${sourceLabel} Registered Professional` : "Professional Profile",
     description: entity
-      ? `${displayName} is a ${entity.registration_category || "financial professional"} registered with ${sourceLabel}${entity.city ? ` in ${entity.city}` : ""}. View credentials on FindOO.`
-      : "View professional credentials on FindOO.",
+      ? `${displayName} is a ${entity.registration_category || "financial professional"} registered with ${sourceLabel}${entity.city ? ` in ${entity.city}` : ""}. View credentials on findoo.`
+      : "View professional credentials on findoo.",
   });
 
   if (isLoading) {
@@ -337,10 +337,10 @@ export default function ProfessionalProfile() {
         <div className="mt-6 text-center text-xs text-muted-foreground space-y-1">
           <p>
             This information is sourced from {sourceLabel}'s public registry.
-            FindOO does not verify the accuracy of third-party data.
+            findoo does not verify the accuracy of third-party data.
           </p>
           <p>
-            <Link to="/about" className="text-primary hover:underline">About FindOO</Link>
+            <Link to="/about" className="text-primary hover:underline">About findoo</Link>
             {" · "}
             <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
           </p>

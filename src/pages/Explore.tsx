@@ -24,9 +24,9 @@ const fadeUp = {
   }),
 };
 
-const tabs = ["What is FindOO", "Why does it exist", "How it works", "Who is it for"];
+const tabs = ["What is findoo", "Why does it exist", "How it works", "Who is it for"];
 
-/* ── What is FindOO ── */
+/* ── What is findoo ── */
 const WhatIsContent = () => (
   <>
     <section className="py-16 relative overflow-hidden space-nebula-teal">
@@ -43,10 +43,10 @@ const WhatIsContent = () => (
             <p className="text-muted-foreground leading-relaxed">
               There are social networks for friends. Professional networks for careers.
               Micro-blogging for opinions. Media broadcasters for news.
-              But until FindOO — <span className="font-semibold text-foreground">no network purpose-built for finance.</span>
+              But until findoo — <span className="font-semibold text-foreground">no network purpose-built for finance.</span>
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              FindOO is a professional financial network designed exclusively for India's regulated ecosystem.
+              findoo is a professional financial network designed exclusively for India's regulated ecosystem.
               Every participant is verified against regulatory databases — SEBI, RBI, IRDAI, AMFI, and PFRDA.
               Trust isn't a feature — it's the foundation.
             </p>
@@ -75,7 +75,7 @@ const WhatIsContent = () => (
       </div>
     </section>
 
-    {/* FindOO by the Numbers */}
+    {/* findoo by the Numbers */}
     <section className="py-14 border-t border-border relative overflow-hidden space-dust-gold">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
@@ -83,7 +83,7 @@ const WhatIsContent = () => (
             <TrendingUp className="h-3.5 w-3.5" />
             Growing Every Day
           </div>
-          <h3 className="text-xl font-bold font-heading text-foreground mb-2">FindOO by the Numbers</h3>
+          <h3 className="text-xl font-bold font-heading text-foreground mb-2">findoo by the Numbers</h3>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">A snapshot of India's emerging financial network.</p>
         </motion.div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -104,11 +104,11 @@ const WhatIsContent = () => (
       </div>
     </section>
 
-    {/* How FindOO is Different */}
+    {/* How findoo is Different */}
     <section className="py-14 border-t border-border relative overflow-hidden space-void-blue">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
-          <h3 className="text-xl font-bold font-heading text-foreground mb-2">How FindOO is Different</h3>
+          <h3 className="text-xl font-bold font-heading text-foreground mb-2">How findoo is Different</h3>
           <p className="text-sm text-muted-foreground max-w-lg mx-auto">Not a social network. Not a job board. Not a terminal. A purpose-built financial network.</p>
         </motion.div>
         <div className="rounded-2xl border border-border bg-card overflow-hidden">
@@ -117,7 +117,7 @@ const WhatIsContent = () => (
             <div className="p-3">Professional Networks</div>
             <div className="p-3">Chat Groups</div>
             <div className="p-3">Terminals</div>
-            <div className="p-3 bg-primary/5 text-primary">FindOO</div>
+            <div className="p-3 bg-primary/5 text-primary">findoo</div>
           </div>
           {[
             { feature: "Identity Verification", profNetwork: false, chatGroup: false, terminal: false, findoo: true },
@@ -150,7 +150,7 @@ const WhatIsContent = () => (
     <section className="py-12 border-t border-border">
       <div className="container max-w-5xl">
         <motion.h3 className="text-xl font-bold font-heading text-foreground text-center mb-3" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
-          What's Live on FindOO
+          What's Live on findoo
         </motion.h3>
         <motion.p className="text-sm text-muted-foreground text-center mb-8 max-w-lg mx-auto" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
           A growing ecosystem of features built specifically for financial professionals.
@@ -231,7 +231,7 @@ const WhyExistsContent = () => (
               { year: "2009", title: "AMFI Grows", desc: "Mutual fund distribution professionalizes with ARN registration — but networking stays offline.", side: "right" },
               { year: "2015", title: "Digital India Push", desc: "UPI, Jan Dhan, and digital KYC accelerate financial inclusion — but professional networks don't evolve.", side: "left" },
               { year: "2020", title: "Retail Explosion", desc: "10Cr+ demat accounts. WhatsApp groups become the de-facto 'network' — unverified, unregulated.", side: "right" },
-              { year: "2024", title: "FindOO is Born", desc: "The first financial network that combines identity verification, regulatory compliance, and professional networking.", side: "left" },
+              { year: "2024", title: "findoo is Born", desc: "The first financial network that combines identity verification, regulatory compliance, and professional networking.", side: "left" },
             ].map((item, i) => (
               <motion.div key={item.year} className={`relative flex items-start gap-4 mb-8 last:mb-0 ${item.side === "right" ? "md:flex-row-reverse md:text-right" : ""}`}
                 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i + 1}>
@@ -301,7 +301,7 @@ const WhyExistsContent = () => (
         <motion.div className="rounded-2xl bg-primary/[0.04] border border-primary/10 p-10 text-center"
           initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={8}>
           <Zap className="h-8 w-8 text-primary mx-auto mb-4" />
-          <h3 className="text-xl font-bold font-heading text-foreground mb-3">FindOO: The Financial Network</h3>
+          <h3 className="text-xl font-bold font-heading text-foreground mb-3">findoo: The Financial Network</h3>
           <p className="text-muted-foreground leading-relaxed max-w-xl mx-auto mb-6">
             We didn't build a better LinkedIn for finance. We created an entirely new category —
             a <span className="font-semibold text-foreground">financial network</span> where trust is the default,
@@ -426,7 +426,7 @@ const HowItWorksContent = () => {
               Role-Based Capabilities
             </div>
             <h2 className="text-2xl font-bold font-heading text-foreground mb-3">
-              What can you do on FindOO?
+              What can you do on findoo?
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-sm">
               Your role shapes your experience. Select a role to explore what features and capabilities are available.
@@ -691,15 +691,15 @@ const WhoIsItForContent = () => (
 );
 
 const tabContentMap: Record<string, React.FC> = {
-  "What is FindOO": WhatIsContent,
+  "What is findoo": WhatIsContent,
   "Why does it exist": WhyExistsContent,
   "How it works": HowItWorksContent,
   "Who is it for": WhoIsItForContent,
 };
 
 const Explore = () => {
-  usePageMeta({ title: "Explore", description: "Discover what FindOO is, why it exists, how it works, and who it's for.", path: "/explore" });
-  const [activeTab, setActiveTab] = useState("What is FindOO");
+  usePageMeta({ title: "Explore", description: "Discover what findoo is, why it exists, how it works, and who it's for.", path: "/explore" });
+  const [activeTab, setActiveTab] = useState("What is findoo");
   const Content = tabContentMap[activeTab];
 
   return (
@@ -709,7 +709,7 @@ const Explore = () => {
         breadcrumb="Explore"
         title="The Financial Network"
         titleAccent="India Needed"
-        subtitle="Not social. Not professional. Financial. Discover what makes FindOO the first network built exclusively for India's regulated financial ecosystem."
+        subtitle="Not social. Not professional. Financial. Discover what makes findoo the first network built exclusively for India's regulated financial ecosystem."
         variant="hexagons"
         context="about"
       />

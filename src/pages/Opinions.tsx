@@ -139,7 +139,7 @@ function OpinionsContent() {
                   <ul className="text-[10.5px] leading-relaxed text-muted-foreground space-y-1.5 list-disc list-outside pl-3.5">
                     <li>Outcomes are derived from participation by registered BFSI professionals (Intermediaries & Issuers) and do not represent universal market consensus.</li>
                     <li>Sentiment indicators reflect reactions from investor participants and are observational in nature.</li>
-                    <li>FindOO is solely a medium and presenter platform — we do not encourage, facilitate, or endorse any betting, wagering, or actions involving financial stakes.</li>
+                    <li>findoo is solely a medium and presenter platform — we do not encourage, facilitate, or endorse any betting, wagering, or actions involving financial stakes.</li>
                     <li>All content is for <strong>educational and informational purposes only</strong> and should not be construed as investment advice, research recommendations, or any form of professional financial guidance.</li>
                     <li>Please consult a qualified, SEBI-registered advisor before making any financial decisions.</li>
                   </ul>
@@ -260,7 +260,7 @@ function OpinionsContent() {
 
 export default function Opinions() {
   usePageMeta({
-    title: "Professional Opinions — FindOO",
+    title: "Professional Opinions — findoo",
     description: "Track professional sentiment on RBI policy, SEBI regulations, markets, and the Indian BFSI ecosystem. No betting — pure professional insight.",
     path: "/opinions",
   });

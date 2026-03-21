@@ -128,7 +128,7 @@ const INR = (n: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
 
 const CostReport = () => {
-  usePageMeta({ title: "Cost & Scaling Report", description: "FindOO dynamic cost, scaling & revenue projection.", path: "/cost-report" });
+  usePageMeta({ title: "Cost & Scaling Report", description: "findoo dynamic cost, scaling & revenue projection.", path: "/cost-report" });
 
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
@@ -204,7 +204,7 @@ const CostReport = () => {
 
       {/* Header */}
       <div className="text-center mb-10 border-b-2 border-foreground/20 pb-6">
-        <h1 className="text-3xl font-bold mb-2">FindOO – Cost, Scaling & Revenue Report</h1>
+        <h1 className="text-3xl font-bold mb-2">findoo – Cost, Scaling & Revenue Report</h1>
         <p className="text-muted-foreground text-sm">Dynamic Report · Generated: {format(new Date(), "dd MMMM yyyy")}</p>
         <p className="text-muted-foreground text-sm">Adoption Model: Moderate-Aggressive · Target: 25K active in 3 months</p>
       </div>
@@ -608,7 +608,7 @@ const CostReport = () => {
       <section className="mb-8">
         <h2 className="text-xl font-bold border-b border-border pb-1 mb-4">8. Key Takeaway</h2>
         <div className="bg-primary/5 border-l-4 border-primary p-4 text-sm leading-relaxed">
-          <p className="mb-2"><strong>With verified platform costs, FindOO remains financially sustainable from Month 1.</strong></p>
+          <p className="mb-2"><strong>With verified platform costs, findoo remains financially sustainable from Month 1.</strong></p>
           <ul className="list-disc pl-5 space-y-1">
             <li>Fixed platform base: <strong>{INR(MONTHLY_BASE)}/mo</strong> (Lovable Pro + Cloud Mini) — becomes negligible at scale</li>
             <li>Total development cost to date ({DAYS_ACTIVE} days): <strong>{INR(TOTAL_SUNK_COST)}</strong></li>
@@ -621,7 +621,7 @@ const CostReport = () => {
 
       {/* Footer */}
       <div className="border-t-2 border-foreground/20 pt-4 mt-10 text-center text-xs text-muted-foreground">
-        <p>FindOO – Confidential Cost & Scaling Report | {format(new Date(), "dd MMMM yyyy")}</p>
+        <p>findoo – Confidential Cost & Scaling Report | {format(new Date(), "dd MMMM yyyy")}</p>
         <p>Dynamic report · Platform costs verified from Lovable Pro billing</p>
       </div>
 

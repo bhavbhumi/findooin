@@ -61,7 +61,7 @@ const emptyForm: BlogPostForm = {
   read_time_minutes: 3,
   published: false,
   featured: false,
-  author_name: "FindOO Team",
+  author_name: "findoo Team",
   author_avatar_url: "",
 };
 

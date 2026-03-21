@@ -16,8 +16,8 @@ const fadeUp = {
 
 const PitchIndex = () => {
   usePageMeta({
-    title: "Pitch Decks — FindOO",
-    description: "Explore FindOO pitch presentations tailored for regulators, issuers, intermediaries, and investors.",
+    title: "Pitch Decks — findoo",
+    description: "Explore findoo pitch presentations tailored for regulators, issuers, intermediaries, and investors.",
   });
 
   return (
@@ -25,8 +25,8 @@ const PitchIndex = () => {
       <PageHero
         breadcrumb="Pitch Decks"
         title="Why"
-        titleAccent="FindOO?"
-        subtitle="Four perspectives. One platform. Explore how FindOO serves every participant in India's financial ecosystem."
+        titleAccent="findoo?"
+        subtitle="Four perspectives. One platform. Explore how findoo serves every participant in India's financial ecosystem."
         variant="hexagons"
         context="pitch"
       />

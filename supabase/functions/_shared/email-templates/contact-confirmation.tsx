@@ -26,7 +26,7 @@ export const ContactConfirmationEmail = ({ recipientName, subject }: ContactConf
     <Preview>We received your message — we'll get back to you soon</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
         <Heading style={h1}>Message received!</Heading>
         <Text style={text}>
           Hi {recipientName}, thanks for reaching out. We've received your message
@@ -40,7 +40,7 @@ export const ContactConfirmationEmail = ({ recipientName, subject }: ContactConf
           If your matter is urgent, you can reach us at <strong>hello@findoo.in</strong>.
         </Text>
         <Text style={footer}>
-          This is an automated confirmation from FindOO. Please do not reply to this email.
+          This is an automated confirmation from findoo. Please do not reply to this email.
         </Text>
       </Container>
     </Body>

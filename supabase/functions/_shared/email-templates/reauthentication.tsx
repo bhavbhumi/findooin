@@ -22,12 +22,12 @@ const logoUrl = 'https://qvzvhmuosxdaqxwyokpg.supabase.co/storage/v1/object/publ
 export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your FindOO verification code</Preview>
+    <Preview>Your findoo verification code</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Img src={logoUrl} alt="FindOO" width="120" height="auto" style={logo} />
+        <Img src={logoUrl} alt="findoo" width="120" height="auto" style={logo} />
         <Heading style={h1}>Verification code</Heading>
-        <Text style={text}>Use this code to confirm your identity on FindOO:</Text>
+        <Text style={text}>Use this code to confirm your identity on findoo:</Text>
         <Text style={codeStyle}>{token}</Text>
         <Text style={footer}>
           This code will expire shortly. If you didn't request this, you can

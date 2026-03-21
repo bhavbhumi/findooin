@@ -138,7 +138,7 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel, activeT
               </div>
             )}
             <p className="text-[10px] text-muted-foreground mt-3 text-center">
-              Join FindOO to earn XP & climb the ranks
+              Join findoo to earn XP & climb the ranks
             </p>
           </CardContent>
         </Card>
@@ -176,13 +176,13 @@ export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel, activeT
         </Card>
       </motion.div>
 
-      {/* 3. Why Join FindOO */}
+      {/* 3. Why Join findoo */}
       <motion.div custom={2} initial="hidden" animate="visible" variants={fadeUp}>
         <Card>
           <CardContent className="p-5">
             <h3 className="text-xs font-semibold text-foreground mb-3 flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              Why Join FindOO?
+              Why Join findoo?
             </h3>
             <ul className="space-y-2.5">
               {[

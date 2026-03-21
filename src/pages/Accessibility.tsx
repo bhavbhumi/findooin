@@ -12,19 +12,19 @@ const fadeUp = {
 const sections = [
   {
     title: "1. Our Commitment",
-    content: `FindOO Solutions LLP is committed to ensuring digital accessibility for people with diverse abilities. We believe the financial networking ecosystem should be inclusive and available to everyone, regardless of ability or disability. We continually improve the user experience for all visitors and apply the relevant accessibility standards to ensure we provide equal access to all users.`,
+    content: `findoo Solutions LLP is committed to ensuring digital accessibility for people with diverse abilities. We believe the financial networking ecosystem should be inclusive and available to everyone, regardless of ability or disability. We continually improve the user experience for all visitors and apply the relevant accessibility standards to ensure we provide equal access to all users.`,
   },
   {
     title: "2. Standards We Follow",
     content: `We aim to conform to the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA, as recommended by the World Wide Web Consortium (W3C). These guidelines address: (a) Perceivable — information and user interface components are presentable to users in ways they can perceive; (b) Operable — user interface components and navigation must be operable by all users; (c) Understandable — information and the operation of the user interface must be understandable; (d) Robust — content must be robust enough to be interpreted reliably by a wide variety of user agents, including assistive technologies. We also align with the Rights of Persons with Disabilities Act, 2016 (RPwD Act), which mandates accessible information and communication technology for persons with disabilities in India.`,
   },
   {
-    title: "3. Accessibility Features on FindOO",
+    title: "3. Accessibility Features on findoo",
     content: `Our Platform includes the following accessibility features: (a) Semantic HTML — proper use of headings (H1–H6), landmarks (header, nav, main, footer), and ARIA attributes for screen reader compatibility; (b) Keyboard Navigation — all interactive elements are fully navigable using keyboard alone (Tab, Enter, Escape, Arrow keys); (c) Skip Navigation — a "Skip to main content" link is provided for keyboard users to bypass repetitive navigation; (d) Focus Management — visible focus indicators on all interactive elements, with proper focus trapping in modals and dialogs; (e) Color Contrast — text and interactive elements maintain a minimum contrast ratio of 4.5:1 (AA standard); (f) Text Resizing — the Platform supports browser-level text zoom up to 200% without loss of content or functionality; (g) Alt Text — meaningful alternative text is provided for informational images; (h) Form Accessibility — all form inputs have associated labels and error messages are programmatically linked; (i) Dark & Light Themes — both themes maintain accessibility contrast standards; (j) Responsive Design — fully responsive across desktop, tablet, and mobile; (k) Motion Sensitivity — animations respect the "prefers-reduced-motion" media query.`,
   },
   {
     title: "4. Assistive Technology Compatibility",
-    content: `FindOO is designed to be compatible with: (a) Screen readers — NVDA, JAWS, VoiceOver (macOS/iOS), TalkBack (Android); (b) Screen magnification software — ZoomText, built-in browser zoom; (c) Speech recognition software — Dragon NaturallySpeaking, system-level voice control; (d) Alternative input devices — switch access, eye-tracking systems, sip-and-puff devices; (e) High-contrast modes — Windows High Contrast Mode, browser-based contrast extensions.`,
+    content: `findoo is designed to be compatible with: (a) Screen readers — NVDA, JAWS, VoiceOver (macOS/iOS), TalkBack (Android); (b) Screen magnification software — ZoomText, built-in browser zoom; (c) Speech recognition software — Dragon NaturallySpeaking, system-level voice control; (d) Alternative input devices — switch access, eye-tracking systems, sip-and-puff devices; (e) High-contrast modes — Windows High Contrast Mode, browser-based contrast extensions.`,
   },
   {
     title: "5. Known Limitations",
@@ -32,7 +32,7 @@ const sections = [
   },
   {
     title: "6. Accessibility Feedback",
-    content: `We welcome your feedback on the accessibility of FindOO. If you encounter any accessibility barriers or have suggestions for improvement, please contact us:
+    content: `We welcome your feedback on the accessibility of findoo. If you encounter any accessibility barriers or have suggestions for improvement, please contact us:
 
 Email: compliance@findoo.in
 Subject line: Accessibility Feedback — [Brief Description]
@@ -53,8 +53,8 @@ We aim to respond within 5 business days and address critical barriers within 30
 
 const Accessibility = () => {
   usePageMeta({
-    title: "Accessibility Statement | FindOO",
-    description: "FindOO's commitment to digital accessibility — WCAG 2.1 AA, RPwD Act 2016 compliant.",
+    title: "Accessibility Statement | findoo",
+    description: "findoo's commitment to digital accessibility — WCAG 2.1 AA, RPwD Act 2016 compliant.",
   });
 
   return (

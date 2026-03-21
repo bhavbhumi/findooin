@@ -1,4 +1,4 @@
-# FindOO — API Reference
+# findoo — API Reference
 
 > Complete reference for all custom hooks, library modules, and key components.
 

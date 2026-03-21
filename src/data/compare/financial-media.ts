@@ -2,9 +2,9 @@ import { ComparisonData } from "@/components/compare/ComparisonPage";
 import { Newspaper, Users, MessageCircle, Shield, Layers, Award, TrendingUp, Eye } from "lucide-react";
 
 export const financialMediaData: ComparisonData = {
-  heroTitle: "FindOO vs Financial Media Portals",
-  heroSubtitle: "Media portals inform. FindOO connects and empowers.",
-  heroDescription: "Financial media portals deliver news and data to millions. But they're built for passive consumption — you read, you leave. FindOO transforms financial professionals from content consumers into active participants in India's financial ecosystem.",
+  heroTitle: "findoo vs Financial Media Portals",
+  heroSubtitle: "Media portals inform. findoo connects and empowers.",
+  heroDescription: "Financial media portals deliver news and data to millions. But they're built for passive consumption — you read, you leave. findoo transforms financial professionals from content consumers into active participants in India's financial ecosystem.",
   competitor: "Financial Media Portals",
   competitorExamples: "Online financial news and market data portals",
   stats: [
@@ -23,6 +23,6 @@ export const financialMediaData: ComparisonData = {
     { icon: Award, feature: "Professional Growth", findoo: "XP, badges, weekly challenges — gamified learning and engagement", competitor: "No growth tracking or professional development features", findooHas: true, competitorHas: false },
     { icon: Eye, feature: "Privacy Controls", findoo: "Choose who sees your activity, network, and documents", competitor: "Tracking cookies, data harvesting for ad targeting", findooHas: true, competitorHas: false },
   ],
-  verdict: { title: "Media portals give you headlines. FindOO gives you a professional platform.", description: "On media portals, you're a pageview. On FindOO, you're a verified professional with a reputation, connections, and business opportunities. The shift from passive consumption to active participation is what separates a media portal from a financial network." },
+  verdict: { title: "Media portals give you headlines. findoo gives you a professional platform.", description: "On media portals, you're a pageview. On findoo, you're a verified professional with a reputation, connections, and business opportunities. The shift from passive consumption to active participation is what separates a media portal from a financial network." },
   cta: { title: "Stop being a pageview. Start being a professional.", subtitle: "Build your financial identity where your expertise gets recognized, not just your clicks." },
 };

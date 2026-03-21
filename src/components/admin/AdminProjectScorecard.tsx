@@ -311,7 +311,7 @@ export function AdminProjectScorecard() {
 
       {/* Footer */}
       <p className="text-[10px] text-muted-foreground text-center print:mt-8">
-        Generated {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })} · FindOO Admin v2.0
+        Generated {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })} · findoo Admin v2.0
       </p>
     </div>
   );

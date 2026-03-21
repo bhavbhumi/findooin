@@ -2,9 +2,9 @@ import { ComparisonData } from "@/components/compare/ComparisonPage";
 import { Shield, Globe, FileText, Calendar, Layers, Award, Users, Database } from "lucide-react";
 
 export const professionalNetworkData: ComparisonData = {
-  heroTitle: "FindOO vs Professional Networks",
-  heroSubtitle: "Generic professional networks serve every industry. FindOO is built for India's financial ecosystem.",
-  heroDescription: "Global professional networks serve over a billion users across every industry and geography. FindOO is laser-focused on India's ₹400 Lakh Crore financial services ecosystem — where SEBI registrations, AMFI codes, and IRDAI licenses define professional identity.",
+  heroTitle: "findoo vs Professional Networks",
+  heroSubtitle: "Generic professional networks serve every industry. findoo is built for India's financial ecosystem.",
+  heroDescription: "Global professional networks serve over a billion users across every industry and geography. findoo is laser-focused on India's ₹400 Lakh Crore financial services ecosystem — where SEBI registrations, AMFI codes, and IRDAI licenses define professional identity.",
   competitor: "Professional Networks",
   competitorExamples: "General-purpose professional networking platforms",
   stats: [
@@ -23,6 +23,6 @@ export const professionalNetworkData: ComparisonData = {
     { icon: Award, feature: "Professional Gamification", findoo: "Finance-specific badges (Market Maven, Compliance Champion), XP & leaderboard", competitor: "Skill assessments and endorsements — generic across industries", findooHas: true, competitorHas: true },
     { icon: Users, feature: "Digital Business Card", findoo: "NFC-ready digital card with QR code, vCard download, and lead capture", competitor: "Profile link sharing — no dedicated business card feature", findooHas: true, competitorHas: false },
   ],
-  verdict: { title: "They know your job title. FindOO knows your ARN number.", description: "On generic professional networks, a mutual fund distributor looks the same as a marketing executive. On FindOO, your AMFI registration, certifications, AUM, and specializations define your professional identity. Every feature is designed for how India's financial ecosystem actually works — from compliance to client acquisition." },
+  verdict: { title: "They know your job title. findoo knows your ARN number.", description: "On generic professional networks, a mutual fund distributor looks the same as a marketing executive. On findoo, your AMFI registration, certifications, AUM, and specializations define your professional identity. Every feature is designed for how India's financial ecosystem actually works — from compliance to client acquisition." },
   cta: { title: "Your ARN number deserves its own network.", subtitle: "Join 15,000+ financial professionals who chose depth over breadth." },
 };

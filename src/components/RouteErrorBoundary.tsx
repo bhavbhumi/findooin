@@ -1,6 +1,6 @@
 /**
  * RouteErrorBoundary — Granular per-route error boundary with contextual
- * fallback UI, retry, and navigation back. Styled with FindOO visual identity.
+ * fallback UI, retry, and navigation back. Styled with findoo visual identity.
  */
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { AlertTriangle, RefreshCw, ArrowLeft, Home } from "lucide-react";

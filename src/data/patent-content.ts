@@ -4,7 +4,7 @@
 const patentContent = `# TrustCircle IQ™ — Intent-Aware Professional Trust Discovery Engine
 
 **Provisional Patent Document**  
-**Applicant:** FindOO (India)  
+**Applicant:** findoo (India)  
 **Filing Date:** 2026-03-17  
 **Classification:** G06Q 50/00 — Information and Communication Technology for Social Networking  
 

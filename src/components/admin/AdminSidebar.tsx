@@ -193,11 +193,11 @@ export function AdminSidebar() {
     <Sidebar collapsible="icon" className="border-r-0 bg-gradient-to-b from-[hsl(240,100%,27%)] via-[hsl(240,100%,20%)] to-[hsl(43,72%,35%)] [&_[data-sidebar=sidebar]]:bg-transparent [&_[data-radix-scroll-area-viewport]]:scrollbar-thin [&_*::-webkit-scrollbar]:w-1 [&_*::-webkit-scrollbar-track]:bg-transparent [&_*::-webkit-scrollbar-thumb]:bg-white/15 [&_*::-webkit-scrollbar-thumb]:rounded-full [&_*::-webkit-scrollbar-thumb:hover]:bg-white/25">
       {/* Header — branded logo */}
       <div className={`flex items-center gap-2.5 px-2 py-3 border-b border-white/10 ${collapsed ? "justify-center px-1" : "px-4"}`}>
-        <img src={findooLogo} alt="FindOO" className={`shrink-0 rounded-lg object-contain ${collapsed ? "h-8 w-8" : "h-10 w-10"}`} />
+        <img src={findooLogo} alt="findoo" className={`shrink-0 rounded-lg object-contain ${collapsed ? "h-8 w-8" : "h-10 w-10"}`} />
         {!collapsed && (
           <div>
             <h1 className="text-sm font-bold text-white tracking-tight font-heading leading-tight">
-              FindOO Admin
+              findoo Admin
             </h1>
             <p className="text-[10px] text-white/50 leading-none mt-0.5">
               Control Center
@@ -298,7 +298,7 @@ export function AdminSidebar() {
           )}
         </div>
         {!collapsed && (
-          <p className="text-[9px] text-white/20 text-center mt-1.5">FindOO Admin v3.0</p>
+          <p className="text-[9px] text-white/20 text-center mt-1.5">findoo Admin v3.0</p>
         )}
       </SidebarFooter>
     </Sidebar>

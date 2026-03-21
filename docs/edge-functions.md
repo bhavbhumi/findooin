@@ -1,4 +1,4 @@
-# FindOO — Edge Functions Reference
+# findoo — Edge Functions Reference
 
 > Documentation for all 9 backend functions deployed on Lovable Cloud.
 

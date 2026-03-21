@@ -92,7 +92,7 @@ export function ComparisonPage({ data }: { data: ComparisonData }) {
                 <th className="text-left p-4 text-sm font-semibold text-foreground w-[35%]">Feature</th>
                 <th className="text-left p-4 text-sm font-semibold text-primary w-[32.5%]">
                   <span className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4" /> FindOO
+                    <Sparkles className="h-4 w-4" /> findoo
                   </span>
                 </th>
                 <th className="text-left p-4 text-sm font-semibold text-muted-foreground w-[32.5%]">
@@ -152,7 +152,7 @@ export function ComparisonPage({ data }: { data: ComparisonData }) {
                       <X className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
                     )}
                     <div>
-                      <p className="font-medium text-primary text-xs mb-0.5">FindOO</p>
+                      <p className="font-medium text-primary text-xs mb-0.5">findoo</p>
                       <p className="text-muted-foreground">{f.findoo}</p>
                     </div>
                   </div>
@@ -200,7 +200,7 @@ export function ComparisonPage({ data }: { data: ComparisonData }) {
           <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
             <Button size="lg" asChild>
               <Link to="/auth?mode=signup">
-                Join FindOO — It's Free <ArrowRight className="ml-1 h-4 w-4" />
+                Join findoo — It's Free <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>

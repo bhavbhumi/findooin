@@ -33,7 +33,7 @@ const footerLinkSections = [
   {
     title: "Explore",
     links: [
-      { label: "What is FindOO", to: "/explore" },
+      { label: "What is findoo", to: "/explore" },
       { label: "Why does it exist", to: "/explore?tab=why" },
       { label: "How it works", to: "/explore?tab=how" },
       { label: "Who is it for", to: "/explore?tab=who" },
@@ -198,9 +198,9 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
         <div className="container flex h-16 items-center justify-between">
           {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <img src={findooLogo} alt="FindOO" className="h-9 w-9" />
+            <img src={findooLogo} alt="findoo" className="h-9 w-9" />
             <span className="text-xl font-bold font-heading text-foreground tracking-tight">
-              FindOO
+              findoo
             </span>
           </Link>
 
@@ -300,13 +300,13 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       <footer className="border-t border-primary/10 bg-primary/[0.04]">
         <div className="container py-8 md:py-10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {/* Column 1: FindOO brand */}
+            {/* Column 1: findoo brand */}
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <img src={findooLogo} alt="FindOO" className="h-7 w-7" />
-                <span className="text-base font-bold font-heading text-foreground">FindOO</span>
+              <div className="flex items-center gap-2 mb-2">
+                <img src={findooLogo} alt="findoo" className="h-9 w-9" />
+                <span className="text-xl font-bold font-heading text-foreground tracking-tight">findoo</span>
               </div>
-              <p className="text-[10px] font-medium text-muted-foreground tracking-[0.15em] uppercase mb-3">
+              <p className="text-xs font-medium text-muted-foreground tracking-wide mb-3">
                 Financially Social
               </p>
               <div className="flex items-center gap-1.5 mb-1">
@@ -347,7 +347,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
         <div className="border-t border-border">
           <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} FindOO. All rights reserved.
+              © {new Date().getFullYear()} findoo. All rights reserved.
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <Link to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
