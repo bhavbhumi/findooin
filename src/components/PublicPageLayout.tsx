@@ -100,14 +100,14 @@ const NewsletterForm = () => {
   };
 
   return (
-    <form onSubmit={handleNewsletterSubmit} className="flex gap-1.5">
+    <form onSubmit={handleNewsletterSubmit} className="flex flex-col gap-2">
       <input
         type="email"
         name="nl_email"
         placeholder="your@email.com"
         required
         maxLength={255}
-        className="flex-1 min-w-0 px-3 py-1.5 rounded-lg border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+        className="w-full px-3 py-2 rounded-lg border border-border bg-card text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
       />
       {/* Honeypot — hidden from humans */}
       <div aria-hidden="true" className="absolute opacity-0 h-0 w-0 overflow-hidden" style={{ position: 'absolute', left: '-9999px' }}>
@@ -116,7 +116,7 @@ const NewsletterForm = () => {
       <button
         type="submit"
         disabled={nlSubmitting}
-        className="px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors shrink-0 disabled:opacity-50"
+        className="w-full px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
       >
         Subscribe
       </button>
