@@ -129,7 +129,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* ── Header ── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-lg">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/40 backdrop-blur-xl supports-[backdrop-filter]:bg-background/30">
         <div className="container flex h-16 items-center justify-between">
           {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
