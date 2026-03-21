@@ -196,7 +196,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
 
         {/* Mobile/tablet menu dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-border bg-background px-4 pb-4 pt-2 space-y-1 animate-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden border-t border-border/40 bg-background/60 backdrop-blur-xl px-4 pb-4 pt-2 space-y-1 animate-in slide-in-from-top-2 duration-200">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
