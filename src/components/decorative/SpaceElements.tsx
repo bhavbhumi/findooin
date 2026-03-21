@@ -28,7 +28,7 @@ export const SpaceDust = ({
       {particles.map((p, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-foreground/20"
+          className="absolute rounded-full bg-foreground/30"
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
