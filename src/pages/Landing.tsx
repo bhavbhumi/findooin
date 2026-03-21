@@ -197,8 +197,8 @@ const Landing = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <div className="flex items-center justify-center gap-3 sm:gap-5 flex-nowrap">
-              <span className="text-[9px] font-medium text-muted-foreground/40 uppercase tracking-widest whitespace-nowrap hidden sm:block">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:gap-x-5 sm:gap-y-3">
+              <span className="w-full sm:w-auto text-center sm:text-left text-[9px] font-medium text-muted-foreground/40 uppercase tracking-widest whitespace-nowrap">
                 Built for India's regulated BFSI ecosystem
               </span>
               <span className="hidden sm:block w-px h-4 bg-border/40" />
@@ -213,9 +213,9 @@ const Landing = () => {
                   <img
                     src={reg.src}
                     alt={`${reg.name} logo`}
-                    className="h-8 w-auto max-w-[36px] object-contain opacity-50 dark:opacity-35 grayscale dark:invert"
+                    className="h-6 sm:h-8 w-auto max-w-[28px] sm:max-w-[36px] object-contain opacity-50 dark:opacity-35 grayscale dark:invert"
                   />
-                  <span className="text-[11px] font-heading font-semibold text-muted-foreground/50 tracking-wide">
+                  <span className="text-[10px] sm:text-[11px] font-heading font-semibold text-muted-foreground/50 tracking-wide">
                     {reg.name}
                   </span>
                 </div>

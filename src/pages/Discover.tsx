@@ -163,7 +163,7 @@ const Discover = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
-      <PulsarBeacon className="!fixed !inset-0 !z-0" />
+      <PulsarBeacon className="!fixed !inset-0 !z-0 opacity-85" />
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
         {/* Main Column */}
         <div>
