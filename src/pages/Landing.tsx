@@ -452,7 +452,7 @@ const Landing = () => {
               >
                 <Link
                   to={`/blog/${post.slug}`}
-                  className="block rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
+                  className="block min-w-[280px] snap-start md:min-w-0 rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
                 >
                   {/* Cover image or gradient placeholder */}
                   <div className="h-36 bg-gradient-to-br from-primary/[0.1] via-accent/[0.05] to-muted/30 relative overflow-hidden">
