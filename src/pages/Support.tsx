@@ -354,6 +354,7 @@ const Support = () => {
 
   return (
     <PublicPageLayout>
+      <PulseWaves className="!fixed !inset-0 !z-0" />
       <PageHero
         breadcrumb="Support"
         title="Support"
