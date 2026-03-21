@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import findooLogo from "@/assets/findoo-logo.png";
 
 /* ── Laniakea Supercluster Visualization ──
    Cosmic web of filaments flowing toward a central "Great Attractor" — FindOO.
