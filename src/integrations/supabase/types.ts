@@ -2461,6 +2461,54 @@ export type Database = {
         }
         Relationships: []
       }
+      registry_sync_log: {
+        Row: {
+          completed_at: string | null
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          records_found: number | null
+          records_inserted: number | null
+          records_skipped: number | null
+          records_updated: number | null
+          source: string
+          started_at: string
+          status: string
+          sync_type: string
+          triggered_by: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          records_found?: number | null
+          records_inserted?: number | null
+          records_skipped?: number | null
+          records_updated?: number | null
+          source: string
+          started_at?: string
+          status?: string
+          sync_type?: string
+          triggered_by?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          records_found?: number | null
+          records_inserted?: number | null
+          records_skipped?: number | null
+          records_updated?: number | null
+          source?: string
+          started_at?: string
+          status?: string
+          sync_type?: string
+          triggered_by?: string | null
+        }
+        Relationships: []
+      }
       reports: {
         Row: {
           created_at: string
