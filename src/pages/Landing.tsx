@@ -132,11 +132,11 @@ const Landing = () => {
               </motion.span>
 
               <h1 className="text-[1.7rem] sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-4">
-                Connect. Share. Discover.{" "}
-                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Prosper Together.</span>
+                India's First{" "}
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Financial Network</span>
               </h1>
               <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-6">
-                Build Trusted Relationships with Verified Professionals and Entities across India's Financial Ecosystem and Turn Insights into Opportunities.
+                Where India's entire BFSI ecosystem connects — verified, compliant, and trusted by design.
               </p>
 
               {/* CTA Buttons */}
