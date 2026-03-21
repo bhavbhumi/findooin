@@ -23,10 +23,8 @@ import irdaiLogo from "@/assets/regulators/irdai-logo.jpg";
 import rbiLogo from "@/assets/regulators/rbi-logo.png";
 import pfrdaLogo from "@/assets/regulators/pfrda-logo.svg";
 import {
-  NetworkMesh,
   GlowBlob,
   Sparkles,
-  ConcentricRings,
   DiamondGrid,
 } from "@/components/decorative/SectionDecorations";
 
