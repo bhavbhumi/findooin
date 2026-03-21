@@ -1,4 +1,5 @@
 import { useState, memo, useMemo } from "react";
+import { NebulaClusters } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
