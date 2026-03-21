@@ -227,6 +227,19 @@ const Auth = () => {
       return;
     }
 
+    // Enforce password complexity on signup
+    if (isSignUp) {
+      const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
+      if (!pwRegex.test(password)) {
+        toast({
+          title: "Weak password",
+          description: "Password must be at least 8 characters with uppercase, lowercase, number, and special character.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setLoading(true);
 
     try {
