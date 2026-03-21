@@ -204,13 +204,28 @@ const Onboarding = () => {
         } as any, { onConflict: "id" });
       if (profileError) throw profileError;
 
-      // Upload verification documents
+      // Upload verification documents and create verification_requests
       let uploadFailures: string[] = [];
       for (const [role, file] of Object.entries(verificationFiles)) {
         if (file) {
           const result = await uploadFile("verification-docs", file, userId);
           if ("error" in result) {
             uploadFailures.push(`${role}: ${result.error}`);
+          } else {
+            // Create verification_request so admins can see it in the queue
+            const { error: vrError } = await supabase.from("verification_requests").insert({
+              user_id: userId,
+              document_url: result.url,
+              document_name: file.name,
+              document_type: file.type,
+              regulator: role === "issuer" ? "SEBI / RBI / IRDAI" : "SEBI / AMFI / IRDAI",
+              notes: `Uploaded during onboarding for ${role} role`,
+              status: "pending",
+            });
+            if (vrError) {
+              console.warn("Failed to create verification request:", vrError.message);
+              uploadFailures.push(`${role}: verification request failed`);
+            }
           }
         }
       }

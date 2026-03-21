@@ -36,6 +36,14 @@ export default function ProtectedRoute({ children, requireOnboarding = true }: P
           return;
         }
 
+        // Block unconfirmed email users (edge case: magic link or OAuth without email confirm)
+        const emailConfirmedAt = session.user.email_confirmed_at;
+        if (!emailConfirmedAt) {
+          await supabase.auth.signOut();
+          navigate("/auth", { replace: true });
+          return;
+        }
+
         if (requireOnboarding) {
           const { data: profile, error } = await supabase
             .from("profiles")
