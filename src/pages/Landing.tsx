@@ -234,7 +234,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-12 relative overflow-hidden space-dust-gold">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-dust-gold">
         <DistantStars count={8} />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
