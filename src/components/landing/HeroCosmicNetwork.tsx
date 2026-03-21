@@ -1,13 +1,9 @@
-import React, { useEffect, useRef, useMemo } from "react";
-import { motion } from "framer-motion";
+import React, { useMemo } from "react";
 
 /* ── Laniakea Supercluster Visualization ──
-   Inspired by the cosmic web: filaments of nodes flowing toward
-   a central "Great Attractor" — the FindOO core. Three distinct
-   filament streams represent Issuers, Intermediaries, and Investors
-   converging into a unified financial ecosystem. */
+   Cosmic web of filaments flowing toward a central "Great Attractor" — FindOO.
+   Three distinct streams: Issuers, Intermediaries, Investors. */
 
-/* ── Types ── */
 interface FilamentNode {
   x: number;
   y: number;
@@ -23,7 +19,6 @@ interface Filament {
   role: "issuer" | "intermediary" | "investor";
 }
 
-/* ── Config ── */
 const CX = 250;
 const CY = 250;
 const VB = 500;
@@ -40,18 +35,21 @@ const ROLE_GLOWS: Record<string, string> = {
   investor: "hsl(var(--investor) / 0.2)",
 };
 
-/* ── Seed-based pseudo-random for deterministic layout ── */
+const ROLE_LABELS: Record<string, string> = {
+  issuer: "ISSUERS",
+  intermediary: "INTERMEDIARIES",
+  investor: "INVESTORS",
+};
+
 function seededRandom(seed: number) {
   const x = Math.sin(seed) * 10000;
   return x - Math.floor(x);
 }
 
-/* ── Generate filament curves flowing toward center ── */
 function generateFilaments(): Filament[] {
   const roles: Array<"issuer" | "intermediary" | "investor"> = [
     "issuer", "intermediary", "investor",
   ];
-  // 5 major filaments from different angles
   const baseAngles = [30, 110, 195, 280, 340];
   const filaments: Filament[] = [];
 
@@ -61,8 +59,8 @@ function generateFilaments(): Filament[] {
     const points: { x: number; y: number }[] = [];
     const steps = 12;
     for (let i = 0; i <= steps; i++) {
-      const t = i / steps; // 0 = outer edge, 1 = center
-      const dist = 230 * (1 - t * t); // quadratic easing toward center
+      const t = i / steps;
+      const dist = 230 * (1 - t * t);
       const wobble = Math.sin(t * Math.PI * 3 + fi) * (20 - t * 18);
       const perpRad = rad + Math.PI / 2;
       const px = CX + Math.cos(rad) * dist + Math.cos(perpRad) * wobble;
@@ -75,7 +73,6 @@ function generateFilaments(): Filament[] {
   return filaments;
 }
 
-/* ── Generate nodes scattered along filaments ── */
 function generateNodes(filaments: Filament[]): FilamentNode[] {
   const nodes: FilamentNode[] = [];
   let seed = 42;
@@ -102,7 +99,6 @@ function generateNodes(filaments: Filament[]): FilamentNode[] {
     }
   });
 
-  // Add scattered "void" nodes — small nodes between filaments
   for (let i = 0; i < 15; i++) {
     const angle = seededRandom(seed++) * Math.PI * 2;
     const dist = 60 + seededRandom(seed++) * 150;
@@ -121,7 +117,6 @@ function generateNodes(filaments: Filament[]): FilamentNode[] {
   return nodes;
 }
 
-/* ── Generate paths from filament points ── */
 function filamentToPath(points: { x: number; y: number }[]): string {
   if (points.length < 2) return "";
   let d = `M ${points[0].x} ${points[0].y}`;
@@ -135,35 +130,29 @@ function filamentToPath(points: { x: number; y: number }[]): string {
   return d;
 }
 
-/* ── Streaming particle along a filament ── */
 const StreamParticle: React.FC<{
   path: string;
   color: string;
   delay: number;
   duration: number;
-  id: string;
-}> = ({ path, color, delay, duration, id }) => (
+}> = ({ path, color, delay, duration }) => (
   <>
     <circle r="2" fill={color} opacity="0.7">
-      <animateMotion
-        dur={`${duration}s`}
-        repeatCount="indefinite"
-        begin={`${delay}s`}
-        path={path}
-      />
+      <animateMotion dur={`${duration}s`} repeatCount="indefinite" begin={`${delay}s`} path={path} />
     </circle>
     <circle r="5" fill={color} opacity="0.15">
-      <animateMotion
-        dur={`${duration}s`}
-        repeatCount="indefinite"
-        begin={`${delay}s`}
-        path={path}
-      />
+      <animateMotion dur={`${duration}s`} repeatCount="indefinite" begin={`${delay}s`} path={path} />
     </circle>
   </>
 );
 
-/* ── Component ── */
+/* ── Role label configs — positioned near outer edge of each primary filament ── */
+const LABEL_POSITIONS = [
+  { role: "issuer", angle: 30 },
+  { role: "intermediary", angle: 110 },
+  { role: "investor", angle: 195 },
+] as const;
+
 const HeroCosmicNetwork: React.FC = () => {
   const filaments = useMemo(() => generateFilaments(), []);
   const nodes = useMemo(() => generateNodes(filaments), [filaments]);
@@ -175,23 +164,16 @@ const HeroCosmicNetwork: React.FC = () => {
       role="img"
       aria-label="India's First Financial Network — verified Issuers, Intermediaries and Investors connected in a compliance-governed ecosystem"
     >
-      {/* Ambient glow behind SVG */}
+      {/* Ambient glow */}
       <div className="absolute inset-[15%] rounded-full bg-primary/[0.08] dark:bg-primary/[0.14] blur-3xl" />
 
-      <svg
-        viewBox={`0 0 ${VB} ${VB}`}
-        className="w-full h-full"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg viewBox={`0 0 ${VB} ${VB}`} className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          {/* Central attractor glow */}
           <radialGradient id="lk-center" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.35" />
             <stop offset="40%" stopColor="hsl(var(--primary))" stopOpacity="0.08" />
             <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
           </radialGradient>
-
-          {/* Filament glow filters */}
           <filter id="lk-glow" x="-40%" y="-40%" width="180%" height="180%">
             <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge>
@@ -199,173 +181,139 @@ const HeroCosmicNetwork: React.FC = () => {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-
-          {/* Pulse gradient */}
-          <radialGradient id="lk-pulse" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
-          </radialGradient>
         </defs>
 
-        {/* Deep space subtle background texture */}
         <circle cx={CX} cy={CY} r="240" fill="url(#lk-center)" />
 
-        {/* ── Gravitational wave pulses from center ── */}
+        {/* Gravitational wave pulses */}
         {[0, 1.2, 2.4].map((delay, i) => (
           <circle key={`wave-${i}`} cx={CX} cy={CY} r="30" fill="none"
             stroke="hsl(var(--primary))" strokeWidth="0.5" opacity="0">
-            <animate attributeName="r" from="30" to="220" dur="4s"
-              begin={`${delay}s`} repeatCount="indefinite" />
-            <animate attributeName="opacity" values="0.2;0.05;0" dur="4s"
-              begin={`${delay}s`} repeatCount="indefinite" />
+            <animate attributeName="r" from="30" to="220" dur="4s" begin={`${delay}s`} repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.2;0.05;0" dur="4s" begin={`${delay}s`} repeatCount="indefinite" />
           </circle>
         ))}
 
-        {/* ── Filament streams (the cosmic web) ── */}
+        {/* Filament streams */}
         {filaments.map((fil, i) => (
           <g key={`fil-${i}`}>
-            {/* Glow trail */}
-            <path
-              d={filamentPaths[i]}
-              fill="none"
-              stroke={ROLE_GLOWS[fil.role]}
-              strokeWidth="8"
-              strokeLinecap="round"
-              opacity="0.3"
-              filter="url(#lk-glow)"
-            />
-            {/* Main filament line */}
-            <path
-              d={filamentPaths[i]}
-              fill="none"
-              stroke={ROLE_COLORS[fil.role]}
-              strokeWidth="1"
-              strokeLinecap="round"
-              opacity="0.25"
-              strokeDasharray="4 6"
-            />
+            <path d={filamentPaths[i]} fill="none" stroke={ROLE_GLOWS[fil.role]}
+              strokeWidth="8" strokeLinecap="round" opacity="0.3" filter="url(#lk-glow)" />
+            <path d={filamentPaths[i]} fill="none" stroke={ROLE_COLORS[fil.role]}
+              strokeWidth="1" strokeLinecap="round" opacity="0.25" strokeDasharray="4 6" />
           </g>
         ))}
 
-        {/* ── Inter-node connections (cosmic web threads) ── */}
+        {/* Inter-node connections */}
         {nodes.slice(0, 35).map((n, i) => {
-          // Connect each node to 1-2 nearby nodes
           const nearby = nodes
             .filter((m, j) => j !== i && Math.hypot(m.x - n.x, m.y - n.y) < 55)
             .slice(0, 2);
           return nearby.map((m, mi) => (
-            <line
-              key={`web-${i}-${mi}`}
-              x1={n.x} y1={n.y} x2={m.x} y2={m.y}
-              stroke={ROLE_COLORS[n.role]}
-              strokeWidth="0.3"
-              opacity="0.12"
-            />
+            <line key={`web-${i}-${mi}`} x1={n.x} y1={n.y} x2={m.x} y2={m.y}
+              stroke={ROLE_COLORS[n.role]} strokeWidth="0.3" opacity="0.12" />
           ));
         })}
 
-        {/* ── Nodes — galaxies/clusters along filaments ── */}
+        {/* Nodes */}
         {nodes.map((n, i) => (
           <g key={`node-${i}`}>
-            {/* Breathing halo */}
             <circle cx={n.x} cy={n.y} r={n.r + 4} fill={ROLE_GLOWS[n.role]} opacity="0.15">
-              <animate
-                attributeName="r"
-                values={`${n.r + 3};${n.r + 7};${n.r + 3}`}
-                dur={`${n.speed}s`}
-                begin={`${n.delay}s`}
-                repeatCount="indefinite"
-              />
-              <animate
-                attributeName="opacity"
-                values="0.12;0.28;0.12"
-                dur={`${n.speed}s`}
-                begin={`${n.delay}s`}
-                repeatCount="indefinite"
-              />
+              <animate attributeName="r" values={`${n.r + 3};${n.r + 7};${n.r + 3}`}
+                dur={`${n.speed}s`} begin={`${n.delay}s`} repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.12;0.28;0.12"
+                dur={`${n.speed}s`} begin={`${n.delay}s`} repeatCount="indefinite" />
             </circle>
-            {/* Core */}
-            <circle
-              cx={n.x} cy={n.y} r={n.r}
-              fill={ROLE_COLORS[n.role]}
-              opacity="0.85"
-            />
-            {/* Verified ring */}
+            <circle cx={n.x} cy={n.y} r={n.r} fill={ROLE_COLORS[n.role]} opacity="0.85" />
             {n.verified && n.r > 2.5 && (
-              <circle
-                cx={n.x} cy={n.y} r={n.r + 1.5}
-                fill="none"
-                stroke={ROLE_COLORS[n.role]}
-                strokeWidth="0.6"
-                opacity="0.4"
-              />
+              <circle cx={n.x} cy={n.y} r={n.r + 1.5} fill="none"
+                stroke={ROLE_COLORS[n.role]} strokeWidth="0.6" opacity="0.4" />
             )}
           </g>
         ))}
 
-        {/* ── Streaming particles flowing toward center ── */}
+        {/* Streaming particles */}
         {filaments.map((fil, i) => (
           <g key={`particles-${i}`}>
             {[0, 1, 2].map(p => (
-              <StreamParticle
-                key={`sp-${i}-${p}`}
-                id={`sp-${i}-${p}`}
-                path={filamentPaths[i]}
-                color={ROLE_COLORS[fil.role]}
-                delay={p * 2.5}
-                duration={6 + i * 0.8}
-              />
+              <StreamParticle key={`sp-${i}-${p}`} path={filamentPaths[i]}
+                color={ROLE_COLORS[fil.role]} delay={p * 2.5} duration={6 + i * 0.8} />
             ))}
           </g>
         ))}
 
-        {/* ── The Great Attractor — FindOO core ── */}
-        {/* Outer glow ring */}
+        {/* ── Central core — FindOO logo ── */}
         <circle cx={CX} cy={CY} r="34" fill="none"
           stroke="hsl(var(--primary))" strokeWidth="0.6" opacity="0.15">
           <animate attributeName="r" values="32;38;32" dur="4s" repeatCount="indefinite" />
           <animate attributeName="opacity" values="0.15;0.06;0.15" dur="4s" repeatCount="indefinite" />
         </circle>
-
-        {/* Core sphere */}
-        <circle cx={CX} cy={CY} r="22"
-          fill="hsl(var(--primary))" opacity="0.95">
+        <circle cx={CX} cy={CY} r="22" fill="hsl(var(--primary))" opacity="0.95">
           <animate attributeName="r" values="22;24;22" dur="3.5s" repeatCount="indefinite" />
         </circle>
-        <circle cx={CX} cy={CY} r="18"
-          fill="hsl(var(--primary))" opacity="1" />
+        <circle cx={CX} cy={CY} r="18" fill="hsl(var(--primary))" opacity="1" />
 
-        {/* FindOO text */}
-        <text
-          x={CX} y={CY + 1.5}
-          textAnchor="middle"
-          dominantBaseline="central"
-          fill="hsl(var(--primary-foreground))"
-          className="text-[8px] font-heading font-bold tracking-[0.08em] select-none"
-        >
-          FindOO
-        </text>
+        {/* FindOO Logo — stylised "F" mark */}
+        <g transform={`translate(${CX - 8}, ${CY - 10})`}>
+          <text
+            x="8" y="14"
+            textAnchor="middle"
+            dominantBaseline="central"
+            fill="hsl(var(--primary-foreground))"
+            fontSize="16"
+            fontWeight="800"
+            fontFamily="Montserrat, sans-serif"
+            letterSpacing="0.5"
+          >
+            F
+          </text>
+        </g>
 
-        {/* ── Role labels near the filament origins ── */}
-        {[
-          { label: "Issuers", angle: 30, role: "issuer" },
-          { label: "Intermediaries", angle: 110, role: "intermediary" },
-          { label: "Investors", angle: 195, role: "investor" },
-        ].map(({ label, angle, role }) => {
+        {/* ── Role labels — high visibility with backdrop pill ── */}
+        {LABEL_POSITIONS.map(({ role, angle }) => {
           const rad = (angle * Math.PI) / 180;
-          const lx = CX + Math.cos(rad) * 215;
-          const ly = CY + Math.sin(rad) * 215;
+          const lx = CX + Math.cos(rad) * 205;
+          const ly = CY + Math.sin(rad) * 205;
+          const label = ROLE_LABELS[role];
+          const pillW = label.length * 5.8 + 16;
           return (
-            <text
-              key={role}
-              x={lx} y={ly}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fill={ROLE_COLORS[role]}
-              className="text-[7px] font-medium uppercase tracking-[0.15em] opacity-40 select-none"
-            >
-              {label}
-            </text>
+            <g key={role}>
+              {/* Semi-transparent pill background */}
+              <rect
+                x={lx - pillW / 2}
+                y={ly - 8}
+                width={pillW}
+                height={16}
+                rx="8"
+                fill="hsl(var(--background))"
+                opacity="0.7"
+              />
+              <rect
+                x={lx - pillW / 2}
+                y={ly - 8}
+                width={pillW}
+                height={16}
+                rx="8"
+                fill={ROLE_COLORS[role]}
+                opacity="0.12"
+              />
+              {/* Color dot */}
+              <circle cx={lx - pillW / 2 + 10} cy={ly} r="2.5" fill={ROLE_COLORS[role]} opacity="0.9" />
+              {/* Label text */}
+              <text
+                x={lx + 4}
+                y={ly + 0.5}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill={ROLE_COLORS[role]}
+                fontSize="7"
+                fontWeight="700"
+                fontFamily="Montserrat, sans-serif"
+                letterSpacing="1.5"
+              >
+                {label}
+              </text>
+            </g>
           );
         })}
       </svg>

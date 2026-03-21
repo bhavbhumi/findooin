@@ -23,10 +23,8 @@ import irdaiLogo from "@/assets/regulators/irdai-logo.jpg";
 import rbiLogo from "@/assets/regulators/rbi-logo.png";
 import pfrdaLogo from "@/assets/regulators/pfrda-logo.svg";
 import {
-  NetworkMesh,
   GlowBlob,
   Sparkles,
-  ConcentricRings,
   DiamondGrid,
 } from "@/components/decorative/SectionDecorations";
 
@@ -101,15 +99,10 @@ const Landing = () => {
   return (
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-12 pb-10 lg:pt-16 lg:pb-14 overflow-hidden">
-        <NetworkMesh />
-        
-        {/* Glow blobs for depth */}
-        <GlowBlob position="top-left" color="primary" size="xl" />
-        <GlowBlob position="bottom-right" color="accent" size="lg" />
-        
-        {/* Decorative concentric rings */}
-        <ConcentricRings className="top-8 right-[5%] hidden lg:block" />
+      <section className="relative pt-10 pb-8 lg:pt-14 lg:pb-10 overflow-hidden">
+        {/* Subtle glow — no geometric mesh */}
+        <GlowBlob position="top-left" color="primary" size="lg" />
+        <GlowBlob position="bottom-right" color="accent" size="md" />
 
         <div className="container relative">
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 items-center">
@@ -195,42 +188,41 @@ const Landing = () => {
 
           {/* ─── Regulator Strip ─── */}
           <motion.div
-            className="mt-10 pt-6 border-t border-border/60"
+            className="mt-8 pt-5 border-t border-border/40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <div className="flex flex-col items-center gap-3">
-              <span className="text-[10px] font-medium text-muted-foreground/50 uppercase tracking-widest">
+            <div className="flex items-center justify-center gap-3 sm:gap-5 flex-nowrap">
+              <span className="text-[9px] font-medium text-muted-foreground/40 uppercase tracking-widest whitespace-nowrap hidden sm:block">
                 Built for India's regulated BFSI ecosystem
               </span>
-              <div className="flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-2">
-                {[
-                  { src: sebiLogo, name: "SEBI" },
-                  { src: amfiLogo, name: "AMFI" },
-                  { src: irdaiLogo, name: "IRDAI" },
-                  { src: rbiLogo, name: "RBI" },
-                  { src: pfrdaLogo, name: "PFRDA" },
-                ].map((reg) => (
-                  <div key={reg.name} className="flex items-center gap-1.5 select-none">
-                    <img
-                      src={reg.src}
-                      alt={`${reg.name} logo`}
-                      className="h-6 w-auto max-w-[28px] object-contain opacity-40 dark:opacity-30 grayscale dark:invert"
-                    />
-                    <span className="text-[11px] font-heading font-semibold text-muted-foreground/40 tracking-wide">
-                      {reg.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <span className="hidden sm:block w-px h-4 bg-border/40" />
+              {[
+                { src: sebiLogo, name: "SEBI" },
+                { src: amfiLogo, name: "AMFI" },
+                { src: irdaiLogo, name: "IRDAI" },
+                { src: rbiLogo, name: "RBI" },
+                { src: pfrdaLogo, name: "PFRDA" },
+              ].map((reg) => (
+                <div key={reg.name} className="flex items-center gap-1.5 select-none">
+                  <img
+                    src={reg.src}
+                    alt={`${reg.name} logo`}
+                    className="h-8 w-auto max-w-[36px] object-contain opacity-50 dark:opacity-35 grayscale dark:invert"
+                  />
+                  <span className="text-[11px] font-heading font-semibold text-muted-foreground/50 tracking-wide">
+                    {reg.name}
+                  </span>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-12 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="bottom-left" color="primary" size="md" />
         <div className="container relative">
           <CosmicValueSection />
@@ -238,7 +230,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden">
         <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
@@ -247,9 +239,8 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden">
         <GlowBlob position="top-left" color="primary" size="lg" />
-        <GlowBlob position="bottom-right" color="accent" size="md" />
         <div className="container max-w-4xl relative">
           <WhyFindooSection />
         </div>
@@ -257,9 +248,9 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-12 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
-        <ConcentricRings className="-bottom-20 -left-20 hidden lg:block" />
+        
         
         <div className="container max-w-5xl relative">
           <motion.div
@@ -305,7 +296,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ CTA — "Signup for FREE" with celebrating gradient ═══ */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-14 relative overflow-hidden">
         {/* Multi-layered gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-[hsl(var(--accent))]" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/[0.05]" />
@@ -420,7 +411,7 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-16 bg-muted/30 border-t border-border relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">
