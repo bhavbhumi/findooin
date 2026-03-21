@@ -409,7 +409,7 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-12 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-dust-gold">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">

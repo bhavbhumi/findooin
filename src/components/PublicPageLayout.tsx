@@ -122,11 +122,9 @@ const DropdownMenu = ({
 
 export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState("en");
   const location = useLocation();
 
   const isActive = (to: string) => location.pathname === to;
-  const currentLangLabel = languages.find((l) => l.code === currentLang)?.label || "English";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
