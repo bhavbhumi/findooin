@@ -256,12 +256,12 @@ const HeroCosmicNetwork: React.FC = () => {
 
         {/* FindOO Logo — image mark */}
         <image
-          href={findooLogo}
-          x={CX - 16}
-          y={CY - 16}
-          width="32"
-          height="32"
-          style={{ filter: "brightness(10)" }}
+          href={findooLogoIcon}
+          x={CX - 14}
+          y={CY - 14}
+          width="28"
+          height="28"
+          style={{ borderRadius: "50%" }}
         />
 
         {/* ── Role labels — high visibility with backdrop pill ── */}
