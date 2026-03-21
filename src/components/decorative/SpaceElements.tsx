@@ -15,11 +15,11 @@ export const SpaceDust = ({
     return {
       x: seed,
       y: ((i * 61.8) % 100),
-      size: 1 + (i % 3) * 0.8,
-      duration: 12 + (i % 7) * 4,
-      delay: (i % 5) * 1.5,
-      opacity: 0.15 + (i % 4) * 0.1,
-      drift: (i % 2 === 0 ? 1 : -1) * (8 + (i % 5) * 4),
+      size: 1.5 + (i % 3) * 1,
+      duration: 10 + (i % 7) * 3,
+      delay: (i % 5) * 1.2,
+      opacity: 0.25 + (i % 4) * 0.12,
+      drift: (i % 2 === 0 ? 1 : -1) * (10 + (i % 5) * 5),
     };
   });
 
