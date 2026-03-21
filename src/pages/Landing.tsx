@@ -235,6 +235,7 @@ const Landing = () => {
 
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="py-12 relative overflow-hidden space-dust-gold">
+        <DistantStars count={8} />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
           <TestimonialsSection />
