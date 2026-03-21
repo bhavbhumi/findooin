@@ -18,10 +18,10 @@ interface ConnectionLine {
 }
 
 /* ── Config ── */
-const ROLE_META: Record<string, { color: string; glow: string; label: string }> = {
-  issuer:       { color: "hsl(var(--issuer))",       glow: "hsl(var(--issuer) / 0.5)",       label: "Issuer" },
-  intermediary: { color: "hsl(var(--intermediary))",  glow: "hsl(var(--intermediary) / 0.5)",  label: "Intermediary" },
-  investor:     { color: "hsl(var(--investor))",      glow: "hsl(var(--investor) / 0.35)",     label: "Investor" },
+const ROLE_META: Record<string, { color: string; glow: string; label: string; plural: string }> = {
+  issuer:       { color: "hsl(var(--issuer))",       glow: "hsl(var(--issuer) / 0.5)",       label: "Issuer",       plural: "Issuers" },
+  intermediary: { color: "hsl(var(--intermediary))",  glow: "hsl(var(--intermediary) / 0.5)",  label: "Intermediary", plural: "Intermediaries" },
+  investor:     { color: "hsl(var(--investor))",      glow: "hsl(var(--investor) / 0.35)",     label: "Investor",     plural: "Investors" },
 };
 
 const ORBITS = {
@@ -300,7 +300,7 @@ const CosmicNetworkVisualization: React.FC<Props> = ({ highlightedOrbit }) => {
               }`}
               fill={ROLE_META[role].color}
             >
-              {ROLE_META[role].label}s
+              {ROLE_META[role].plural}
             </text>
           )
         )}
