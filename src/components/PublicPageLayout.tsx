@@ -198,9 +198,9 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
         <div className="container flex h-16 items-center justify-between">
           {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
-            <img src={findooLogo} alt="FindOO" className="h-9 w-9" />
+            <img src={findooLogo} alt="findoo" className="h-9 w-9" />
             <span className="text-xl font-bold font-heading text-foreground tracking-tight">
-              FindOO
+              findoo
             </span>
           </Link>
 
