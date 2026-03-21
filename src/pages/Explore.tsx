@@ -28,7 +28,7 @@ const tabs = ["What is FindOO", "Why does it exist", "How it works", "Who is it 
 /* ── What is FindOO ── */
 const WhatIsContent = () => (
   <>
-    <section className="py-16">
+    <section className="py-16 relative overflow-hidden space-nebula-teal">
       <div className="container">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div className="space-y-5" initial="hidden" animate="visible" variants={fadeUp} custom={0}>

@@ -253,6 +253,7 @@ const Landing = () => {
 
       {/* ═══ PLATFORM FEATURES ═══ */}
       <section className="py-12 relative overflow-hidden space-void-blue">
+        <SpaceDust count={15} />
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         
         
