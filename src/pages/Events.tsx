@@ -131,7 +131,7 @@ const Events = () => {
       <MobileFilterDrawer title="Events Filters & Calendar">
         <EventsSidebar onCategoryClick={handleCategoryClick} selectedDate={selectedDate} onDateSelect={setSelectedDate} eventDates={eventDates} />
       </MobileFilterDrawer>
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
         <div className="min-w-0">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
