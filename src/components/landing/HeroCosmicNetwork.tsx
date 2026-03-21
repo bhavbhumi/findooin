@@ -270,9 +270,9 @@ const HeroCosmicNetwork: React.FC = () => {
           const lx = CX + Math.cos(rad) * 205;
           const ly = CY + Math.sin(rad) * 205;
           const label = ROLE_LABELS[role];
-          const pillW = label.length * 6.2 + 24;
-          const dotX = lx - pillW / 2 + 11;
-          const textX = lx + 6;
+          const pillW = label.length * 7.5 + 28;
+          const dotX = lx - pillW / 2 + 12;
+          const textX = lx + 8;
           return (
             <g key={role}>
               {/* Solid pill background for contrast */}
