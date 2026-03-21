@@ -2477,6 +2477,36 @@ export type Database = {
         }
         Relationships: []
       }
+      registry_sync_config: {
+        Row: {
+          id: string
+          is_paused: boolean
+          paused_at: string | null
+          paused_by: string | null
+          sebi_intm_id: number | null
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          is_paused?: boolean
+          paused_at?: string | null
+          paused_by?: string | null
+          sebi_intm_id?: number | null
+          source: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          is_paused?: boolean
+          paused_at?: string | null
+          paused_by?: string | null
+          sebi_intm_id?: number | null
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       registry_sync_log: {
         Row: {
           completed_at: string | null

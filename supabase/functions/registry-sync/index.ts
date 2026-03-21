@@ -726,16 +726,44 @@ Deno.serve(async (req) => {
 
     const results: Record<string, ScrapeSummary & { log_id?: string }> = {};
 
+    // Load pause config once
+    const { data: pauseConfigs } = await supabase
+      .from("registry_sync_config")
+      .select("source, sebi_intm_id, is_paused")
+      .eq("is_paused", true);
+    const pausedSources = new Set((pauseConfigs || []).filter(c => !c.sebi_intm_id).map(c => c.source));
+    const pausedSebiTypes = new Set((pauseConfigs || []).filter(c => c.sebi_intm_id).map(c => c.sebi_intm_id));
+
     for (const source of sources) {
+      // Check source-level pause
+      if (pausedSources.has(source)) {
+        console.log(`[${source}] PAUSED — skipping`);
+        results[source] = { found: 0, inserted: 0, updated: 0, skipped: 0, details: "Paused" };
+        continue;
+      }
+
       console.log(`\n━━━ Syncing ${source.toUpperCase()} ━━━`);
 
       let subSource: string | null = null;
+      // Filter out paused SEBI types
+      let effectiveSebiTypeIds = sebiTypeIds;
       if (source === "sebi" && sebiTypeIds && sebiTypeIds.length > 0) {
-        const labels = sebiTypeIds.map(id => {
+        effectiveSebiTypeIds = sebiTypeIds.filter(id => !pausedSebiTypes.has(id));
+        if (effectiveSebiTypeIds.length === 0) {
+          console.log(`[sebi] All requested types are paused — skipping`);
+          results[source] = { found: 0, inserted: 0, updated: 0, skipped: 0, details: "All types paused" };
+          continue;
+        }
+        const labels = effectiveSebiTypeIds.map(id => {
           const t = SEBI_TYPES.find(st => st.intmId === id);
           return t ? t.registration_category : `intm${id}`;
         });
         subSource = labels.join(", ");
+      } else if (source === "sebi" && !sebiTypeIds) {
+        // Full SEBI sync — filter out paused types
+        effectiveSebiTypeIds = pausedSebiTypes.size > 0
+          ? SEBI_TYPES.filter(t => !pausedSebiTypes.has(t.intmId)).map(t => t.intmId)
+          : undefined;
       }
 
       const { data: logEntry } = await supabase
@@ -745,7 +773,7 @@ Deno.serve(async (req) => {
           sync_type: syncType,
           status: "running",
           triggered_by: triggeredBy,
-          metadata: subSource ? { sub_source: subSource, sebi_type_ids: sebiTypeIds } : {},
+          metadata: subSource ? { sub_source: subSource, sebi_type_ids: effectiveSebiTypeIds } : {},
         })
         .select("id")
         .single();
@@ -755,7 +783,7 @@ Deno.serve(async (req) => {
       try {
         const config = SOURCE_CONFIG[source];
         const opts: Record<string, unknown> = {};
-        if (source === "sebi" && sebiTypeIds) opts.sebi_type_ids = sebiTypeIds;
+        if (source === "sebi" && effectiveSebiTypeIds) opts.sebi_type_ids = effectiveSebiTypeIds;
 
         const summary = await config.scraper(supabase, logId, opts);
 
