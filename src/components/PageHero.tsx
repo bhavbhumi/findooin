@@ -2,8 +2,13 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { SpaceDust, DistantStars, Asteroids } from "@/components/decorative/SpaceElements";
+import {
+  SignalStreams, ConstellationWeb, LaunchStreaks, SupernovaBurst,
+  NebulaClusters, QuantumLinks, PulsarBeacon, PulseWaves,
+} from "@/components/decorative/ContextualSpaceElements";
 
 type HeroVariant = "circles" | "squares" | "triangles" | "hexagons" | "waves" | "dots";
+type HeroContext = "feed" | "network" | "jobs" | "events" | "directory" | "messages" | "discover" | "opinions" | "blog" | "support" | "legal" | "about" | "compare" | "pitch" | "community" | "professionals";
 
 interface PageHeroProps {
   breadcrumb: string;
