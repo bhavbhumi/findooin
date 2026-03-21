@@ -18,6 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Filter, BarChart3, TrendingUp, Clock, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { PulseWaves } from "@/components/decorative/ContextualSpaceElements";
 import {
   useOpinions, useOpinionDetail,
   type OpinionCategory, type OpinionStatus,

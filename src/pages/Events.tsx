@@ -127,7 +127,7 @@ const Events = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
-      <SupernovaBurst className="!fixed" />
+      <SupernovaBurst className="!fixed !inset-0 !z-0" />
       <MobileFilterDrawer title="Events Filters & Calendar">
         <EventsSidebar onCategoryClick={handleCategoryClick} selectedDate={selectedDate} onDateSelect={setSelectedDate} eventDates={eventDates} />
       </MobileFilterDrawer>

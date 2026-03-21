@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { PulseWaves } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import { Mail, MapPin, Clock, MessageCircle, Phone, User2, CheckCircle2, Building2, Globe, Navigation } from "lucide-react";

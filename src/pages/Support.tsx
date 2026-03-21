@@ -3,6 +3,7 @@
  * Tabs: Knowledge Base | Raise a Ticket | My Tickets
  */
 import { motion } from "framer-motion";
+import { PulseWaves } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState, useEffect } from "react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";

@@ -150,7 +150,7 @@ const Network = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
-      <ConstellationWeb className="!fixed" />
+      <ConstellationWeb className="!fixed !inset-0 !z-0" />
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
           {/* Main Column */}
           <div>
