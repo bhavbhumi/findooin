@@ -278,7 +278,7 @@ const Landing = () => {
             {platformFeatures.map((feat, i) => (
               <motion.div
                 key={feat.title}
-                className="rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 relative hover:shadow-lg hover:border-primary/15 transition-all duration-300 group"
+                className="min-w-[260px] snap-start md:min-w-0 rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 relative hover:shadow-lg hover:border-primary/15 transition-all duration-300 group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
