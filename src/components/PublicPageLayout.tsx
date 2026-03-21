@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import findooLogo from "@/assets/findoo-logo-icon.png";
@@ -15,14 +15,6 @@ const navLinks = [
   { label: "Explore", to: "/explore" },
   { label: "Compare", to: "/compare" },
   { label: "Blog", to: "/blog" },
-];
-
-const languages = [
-  { code: "en", label: "English" },
-  { code: "hi", label: "हिन्दी" },
-  { code: "mr", label: "मराठी" },
-  { code: "gu", label: "ગુજરાતી" },
-  { code: "ta", label: "தமிழ்" },
 ];
 
 const footerLinkSections = [
@@ -130,11 +122,9 @@ const DropdownMenu = ({
 
 export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState("en");
   const location = useLocation();
 
   const isActive = (to: string) => location.pathname === to;
-  const currentLangLabel = languages.find((l) => l.code === currentLang)?.label || "English";
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

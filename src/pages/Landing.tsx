@@ -99,7 +99,7 @@ const Landing = () => {
   return (
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-10 pb-8 lg:pt-14 lg:pb-10 overflow-hidden">
+      <section className="relative pt-10 pb-8 lg:pt-14 lg:pb-10 overflow-hidden space-void-blue">
         {/* Subtle glow — no geometric mesh */}
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
@@ -222,14 +222,14 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-12 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-nebula-teal">
         <div className="container relative">
           <CosmicValueSection />
         </div>
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-12 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-dust-gold">
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
           <TestimonialsSection />
@@ -237,7 +237,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-12 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-emerald">
         <GlowBlob position="top-left" color="primary" size="lg" />
         <div className="container max-w-4xl relative">
           <WhyFindooSection />
@@ -246,7 +246,7 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-12 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-void-blue">
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         
         
@@ -409,7 +409,7 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-12 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-dust-gold">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">

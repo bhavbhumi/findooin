@@ -169,6 +169,57 @@
   }
 }
 
+/* ── Deep Space Section Atmospheres ── */
+@layer utilities {
+  /* Nebula Teal — frozen gas wisps */
+  .space-nebula-teal {
+    background:
+      radial-gradient(ellipse 60% 50% at 15% 80%, hsl(165 50% 40% / 0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 85% 20%, hsl(200 45% 35% / 0.03) 0%, transparent 60%);
+  }
+  .dark .space-nebula-teal {
+    background:
+      radial-gradient(ellipse 60% 50% at 15% 80%, hsl(165 45% 48% / 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 85% 20%, hsl(200 45% 40% / 0.04) 0%, transparent 60%);
+  }
+
+  /* Stellar Gold — dust cloud */
+  .space-dust-gold {
+    background:
+      radial-gradient(ellipse 50% 40% at 80% 70%, hsl(46 65% 52% / 0.035) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 55% at 20% 30%, hsl(32 50% 45% / 0.025) 0%, transparent 55%);
+  }
+  .dark .space-dust-gold {
+    background:
+      radial-gradient(ellipse 50% 40% at 80% 70%, hsl(46 65% 45% / 0.05) 0%, transparent 65%),
+      radial-gradient(ellipse 35% 55% at 20% 30%, hsl(32 50% 40% / 0.035) 0%, transparent 55%);
+  }
+
+  /* Deep Void Blue — interstellar depth */
+  .space-void-blue {
+    background:
+      radial-gradient(ellipse 55% 45% at 70% 25%, hsl(240 80% 35% / 0.03) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 50% at 25% 75%, hsl(220 60% 30% / 0.025) 0%, transparent 55%);
+  }
+  .dark .space-void-blue {
+    background:
+      radial-gradient(ellipse 55% 45% at 70% 25%, hsl(240 80% 45% / 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 50% at 25% 75%, hsl(220 60% 40% / 0.04) 0%, transparent 55%);
+  }
+
+  /* Cosmic Emerald — deep space formation */
+  .space-emerald {
+    background:
+      radial-gradient(ellipse 50% 55% at 30% 60%, hsl(160 45% 35% / 0.03) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 35% at 75% 35%, hsl(180 40% 30% / 0.025) 0%, transparent 50%);
+  }
+  .dark .space-emerald {
+    background:
+      radial-gradient(ellipse 50% 55% at 30% 60%, hsl(160 45% 45% / 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 35% at 75% 35%, hsl(180 40% 38% / 0.04) 0%, transparent 50%);
+  }
+}
+
 /* ── Card hover glow effect ── */
 @layer utilities {
   .card-hover-glow {
