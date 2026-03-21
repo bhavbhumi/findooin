@@ -222,7 +222,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-12 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-nebula-teal">
         <div className="container relative">
           <CosmicValueSection />
         </div>
