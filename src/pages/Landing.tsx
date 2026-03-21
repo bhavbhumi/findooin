@@ -141,19 +141,19 @@ const Landing = () => {
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex items-center gap-3 mb-8">
-                <div className="flex flex-col items-center">
+              <div className="flex flex-col gap-3 mb-8">
+                <div className="flex items-center gap-3">
                   <Button size="lg" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
                     <Link to="/auth?mode=signup">
                       Join FindOO
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                  <span className="text-[10px] text-muted-foreground/60 mt-1 font-medium tracking-wide">It's free forever</span>
+                  <Button size="lg" variant="outline" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
+                    <Link to="/explore">Explore Platform</Link>
+                  </Button>
                 </div>
-                <Button size="lg" variant="outline" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
-                  <Link to="/explore">Explore Platform</Link>
-                </Button>
+                <span className="text-[10px] text-muted-foreground/50 font-medium tracking-wide">It's free forever — no credit card required</span>
               </div>
 
               {/* 3 Icon Stat Badges */}
