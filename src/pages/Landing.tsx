@@ -12,13 +12,15 @@ import { format } from "date-fns";
 import CosmicValueSection from "@/components/landing/CosmicValueSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import WhyFindooSection from "@/components/landing/WhyFindooSection";
+import HeroCosmicNetwork from "@/components/landing/HeroCosmicNetwork";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import networkBrainHero from "@/assets/network-brain-hero.png";
-import networkBrainHeroDark from "@/assets/network-brain-hero-dark-transparent.png";
-import findooLogoIcon from "@/assets/findoo-logo-icon.png";
+import sebiLogo from "@/assets/regulators/sebi-logo.png";
+import amfiLogo from "@/assets/regulators/amfi-logo.png";
+import irdaiLogo from "@/assets/regulators/irdai-logo.png";
+import rbiLogo from "@/assets/regulators/rbi-logo.png";
 import {
   NetworkMesh,
   GlowBlob,
@@ -130,11 +132,11 @@ const Landing = () => {
               </motion.span>
 
               <h1 className="text-[1.7rem] sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-bold font-heading tracking-tight text-foreground leading-[1.08] mb-4">
-                Connect. Share. Discover.{" "}
-                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Prosper Together.</span>
+                India's First{" "}
+                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Financial Network</span>
               </h1>
               <p className="text-base sm:text-lg text-muted-foreground max-w-xl leading-relaxed mb-6">
-                Build Trusted Relationships with Verified Professionals and Entities across India's Financial Ecosystem and Turn Insights into Opportunities.
+                Where India's entire BFSI ecosystem connects — verified, compliant, and trusted by design.
               </p>
 
               {/* CTA Buttons */}
@@ -176,53 +178,44 @@ const Landing = () => {
               </div>
             </motion.div>
 
-            {/* Right — Hero Illustration */}
+            {/* Right — Hero Cosmic Network */}
             <motion.div
               className="relative w-full max-w-sm lg:max-w-md mx-auto"
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <div className="relative">
-                {/* Soft ambient glow behind brain */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-gold/[0.06] rounded-full blur-3xl scale-110" />
-                <img
-                  src={networkBrainHero}
-                  alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain mix-blend-multiply dark:hidden"
-                />
-                <img
-                  src={networkBrainHeroDark}
-                  alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain hidden dark:block"
-                />
-                {/* Findoo logo subtly inside the skull — sits beneath the brain network */}
-                <motion.img
-                  src={findooLogoIcon}
-                  alt="Findoo — Your Financial Brain"
-                  className="absolute top-[8%] left-[50%] -translate-x-1/2 w-[52%] h-[52%] object-contain opacity-[0.15] dark:opacity-[0.18] pointer-events-none z-[1]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.15 }}
-                  transition={{ delay: 0.8, duration: 1.5 }}
-                />
-                <Sparkles />
-              </div>
+              <HeroCosmicNetwork />
             </motion.div>
           </div>
 
-          {/* ─── Inline Media Bar ─── */}
+          {/* ─── Regulator Strip ─── */}
           <motion.div
             className="mt-10 pt-6 border-t border-border/60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.5 }}
           >
-            <div className="flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-8 gap-y-2">
-              <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider mr-2">Featured in</span>
-              {["Economic Times", "Mint", "CNBC TV18", "Business Standard", "Forbes India", "Money Control", "NDTV Profit"].map((name) => (
-                <span key={name} className="text-xs sm:text-sm font-heading font-semibold text-muted-foreground/40 tracking-wide select-none">
-                  {name}
-                </span>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-10 gap-y-3">
+              <span className="text-xs font-medium text-muted-foreground/60 uppercase tracking-wider mr-2">
+                Built for India's regulated BFSI ecosystem
+              </span>
+              {[
+                { src: sebiLogo, name: "SEBI" },
+                { src: amfiLogo, name: "AMFI" },
+                { src: irdaiLogo, name: "IRDAI" },
+                { src: rbiLogo, name: "RBI" },
+              ].map((reg) => (
+                <div key={reg.name} className="flex items-center gap-2 select-none">
+                  <img
+                    src={reg.src}
+                    alt={`${reg.name} logo`}
+                    className="h-7 w-7 sm:h-8 sm:w-8 object-contain opacity-50 dark:opacity-40 grayscale dark:invert"
+                  />
+                  <span className="text-xs sm:text-sm font-heading font-semibold text-muted-foreground/50 tracking-wide">
+                    {reg.name}
+                  </span>
+                </div>
               ))}
             </div>
           </motion.div>
