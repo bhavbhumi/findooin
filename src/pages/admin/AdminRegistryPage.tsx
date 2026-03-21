@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink, FileUp, Globe, Clock, CheckCircle2, XCircle, Loader2, Shield, Landmark, Umbrella, PiggyBank } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Database, Search, RefreshCw, Download, MapPin, Building2, Hash, MoreHorizontal, Send, Mail, Upload, ExternalLink, FileUp, Globe, Clock, CheckCircle2, XCircle, Loader2, Shield, Landmark, Umbrella, PiggyBank, ChevronDown, ChevronRight } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateInvitation } from "@/hooks/useInvitations";
@@ -18,10 +19,71 @@ import { RegistryImportWizard } from "@/components/admin/RegistryImportWizard";
 
 const SOURCES = [
   { id: "amfi", label: "AMFI", icon: Landmark, color: "text-blue-600", desc: "Mutual Fund Distributors", url: "https://www.amfiindia.com/locate-distributor" },
-  { id: "sebi", label: "SEBI", icon: Shield, color: "text-emerald-600", desc: "Investment Advisers", url: "https://www.sebi.gov.in/sebiweb/other/OtherAction.do?doRecognisedFpi=yes&intmId=13" },
+  { id: "sebi", label: "SEBI", icon: Shield, color: "text-emerald-600", desc: "37 Registry Types — 35K+ Entities", url: "https://www.sebi.gov.in/sebiweb/other/OtherAction.do?doRecognised=yes" },
   { id: "irdai", label: "IRDAI", icon: Umbrella, color: "text-orange-600", desc: "Insurance Brokers", url: "https://irdai.gov.in/list-of-brokers" },
   { id: "pfrda", label: "PFRDA", icon: PiggyBank, color: "text-purple-600", desc: "Points of Presence", url: "https://pfrda.org.in/list-of-pops" },
 ] as const;
+
+// SEBI sub-types for granular sync
+const SEBI_TYPE_GROUPS = [
+  {
+    group: "Issuers",
+    types: [
+      { intmId: 16, label: "Alternative Investment Funds", count: 1830 },
+      { intmId: 20, label: "Infrastructure Investment Trusts", count: 28 },
+      { intmId: 23, label: "Mutual Funds", count: 56 },
+      { intmId: 33, label: "Portfolio Managers", count: 505 },
+      { intmId: 21, label: "Venture Capital Funds", count: 149 },
+      { intmId: 48, label: "SM REITs", count: 6 },
+      { intmId: 42, label: "Real Estate Investment Trust", count: 6 },
+    ],
+  },
+  {
+    group: "Intermediaries",
+    types: [
+      { intmId: 30, label: "Stock Brokers - Equity", count: 4946 },
+      { intmId: 31, label: "Stock Brokers - Equity Derivative", count: 3737 },
+      { intmId: 32, label: "Stock Brokers - Currency Derivative", count: 2730 },
+      { intmId: 38, label: "Stock Brokers - Interest Rate Derivative", count: 1521 },
+      { intmId: 37, label: "Stock Brokers - Debt", count: 742 },
+      { intmId: 2, label: "Stock Brokers - Commodity Derivative", count: 2017 },
+      { intmId: 5, label: "Banker to an Issue", count: 60 },
+      { intmId: 7, label: "Credit Rating Agency", count: 8 },
+      { intmId: 6, label: "Debentures Trustee", count: 26 },
+      { intmId: 4, label: "Designated Depository Participants", count: 17 },
+      { intmId: 15, label: "Qualified Depository Participants", count: 62 },
+      { intmId: 18, label: "Depository Participants - CDSL", count: 736 },
+      { intmId: 19, label: "Depository Participants - NSDL", count: 343 },
+      { intmId: 13, label: "Investment Adviser", count: 995 },
+      { intmId: 9, label: "Merchant Bankers", count: 241 },
+      { intmId: 14, label: "Research Analyst", count: 1844 },
+    ],
+  },
+  {
+    group: "Enablers",
+    types: [
+      { intmId: 27, label: "Custodians", count: 17 },
+      { intmId: 8, label: "KYC Registration Agency", count: 6 },
+      { intmId: 10, label: "Registrars & Transfer Agents", count: 80 },
+      { intmId: 35, label: "SCSB - Syndicate ASBA (equity)", count: 54 },
+      { intmId: 34, label: "SCSB - Direct ASBA (equity)", count: 54 },
+      { intmId: 47, label: "ESG Rating Providers", count: 19 },
+      { intmId: 40, label: "SCSB - Issuer Banks UPI", count: 54 },
+      { intmId: 41, label: "SCSB - Sponsor Banks UPI", count: 8 },
+      { intmId: 43, label: "UPI Mobile Applications", count: 39 },
+      { intmId: 44, label: "SCSB - Direct ASBA (debt)", count: 38 },
+      { intmId: 45, label: "SCSB - Syndicate ASBA (debt)", count: 44 },
+      { intmId: 46, label: "Vault Managers", count: 3 },
+    ],
+  },
+  {
+    group: "Investors / Participants",
+    types: [
+      { intmId: 29, label: "FPIs / Deemed FPIs", count: 11735 },
+      { intmId: 25, label: "Foreign Venture Capital Investors", count: 314 },
+    ],
+  },
+];
 
 export default function AdminRegistryPage() {
   const [search, setSearch] = useState("");
@@ -92,15 +154,18 @@ export default function AdminRegistryPage() {
     },
   });
 
-  const triggerSync = async (sources: string[]) => {
-    const label = sources.length === 1 ? sources[0].toUpperCase() : "All Sources";
+  const triggerSync = async (sources: string[], sebiTypeIds?: number[]) => {
+    const label = sebiTypeIds
+      ? `SEBI (${sebiTypeIds.length} type${sebiTypeIds.length > 1 ? "s" : ""})`
+      : sources.length === 1 ? sources[0].toUpperCase() : "All Sources";
     setSyncingSource(sources[0] || "all");
     toast.info(`Syncing ${label}... This may take a few minutes.`);
 
     try {
-      const { data, error } = await supabase.functions.invoke("registry-sync", {
-        body: { sources, sync_type: "manual" },
-      });
+      const body: Record<string, unknown> = { sources, sync_type: "manual" };
+      if (sebiTypeIds) body.sebi_type_ids = sebiTypeIds;
+
+      const { data, error } = await supabase.functions.invoke("registry-sync", { body });
 
       if (error) throw error;
       if (data?.success) {
@@ -240,6 +305,79 @@ export default function AdminRegistryPage() {
             })}
           </div>
 
+          {/* SEBI Sub-types breakdown */}
+          <Card>
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-emerald-600" />
+                    SEBI Registry Types — Granular Sync
+                  </CardTitle>
+                  <CardDescription className="text-[10px]">
+                    37 categories across 4 Findoo buckets. Sync individual types or groups.
+                  </CardDescription>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => triggerSync(["sebi"])}
+                  disabled={!!syncingSource}
+                >
+                  <RefreshCw className={`h-3 w-3 mr-1.5 ${syncingSource === "sebi" ? "animate-spin" : ""}`} />
+                  Sync All SEBI
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {SEBI_TYPE_GROUPS.map((group) => (
+                <Collapsible key={group.group}>
+                  <CollapsibleTrigger className="flex items-center justify-between w-full p-2 rounded-md hover:bg-muted/50 transition-colors group">
+                    <div className="flex items-center gap-2">
+                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground transition-transform group-data-[state=open]:rotate-90" />
+                      <span className="text-xs font-medium">{group.group}</span>
+                      <Badge variant="secondary" className="text-[9px]">
+                        {group.types.length} types · {group.types.reduce((s, t) => s + t.count, 0).toLocaleString()} entities
+                      </Badge>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 text-[10px] px-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        triggerSync(["sebi"], group.types.map(t => t.intmId));
+                      }}
+                      disabled={!!syncingSource}
+                    >
+                      <RefreshCw className="h-3 w-3 mr-1" /> Sync Group
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <div className="ml-6 mt-1 space-y-1">
+                      {group.types.map((type) => (
+                        <div key={type.intmId} className="flex items-center justify-between py-1 px-2 text-xs rounded hover:bg-muted/30">
+                          <div className="flex items-center gap-2">
+                            <span className="text-muted-foreground font-mono w-6 text-right">{type.intmId}</span>
+                            <span>{type.label}</span>
+                            <span className="text-muted-foreground">({type.count.toLocaleString()})</span>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-5 text-[9px] px-1.5"
+                            onClick={() => triggerSync(["sebi"], [type.intmId])}
+                            disabled={!!syncingSource}
+                          >
+                            <RefreshCw className="h-2.5 w-2.5 mr-1" /> Sync
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              ))}
+            </CardContent>
+          </Card>
           {/* Summary stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Card>
