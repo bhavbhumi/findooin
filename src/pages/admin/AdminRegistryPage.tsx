@@ -435,8 +435,8 @@ export default function AdminRegistryPage() {
                             </div>
                           </TableCell>
                           <TableCell className="text-xs font-mono">{log.records_found}</TableCell>
-                          <TableCell className="text-xs font-mono text-emerald-600">{log.records_inserted}</TableCell>
-                          <TableCell className="text-xs font-mono text-blue-600">{log.records_updated}</TableCell>
+                          <TableCell className="text-xs font-mono text-primary">{log.records_inserted}</TableCell>
+                          <TableCell className="text-xs font-mono text-accent-foreground">{log.records_updated}</TableCell>
                           <TableCell className="text-xs text-muted-foreground">
                             {format(new Date(log.started_at), "MMM d, HH:mm")}
                           </TableCell>
