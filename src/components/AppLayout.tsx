@@ -51,7 +51,7 @@ export default function AppLayout({
   useLoginStreak();
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0">
+    <div className="min-h-screen bg-background space-nebula-teal pb-16 md:pb-0">
       {showNavbar && <AppNavbar />}
       <ErrorBoundary fallbackTitle="This section encountered an error">
         {fullBleed ? (
