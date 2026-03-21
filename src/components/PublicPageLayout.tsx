@@ -300,13 +300,13 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       <footer className="border-t border-primary/10 bg-primary/[0.04]">
         <div className="container py-8 md:py-10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {/* Column 1: FindOO brand */}
+            {/* Column 1: findoo brand */}
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <img src={findooLogo} alt="FindOO" className="h-7 w-7" />
-                <span className="text-base font-bold font-heading text-foreground">FindOO</span>
+              <div className="flex items-center gap-2 mb-2">
+                <img src={findooLogo} alt="findoo" className="h-9 w-9" />
+                <span className="text-xl font-bold font-heading text-foreground tracking-tight">findoo</span>
               </div>
-              <p className="text-[10px] font-medium text-muted-foreground tracking-[0.15em] uppercase mb-3">
+              <p className="text-xs font-medium text-muted-foreground tracking-wide mb-3">
                 Financially Social
               </p>
               <div className="flex items-center gap-1.5 mb-1">
