@@ -298,7 +298,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ CTA — "Signup for FREE" with celebrating gradient ═══ */}
-      <section className="py-20 relative overflow-hidden">
+      <section className="py-14 relative overflow-hidden">
         {/* Multi-layered gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-[hsl(var(--accent))]" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/[0.05]" />
