@@ -142,7 +142,7 @@ export default function AdminRegistryPage() {
   };
 
   const statusIcon = (status: string) => {
-    if (status === "completed") return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />;
+    if (status === "completed") return <CheckCircle2 className="h-3.5 w-3.5 text-primary" />;
     if (status === "failed") return <XCircle className="h-3.5 w-3.5 text-destructive" />;
     if (status === "running") return <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />;
     return <Clock className="h-3.5 w-3.5 text-muted-foreground" />;
