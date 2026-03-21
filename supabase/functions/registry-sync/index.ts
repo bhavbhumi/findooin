@@ -134,21 +134,32 @@ async function upsertEntities(
         raw_data: rec.raw_data || {},
       };
 
+      // Deduplicate: prefer registration_number, fall back to name+category+source
+      let existing: any = null;
       if (rec.registration_number) {
-        const { data: existing } = await supabase
+        const { data: found } = await supabase
           .from("registry_entities")
           .select("id")
           .eq("source", source)
           .eq("source_id", rec.registration_number.trim())
           .maybeSingle();
+        existing = found;
+      }
+      if (!existing) {
+        // Fallback: match by name + category + source to prevent duplicates for entities without reg numbers
+        const { data: found } = await supabase
+          .from("registry_entities")
+          .select("id")
+          .eq("source", source)
+          .eq("registration_category", regCategory)
+          .eq("entity_name", rec.entity_name.trim())
+          .maybeSingle();
+        existing = found;
+      }
 
-        if (existing) {
-          await supabase.from("registry_entities").update(data).eq("id", existing.id);
-          updated++;
-        } else {
-          await supabase.from("registry_entities").insert(data);
-          inserted++;
-        }
+      if (existing) {
+        await supabase.from("registry_entities").update(data).eq("id", existing.id);
+        updated++;
       } else {
         await supabase.from("registry_entities").insert(data);
         inserted++;
