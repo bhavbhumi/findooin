@@ -166,9 +166,9 @@ export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "
         <Decoration />
       </div>
       {/* Subtle space flair in every hero */}
-      <SpaceDust count={10} />
-      <DistantStars count={6} />
-      <Asteroids count={2} />
+      <SpaceDust count={18} />
+      <DistantStars count={10} />
+      <Asteroids count={3} />
 
       <div className="container relative">
         <motion.div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6"

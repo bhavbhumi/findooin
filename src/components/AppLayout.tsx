@@ -52,7 +52,10 @@ export default function AppLayout({
   useLoginStreak();
 
   return (
-    <div className="min-h-screen bg-background space-nebula-teal pb-16 md:pb-0">
+    <div className="relative min-h-screen bg-background space-nebula-teal pb-16 md:pb-0">
+      <SpaceDust count={15} />
+      <DistantStars count={8} />
+      <Asteroids count={2} />
       {showNavbar && <AppNavbar />}
       <ErrorBoundary fallbackTitle="This section encountered an error">
         {fullBleed ? (
