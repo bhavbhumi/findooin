@@ -17,14 +17,6 @@ const navLinks = [
   { label: "Blog", to: "/blog" },
 ];
 
-const languages = [
-  { code: "en", label: "English" },
-  { code: "hi", label: "हिन्दी" },
-  { code: "mr", label: "मराठी" },
-  { code: "gu", label: "ગુજરાતી" },
-  { code: "ta", label: "தமிழ்" },
-];
-
 const footerLinkSections = [
   {
     title: "About",
