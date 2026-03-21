@@ -27,6 +27,7 @@ import {
   Sparkles,
   DiamondGrid,
 } from "@/components/decorative/SectionDecorations";
+import { SpaceDust, CometStreaks, DistantStars } from "@/components/decorative/SpaceElements";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
