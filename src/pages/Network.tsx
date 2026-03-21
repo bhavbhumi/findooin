@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, memo } from "react";
+import { ConstellationWeb } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
