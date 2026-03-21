@@ -1177,6 +1177,13 @@ export type Database = {
             referencedRelation: "registry_entities"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "invitations_registry_entity_id_fkey"
+            columns: ["registry_entity_id"]
+            isOneToOne: false
+            referencedRelation: "registry_entities_consolidated"
+            referencedColumns: ["id"]
+          },
         ]
       }
       job_applications: {
@@ -2389,14 +2396,17 @@ export type Database = {
       registry_entities: {
         Row: {
           address: string | null
+          all_registrations: Json | null
           city: string | null
           claimed_at: string | null
+          consolidated_entity_id: string | null
           contact_email: string | null
           contact_phone: string | null
           created_at: string
           entity_name: string
           entity_type: string | null
           id: string
+          is_primary_record: boolean | null
           is_public: boolean
           last_synced_at: string | null
           matched_user_id: string | null
@@ -2413,14 +2423,17 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          all_registrations?: Json | null
           city?: string | null
           claimed_at?: string | null
+          consolidated_entity_id?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
           entity_name: string
           entity_type?: string | null
           id?: string
+          is_primary_record?: boolean | null
           is_public?: boolean
           last_synced_at?: string | null
           matched_user_id?: string | null
@@ -2437,14 +2450,17 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          all_registrations?: Json | null
           city?: string | null
           claimed_at?: string | null
+          consolidated_entity_id?: string | null
           contact_email?: string | null
           contact_phone?: string | null
           created_at?: string
           entity_name?: string
           entity_type?: string | null
           id?: string
+          is_primary_record?: boolean | null
           is_public?: boolean
           last_synced_at?: string | null
           matched_user_id?: string | null
@@ -2624,6 +2640,13 @@ export type Database = {
             columns: ["registry_entity_id"]
             isOneToOne: false
             referencedRelation: "registry_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sales_leads_registry_entity_id_fkey"
+            columns: ["registry_entity_id"]
+            isOneToOne: false
+            referencedRelation: "registry_entities_consolidated"
             referencedColumns: ["id"]
           },
         ]
@@ -3715,7 +3738,93 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      registry_entities_consolidated: {
+        Row: {
+          address: string | null
+          all_categories: string | null
+          all_registration_numbers: string | null
+          all_registrations: Json | null
+          city: string | null
+          claimed_at: string | null
+          consolidated_entity_id: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          created_at: string | null
+          entity_name: string | null
+          entity_type: string | null
+          id: string | null
+          is_public: boolean | null
+          last_synced_at: string | null
+          matched_user_id: string | null
+          pincode: string | null
+          registration_category: string | null
+          registration_count: number | null
+          registration_number: string | null
+          source: string | null
+          source_id: string | null
+          state: string | null
+          status: string | null
+          updated_at: string | null
+          view_count: number | null
+        }
+        Insert: {
+          address?: string | null
+          all_categories?: never
+          all_registration_numbers?: never
+          all_registrations?: Json | null
+          city?: string | null
+          claimed_at?: string | null
+          consolidated_entity_id?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string | null
+          is_public?: boolean | null
+          last_synced_at?: string | null
+          matched_user_id?: string | null
+          pincode?: string | null
+          registration_category?: string | null
+          registration_count?: never
+          registration_number?: string | null
+          source?: string | null
+          source_id?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          address?: string | null
+          all_categories?: never
+          all_registration_numbers?: never
+          all_registrations?: Json | null
+          city?: string | null
+          claimed_at?: string | null
+          consolidated_entity_id?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string | null
+          is_public?: boolean | null
+          last_synced_at?: string | null
+          matched_user_id?: string | null
+          pincode?: string | null
+          registration_category?: string | null
+          registration_count?: never
+          registration_number?: string | null
+          source?: string | null
+          source_id?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       award_xp: {
@@ -3759,6 +3868,13 @@ export type Database = {
       compute_user_activity_status: {
         Args: { p_user_id: string }
         Returns: Json
+      }
+      consolidate_registry_entities: {
+        Args: never
+        Returns: {
+          groups_found: number
+          records_consolidated: number
+        }[]
       }
       create_notification: {
         Args: {

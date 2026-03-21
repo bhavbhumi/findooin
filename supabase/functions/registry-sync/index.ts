@@ -788,6 +788,15 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Run consolidation after sync to merge duplicate entities
+    try {
+      console.log("[consolidation] Running entity consolidation...");
+      const { data: consolResult } = await supabase.rpc("consolidate_registry_entities");
+      console.log("[consolidation] Result:", consolResult);
+    } catch (consolErr) {
+      console.warn("[consolidation] Non-fatal error:", consolErr);
+    }
+
     return new Response(JSON.stringify({ success: true, results }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

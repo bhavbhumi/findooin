@@ -109,13 +109,14 @@ export default function ProfessionalDirectory() {
   }, [setSearchParams]);
 
   const { data: allEntities = [], isLoading } = useQuery({
-    queryKey: ["public-professionals"],
+    queryKey: ["public-professionals-consolidated"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("registry_entities")
-        .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at")
+        .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record")
         .eq("is_public", true)
         .eq("status", "active")
+        .eq("is_primary_record", true)
         .order("entity_name", { ascending: true })
         .limit(1000);
       if (error) throw error;
@@ -438,11 +439,25 @@ export default function ProfessionalDirectory() {
                                   {entity.entity_name}
                                 </FlairName>
                               </h3>
-                              {entity.registration_category && (
-                                <p className="text-[11px] text-muted-foreground truncate mb-2.5">
-                                  {entity.registration_category}
-                                </p>
-                              )}
+                              {(() => {
+                                const regs = entity.all_registrations as Array<{ registration_category?: string }> | null;
+                                const regCount = regs?.length || 0;
+                                const allCats = regCount > 1
+                                  ? [...new Set(regs?.map(r => r.registration_category).filter(Boolean))].join(" · ")
+                                  : entity.registration_category;
+                                return allCats ? (
+                                  <div className="flex items-center gap-1.5 mb-2.5">
+                                    <p className="text-[11px] text-muted-foreground truncate">
+                                      {allCats}
+                                    </p>
+                                    {regCount > 1 && (
+                                      <Badge variant="secondary" className="text-[9px] h-4 px-1 shrink-0">
+                                        {regCount} reg.
+                                      </Badge>
+                                    )}
+                                  </div>
+                                ) : null;
+                              })()}
                               <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                                 <div className="flex items-center gap-3">
                                   {entity.city && (
