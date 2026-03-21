@@ -17,10 +17,11 @@ import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import sebiLogo from "@/assets/regulators/sebi-logo.png";
-import amfiLogo from "@/assets/regulators/amfi-logo.png";
-import irdaiLogo from "@/assets/regulators/irdai-logo.png";
+import sebiLogo from "@/assets/regulators/sebi-logo.avif";
+import amfiLogo from "@/assets/regulators/amfi-logo.jpeg";
+import irdaiLogo from "@/assets/regulators/irdai-logo.jpg";
 import rbiLogo from "@/assets/regulators/rbi-logo.png";
+import pfrdaLogo from "@/assets/regulators/pfrda-logo.svg";
 import {
   NetworkMesh,
   GlowBlob,
@@ -141,12 +142,15 @@ const Landing = () => {
 
               {/* CTA Buttons */}
               <div className="flex items-center gap-3 mb-8">
-                <Button size="lg" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
-                  <Link to="/auth?mode=signup">
-                    Join Findoo
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
+                <div className="flex flex-col items-center">
+                  <Button size="lg" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
+                    <Link to="/auth?mode=signup">
+                      Join FindOO
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <span className="text-[10px] text-muted-foreground/60 mt-1 font-medium tracking-wide">It's free forever</span>
+                </div>
                 <Button size="lg" variant="outline" className="h-11 px-6 sm:px-8 text-sm sm:text-base rounded-md" asChild>
                   <Link to="/explore">Explore Platform</Link>
                 </Button>
@@ -205,6 +209,7 @@ const Landing = () => {
                 { src: amfiLogo, name: "AMFI" },
                 { src: irdaiLogo, name: "IRDAI" },
                 { src: rbiLogo, name: "RBI" },
+                { src: pfrdaLogo, name: "PFRDA" },
               ].map((reg) => (
                 <div key={reg.name} className="flex items-center gap-2 select-none">
                   <img
