@@ -109,13 +109,14 @@ export default function ProfessionalDirectory() {
   }, [setSearchParams]);
 
   const { data: allEntities = [], isLoading } = useQuery({
-    queryKey: ["public-professionals"],
+    queryKey: ["public-professionals-consolidated"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("registry_entities")
-        .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at")
+        .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record")
         .eq("is_public", true)
         .eq("status", "active")
+        .eq("is_primary_record", true)
         .order("entity_name", { ascending: true })
         .limit(1000);
       if (error) throw error;
