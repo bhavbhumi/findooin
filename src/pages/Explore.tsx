@@ -9,6 +9,7 @@ import {
   XCircle, Package, Wrench, LayoutDashboard, Trophy, Sparkles, EyeOff
 } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { SpaceDust, CometStreaks, DistantStars } from "@/components/decorative/SpaceElements";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +28,7 @@ const tabs = ["What is FindOO", "Why does it exist", "How it works", "Who is it 
 /* ── What is FindOO ── */
 const WhatIsContent = () => (
   <>
-    <section className="py-16">
+    <section className="py-16 relative overflow-hidden space-nebula-teal">
       <div className="container">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div className="space-y-5" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
@@ -74,7 +75,7 @@ const WhatIsContent = () => (
     </section>
 
     {/* FindOO by the Numbers */}
-    <section className="py-14 border-t border-border">
+    <section className="py-14 border-t border-border relative overflow-hidden space-dust-gold">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -103,7 +104,7 @@ const WhatIsContent = () => (
     </section>
 
     {/* How FindOO is Different */}
-    <section className="py-14 border-t border-border">
+    <section className="py-14 border-t border-border relative overflow-hidden space-void-blue">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
           <h3 className="text-xl font-bold font-heading text-foreground mb-2">How FindOO is Different</h3>
@@ -192,7 +193,7 @@ const WhatIsContent = () => (
 const WhyExistsContent = () => (
   <>
     {/* Hero problem statement */}
-    <section className="py-16">
+    <section className="py-16 relative overflow-hidden space-emerald">
       <div className="container max-w-4xl">
         <motion.div className="text-center mb-12" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
           <h2 className="text-2xl font-bold font-heading text-foreground mb-4">The gap no one filled</h2>
@@ -382,7 +383,7 @@ const HowItWorksContent = () => {
   return (
     <>
       {/* Steps section */}
-      <section className="py-16">
+    <section className="py-16 relative overflow-hidden space-nebula-teal">
         <div className="container max-w-4xl">
           <motion.div className="text-center mb-12" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <h2 className="text-2xl font-bold font-heading text-foreground mb-4">Getting Started is Simple</h2>
@@ -531,7 +532,7 @@ const HowItWorksContent = () => {
 /* ── Who is it for ── */
 const WhoIsItForContent = () => (
   <>
-    <section className="py-16">
+    <section className="py-16 relative overflow-hidden space-dust-gold">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-12" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
           <h2 className="text-2xl font-bold font-heading text-foreground mb-4">Built for India's Financial Ecosystem</h2>

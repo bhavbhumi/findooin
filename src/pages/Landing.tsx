@@ -27,6 +27,7 @@ import {
   Sparkles,
   DiamondGrid,
 } from "@/components/decorative/SectionDecorations";
+import { SpaceDust, CometStreaks, DistantStars } from "@/components/decorative/SpaceElements";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -103,6 +104,9 @@ const Landing = () => {
         {/* Subtle glow — no geometric mesh */}
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
+        <CometStreaks count={4} />
+        <SpaceDust count={25} />
+        <DistantStars count={15} />
 
         <div className="container relative">
           <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 lg:gap-12 items-center">
@@ -223,6 +227,7 @@ const Landing = () => {
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
       <section className="py-12 relative overflow-hidden space-nebula-teal">
+        <SpaceDust count={12} />
         <div className="container relative">
           <CosmicValueSection />
         </div>
@@ -230,6 +235,7 @@ const Landing = () => {
 
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="py-12 relative overflow-hidden space-dust-gold">
+        <DistantStars count={8} />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
           <TestimonialsSection />
@@ -247,6 +253,7 @@ const Landing = () => {
 
       {/* ═══ PLATFORM FEATURES ═══ */}
       <section className="py-12 relative overflow-hidden space-void-blue">
+        <SpaceDust count={15} />
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         
         
