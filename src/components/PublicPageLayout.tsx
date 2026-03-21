@@ -33,7 +33,7 @@ const footerLinkSections = [
   {
     title: "Explore",
     links: [
-      { label: "What is FindOO", to: "/explore" },
+      { label: "What is findoo", to: "/explore" },
       { label: "Why does it exist", to: "/explore?tab=why" },
       { label: "How it works", to: "/explore?tab=how" },
       { label: "Who is it for", to: "/explore?tab=who" },
