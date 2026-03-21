@@ -178,37 +178,14 @@ const Landing = () => {
               </div>
             </motion.div>
 
-            {/* Right — Hero Illustration */}
+            {/* Right — Hero Cosmic Network */}
             <motion.div
               className="relative w-full max-w-sm lg:max-w-md mx-auto"
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <div className="relative">
-                {/* Soft ambient glow behind brain */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.08] via-transparent to-gold/[0.06] rounded-full blur-3xl scale-110" />
-                <img
-                  src={networkBrainHero}
-                  alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain mix-blend-multiply dark:hidden"
-                />
-                <img
-                  src={networkBrainHeroDark}
-                  alt="FindOO — The brain of your financial life"
-                  className="relative w-full h-auto object-contain hidden dark:block"
-                />
-                {/* Findoo logo subtly inside the skull — sits beneath the brain network */}
-                <motion.img
-                  src={findooLogoIcon}
-                  alt="Findoo — Your Financial Brain"
-                  className="absolute top-[8%] left-[50%] -translate-x-1/2 w-[52%] h-[52%] object-contain opacity-[0.15] dark:opacity-[0.18] pointer-events-none z-[1]"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.15 }}
-                  transition={{ delay: 0.8, duration: 1.5 }}
-                />
-                <Sparkles />
-              </div>
+              <HeroCosmicNetwork />
             </motion.div>
           </div>
 
