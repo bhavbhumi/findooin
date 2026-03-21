@@ -141,8 +141,8 @@ export const DistantStars = ({
             height: s.size,
           }}
           animate={{
-            opacity: [0.08, 0.3, 0.08],
-            scale: [1, 1.3, 1],
+            opacity: [0.15, 0.5, 0.15],
+            scale: [1, 1.4, 1],
           }}
           transition={{
             duration: s.twinkleDuration,
