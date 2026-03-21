@@ -194,6 +194,7 @@ export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "
       <SpaceDust count={18} />
       <DistantStars count={10} />
       <Asteroids count={3} />
+      {ContextElement && <ContextElement />}
 
       <div className="container relative">
         <motion.div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6"
