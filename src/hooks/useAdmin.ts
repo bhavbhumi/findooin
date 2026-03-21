@@ -149,9 +149,18 @@ export function useReviewVerification() {
       adminNotes: string;
       userId: string;
     }) => {
+      // Get current admin's ID for audit trail
+      const { data: { session } } = await supabase.auth.getSession();
+      const reviewerId = session?.user?.id || null;
+
       const { error: reqError } = await supabase
         .from("verification_requests")
-        .update({ status, admin_notes: adminNotes })
+        .update({
+          status,
+          admin_notes: adminNotes,
+          reviewed_by: reviewerId,
+          reviewed_at: new Date().toISOString(),
+        })
         .eq("id", requestId);
       if (reqError) throw reqError;
 
