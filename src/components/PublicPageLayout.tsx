@@ -302,10 +302,10 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {/* Column 1: findoo brand */}
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <img src={findooLogo} alt="findoo" className="h-9 w-9" />
+              <Link to="/" className="flex items-center gap-2">
+                <img src={findooLogo} alt="findoo" className="h-9 w-9 dark:brightness-0 dark:invert" />
                 <span className="text-xl font-bold font-heading text-primary tracking-tight">findoo</span>
-              </div>
+              </Link>
               <p className="text-xs font-medium text-muted-foreground tracking-wide mb-3">
                 Financially Social
               </p>
