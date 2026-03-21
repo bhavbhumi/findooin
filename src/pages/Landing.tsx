@@ -17,10 +17,11 @@ import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import sebiLogo from "@/assets/regulators/sebi-logo.png";
-import amfiLogo from "@/assets/regulators/amfi-logo.png";
-import irdaiLogo from "@/assets/regulators/irdai-logo.png";
+import sebiLogo from "@/assets/regulators/sebi-logo.avif";
+import amfiLogo from "@/assets/regulators/amfi-logo.jpeg";
+import irdaiLogo from "@/assets/regulators/irdai-logo.jpg";
 import rbiLogo from "@/assets/regulators/rbi-logo.png";
+import pfrdaLogo from "@/assets/regulators/pfrda-logo.svg";
 import {
   NetworkMesh,
   GlowBlob,
