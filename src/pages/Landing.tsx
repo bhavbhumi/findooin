@@ -224,7 +224,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-12 bg-muted/30 border-y border-border relative overflow-hidden">
         <GlowBlob position="bottom-left" color="primary" size="md" />
         <div className="container relative">
           <CosmicValueSection />
@@ -232,7 +232,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-16 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden">
         <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
@@ -241,9 +241,8 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-16 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden">
         <GlowBlob position="top-left" color="primary" size="lg" />
-        <GlowBlob position="bottom-right" color="accent" size="md" />
         <div className="container max-w-4xl relative">
           <WhyFindooSection />
         </div>
