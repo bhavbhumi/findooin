@@ -417,29 +417,30 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-12 relative overflow-hidden space-dust-gold">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-dust-gold">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">
           <motion.div
-            className="flex items-center justify-between mb-6"
+            className="flex items-center justify-between mb-5"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-3xl font-bold font-heading text-foreground">Latest from FindOO</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground">Latest from FindOO</h2>
             <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
               View all Insights <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </motion.div>
           {(!blogPosts || blogPosts.length === 0) ? (
-            <div className="md:col-span-3 text-center py-10">
+            <div className="md:col-span-3 text-center py-8">
               <p className="text-muted-foreground text-sm">Insights coming soon. Stay tuned!</p>
             </div>
           ) : null}
-          <div className="grid md:grid-cols-3 gap-5">
+          {/* Horizontal scroll on mobile, grid on desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
             {(blogPosts ?? []).map((post, i) => (
               <motion.div
                 key={post.id}
