@@ -1,4 +1,5 @@
 import { useState, memo } from "react";
+import { LaunchStreaks } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
