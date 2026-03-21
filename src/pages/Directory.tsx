@@ -185,6 +185,7 @@ const Directory = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      <NebulaClusters className="!fixed" />
       <MobileFilterDrawer title="Showcase Filters">
         <DirectorySidebar
           selectedType={selectedType}

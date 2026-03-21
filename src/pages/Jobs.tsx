@@ -96,6 +96,7 @@ const Jobs = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      <LaunchStreaks className="!fixed" />
       <MobileFilterDrawer title="Jobs Filters & Insights">
         <JobsSidebar onCategoryClick={handleCategoryClick} onLocationClick={handleLocationClick} />
       </MobileFilterDrawer>
