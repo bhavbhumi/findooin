@@ -304,7 +304,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <img src={findooLogo} alt="findoo" className="h-9 w-9" />
-                <span className="text-xl font-bold font-heading text-foreground tracking-tight">findoo</span>
+                <span className="text-xl font-bold font-heading text-primary tracking-tight">findoo</span>
               </div>
               <p className="text-xs font-medium text-muted-foreground tracking-wide mb-3">
                 Financially Social
