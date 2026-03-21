@@ -347,7 +347,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
         <div className="border-t border-border">
           <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} FindOO. All rights reserved.
+              © {new Date().getFullYear()} findoo. All rights reserved.
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <Link to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">

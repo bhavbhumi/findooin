@@ -99,9 +99,9 @@ const AppNavbar = () => {
           {/* Left: Logo + Feed + Network */}
           <div className="flex items-center gap-4">
             <Link to="/feed" className="flex items-center gap-2">
-              <img src={findooLogo} alt="FindOO" className="h-9 w-9" />
+              <img src={findooLogo} alt="findoo" className="h-9 w-9" />
               <span className="text-lg font-bold font-heading text-primary hidden sm:block tracking-tight">
-                FindOO
+                findoo
               </span>
             </Link>
           <div className="hidden md:flex items-center gap-0.5">
