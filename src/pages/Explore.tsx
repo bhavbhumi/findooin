@@ -75,7 +75,7 @@ const WhatIsContent = () => (
     </section>
 
     {/* FindOO by the Numbers */}
-    <section className="py-14 border-t border-border">
+    <section className="py-14 border-t border-border relative overflow-hidden space-dust-gold">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
