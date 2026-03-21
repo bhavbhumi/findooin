@@ -301,19 +301,19 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
         <div className="container py-8 md:py-10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {/* Column 1: findoo brand */}
-            <div>
-              <Link to="/" className="flex items-center gap-2">
+            <div className="space-y-3">
+              <Link to="/" className="inline-flex items-center gap-2">
                 <img src={findooLogo} alt="findoo" className="h-9 w-9 dark:brightness-0 dark:invert" />
                 <span className="text-xl font-bold font-heading text-primary tracking-tight">findoo</span>
               </Link>
-              <p className="text-xs font-medium text-muted-foreground tracking-wide mb-3">
+              <p className="text-xs font-medium text-muted-foreground tracking-wide">
                 Financially Social
               </p>
-              <div className="flex items-center gap-1.5 mb-1">
-                <MapPin className="h-3 w-3 text-primary shrink-0" />
+              <div className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
                 <span className="text-xs text-muted-foreground">Mumbai, India</span>
               </div>
-              <p className="text-[10px] text-muted-foreground leading-relaxed mb-4 pl-[18px]">
+              <p className="text-[10px] text-muted-foreground leading-relaxed pl-5">
                 CIN : AAA-7870
               </p>
 
