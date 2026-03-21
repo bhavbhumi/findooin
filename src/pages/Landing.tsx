@@ -12,13 +12,15 @@ import { format } from "date-fns";
 import CosmicValueSection from "@/components/landing/CosmicValueSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import WhyFindooSection from "@/components/landing/WhyFindooSection";
+import HeroCosmicNetwork from "@/components/landing/HeroCosmicNetwork";
 import { Button } from "@/components/ui/button";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
-import networkBrainHero from "@/assets/network-brain-hero.png";
-import networkBrainHeroDark from "@/assets/network-brain-hero-dark-transparent.png";
-import findooLogoIcon from "@/assets/findoo-logo-icon.png";
+import sebiLogo from "@/assets/regulators/sebi-logo.png";
+import amfiLogo from "@/assets/regulators/amfi-logo.png";
+import irdaiLogo from "@/assets/regulators/irdai-logo.png";
+import rbiLogo from "@/assets/regulators/rbi-logo.png";
 import {
   NetworkMesh,
   GlowBlob,
