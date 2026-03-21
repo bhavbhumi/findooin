@@ -532,7 +532,7 @@ const HowItWorksContent = () => {
 /* ── Who is it for ── */
 const WhoIsItForContent = () => (
   <>
-    <section className="py-16">
+    <section className="py-16 relative overflow-hidden space-dust-gold">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-12" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
           <h2 className="text-2xl font-bold font-heading text-foreground mb-4">Built for India's Financial Ecosystem</h2>
