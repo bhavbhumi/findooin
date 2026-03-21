@@ -270,41 +270,54 @@ const HeroCosmicNetwork: React.FC = () => {
           const lx = CX + Math.cos(rad) * 205;
           const ly = CY + Math.sin(rad) * 205;
           const label = ROLE_LABELS[role];
-          const pillW = label.length * 5.8 + 16;
+          const pillW = label.length * 6.2 + 24;
+          const dotX = lx - pillW / 2 + 11;
+          const textX = lx + 6;
           return (
             <g key={role}>
-              {/* Semi-transparent pill background */}
+              {/* Solid pill background for contrast */}
               <rect
                 x={lx - pillW / 2}
-                y={ly - 8}
+                y={ly - 9}
                 width={pillW}
-                height={16}
-                rx="8"
+                height={18}
+                rx="9"
                 fill="hsl(var(--background))"
-                opacity="0.7"
+                opacity="0.85"
               />
               <rect
                 x={lx - pillW / 2}
-                y={ly - 8}
+                y={ly - 9}
                 width={pillW}
-                height={16}
-                rx="8"
+                height={18}
+                rx="9"
                 fill={ROLE_COLORS[role]}
-                opacity="0.12"
+                opacity="0.15"
+              />
+              <rect
+                x={lx - pillW / 2}
+                y={ly - 9}
+                width={pillW}
+                height={18}
+                rx="9"
+                fill="none"
+                stroke={ROLE_COLORS[role]}
+                strokeWidth="0.5"
+                opacity="0.3"
               />
               {/* Color dot */}
-              <circle cx={lx - pillW / 2 + 10} cy={ly} r="2.5" fill={ROLE_COLORS[role]} opacity="0.9" />
-              {/* Label text */}
+              <circle cx={dotX} cy={ly} r="2.5" fill={ROLE_COLORS[role]} opacity="0.9" />
+              {/* Label text — centered in pill after dot */}
               <text
-                x={lx + 4}
+                x={textX}
                 y={ly + 0.5}
                 textAnchor="middle"
                 dominantBaseline="central"
                 fill={ROLE_COLORS[role]}
-                fontSize="7"
+                fontSize="7.5"
                 fontWeight="700"
                 fontFamily="Montserrat, sans-serif"
-                letterSpacing="1.5"
+                letterSpacing="1.2"
               >
                 {label}
               </text>
