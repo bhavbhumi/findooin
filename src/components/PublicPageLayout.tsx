@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
@@ -298,8 +298,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
 
       {/* ── Footer ── */}
       <footer className="border-t border-primary/10 bg-primary/[0.04]">
-        <div className="container py-12">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div className="container py-8 md:py-10">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {/* Column 1: FindOO brand */}
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -309,10 +309,11 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               <p className="text-[10px] font-medium text-muted-foreground tracking-[0.15em] uppercase mb-3">
                 Financially Social
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed mb-1">
-                📍 Mumbai, India
-              </p>
-              <p className="text-[10px] text-muted-foreground leading-relaxed mb-4">
+              <div className="flex items-center gap-1.5 mb-1">
+                <MapPin className="h-3 w-3 text-primary shrink-0" />
+                <span className="text-xs text-muted-foreground">Mumbai, India</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground leading-relaxed mb-4 pl-[18px]">
                 CIN : AAA-7870
               </p>
 

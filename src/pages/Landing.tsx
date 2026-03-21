@@ -100,7 +100,7 @@ const Landing = () => {
   return (
     <PublicPageLayout>
       {/* ═══ HERO ═══ */}
-      <section className="relative pt-10 pb-8 lg:pt-14 lg:pb-10 overflow-hidden space-void-blue">
+      <section className="relative pt-8 pb-6 lg:pt-10 lg:pb-8 overflow-hidden space-void-blue">
         {/* Subtle glow — no geometric mesh */}
         <GlowBlob position="top-left" color="primary" size="lg" />
         <GlowBlob position="bottom-right" color="accent" size="md" />
@@ -226,7 +226,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ VALUE PROPOSITIONS — Cosmic Network ═══ */}
-      <section className="py-12 relative overflow-hidden space-nebula-teal">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-nebula-teal">
         <SpaceDust count={12} />
         <div className="container relative">
           <CosmicValueSection />
@@ -234,7 +234,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-12 relative overflow-hidden space-dust-gold">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-dust-gold">
         <DistantStars count={8} />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
@@ -243,7 +243,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-12 relative overflow-hidden space-emerald">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-emerald">
         <GlowBlob position="top-left" color="primary" size="lg" />
         <div className="container max-w-4xl relative">
           <WhyFindooSection />
@@ -252,32 +252,33 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-12 relative overflow-hidden space-void-blue">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-void-blue">
         <SpaceDust count={15} />
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         
         
         <div className="container max-w-5xl relative">
           <motion.div
-            className="text-center mb-8"
+            className="text-center mb-6"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground mb-3">
               A full-stack financial network
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-base max-w-2xl mx-auto">
               Not just networking — FindOO is a complete operating system for India's financial professionals.
             </p>
           </motion.div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Horizontal scroll on mobile, grid on desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible md:pb-0">
             {platformFeatures.map((feat, i) => (
               <motion.div
                 key={feat.title}
-                className="rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 relative hover:shadow-lg hover:border-primary/15 transition-all duration-300 group"
+                className="min-w-[260px] snap-start md:min-w-0 rounded-xl border border-border bg-card/80 backdrop-blur-sm p-5 relative hover:shadow-lg hover:border-primary/15 transition-all duration-300 group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -301,7 +302,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ CTA — "Signup for FREE" with celebrating gradient ═══ */}
-      <section className="py-14 relative overflow-hidden">
+      <section className="py-10 lg:py-12 relative overflow-hidden">
         {/* Multi-layered gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-[hsl(var(--accent))]" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/[0.05]" />
@@ -416,29 +417,30 @@ const Landing = () => {
 
 
       {/* ═══ LATEST FROM FINDOO — Blog tease ═══ */}
-      <section className="py-12 relative overflow-hidden space-dust-gold">
+      <section className="py-8 lg:py-10 relative overflow-hidden space-dust-gold">
         <GlowBlob position="bottom-right" color="primary" size="md" />
         
         <div className="container max-w-5xl relative">
           <motion.div
-            className="flex items-center justify-between mb-6"
+            className="flex items-center justify-between mb-5"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeUp}
             custom={0}
           >
-            <h2 className="text-3xl font-bold font-heading text-foreground">Latest from FindOO</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground">Latest from FindOO</h2>
             <Link to="/blog" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
               View all Insights <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </motion.div>
           {(!blogPosts || blogPosts.length === 0) ? (
-            <div className="md:col-span-3 text-center py-10">
+            <div className="md:col-span-3 text-center py-8">
               <p className="text-muted-foreground text-sm">Insights coming soon. Stay tuned!</p>
             </div>
           ) : null}
-          <div className="grid md:grid-cols-3 gap-5">
+          {/* Horizontal scroll on mobile, grid on desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
             {(blogPosts ?? []).map((post, i) => (
               <motion.div
                 key={post.id}
@@ -450,7 +452,7 @@ const Landing = () => {
               >
                 <Link
                   to={`/blog/${post.slug}`}
-                  className="block rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
+                  className="block min-w-[280px] snap-start md:min-w-0 rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
                 >
                   {/* Cover image or gradient placeholder */}
                   <div className="h-36 bg-gradient-to-br from-primary/[0.1] via-accent/[0.05] to-muted/30 relative overflow-hidden">
