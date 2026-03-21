@@ -104,7 +104,7 @@ const WhatIsContent = () => (
     </section>
 
     {/* How FindOO is Different */}
-    <section className="py-14 border-t border-border">
+    <section className="py-14 border-t border-border relative overflow-hidden space-void-blue">
       <div className="container max-w-5xl">
         <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
           <h3 className="text-xl font-bold font-heading text-foreground mb-2">How FindOO is Different</h3>
