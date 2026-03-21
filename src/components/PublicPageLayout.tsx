@@ -180,20 +180,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
 
             <ThemeToggle />
 
-            <DropdownMenu
-              trigger={
-                <>
-                  <Globe className="h-4 w-4" />
-                  <span className="text-sm">{currentLangLabel}</span>
-                </>
-              }
-              items={languages.map((lang) => ({
-                label: lang.label,
-                onClick: () => setCurrentLang(lang.code),
-              }))}
-            />
 
-            <div className="w-px h-5 bg-border mx-1" />
+
 
             <Button variant="ghost" size="sm" asChild>
               <Link to="/auth" className="text-sm">Sign In</Link>
