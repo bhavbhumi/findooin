@@ -33,3 +33,5 @@ project_id = "qvzvhmuosxdaqxwyokpg"
     verify_jwt = false
   [functions.publish-scheduled-posts]
     verify_jwt = false
+  [functions.registry-sync]
+    verify_jwt = false
