@@ -16,7 +16,27 @@ interface PageHeroProps {
   titleAccent?: string;
   subtitle: string;
   variant?: HeroVariant;
+  /** Page context for unique space element overlays */
+  context?: HeroContext;
 }
+
+const contextElementMap: Partial<Record<HeroContext, React.FC>> = {
+  feed: SignalStreams,
+  network: ConstellationWeb,
+  jobs: LaunchStreaks,
+  events: SupernovaBurst,
+  directory: NebulaClusters,
+  messages: QuantumLinks,
+  discover: PulsarBeacon,
+  opinions: PulseWaves,
+  blog: SignalStreams,
+  support: PulseWaves,
+  compare: ConstellationWeb,
+  about: ConstellationWeb,
+  professionals: PulsarBeacon,
+  pitch: LaunchStreaks,
+  community: PulseWaves,
+};
 
 /* ── Distinct geometric sets per variant — VISIBLE opacities ── */
 
