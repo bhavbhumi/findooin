@@ -704,6 +704,7 @@ const Explore = () => {
 
   return (
     <PublicPageLayout>
+      <ConstellationWeb className="!fixed !inset-0 !z-0" />
       <PageHero
         breadcrumb="Explore"
         title="The Financial Network"
