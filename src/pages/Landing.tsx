@@ -246,7 +246,7 @@ const Landing = () => {
 
 
       {/* ═══ PLATFORM FEATURES ═══ */}
-      <section className="py-12 bg-muted/30 border-y border-border relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-void-blue">
         <GlowBlob position="center" color="primary" size="xl" className="opacity-50" />
         
         
