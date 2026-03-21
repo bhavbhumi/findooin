@@ -484,8 +484,13 @@ const Auth = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                minLength={6}
+                minLength={8}
               />
+              {isSignUp && (
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  Min 8 characters with uppercase, lowercase, number & special character.
+                </p>
+              )}
             </div>
 
             {/* Attempt counter */}
