@@ -133,7 +133,7 @@ export const DistantStars = ({
       {stars.map((s, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-foreground"
+          className="absolute rounded-full bg-foreground/80"
           style={{
             left: `${s.x}%`,
             top: `${s.y}%`,
