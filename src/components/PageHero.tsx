@@ -161,10 +161,14 @@ export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "
   const Decoration = decorationMap[variant];
 
   return (
-    <section className="relative pt-8 pb-12 overflow-hidden bg-gradient-to-b from-primary/[0.06] to-transparent">
+    <section className="relative pt-8 pb-12 overflow-hidden bg-gradient-to-b from-primary/[0.06] to-transparent space-void-blue">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <Decoration />
       </div>
+      {/* Subtle space flair in every hero */}
+      <SpaceDust count={10} />
+      <DistantStars count={6} />
+      <Asteroids count={2} />
 
       <div className="container relative">
         <motion.div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6"
