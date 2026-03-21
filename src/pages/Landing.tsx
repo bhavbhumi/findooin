@@ -237,7 +237,7 @@ const Landing = () => {
       </section>
 
       {/* ═══ WHY FINDOO ═══ */}
-      <section className="py-12 relative overflow-hidden">
+      <section className="py-12 relative overflow-hidden space-emerald">
         <GlowBlob position="top-left" color="primary" size="lg" />
         <div className="container max-w-4xl relative">
           <WhyFindooSection />
