@@ -1,4 +1,5 @@
 import { useState, useMemo, memo } from "react";
+import { SupernovaBurst } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
