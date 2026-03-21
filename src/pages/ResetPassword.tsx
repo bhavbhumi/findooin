@@ -42,8 +42,9 @@ const ResetPassword = () => {
       toast({ title: "Passwords don't match", variant: "destructive" });
       return;
     }
-    if (password.length < 6) {
-      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
+    const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
+    if (!pwRegex.test(password)) {
+      toast({ title: "Weak password", description: "Min 8 characters with uppercase, lowercase, number & special character.", variant: "destructive" });
       return;
     }
 
