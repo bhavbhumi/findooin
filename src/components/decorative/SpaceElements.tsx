@@ -15,11 +15,11 @@ export const SpaceDust = ({
     return {
       x: seed,
       y: ((i * 61.8) % 100),
-      size: 1 + (i % 3) * 0.8,
-      duration: 12 + (i % 7) * 4,
-      delay: (i % 5) * 1.5,
-      opacity: 0.15 + (i % 4) * 0.1,
-      drift: (i % 2 === 0 ? 1 : -1) * (8 + (i % 5) * 4),
+      size: 1.5 + (i % 3) * 1,
+      duration: 10 + (i % 7) * 3,
+      delay: (i % 5) * 1.2,
+      opacity: 0.25 + (i % 4) * 0.12,
+      drift: (i % 2 === 0 ? 1 : -1) * (10 + (i % 5) * 5),
     };
   });
 
@@ -28,7 +28,7 @@ export const SpaceDust = ({
       {particles.map((p, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-foreground/20"
+          className="absolute rounded-full bg-foreground/30"
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
@@ -133,7 +133,7 @@ export const DistantStars = ({
       {stars.map((s, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-foreground"
+          className="absolute rounded-full bg-foreground/80"
           style={{
             left: `${s.x}%`,
             top: `${s.y}%`,
@@ -141,8 +141,8 @@ export const DistantStars = ({
             height: s.size,
           }}
           animate={{
-            opacity: [0.08, 0.3, 0.08],
-            scale: [1, 1.3, 1],
+            opacity: [0.15, 0.5, 0.15],
+            scale: [1, 1.4, 1],
           }}
           transition={{
             duration: s.twinkleDuration,
@@ -180,13 +180,13 @@ export const Asteroids = ({
     return {
       x: ((i * 83.7) % 85) + 5,
       y: ((i * 59.3) % 80) + 10,
-      size: isLarge ? 18 + (i % 3) * 4 : 8 + (i % 4) * 3,
+      size: isLarge ? 22 + (i % 3) * 5 : 10 + (i % 4) * 4,
       rotation: (i * 47) % 360,
-      tumbleDuration: 20 + (i % 5) * 8,
-      driftDuration: 30 + (i % 4) * 10,
-      driftX: (i % 2 === 0 ? 1 : -1) * (15 + (i % 3) * 10),
-      driftY: (i % 2 === 0 ? -1 : 1) * (8 + (i % 3) * 6),
-      opacity: isLarge ? 0.12 : 0.08 + (i % 3) * 0.03,
+      tumbleDuration: 18 + (i % 5) * 6,
+      driftDuration: 25 + (i % 4) * 8,
+      driftX: (i % 2 === 0 ? 1 : -1) * (18 + (i % 3) * 12),
+      driftY: (i % 2 === 0 ? -1 : 1) * (10 + (i % 3) * 8),
+      opacity: isLarge ? 0.2 : 0.12 + (i % 3) * 0.05,
       shape: shapes[i % shapes.length],
       delay: (i % 4) * 2,
     };
