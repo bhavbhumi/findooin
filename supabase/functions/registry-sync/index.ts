@@ -38,7 +38,7 @@ const HEADERS = {
 interface SebiTypeConfig {
   intmId: number;
   label: string;
-  findoo_bucket: string; // issuer | intermediary | enabler | investor
+  findoo_bucket: string;
   entity_type: string;
   registration_category: string;
   expected_count: number;
@@ -85,7 +85,7 @@ const SEBI_TYPES: SebiTypeConfig[] = [
 ];
 
 // ═══════════════════════════════════════════════════
-// Source configs (AMFI, IRDAI, PFRDA remain, SEBI expanded)
+// Source configs
 // ═══════════════════════════════════════════════════
 type SourceScraper = (sb: any, logId: string, opts?: Record<string, unknown>) => Promise<ScrapeSummary>;
 
@@ -160,73 +160,72 @@ async function upsertEntities(
 }
 
 // ═══════════════════════════════════════════════════
-// SEBI SCRAPER — Comprehensive all-types scraper
+// SEBI SCRAPER — Session-based pagination via AJAX endpoint
 // ═══════════════════════════════════════════════════
 
 const SEBI_BASE = "https://www.sebi.gov.in/sebiweb/other/OtherAction.do";
+const SEBI_AJAX = "https://www.sebi.gov.in/sebiweb/ajax/other/getintmfpiinfo.jsp";
 
-// Parse SEBI card-style HTML into records
-function parseSebiCards(html: string): RawEntity[] {
-  const records: RawEntity[] = [];
-  // Clean HTML: remove scripts, styles
-  const clean = html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
-
-  // Split by "Name" label which starts each record card
-  // Pattern: label-value pairs separated by HTML structure
-  // Extract all text content between meaningful markers
-  const textContent = clean
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/?(div|span|p|td|tr|th|table|tbody|thead|a|b|strong|em|i|font|li|ul|ol|h\d)[^>]*>/gi, "\n")
-    .replace(/<[^>]*>/g, "")
+// Decode HTML entities (&#64; -> @, etc.)
+function decodeHtmlEntities(str: string): string {
+  return str
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n)))
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
-    .replace(/&#\d+;/g, "")
+    .replace(/&quot;/g, '"');
+}
+
+// Parse SEBI card-style HTML into records
+function parseSebiCards(html: string): RawEntity[] {
+  const records: RawEntity[] = [];
+  const clean = html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
+
+  const textContent = clean
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/?(div|span|p|td|tr|th|table|tbody|thead|a|b|strong|em|i|font|li|ul|ol|h\d)[^>]*>/gi, "\n")
+    .replace(/<[^>]*>/g, "")
     .replace(/\r/g, "");
 
-  // Split into lines and clean
-  const lines = textContent.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+  // Decode all HTML entities
+  const decoded = decodeHtmlEntities(textContent);
+  const lines = decoded.split("\n").map(l => l.trim()).filter(l => l.length > 0);
 
-  // State machine: parse label/value pairs
   let currentRecord: Record<string, string> = {};
   let currentLabel = "";
+
+  const labelPatterns: Record<string, string> = {
+    "^Name$": "name",
+    "^Trade Name$": "trade_name",
+    "^Registration No\\.?$": "registration_number",
+    "^E-?mail$": "email",
+    "^Telephone$": "telephone",
+    "^Fax No\\.?$": "fax",
+    "^Address$": "address",
+    "^Correspondence Address$": "correspondence_address",
+    "^Contact Person$": "contact_person",
+    "^Validity$": "validity",
+    "^Exchange Name$": "exchange_name",
+    "^Principal Officer$": "principal_officer",
+    "^Compliance Officer$": "compliance_officer",
+    "^Category$": "category",
+    "^Type$": "type",
+    "^Sponsor$": "sponsor",
+    "^Manager$": "manager",
+    "^Trustee$": "trustee",
+    "^Registrar$": "registrar",
+    "^Custodian$": "custodian",
+  };
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    // Skip navigation, pagination, header noise
     if (/^(Search|GO$|Show All|Note:|1 to |\d+ to \d+ of|0-9|A B C|---|\-\-|Select|records$)/i.test(line)) continue;
-    if (/^(Name \/ Trade Name|Registration No\.|Contact Person|Email|Location|Exchange Name):?$/i.test(line) && lines[i+1]?.startsWith("GO")) continue;
-
-    // Detect field labels
-    const labelPatterns: Record<string, string> = {
-      "^Name$": "name",
-      "^Trade Name$": "trade_name",
-      "^Registration No\\.?$": "registration_number",
-      "^E-?mail$": "email",
-      "^Telephone$": "telephone",
-      "^Fax No\\.?$": "fax",
-      "^Address$": "address",
-      "^Correspondence Address$": "correspondence_address",
-      "^Contact Person$": "contact_person",
-      "^Validity$": "validity",
-      "^Exchange Name$": "exchange_name",
-      "^Principal Officer$": "principal_officer",
-      "^Compliance Officer$": "compliance_officer",
-      "^Category$": "category",
-      "^Type$": "type",
-      "^Sponsor$": "sponsor",
-      "^Manager$": "manager",
-      "^Trustee$": "trustee",
-      "^Registrar$": "registrar",
-      "^Custodian$": "custodian",
-    };
 
     let isLabel = false;
     for (const [pattern, field] of Object.entries(labelPatterns)) {
       if (new RegExp(pattern, "i").test(line)) {
-        // If we encounter "Name" again and have a current record, save it
         if (field === "name" && currentRecord.name) {
           const entity = buildEntityFromRecord(currentRecord);
           if (entity) records.push(entity);
@@ -239,22 +238,17 @@ function parseSebiCards(html: string): RawEntity[] {
     }
 
     if (!isLabel && currentLabel) {
-      // This line is the value for the current label
       if (currentRecord[currentLabel]) {
         currentRecord[currentLabel] += ", " + line;
       } else {
         currentRecord[currentLabel] = line;
       }
-      // Reset label for next iteration (value consumed)
-      // But some values span multiple lines (addresses)
-      // Only reset if next line is a known label
       const nextLine = lines[i + 1] || "";
       const isNextLabel = Object.keys(labelPatterns).some(p => new RegExp(p, "i").test(nextLine));
       if (isNextLabel) currentLabel = "";
     }
   }
 
-  // Don't forget the last record
   if (currentRecord.name) {
     const entity = buildEntityFromRecord(currentRecord);
     if (entity) records.push(entity);
@@ -267,13 +261,11 @@ function buildEntityFromRecord(rec: Record<string, string>): RawEntity | null {
   const name = rec.name?.trim();
   if (!name || name.length < 2) return null;
 
-  // Extract city/state/pincode from address
   let city = "", state = "", pincode = "";
   const addr = rec.address || rec.correspondence_address || "";
   const pincodeMatch = addr.match(/(\d{6})\s*$/);
   if (pincodeMatch) pincode = pincodeMatch[1];
 
-  // Common pattern: "..., CITY, STATE, PINCODE"
   const parts = addr.split(",").map(p => p.trim());
   if (parts.length >= 3) {
     state = parts[parts.length - 2] || "";
@@ -307,21 +299,76 @@ function buildEntityFromRecord(rec: Record<string, string>): RawEntity | null {
   };
 }
 
-// Fetch a single SEBI page
-async function fetchSebiPage(intmId: number, pageNo: number): Promise<{ html: string; totalRecords: number }> {
-  const url = `${SEBI_BASE}?doRecognisedFpi=yes&intmId=${intmId}&pageNo=${pageNo}`;
-  const resp = await fetch(url, { headers: HEADERS, signal: AbortSignal.timeout(20000) });
-  if (!resp.ok) throw new Error(`SEBI returned ${resp.status} for intmId=${intmId} page=${pageNo}`);
-  const html = await resp.text();
+// Extract session cookie from Set-Cookie header
+function extractSessionCookie(resp: Response): string {
+  const setCookies = resp.headers.getSetCookie?.() || [];
+  for (const c of setCookies) {
+    const m = c.match(/JSESSIONID=([^;]+)/);
+    if (m) return m[1];
+  }
+  // Fallback: try raw header
+  const raw = resp.headers.get("set-cookie") || "";
+  const m = raw.match(/JSESSIONID=([^;]+)/);
+  return m ? m[1] : "";
+}
 
-  // Extract total from "1 to 25 of XXXX records"
+// Fetch initial SEBI page (establishes session) and parse page 1
+async function fetchSebiInitialPage(intmId: number): Promise<{ html: string; totalRecords: number; sessionId: string }> {
+  const url = `${SEBI_BASE}?doRecognisedFpi=yes&intmId=${intmId}`;
+  const resp = await fetch(url, { headers: HEADERS, signal: AbortSignal.timeout(20000) });
+  if (!resp.ok) throw new Error(`SEBI returned ${resp.status} for intmId=${intmId}`);
+  
+  const sessionId = extractSessionCookie(resp);
+  const html = await resp.text();
   const totalMatch = html.match(/\d+\s+to\s+\d+\s+of\s+(\d+)\s+record/i);
   const totalRecords = totalMatch ? parseInt(totalMatch[1], 10) : 0;
 
-  return { html, totalRecords };
+  return { html, totalRecords, sessionId };
 }
 
-// Scrape a single SEBI intermediary type (by intmId)
+// Fetch subsequent page via AJAX with session cookie
+async function fetchSebiAjaxPage(intmId: number, pageIndex: number, sessionId: string): Promise<string> {
+  const body = new URLSearchParams({
+    nextValue: "0",
+    next: "n",
+    intmId: String(intmId),
+    contPer: "",
+    name: "",
+    regNo: "",
+    email: "",
+    location: "",
+    exchange: "",
+    affiliate: "",
+    alp: "",
+    doDirect: String(pageIndex),
+    intmIds: "",
+  });
+
+  const resp = await fetch(SEBI_AJAX, {
+    method: "POST",
+    headers: {
+      ...HEADERS,
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Referer": `${SEBI_BASE}?doRecognisedFpi=yes&intmId=${intmId}`,
+      "X-Requested-With": "XMLHttpRequest",
+      "Cookie": `JSESSIONID=${sessionId}`,
+    },
+    body: body.toString(),
+    signal: AbortSignal.timeout(20000),
+  });
+
+  if (!resp.ok) throw new Error(`SEBI AJAX returned ${resp.status}`);
+  const html = await resp.text();
+  
+  // Check for WAF block
+  if (html.includes("Unauthorized Request Blocked") || html.includes("Unauthorized Activity")) {
+    throw new Error("SEBI WAF blocked request — session may have expired");
+  }
+
+  return html;
+}
+
+// Scrape a single SEBI intermediary type with session-based pagination
 async function scrapeSebiType(
   supabase: any,
   typeConfig: SebiTypeConfig,
@@ -331,8 +378,8 @@ async function scrapeSebiType(
   const PER_PAGE = 25;
 
   try {
-    // Fetch first page to get total count
-    const { html: firstHtml, totalRecords } = await fetchSebiPage(typeConfig.intmId, 1);
+    // Step 1: Fetch initial page (gets session cookie + page 1 data)
+    const { html: firstHtml, totalRecords, sessionId } = await fetchSebiInitialPage(typeConfig.intmId);
     const firstRecords = parseSebiCards(firstHtml);
     for (const r of firstRecords) {
       const key = r.registration_number || r.entity_name;
@@ -340,39 +387,64 @@ async function scrapeSebiType(
     }
 
     const totalPages = Math.ceil(totalRecords / PER_PAGE);
-    console.log(`[SEBI:${typeConfig.intmId}] ${typeConfig.label}: ${totalRecords} records, ${totalPages} pages`);
+    console.log(`[SEBI:${typeConfig.intmId}] ${typeConfig.label}: ${totalRecords} records, ${totalPages} pages, session=${sessionId ? "yes" : "NO"}, page1=${firstRecords.length} parsed`);
 
-    // Fetch remaining pages
-    for (let page = 2; page <= totalPages; page++) {
-      try {
-        const { html } = await fetchSebiPage(typeConfig.intmId, page);
-        const parsed = parseSebiCards(html);
-        for (const r of parsed) {
-          const key = r.registration_number || r.entity_name;
-          if (!seenRegNums.has(key)) { seenRegNums.add(key); allRecords.push(r); }
+    if (!sessionId) {
+      console.log(`[SEBI:${typeConfig.intmId}] WARNING: No session cookie — pagination will not work`);
+    }
+
+    // Step 2: Fetch remaining pages via AJAX with session cookie
+    if (sessionId && totalPages > 1) {
+      let consecutiveFailures = 0;
+      const MAX_CONSECUTIVE_FAILURES = 3;
+
+      for (let pageIdx = 1; pageIdx < totalPages; pageIdx++) {
+        try {
+          const html = await fetchSebiAjaxPage(typeConfig.intmId, pageIdx, sessionId);
+          const parsed = parseSebiCards(html);
+          
+          if (parsed.length === 0) {
+            console.log(`[SEBI:${typeConfig.intmId}] Page ${pageIdx + 1}/${totalPages}: 0 records parsed`);
+            consecutiveFailures++;
+          } else {
+            consecutiveFailures = 0;
+            for (const r of parsed) {
+              const key = r.registration_number || r.entity_name;
+              if (!seenRegNums.has(key)) { seenRegNums.add(key); allRecords.push(r); }
+            }
+          }
+
+          if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+            console.log(`[SEBI:${typeConfig.intmId}] Stopping after ${MAX_CONSECUTIVE_FAILURES} consecutive empty pages`);
+            break;
+          }
+        } catch (err) {
+          console.log(`[SEBI:${typeConfig.intmId}] Page ${pageIdx + 1} failed: ${err}`);
+          consecutiveFailures++;
+          if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
+            console.log(`[SEBI:${typeConfig.intmId}] Stopping after ${MAX_CONSECUTIVE_FAILURES} consecutive failures`);
+            break;
+          }
         }
-      } catch (err) {
-        console.log(`[SEBI:${typeConfig.intmId}] Page ${page} failed: ${err}`);
+        // Rate limit: 400ms between AJAX requests
+        await new Promise(r => setTimeout(r, 400));
       }
-      // Rate limit: 300ms between requests
-      await new Promise(r => setTimeout(r, 300));
     }
   } catch (err) {
     return { found: 0, inserted: 0, updated: 0, skipped: 0, details: `Failed to scrape intmId=${typeConfig.intmId}: ${err}` };
   }
 
+  console.log(`[SEBI:${typeConfig.intmId}] Total parsed: ${allRecords.length} unique records`);
+
   if (allRecords.length === 0) {
     return { found: 0, inserted: 0, updated: 0, skipped: 0, details: `No records parsed for ${typeConfig.label}` };
   }
 
-  // Upsert with SEBI sub-source for dedup
-  const sourceKey = `sebi`;
-  const result = await upsertEntities(supabase, sourceKey, typeConfig.entity_type, typeConfig.registration_category, allRecords);
+  const result = await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, allRecords);
   return { found: allRecords.length, ...result };
 }
 
-// Entry: scrape ALL SEBI types (called when source=sebi with no sebi_type_ids)
-// Or scrape specific types via sebi_type_ids array
+// Entry: scrape ALL or specific SEBI types
 async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string, unknown>): Promise<ScrapeSummary> {
   const typeIds = opts?.sebi_type_ids as number[] | undefined;
   const configs = typeIds
@@ -392,8 +464,8 @@ async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string
     typeResults[`${config.intmId}_${config.registration_category}`] = result;
     console.log(`   found=${result.found} ins=${result.inserted} upd=${result.updated} skip=${result.skipped}`);
 
-    // Breathing room between types
-    await new Promise(r => setTimeout(r, 500));
+    // Breathing room between types (fresh session for each)
+    await new Promise(r => setTimeout(r, 1000));
   }
 
   return {
@@ -406,7 +478,7 @@ async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string
 }
 
 // ═══════════════════════════════════════════════════
-// AMFI Scraper (unchanged)
+// AMFI Scraper
 // ═══════════════════════════════════════════════════
 const AMFI_CITIES = [
   "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Ahmedabad", "Chennai",
@@ -673,13 +745,22 @@ Deno.serve(async (req) => {
 
     const syncType = (body.sync_type as string) || "manual";
     const triggeredBy = (body.triggered_by as string) || null;
-    // For SEBI: optionally pass specific type IDs
     const sebiTypeIds = body.sebi_type_ids as number[] | undefined;
 
     const results: Record<string, ScrapeSummary & { log_id?: string }> = {};
 
     for (const source of sources) {
       console.log(`\n━━━ Syncing ${source.toUpperCase()} ━━━`);
+
+      // Build a descriptive sub_source for SEBI granular syncs
+      let subSource: string | null = null;
+      if (source === "sebi" && sebiTypeIds && sebiTypeIds.length > 0) {
+        const labels = sebiTypeIds.map(id => {
+          const t = SEBI_TYPES.find(st => st.intmId === id);
+          return t ? t.registration_category : `intm${id}`;
+        });
+        subSource = labels.join(", ");
+      }
 
       const { data: logEntry } = await supabase
         .from("registry_sync_log")
@@ -688,6 +769,7 @@ Deno.serve(async (req) => {
           sync_type: syncType,
           status: "running",
           triggered_by: triggeredBy,
+          metadata: subSource ? { sub_source: subSource, sebi_type_ids: sebiTypeIds } : {},
         })
         .select("id")
         .single();
@@ -708,7 +790,10 @@ Deno.serve(async (req) => {
           records_updated: summary.updated,
           records_skipped: summary.skipped,
           completed_at: new Date().toISOString(),
-          metadata: summary.details ? { details: summary.details } : {},
+          metadata: {
+            ...(subSource ? { sub_source: subSource, sebi_type_ids: sebiTypeIds } : {}),
+            ...(summary.details ? { details: summary.details } : {}),
+          },
         }).eq("id", logId);
 
         results[source] = { ...summary, log_id: logId };
@@ -739,5 +824,4 @@ Deno.serve(async (req) => {
   }
 });
 
-// Export SEBI_TYPES for reference
 export { SEBI_TYPES };
