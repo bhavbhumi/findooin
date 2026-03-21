@@ -182,9 +182,9 @@ const decorationMap: Record<HeroVariant, React.FC> = {
   dots: DotsDecoration,
 };
 
-export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "circles" }: PageHeroProps) => {
+export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "circles", context }: PageHeroProps) => {
   const Decoration = decorationMap[variant];
-
+  const ContextElement = context ? contextElementMap[context] : null;
   return (
     <section className="relative pt-8 pb-12 overflow-hidden bg-gradient-to-b from-primary/[0.06] to-transparent space-void-blue">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
