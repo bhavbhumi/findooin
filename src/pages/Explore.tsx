@@ -9,6 +9,7 @@ import {
   XCircle, Package, Wrench, LayoutDashboard, Trophy, Sparkles, EyeOff
 } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { SpaceDust, CometStreaks, DistantStars } from "@/components/decorative/SpaceElements";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
