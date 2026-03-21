@@ -240,8 +240,9 @@ export function RegistryImportWizard({ open, onOpenChange, onImportComplete }: P
                 <SelectContent>
                   <SelectItem value="amfi">AMFI</SelectItem>
                   <SelectItem value="sebi">SEBI</SelectItem>
-                  <SelectItem value="rbi">RBI</SelectItem>
                   <SelectItem value="irdai">IRDAI</SelectItem>
+                  <SelectItem value="pfrda">PFRDA</SelectItem>
+                  <SelectItem value="rbi">RBI</SelectItem>
                   <SelectItem value="manual">Manual / Other</SelectItem>
                 </SelectContent>
               </Select>
