@@ -59,10 +59,10 @@ const CosmicValueSection: React.FC = () => {
           variants={fadeUp}
           custom={0}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-1">
+          <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground mb-1">
             Your Financial Cosmos
           </h2>
-          <p className="text-muted-foreground text-base mb-5">
+          <p className="text-muted-foreground text-sm sm:text-base mb-4">
             A living universe of trust, opportunity, and insight.
           </p>
         </motion.div>
