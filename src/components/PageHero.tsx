@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { SpaceDust, DistantStars, Asteroids } from "@/components/decorative/SpaceElements";
 
 type HeroVariant = "circles" | "squares" | "triangles" | "hexagons" | "waves" | "dots";
 

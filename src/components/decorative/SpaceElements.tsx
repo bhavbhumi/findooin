@@ -10,9 +10,8 @@ export const SpaceDust = ({
   count?: number;
   className?: string;
 }) => {
-  // Deterministic positions using simple math
   const particles = Array.from({ length: count }, (_, i) => {
-    const seed = (i * 137.508) % 100; // golden angle distribution
+    const seed = (i * 137.508) % 100;
     return {
       x: seed,
       y: ((i * 61.8) % 100),
@@ -98,7 +97,6 @@ export const CometStreaks = ({
             repeatDelay: 8 + i * 3,
           }}
         >
-          {/* Comet head — bright dot */}
           <div
             className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
             style={{
@@ -153,6 +151,90 @@ export const DistantStars = ({
             delay: s.delay,
           }}
         />
+      ))}
+    </div>
+  );
+};
+
+/**
+ * Asteroids — irregular rocky shapes that drift and tumble slowly.
+ * Mix of sizes: mostly tiny background rocks + one slightly larger per section.
+ */
+export const Asteroids = ({
+  count = 4,
+  className = "",
+}: {
+  count?: number;
+  className?: string;
+}) => {
+  // Irregular asteroid SVG shapes (different silhouettes)
+  const shapes = [
+    "M12 2 L18 6 L20 14 L16 20 L8 18 L4 12 L6 6 Z",        // chunky
+    "M10 1 L16 4 L19 10 L17 17 L10 19 L4 15 L2 8 L5 3 Z",   // elongated
+    "M8 2 L14 3 L18 8 L16 15 L12 18 L5 16 L2 10 L4 5 Z",    // irregular
+    "M11 1 L17 5 L20 12 L15 19 L9 18 L3 13 L2 7 L7 3 Z",    // jagged
+  ];
+
+  const asteroids = Array.from({ length: count }, (_, i) => {
+    const isLarge = i === 0; // first one is the "hero" asteroid
+    return {
+      x: ((i * 83.7) % 85) + 5,
+      y: ((i * 59.3) % 80) + 10,
+      size: isLarge ? 18 + (i % 3) * 4 : 8 + (i % 4) * 3,
+      rotation: (i * 47) % 360,
+      tumbleDuration: 20 + (i % 5) * 8,
+      driftDuration: 30 + (i % 4) * 10,
+      driftX: (i % 2 === 0 ? 1 : -1) * (15 + (i % 3) * 10),
+      driftY: (i % 2 === 0 ? -1 : 1) * (8 + (i % 3) * 6),
+      opacity: isLarge ? 0.12 : 0.08 + (i % 3) * 0.03,
+      shape: shapes[i % shapes.length],
+      delay: (i % 4) * 2,
+    };
+  });
+
+  return (
+    <div className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`} aria-hidden="true">
+      {asteroids.map((a, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          style={{
+            left: `${a.x}%`,
+            top: `${a.y}%`,
+          }}
+          animate={{
+            x: [0, a.driftX, 0],
+            y: [0, a.driftY, 0],
+          }}
+          transition={{
+            duration: a.driftDuration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: a.delay,
+          }}
+        >
+          <motion.svg
+            width={a.size}
+            height={a.size}
+            viewBox="0 0 22 22"
+            className="text-foreground"
+            style={{ opacity: a.opacity }}
+            animate={{ rotate: [a.rotation, a.rotation + 360] }}
+            transition={{
+              duration: a.tumbleDuration,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            <path
+              d={a.shape}
+              fill="currentColor"
+              stroke="currentColor"
+              strokeWidth="0.5"
+              opacity="0.6"
+            />
+          </motion.svg>
+        </motion.div>
       ))}
     </div>
   );
