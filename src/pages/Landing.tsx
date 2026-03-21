@@ -230,7 +230,6 @@ const Landing = () => {
 
       {/* ═══ TESTIMONIALS ═══ */}
       <section className="py-12 relative overflow-hidden">
-        <GlowBlob position="top-right" color="gold" size="md" />
         <DiamondGrid className="bottom-8 left-8 hidden lg:block" />
         <div className="container relative">
           <TestimonialsSection />
