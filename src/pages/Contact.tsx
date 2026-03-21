@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { PulseWaves } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
-import { Mail, MapPin, Clock, MessageCircle, Phone, User2, CheckCircle2, Building2, Globe, Navigation } from "lucide-react";
+import { Mail, MapPin, Clock, MessageCircle, Phone, User2, CheckCircle2, Building2, Navigation } from "lucide-react";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,100 @@ const MAX_NAME_LEN = 100;
 const MAX_EMAIL_LEN = 255;
 const MAX_PHONE_LEN = 20;
 const MAX_MSG_LEN = 2000;
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.08, duration: 0.45, ease: "easeOut" as const },
+  }),
+};
+
+const tabs = ["Ask Us", "Visit Us"];
+
+const expectations = [
+  "Confirmation via email",
+  "Response within 24–48 hours",
+  "No obligation, completely free",
+  "Personalised recommendations",
+];
+
+const offices = [
+  {
+    city: "Mumbai",
+    label: "Head Office",
+    address: "B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064",
+    phone: "+91 999 999 9999",
+    email: "hello@findoo.in",
+    hours: "Mon–Sat, 9:00 AM – 6:00 PM IST",
+    mapUrl: "https://www.openstreetmap.org/export/embed.html?bbox=72.83%2C19.17%2C72.86%2C19.20&layer=mapnik&marker=19.186,72.845",
+  },
+];
+
+const Contact = () => {
+  usePageMeta({ title: "Contact Us", description: "Get in touch with FindOO — reach us via form or visit our office.", path: "/contact" });
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("Ask Us");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    // Honeypot anti-spam check — bots fill this hidden field
+    const honeypot = formData.get("website_url") as string;
+    if (honeypot) {
+      toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
+      form.reset();
+      return;
+    }
+
+    // Extract and sanitize inputs
+    const rawName = (formData.get("name") as string || "").trim();
+    const rawEmail = (formData.get("email") as string || "").trim();
+    const rawPhone = (formData.get("phone") as string || "").trim();
+    const rawMessage = (formData.get("message") as string || "").trim();
+    const subject = (formData.get("topic") as string) || "General inquiry";
+
+    const name = sanitizeText(rawName).slice(0, MAX_NAME_LEN);
+    const email = sanitizeText(rawEmail).slice(0, MAX_EMAIL_LEN).toLowerCase();
+    const phone = sanitizeText(rawPhone).slice(0, MAX_PHONE_LEN);
+    const message = sanitizeText(rawMessage).slice(0, MAX_MSG_LEN);
+
+    // Validate required fields
+    if (!name || !email || !message) {
+      toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
+      return;
+    }
+
+    // Email format check
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({ title: "Invalid email", description: "Please enter a valid email address.", variant: "destructive" });
+      return;
+    }
+
+    // Disposable email check
+    if (isDisposableEmail(email)) {
+      toast({ title: "Email not accepted", description: DISPOSABLE_EMAIL_ERROR, variant: "destructive" });
+      return;
+    }
+
+    setSubmitting(true);
+
+    // Send confirmation email (fire and forget)
+    supabase.functions.invoke("send-transactional-email", {
+      body: {
+        type: "contact-confirmation",
+        to: email,
+        data: { recipientName: name, subject },
+      },
+    }).catch(() => {});
+
+    toast({ title: "Message sent!", description: "We'll get back to you within 24–48 hours." });
+    setSubmitting(false);
+    form.reset();
+  };
 
   return (
     <PublicPageLayout>
@@ -87,21 +181,21 @@ const MAX_MSG_LEN = 2000;
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name *</Label>
-                        <Input id="name" required placeholder="Your name" />
+                        <Input id="name" name="name" required maxLength={MAX_NAME_LEN} placeholder="Your name" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">Email *</Label>
-                        <Input id="email" type="email" required placeholder="you@example.com" />
+                        <Input id="email" name="email" type="email" required maxLength={MAX_EMAIL_LEN} placeholder="you@example.com" />
                       </div>
                     </div>
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="phone">Phone</Label>
-                        <Input id="phone" placeholder="+91 XXXXX XXXXX" />
+                        <Input id="phone" name="phone" maxLength={MAX_PHONE_LEN} placeholder="+91 XXXXX XXXXX" />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="topic">Topic</Label>
-                        <Select>
+                        <Select name="topic">
                           <SelectTrigger>
                             <SelectValue placeholder="Select a topic" />
                           </SelectTrigger>
@@ -117,7 +211,7 @@ const MAX_MSG_LEN = 2000;
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="message">Message *</Label>
-                      <Textarea id="message" required rows={5} placeholder="Tell us how we can help..." />
+                      <Textarea id="message" name="message" required rows={5} maxLength={MAX_MSG_LEN} placeholder="Tell us how we can help..." />
                     </div>
                     {/* Honeypot field — hidden from humans, catches bots */}
                     <div aria-hidden="true" className="absolute opacity-0 h-0 w-0 overflow-hidden" style={{ position: 'absolute', left: '-9999px' }}>
@@ -179,7 +273,6 @@ const MAX_MSG_LEN = 2000;
       {activeTab === "Visit Us" && (
         <section className="py-12">
           <div className="container">
-            {/* Description bar */}
             <motion.div
               className="flex items-center gap-3 mb-10 pb-6 border-b border-border"
               initial="hidden" animate="visible" variants={fadeUp} custom={0}
@@ -193,9 +286,8 @@ const MAX_MSG_LEN = 2000;
               </div>
             </motion.div>
 
-            {offices.map((office, idx) => (
+            {offices.map((office) => (
               <div key={office.city} className="grid md:grid-cols-5 gap-8 mb-10">
-                {/* Map */}
                 <motion.div className="md:col-span-3 rounded-xl overflow-hidden border border-border bg-muted aspect-[16/10]"
                   initial="hidden" animate="visible" variants={fadeUp} custom={1}>
                   <iframe
@@ -210,7 +302,6 @@ const MAX_MSG_LEN = 2000;
                   />
                 </motion.div>
 
-                {/* Office details */}
                 <motion.div className="md:col-span-2 space-y-5" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
                   <div className="rounded-xl border border-border bg-card p-6">
                     <div className="flex items-center gap-2 mb-4">
@@ -223,7 +314,6 @@ const MAX_MSG_LEN = 2000;
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed mb-4">{office.address}</p>
-
                     <div className="space-y-3 text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Phone className="h-3.5 w-3.5 text-primary" />
@@ -239,7 +329,6 @@ const MAX_MSG_LEN = 2000;
                       </div>
                     </div>
                   </div>
-
                   <Button variant="outline" className="w-full" asChild>
                     <a href={`https://maps.google.com/?q=${encodeURIComponent(office.address)}`} target="_blank" rel="noopener noreferrer">
                       <Navigation className="h-4 w-4 mr-2" /> Get Directions
