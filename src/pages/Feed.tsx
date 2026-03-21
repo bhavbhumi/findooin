@@ -10,6 +10,7 @@ import { useState, useCallback, useRef, useEffect, useMemo, memo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PageTransition } from "@/components/PageTransition";
+import { SignalStreams } from "@/components/decorative/ContextualSpaceElements";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { PostDraft } from "@/hooks/useDrafts";
@@ -147,6 +148,7 @@ const Feed = () => {
   return (
     <AppLayout maxWidth="max-w-6xl">
       <PageTransition>
+      <SignalStreams className="!fixed" />
       <div className="grid lg:grid-cols-[1fr_300px] gap-6">
         <div className="space-y-4">
           <ErrorBoundary fallbackTitle="Error loading composer">

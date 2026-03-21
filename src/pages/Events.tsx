@@ -1,4 +1,5 @@
 import { useState, useMemo, memo } from "react";
+import { SupernovaBurst } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -126,6 +127,7 @@ const Events = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      <SupernovaBurst className="!fixed" />
       <MobileFilterDrawer title="Events Filters & Calendar">
         <EventsSidebar onCategoryClick={handleCategoryClick} selectedDate={selectedDate} onDateSelect={setSelectedDate} eventDates={eventDates} />
       </MobileFilterDrawer>

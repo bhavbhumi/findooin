@@ -2,8 +2,13 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { SpaceDust, DistantStars, Asteroids } from "@/components/decorative/SpaceElements";
+import {
+  SignalStreams, ConstellationWeb, LaunchStreaks, SupernovaBurst,
+  NebulaClusters, QuantumLinks, PulsarBeacon, PulseWaves,
+} from "@/components/decorative/ContextualSpaceElements";
 
 type HeroVariant = "circles" | "squares" | "triangles" | "hexagons" | "waves" | "dots";
+type HeroContext = "feed" | "network" | "jobs" | "events" | "directory" | "messages" | "discover" | "opinions" | "blog" | "support" | "legal" | "about" | "compare" | "pitch" | "community" | "professionals";
 
 interface PageHeroProps {
   breadcrumb: string;
@@ -11,7 +16,27 @@ interface PageHeroProps {
   titleAccent?: string;
   subtitle: string;
   variant?: HeroVariant;
+  /** Page context for unique space element overlays */
+  context?: HeroContext;
 }
+
+const contextElementMap: Partial<Record<HeroContext, React.FC>> = {
+  feed: SignalStreams,
+  network: ConstellationWeb,
+  jobs: LaunchStreaks,
+  events: SupernovaBurst,
+  directory: NebulaClusters,
+  messages: QuantumLinks,
+  discover: PulsarBeacon,
+  opinions: PulseWaves,
+  blog: SignalStreams,
+  support: PulseWaves,
+  compare: ConstellationWeb,
+  about: ConstellationWeb,
+  professionals: PulsarBeacon,
+  pitch: LaunchStreaks,
+  community: PulseWaves,
+};
 
 /* ── Distinct geometric sets per variant — VISIBLE opacities ── */
 
@@ -157,9 +182,9 @@ const decorationMap: Record<HeroVariant, React.FC> = {
   dots: DotsDecoration,
 };
 
-export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "circles" }: PageHeroProps) => {
+export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "circles", context }: PageHeroProps) => {
   const Decoration = decorationMap[variant];
-
+  const ContextElement = context ? contextElementMap[context] : null;
   return (
     <section className="relative pt-8 pb-12 overflow-hidden bg-gradient-to-b from-primary/[0.06] to-transparent space-void-blue">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -169,6 +194,7 @@ export const PageHero = ({ breadcrumb, title, titleAccent, subtitle, variant = "
       <SpaceDust count={18} />
       <DistantStars count={10} />
       <Asteroids count={3} />
+      {ContextElement && <ContextElement />}
 
       <div className="container relative">
         <motion.div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6"

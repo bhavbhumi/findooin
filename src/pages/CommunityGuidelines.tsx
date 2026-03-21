@@ -54,6 +54,7 @@ const CommunityGuidelines = () => {
         titleAccent="trusted network"
         subtitle="These guidelines ensure every interaction upholds the trust, compliance, and integrity India's financial community deserves."
         variant="triangles"
+        context="community"
       />
 
       <div className="border-b border-border bg-background sticky top-16 z-30">

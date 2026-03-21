@@ -228,6 +228,7 @@ export default function ProfessionalDirectory() {
         titleAccent="Directory"
         subtitle="Browse AMFI & SEBI registered professionals across India. Find, verify, and connect with trusted intermediaries and issuers."
         variant="dots"
+        context="professionals"
       />
 
       {/* Sticky Tabs */}

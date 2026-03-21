@@ -888,6 +888,7 @@ const DeveloperDocs = () => {
         titleAccent="Documentation"
         subtitle="Architecture guides, API references, and everything you need to build on FindOO."
         variant="dots"
+        context="discover"
       />
 
       <div className="border-b border-border bg-background sticky top-16 z-30">

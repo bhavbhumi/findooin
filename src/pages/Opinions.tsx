@@ -272,6 +272,7 @@ export default function Opinions() {
           titleAccent="Opinions"
           subtitle="Track BFSI professional sentiment on policy, markets, and regulation. Curated by verified industry experts."
           variant="hexagons"
+          context="opinions"
         />
         <OpinionsContent />
       </PageTransition>

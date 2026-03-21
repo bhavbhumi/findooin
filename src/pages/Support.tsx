@@ -360,6 +360,7 @@ const Support = () => {
         titleAccent="Portal"
         subtitle="Search our knowledge base for instant answers, or raise a ticket for personal support."
         variant="dots"
+        context="support"
       />
 
       {/* Tabs */}

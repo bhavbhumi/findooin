@@ -28,6 +28,7 @@ const PitchIndex = () => {
         titleAccent="FindOO?"
         subtitle="Four perspectives. One platform. Explore how FindOO serves every participant in India's financial ecosystem."
         variant="hexagons"
+        context="pitch"
       />
 
       <section className="py-16">

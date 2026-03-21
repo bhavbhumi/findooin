@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, memo } from "react";
+import { ConstellationWeb } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -149,6 +150,7 @@ const Network = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      <ConstellationWeb className="!fixed" />
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
           {/* Main Column */}
           <div>

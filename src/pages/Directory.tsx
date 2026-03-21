@@ -1,4 +1,5 @@
 import { useState, memo, useMemo } from "react";
+import { NebulaClusters } from "@/components/decorative/ContextualSpaceElements";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -184,6 +185,7 @@ const Directory = () => {
 
   return (
     <AppLayout maxWidth="max-w-6xl">
+      <NebulaClusters className="!fixed" />
       <MobileFilterDrawer title="Showcase Filters">
         <DirectorySidebar
           selectedType={selectedType}
