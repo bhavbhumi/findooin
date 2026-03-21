@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import findooLogo from "@/assets/findoo-logo.png";
 
 /* ── Laniakea Supercluster Visualization ──
    Cosmic web of filaments flowing toward a central "Great Attractor" — FindOO.
@@ -253,21 +254,15 @@ const HeroCosmicNetwork: React.FC = () => {
         </circle>
         <circle cx={CX} cy={CY} r="18" fill="hsl(var(--primary))" opacity="1" />
 
-        {/* FindOO Logo — stylised "F" mark */}
-        <g transform={`translate(${CX - 8}, ${CY - 10})`}>
-          <text
-            x="8" y="14"
-            textAnchor="middle"
-            dominantBaseline="central"
-            fill="hsl(var(--primary-foreground))"
-            fontSize="16"
-            fontWeight="800"
-            fontFamily="Montserrat, sans-serif"
-            letterSpacing="0.5"
-          >
-            F
-          </text>
-        </g>
+        {/* FindOO Logo — image mark */}
+        <image
+          href={findooLogo}
+          x={CX - 16}
+          y={CY - 16}
+          width="32"
+          height="32"
+          style={{ filter: "brightness(10)" }}
+        />
 
         {/* ── Role labels — high visibility with backdrop pill ── */}
         {LABEL_POSITIONS.map(({ role, angle }) => {
