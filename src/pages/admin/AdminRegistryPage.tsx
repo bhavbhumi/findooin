@@ -7,10 +7,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Database, Search, RefreshCw, MoreHorizontal, Send, Mail, ExternalLink, FileUp, Globe, Clock, CheckCircle2, XCircle, Loader2, Shield, Landmark, Umbrella, PiggyBank, ChevronRight } from "lucide-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Checkbox } from "@/components/ui/checkbox";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  Database, Search, RefreshCw, MoreHorizontal, Send, Mail, ExternalLink, FileUp,
+  Clock, CheckCircle2, XCircle, Loader2, Shield, Landmark, Umbrella, PiggyBank,
+  ChevronRight, Pause, Play, Trash2, AlertTriangle
+} from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateInvitation } from "@/hooks/useInvitations";
 import { toast } from "sonner";
@@ -24,7 +30,6 @@ const SOURCES = [
   { id: "pfrda", label: "PFRDA", icon: PiggyBank, color: "text-purple-600", desc: "Points of Presence", url: "https://pfrda.org.in/list-of-pops" },
 ] as const;
 
-// SEBI sub-types for granular sync — expected_count is reference only, actual comes from DB
 const SEBI_TYPE_GROUPS = [
   {
     group: "Issuers",
@@ -90,6 +95,9 @@ export default function AdminRegistryPage() {
   const [sourceFilter, setSourceFilter] = useState("all");
   const [wizardOpen, setWizardOpen] = useState(false);
   const [syncingSource, setSyncingSource] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleteConfirm, setDeleteConfirm] = useState<{ type: "single" | "bulk" | "source" | "category"; ids?: string[]; source?: string; category?: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
   const createInvite = useCreateInvitation();
 
@@ -129,7 +137,7 @@ export default function AdminRegistryPage() {
     refetchInterval: syncingSource ? 5000 : false,
   });
 
-  // Source stats — total per source
+  // Source stats
   const { data: sourceStats = {} } = useQuery({
     queryKey: ["admin-registry-stats"],
     queryFn: async () => {
@@ -154,7 +162,7 @@ export default function AdminRegistryPage() {
     },
   });
 
-  // Per-category counts from DB (for SEBI granular display)
+  // Per-category counts
   const { data: categoryCounts = {} } = useQuery({
     queryKey: ["admin-registry-category-counts"],
     queryFn: async () => {
@@ -171,6 +179,96 @@ export default function AdminRegistryPage() {
       return counts;
     },
   });
+
+  // ─── Pause/Resume Config ───
+  const { data: pauseConfig = [] } = useQuery({
+    queryKey: ["admin-registry-pause-config"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("registry_sync_config").select("*");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const isSourcePaused = (source: string) =>
+    pauseConfig.some((c: any) => c.source === source && !c.sebi_intm_id && c.is_paused);
+
+  const isSebiTypePaused = (intmId: number) =>
+    pauseConfig.some((c: any) => c.source === "sebi" && c.sebi_intm_id === intmId && c.is_paused);
+
+  const togglePauseMutation = useMutation({
+    mutationFn: async ({ source, sebiIntmId, pause }: { source: string; sebiIntmId?: number; pause: boolean }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      // Upsert config row
+      const matchFilter: Record<string, unknown> = { source };
+      if (sebiIntmId) matchFilter.sebi_intm_id = sebiIntmId;
+
+      const { data: existing } = await supabase
+        .from("registry_sync_config")
+        .select("id")
+        .match(matchFilter)
+        .maybeSingle();
+
+      if (existing) {
+        await supabase.from("registry_sync_config").update({
+          is_paused: pause,
+          paused_by: pause ? user.id : null,
+          paused_at: pause ? new Date().toISOString() : null,
+          updated_at: new Date().toISOString(),
+        }).eq("id", existing.id);
+      } else {
+        await supabase.from("registry_sync_config").insert({
+          source,
+          sebi_intm_id: sebiIntmId || null,
+          is_paused: pause,
+          paused_by: pause ? user.id : null,
+          paused_at: pause ? new Date().toISOString() : null,
+        });
+      }
+    },
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-registry-pause-config"] });
+      toast.success(vars.pause ? "Sync paused" : "Sync resumed");
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to update pause state"),
+  });
+
+  // ─── Delete ───
+  const handleDelete = async () => {
+    if (!deleteConfirm) return;
+    setIsDeleting(true);
+    try {
+      if (deleteConfirm.type === "single" || deleteConfirm.type === "bulk") {
+        const ids = deleteConfirm.ids || [];
+        // Delete in batches of 50
+        for (let i = 0; i < ids.length; i += 50) {
+          const batch = ids.slice(i, i + 50);
+          const { error } = await supabase.from("registry_entities").delete().in("id", batch);
+          if (error) throw error;
+        }
+        toast.success(`Deleted ${ids.length} record${ids.length > 1 ? "s" : ""}`);
+      } else if (deleteConfirm.type === "source" && deleteConfirm.source) {
+        const { error } = await supabase.from("registry_entities").delete().eq("source", deleteConfirm.source);
+        if (error) throw error;
+        toast.success(`Deleted all ${deleteConfirm.source.toUpperCase()} records`);
+      } else if (deleteConfirm.type === "category" && deleteConfirm.category) {
+        const { error } = await supabase.from("registry_entities").delete().eq("registration_category", deleteConfirm.category);
+        if (error) throw error;
+        toast.success(`Deleted all "${deleteConfirm.category}" records`);
+      }
+      setSelectedIds(new Set());
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["admin-registry-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-registry-category-counts"] });
+    } catch (err: any) {
+      toast.error(err.message || "Delete failed");
+    } finally {
+      setIsDeleting(false);
+      setDeleteConfirm(null);
+    }
+  };
 
   const triggerSync = async (sources: string[], sebiTypeIds?: number[]) => {
     const label = sebiTypeIds
@@ -221,24 +319,15 @@ export default function AdminRegistryPage() {
     });
   };
 
-  const getLastSync = (source: string) => {
-    return syncLogs.find((l: any) => l.source === source);
-  };
+  const getLastSync = (source: string) => syncLogs.find((l: any) => l.source === source);
 
-  // Find last sync for a specific SEBI type by checking metadata.sebi_type_ids or metadata.sub_source
   const getLastSebiTypeSync = (intmId: number, regCategory: string) => {
     return syncLogs.find((l: any) => {
       if (l.source !== "sebi") return false;
       const meta = l.metadata as any;
       if (!meta) return false;
-      // Check if this log was for this specific type
-      if (meta.sebi_type_ids && Array.isArray(meta.sebi_type_ids)) {
-        return meta.sebi_type_ids.includes(intmId);
-      }
-      if (meta.sub_source && typeof meta.sub_source === "string") {
-        return meta.sub_source.includes(regCategory);
-      }
-      // Full SEBI sync — check details for this type's results
+      if (meta.sebi_type_ids && Array.isArray(meta.sebi_type_ids)) return meta.sebi_type_ids.includes(intmId);
+      if (meta.sub_source && typeof meta.sub_source === "string") return meta.sub_source.includes(regCategory);
       if (meta.details) {
         try {
           const details = typeof meta.details === "string" ? JSON.parse(meta.details) : meta.details;
@@ -249,7 +338,6 @@ export default function AdminRegistryPage() {
     });
   };
 
-  // Extract per-type result from a sync log's metadata.details
   const getTypeResultFromLog = (log: any, intmId: number, regCategory: string) => {
     const meta = log?.metadata as any;
     if (!meta?.details) return null;
@@ -264,6 +352,21 @@ export default function AdminRegistryPage() {
     if (status === "failed") return <XCircle className="h-3.5 w-3.5 text-destructive" />;
     if (status === "running") return <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />;
     return <Clock className="h-3.5 w-3.5 text-muted-foreground" />;
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === entities.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(entities.map((e) => e.id)));
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelectedIds(next);
   };
 
   return (
@@ -296,9 +399,10 @@ export default function AdminRegistryPage() {
               const lastSync = getLastSync(src.id);
               const count = (sourceStats as any)[src.id] || 0;
               const isSyncing = syncingSource === src.id;
+              const paused = isSourcePaused(src.id);
 
               return (
-                <Card key={src.id}>
+                <Card key={src.id} className={paused ? "opacity-60 border-dashed" : ""}>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -306,7 +410,10 @@ export default function AdminRegistryPage() {
                           <src.icon className="h-4 w-4" />
                         </div>
                         <div>
-                          <CardTitle className="text-sm">{src.label}</CardTitle>
+                          <CardTitle className="text-sm flex items-center gap-1.5">
+                            {src.label}
+                            {paused && <Badge variant="outline" className="text-[8px] text-destructive border-destructive/30">PAUSED</Badge>}
+                          </CardTitle>
                           <CardDescription className="text-[10px]">{src.desc}</CardDescription>
                         </div>
                       </div>
@@ -338,17 +445,42 @@ export default function AdminRegistryPage() {
                         size="sm"
                         variant="outline"
                         onClick={() => triggerSync([src.id])}
-                        disabled={!!syncingSource}
+                        disabled={!!syncingSource || paused}
                         className="flex-1"
                       >
                         <RefreshCw className={`h-3 w-3 mr-1.5 ${isSyncing ? "animate-spin" : ""}`} />
                         {isSyncing ? "Syncing..." : "Sync Now"}
                       </Button>
-                      <Button size="sm" variant="ghost" asChild>
-                        <a href={src.url} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
+                      <Button
+                        size="sm"
+                        variant={paused ? "default" : "outline"}
+                        onClick={() => togglePauseMutation.mutate({ source: src.id, pause: !paused })}
+                        disabled={togglePauseMutation.isPending}
+                        title={paused ? "Resume sync" : "Pause sync"}
+                      >
+                        {paused ? <Play className="h-3 w-3" /> : <Pause className="h-3 w-3" />}
                       </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size="sm" variant="ghost">
+                            <MoreHorizontal className="h-3 w-3" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <a href={src.url} target="_blank" rel="noopener noreferrer">
+                              <ExternalLink className="h-3 w-3 mr-2" /> View Source
+                            </a>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive focus:text-destructive"
+                            onClick={() => setDeleteConfirm({ type: "source", source: src.id })}
+                          >
+                            <Trash2 className="h-3 w-3 mr-2" /> Delete All {src.label} Records
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </CardContent>
                 </Card>
@@ -366,13 +498,13 @@ export default function AdminRegistryPage() {
                     SEBI Registry Types — Granular Sync
                   </CardTitle>
                   <CardDescription className="text-[10px]">
-                    37 categories across 4 Findoo buckets. Now with session-based pagination for full data capture.
+                    37 categories across 4 Findoo buckets. Pause individual types or delete by category.
                   </CardDescription>
                 </div>
                 <Button
                   size="sm"
                   onClick={() => triggerSync(["sebi"])}
-                  disabled={!!syncingSource}
+                  disabled={!!syncingSource || isSourcePaused("sebi")}
                 >
                   <RefreshCw className={`h-3 w-3 mr-1.5 ${syncingSource === "sebi" ? "animate-spin" : ""}`} />
                   Sync All SEBI
@@ -383,6 +515,8 @@ export default function AdminRegistryPage() {
               {SEBI_TYPE_GROUPS.map((group) => {
                 const groupDbCount = group.types.reduce((s, t) => s + ((categoryCounts as any)[t.regCategory] || 0), 0);
                 const groupExpected = group.types.reduce((s, t) => s + t.expected, 0);
+                const allGroupPaused = group.types.every(t => isSebiTypePaused(t.intmId));
+                const someGroupPaused = group.types.some(t => isSebiTypePaused(t.intmId));
 
                 return (
                   <Collapsible key={group.group}>
@@ -396,19 +530,44 @@ export default function AdminRegistryPage() {
                         <span className="text-[9px] text-muted-foreground font-mono">
                           {groupDbCount.toLocaleString()} / {groupExpected.toLocaleString()} scraped
                         </span>
+                        {someGroupPaused && (
+                          <Badge variant="outline" className="text-[8px] text-destructive border-destructive/30">
+                            {allGroupPaused ? "ALL PAUSED" : "SOME PAUSED"}
+                          </Badge>
+                        )}
                       </div>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-6 text-[10px] px-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          triggerSync(["sebi"], group.types.map(t => t.intmId));
-                        }}
-                        disabled={!!syncingSource}
-                      >
-                        <RefreshCw className="h-3 w-3 mr-1" /> Sync Group
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 text-[10px] px-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Toggle pause for all types in group
+                            const newPauseState = !allGroupPaused;
+                            group.types.forEach(t => {
+                              togglePauseMutation.mutate({ source: "sebi", sebiIntmId: t.intmId, pause: newPauseState });
+                            });
+                          }}
+                          disabled={togglePauseMutation.isPending}
+                          title={allGroupPaused ? "Resume all in group" : "Pause all in group"}
+                        >
+                          {allGroupPaused ? <Play className="h-3 w-3 mr-1" /> : <Pause className="h-3 w-3 mr-1" />}
+                          {allGroupPaused ? "Resume" : "Pause"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 text-[10px] px-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            triggerSync(["sebi"], group.types.map(t => t.intmId));
+                          }}
+                          disabled={!!syncingSource || allGroupPaused}
+                        >
+                          <RefreshCw className="h-3 w-3 mr-1" /> Sync
+                        </Button>
+                      </div>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                       <div className="ml-6 mt-1 space-y-1">
@@ -417,12 +576,17 @@ export default function AdminRegistryPage() {
                           const pct = type.expected > 0 ? Math.round((dbCount / type.expected) * 100) : 0;
                           const lastTypeSync = getLastSebiTypeSync(type.intmId, type.regCategory);
                           const typeResult = lastTypeSync ? getTypeResultFromLog(lastTypeSync, type.intmId, type.regCategory) : null;
+                          const typePaused = isSebiTypePaused(type.intmId);
 
                           return (
-                            <div key={type.intmId} className="flex items-center justify-between py-1.5 px-2 text-xs rounded hover:bg-muted/30">
+                            <div
+                              key={type.intmId}
+                              className={`flex items-center justify-between py-1.5 px-2 text-xs rounded hover:bg-muted/30 ${typePaused ? "opacity-50" : ""}`}
+                            >
                               <div className="flex items-center gap-2 flex-1 min-w-0">
                                 <span className="text-muted-foreground font-mono w-6 text-right shrink-0">{type.intmId}</span>
                                 <span className="truncate">{type.label}</span>
+                                {typePaused && <Pause className="h-2.5 w-2.5 text-destructive shrink-0" />}
                                 <Badge
                                   variant={pct >= 90 ? "default" : pct > 0 ? "secondary" : "outline"}
                                   className="text-[8px] font-mono shrink-0"
@@ -431,8 +595,7 @@ export default function AdminRegistryPage() {
                                   {pct > 0 && pct < 100 && ` (${pct}%)`}
                                 </Badge>
                               </div>
-                              <div className="flex items-center gap-2 shrink-0">
-                                {/* Last sync status for this type */}
+                              <div className="flex items-center gap-1 shrink-0">
                                 {lastTypeSync && (
                                   <span className="text-[9px] text-muted-foreground flex items-center gap-1">
                                     {statusIcon(lastTypeSync.status)}
@@ -445,10 +608,29 @@ export default function AdminRegistryPage() {
                                   size="sm"
                                   variant="ghost"
                                   className="h-5 text-[9px] px-1.5"
+                                  onClick={() => togglePauseMutation.mutate({ source: "sebi", sebiIntmId: type.intmId, pause: !typePaused })}
+                                  disabled={togglePauseMutation.isPending}
+                                  title={typePaused ? "Resume" : "Pause"}
+                                >
+                                  {typePaused ? <Play className="h-2.5 w-2.5" /> : <Pause className="h-2.5 w-2.5" />}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-5 text-[9px] px-1.5"
                                   onClick={() => triggerSync(["sebi"], [type.intmId])}
-                                  disabled={!!syncingSource}
+                                  disabled={!!syncingSource || typePaused}
                                 >
                                   <RefreshCw className="h-2.5 w-2.5 mr-1" /> Sync
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-5 text-[9px] px-1.5 text-destructive hover:text-destructive"
+                                  onClick={() => setDeleteConfirm({ type: "category", category: type.regCategory })}
+                                  title={`Delete all ${type.label} records`}
+                                >
+                                  <Trash2 className="h-2.5 w-2.5" />
                                 </Button>
                               </div>
                             </div>
@@ -484,8 +666,8 @@ export default function AdminRegistryPage() {
             </Card>
             <Card>
               <CardContent className="p-3 text-center">
-                <p className="text-2xl font-bold">{syncLogs.filter((l: any) => l.status === "failed").length}</p>
-                <p className="text-[10px] text-muted-foreground">Failed Syncs</p>
+                <p className="text-2xl font-bold">{pauseConfig.filter((c: any) => c.is_paused).length}</p>
+                <p className="text-[10px] text-muted-foreground">Paused Items</p>
               </CardContent>
             </Card>
           </div>
@@ -515,6 +697,29 @@ export default function AdminRegistryPage() {
             </Select>
           </div>
 
+          {/* Bulk actions bar */}
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-3 p-2 bg-muted/50 rounded-md border">
+              <span className="text-xs font-medium">{selectedIds.size} selected</span>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="h-7 text-xs"
+                onClick={() => setDeleteConfirm({ type: "bulk", ids: Array.from(selectedIds) })}
+              >
+                <Trash2 className="h-3 w-3 mr-1.5" /> Delete Selected
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-7 text-xs"
+                onClick={() => setSelectedIds(new Set())}
+              >
+                Clear
+              </Button>
+            </div>
+          )}
+
           {isLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
@@ -529,6 +734,12 @@ export default function AdminRegistryPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[40px]">
+                      <Checkbox
+                        checked={selectedIds.size === entities.length && entities.length > 0}
+                        onCheckedChange={toggleSelectAll}
+                      />
+                    </TableHead>
                     <TableHead className="text-xs">Entity</TableHead>
                     <TableHead className="text-xs">Reg. Number</TableHead>
                     <TableHead className="text-xs">Source</TableHead>
@@ -541,7 +752,13 @@ export default function AdminRegistryPage() {
                 </TableHeader>
                 <TableBody>
                   {entities.map((entity) => (
-                    <TableRow key={entity.id}>
+                    <TableRow key={entity.id} className={selectedIds.has(entity.id) ? "bg-muted/30" : ""}>
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedIds.has(entity.id)}
+                          onCheckedChange={() => toggleSelect(entity.id)}
+                        />
+                      </TableCell>
                       <TableCell>
                         <p className="text-sm font-medium truncate max-w-[200px]">{entity.entity_name}</p>
                         {entity.entity_type && (
@@ -585,29 +802,38 @@ export default function AdminRegistryPage() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {!entity.matched_user_id && (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-7 w-7">
-                                <MoreHorizontal className="h-3.5 w-3.5" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => handleCreateInvite(entity, "intermediary")}
-                                disabled={!entity.contact_email || createInvite.isPending}
-                              >
-                                <Send className="h-3.5 w-3.5 mr-2" /> Invite as Intermediary
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleCreateInvite(entity, "issuer")}
-                                disabled={!entity.contact_email || createInvite.isPending}
-                              >
-                                <Mail className="h-3.5 w-3.5 mr-2" /> Invite as Issuer
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-7 w-7">
+                              <MoreHorizontal className="h-3.5 w-3.5" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {!entity.matched_user_id && (
+                              <>
+                                <DropdownMenuItem
+                                  onClick={() => handleCreateInvite(entity, "intermediary")}
+                                  disabled={!entity.contact_email || createInvite.isPending}
+                                >
+                                  <Send className="h-3.5 w-3.5 mr-2" /> Invite as Intermediary
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleCreateInvite(entity, "issuer")}
+                                  disabled={!entity.contact_email || createInvite.isPending}
+                                >
+                                  <Mail className="h-3.5 w-3.5 mr-2" /> Invite as Issuer
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                              </>
+                            )}
+                            <DropdownMenuItem
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => setDeleteConfirm({ type: "single", ids: [entity.id] })}
+                            >
+                              <Trash2 className="h-3.5 w-3.5 mr-2" /> Delete Record
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -699,6 +925,35 @@ export default function AdminRegistryPage() {
           queryClient.invalidateQueries({ queryKey: ["admin-registry-category-counts"] });
         }}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              Confirm Deletion
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteConfirm?.type === "single" && "This will permanently delete this registry record. This cannot be undone."}
+              {deleteConfirm?.type === "bulk" && `This will permanently delete ${deleteConfirm.ids?.length || 0} selected registry records. This cannot be undone.`}
+              {deleteConfirm?.type === "source" && `This will permanently delete ALL records from ${deleteConfirm.source?.toUpperCase()}. This cannot be undone.`}
+              {deleteConfirm?.type === "category" && `This will permanently delete ALL records with category "${deleteConfirm.category}". This cannot be undone.`}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Trash2 className="h-4 w-4 mr-2" />}
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
