@@ -96,7 +96,7 @@ export function useListings(filters?: {
   search?: string;
 }) {
   return useQuery({
-    queryKey: ["listings", filters],
+    queryKey: QUERY_KEYS.listings(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("listings")
