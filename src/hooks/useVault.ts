@@ -121,14 +121,21 @@ export function useVault(userId: string | null) {
     await fetchFiles();
   };
 
-  const toggleShare = async (fileId: string, currentlyShared: boolean) => {
+  const toggleShare = async (fileId: string, currentlyShared: boolean, ttlDays: number = 7) => {
     const updates: any = currentlyShared
-      ? { is_shared: false, share_token: null }
-      : { is_shared: true, share_token: crypto.randomUUID().replace(/-/g, "").slice(0, 16) };
+      ? { is_shared: false, share_token: null, share_expires_at: null }
+      : {
+          is_shared: true,
+          share_token: crypto.randomUUID().replace(/-/g, "").slice(0, 16),
+          share_expires_at: new Date(Date.now() + ttlDays * 24 * 60 * 60 * 1000).toISOString(),
+        };
 
     await supabase.from("vault_files").update(updates).eq("id", fileId);
     await fetchFiles();
-    toast({ title: currentlyShared ? "Sharing disabled" : "Share link created" });
+    toast({
+      title: currentlyShared ? "Sharing disabled" : "Share link created",
+      description: currentlyShared ? undefined : `Link expires in ${ttlDays} days.`,
+    });
   };
 
   const getSignedUrl = async (filePath: string) => {
