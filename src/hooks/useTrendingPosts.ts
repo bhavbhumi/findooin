@@ -10,6 +10,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { FeedPost } from "./useFeedPosts";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export function useTrendingPosts() {
   return useQuery({
