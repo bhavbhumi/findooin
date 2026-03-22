@@ -198,7 +198,7 @@ export function useMyRegistrations() {
 
 export function useEventSpeakers(eventId: string | undefined) {
   return useQuery({
-    queryKey: ["event-speakers", eventId],
+    queryKey: QUERY_KEYS.eventSpeakers(eventId),
     enabled: !!eventId,
     queryFn: async () => {
       const { data, error } = await supabase
