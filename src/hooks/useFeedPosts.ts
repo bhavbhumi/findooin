@@ -12,6 +12,7 @@
  */
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 /** Number of posts fetched per page */
 const PAGE_SIZE = 15;
