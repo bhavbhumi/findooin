@@ -285,7 +285,7 @@ export function useUpdateReportStatus() {
 
 export function useAdminUsers() {
   return useQuery({
-    queryKey: ["admin-users"],
+    queryKey: QUERY_KEYS.adminUsers(),
     queryFn: async () => {
       const { data: profiles, error } = await supabase
         .from("profiles")
