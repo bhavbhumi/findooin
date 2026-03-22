@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -93,6 +93,7 @@ const SEBI_TYPE_GROUPS = [
 const SEBI_SYNC_MAX_PAGES = 8;
 const SEBI_SYNC_MAX_CONTINUATIONS = 40;
 const SEBI_TYPE_BY_ID = new Map(SEBI_TYPE_GROUPS.flatMap((group) => group.types.map((type) => [type.intmId, type])));
+const getSebiTypeKey = (intmId: number, regCategory: string) => `${intmId}_${regCategory}`;
 
 const parseSyncDetails = (detailsRaw: unknown): Record<string, any> | null => {
   if (!detailsRaw) return null;
@@ -131,6 +132,19 @@ const formatSebiScopeSummary = (detailsRaw: unknown, maxItems = 3): string | nul
 
   const shown = parsed.slice(0, maxItems).map((entry) => `${entry.label} (${entry.found})`);
   const remaining = parsed.length - shown.length;
+  return remaining > 0 ? `${shown.join(", ")} +${remaining} more` : shown.join(", ");
+};
+
+const formatSebiTypeIdScope = (typeIdsRaw: unknown, maxItems = 6): string | null => {
+  if (!Array.isArray(typeIdsRaw)) return null;
+  const labels = typeIdsRaw
+    .map((id) => Number(id))
+    .filter((id) => Number.isFinite(id))
+    .map((id) => getSebiTypeLabel(id));
+
+  if (labels.length === 0) return null;
+  const shown = labels.slice(0, maxItems);
+  const remaining = labels.length - shown.length;
   return remaining > 0 ? `${shown.join(", ")} +${remaining} more` : shown.join(", ");
 };
 
@@ -201,7 +215,7 @@ export default function AdminRegistryPage() {
         .from("registry_sync_log")
         .select("*")
         .order("started_at", { ascending: false })
-        .limit(50);
+        .limit(250);
       if (error) throw error;
       // Mark logs stuck as "running" for over 10 minutes as timed_out in UI display
       return (data || []).map((log: any) => {
@@ -217,6 +231,25 @@ export default function AdminRegistryPage() {
     },
     refetchInterval: syncingSource ? 5000 : false,
   });
+
+  const stableSebiFoundByType = useMemo(() => {
+    const foundByType: Record<string, number> = {};
+
+    for (const log of syncLogs as any[]) {
+      if (log.source !== "sebi") continue;
+      const details = parseSyncDetails((log.metadata as any)?.details);
+      const typeResults = details?.types;
+      if (!typeResults || typeof typeResults !== "object") continue;
+
+      for (const [typeKey, result] of Object.entries(typeResults as Record<string, any>)) {
+        const found = Number(result?.found);
+        if (!Number.isFinite(found) || found <= 0) continue;
+        foundByType[typeKey] = Math.max(foundByType[typeKey] || 0, found);
+      }
+    }
+
+    return foundByType;
+  }, [syncLogs]);
 
   // Source stats
   const { data: sourceStats = {} } = useQuery({
@@ -447,7 +480,7 @@ export default function AdminRegistryPage() {
           {
             const base = `${src.toUpperCase()}: ${r.found} found, ${r.inserted} new, ${r.updated} updated`;
             if (src !== "sebi") return base;
-            const scope = formatSebiScopeSummary(r?.details, 2);
+            const scope = formatSebiScopeSummary(r?.details, 6);
             return scope ? `${base} — ${scope}` : base;
           }
         );
@@ -500,21 +533,24 @@ export default function AdminRegistryPage() {
   const getLastSync = (source: string) => syncLogs.find((l: any) => l.source === source);
 
   const getLastSebiTypeSync = (intmId: number, regCategory: string) => {
+    const targetKey = getSebiTypeKey(intmId, regCategory);
     return syncLogs.find((l: any) => {
       if (l.source !== "sebi") return false;
       const meta = l.metadata as any;
       if (!meta) return false;
-      if (meta.sebi_type_ids && Array.isArray(meta.sebi_type_ids)) return meta.sebi_type_ids.includes(intmId);
-      if (meta.sub_source && typeof meta.sub_source === "string") return meta.sub_source.includes(regCategory);
-      if (meta.details) {
-        return !!extractSebiTypeResult(meta.details, intmId, regCategory);
-      }
-      return false;
+
+      if (Array.isArray(meta.sebi_type_ids) && meta.sebi_type_ids.includes(intmId)) return true;
+
+      const details = parseSyncDetails(meta.details);
+      return !!details?.types?.[targetKey];
     });
   };
 
   const getTypeResultFromLog = (log: any, intmId: number, regCategory: string) => {
     const meta = log?.metadata as any;
+    const details = parseSyncDetails(meta?.details);
+    const targetKey = getSebiTypeKey(intmId, regCategory);
+    if (details?.types?.[targetKey]) return details.types[targetKey];
     return extractSebiTypeResult(meta?.details, intmId, regCategory);
   };
 
@@ -697,10 +733,8 @@ export default function AdminRegistryPage() {
               {SEBI_TYPE_GROUPS.map((group) => {
                 const groupDbCount = group.types.reduce((s, t) => s + (((categoryCounts as any)[t.regCategory]?.total) || 0), 0);
                 const groupFoundCount = group.types.reduce((sum, type) => {
-                  const groupLog = getLastSebiTypeSync(type.intmId, type.regCategory);
-                  const groupTypeResult = groupLog ? getTypeResultFromLog(groupLog, type.intmId, type.regCategory) : null;
-                  const foundFromLog = Number(groupTypeResult?.found);
-                  return sum + (Number.isFinite(foundFromLog) && foundFromLog > 0 ? foundFromLog : type.expected);
+                  const stableFound = Number(stableSebiFoundByType[getSebiTypeKey(type.intmId, type.regCategory)] || type.expected);
+                  return sum + stableFound;
                 }, 0);
                 const allGroupPaused = group.types.every(t => isSebiTypePaused(t.intmId));
                 const someGroupPaused = group.types.some(t => isSebiTypePaused(t.intmId));
@@ -764,8 +798,7 @@ export default function AdminRegistryPage() {
                           const primaryCount = Number(counts.primary || 0);
                           const lastTypeSync = getLastSebiTypeSync(type.intmId, type.regCategory);
                           const typeResult = lastTypeSync ? getTypeResultFromLog(lastTypeSync, type.intmId, type.regCategory) : null;
-                          const foundFromLog = Number(typeResult?.found);
-                          const foundCount = Number.isFinite(foundFromLog) && foundFromLog > 0 ? foundFromLog : type.expected;
+                          const foundCount = Number(stableSebiFoundByType[getSebiTypeKey(type.intmId, type.regCategory)] || type.expected);
                           const pct = foundCount > 0 ? Math.round((dbCount / foundCount) * 100) : 0;
                           const nextPageFromLog = getNextPageFromTypeResult(typeResult);
                           const typePaused = isSebiTypePaused(type.intmId);
@@ -797,7 +830,7 @@ export default function AdminRegistryPage() {
                                   <span className="text-[9px] text-muted-foreground flex items-center gap-1">
                                     {statusIcon(lastTypeSync.status)}
                                     {typeResult
-                                      ? `${typeResult.found} found${Number(typeResult.updated || 0) > 0 ? `, ${typeResult.updated} updated` : ""}`
+                                      ? `last: ${typeResult.found} found${Number(typeResult.updated || 0) > 0 ? `, ${typeResult.updated} updated` : ""}`
                                       : formatDistanceToNow(new Date(lastTypeSync.started_at), { addSuffix: true })}
                                   </span>
                                 )}
@@ -1086,8 +1119,9 @@ export default function AdminRegistryPage() {
                       {syncLogs.map((log: any) => {
                         const meta = log.metadata as any;
                         const subSource = meta?.sub_source;
-                        const parsedScope = log.source === "sebi" ? formatSebiScopeSummary(meta?.details, 2) : null;
-                        const scopeLabel = subSource || parsedScope;
+                        const scopeFromIds = log.source === "sebi" ? formatSebiTypeIdScope(meta?.sebi_type_ids, 6) : null;
+                        const parsedScope = log.source === "sebi" ? formatSebiScopeSummary(meta?.details, 4) : null;
+                        const scopeLabel = scopeFromIds || subSource || parsedScope;
 
                         return (
                           <TableRow key={log.id}>
