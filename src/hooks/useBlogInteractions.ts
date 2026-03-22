@@ -221,7 +221,7 @@ export function useSubmitSurvey(blogPostId: string) {
 /* ── Aggregate stats for listing cards ── */
 export function useBlogPollStats() {
   return useQuery({
-    queryKey: ["blog-poll-stats"],
+    queryKey: QUERY_KEYS.blogPollStats(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_poll_votes")
