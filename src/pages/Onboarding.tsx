@@ -84,6 +84,7 @@ const Onboarding = () => {
     investor: "",
     intermediary: "",
     issuer: "",
+    enabler: "",
   });
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
