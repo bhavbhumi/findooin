@@ -65,6 +65,17 @@ const ISSUER_CATEGORIES = [
   "Infrastructure Finance Specialist",
 ];
 
+const ENABLER_CATEGORIES = [
+  "KYC Registration Agency",
+  "Registrar & Transfer Agent",
+  "Custodian",
+  "Vault Manager",
+  "ESG Rating Provider",
+  "SCSB",
+  "UPI Mobile App",
+  "Point of Presence",
+];
+
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
