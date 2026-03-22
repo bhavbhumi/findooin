@@ -74,7 +74,7 @@ export interface JobApplication {
 
 export function useJobs(filters?: { category?: string; type?: string; location?: string; search?: string }) {
   return useQuery({
-    queryKey: ["jobs", filters],
+    queryKey: QUERY_KEYS.jobs(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("jobs")
