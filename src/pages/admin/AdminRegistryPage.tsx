@@ -90,6 +90,46 @@ const SEBI_TYPE_GROUPS = [
   },
 ];
 
+const SEBI_SYNC_MAX_PAGES = 8;
+const SEBI_SYNC_MAX_CONTINUATIONS = 40;
+
+const parseSyncDetails = (detailsRaw: unknown): Record<string, any> | null => {
+  if (!detailsRaw) return null;
+  try {
+    const parsed = typeof detailsRaw === "string" ? JSON.parse(detailsRaw) : detailsRaw;
+    return parsed && typeof parsed === "object" ? (parsed as Record<string, any>) : null;
+  } catch {
+    return null;
+  }
+};
+
+const extractSebiTypeResult = (detailsRaw: unknown, intmId: number, regCategory: string) => {
+  const details = parseSyncDetails(detailsRaw);
+  if (!details) return null;
+
+  const directKey = `${intmId}_${regCategory}`;
+  const collections: Record<string, any>[] = [];
+  if (details.types && typeof details.types === "object") {
+    collections.push(details.types as Record<string, any>);
+  }
+  collections.push(details);
+
+  for (const collection of collections) {
+    if (collection[directKey]) return collection[directKey];
+    const fallbackKey = Object.keys(collection).find((k) => k.startsWith(`${intmId}_`));
+    if (fallbackKey) return collection[fallbackKey];
+  }
+
+  return null;
+};
+
+const extractSebiPartialType = (detailsRaw: unknown, intmId: number) => {
+  const details = parseSyncDetails(detailsRaw);
+  const partialTypes = details?.partial_types;
+  if (!Array.isArray(partialTypes)) return null;
+  return partialTypes.find((p: any) => Number(p?.intmId) === intmId) || null;
+};
+
 export default function AdminRegistryPage() {
   const [search, setSearch] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
