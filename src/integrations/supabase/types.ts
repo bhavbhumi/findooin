@@ -2409,6 +2409,8 @@ export type Database = {
           is_primary_record: boolean | null
           is_public: boolean
           last_synced_at: string | null
+          mapped_role: string | null
+          mapped_sub_type: string | null
           matched_user_id: string | null
           pincode: string | null
           raw_data: Json | null
@@ -2436,6 +2438,8 @@ export type Database = {
           is_primary_record?: boolean | null
           is_public?: boolean
           last_synced_at?: string | null
+          mapped_role?: string | null
+          mapped_sub_type?: string | null
           matched_user_id?: string | null
           pincode?: string | null
           raw_data?: Json | null
@@ -2463,6 +2467,8 @@ export type Database = {
           is_primary_record?: boolean | null
           is_public?: boolean
           last_synced_at?: string | null
+          mapped_role?: string | null
+          mapped_sub_type?: string | null
           matched_user_id?: string | null
           pincode?: string | null
           raw_data?: Json | null
@@ -3771,8 +3777,6 @@ export type Database = {
       registry_entities_consolidated: {
         Row: {
           address: string | null
-          all_categories: string | null
-          all_registration_numbers: string | null
           all_registrations: Json | null
           city: string | null
           claimed_at: string | null
@@ -3783,12 +3787,15 @@ export type Database = {
           entity_name: string | null
           entity_type: string | null
           id: string | null
+          is_primary_record: boolean | null
           is_public: boolean | null
           last_synced_at: string | null
+          mapped_role: string | null
+          mapped_sub_type: string | null
           matched_user_id: string | null
           pincode: string | null
+          raw_data: Json | null
           registration_category: string | null
-          registration_count: number | null
           registration_number: string | null
           source: string | null
           source_id: string | null
@@ -3799,8 +3806,6 @@ export type Database = {
         }
         Insert: {
           address?: string | null
-          all_categories?: never
-          all_registration_numbers?: never
           all_registrations?: Json | null
           city?: string | null
           claimed_at?: string | null
@@ -3811,12 +3816,15 @@ export type Database = {
           entity_name?: string | null
           entity_type?: string | null
           id?: string | null
+          is_primary_record?: boolean | null
           is_public?: boolean | null
           last_synced_at?: string | null
+          mapped_role?: string | null
+          mapped_sub_type?: string | null
           matched_user_id?: string | null
           pincode?: string | null
+          raw_data?: Json | null
           registration_category?: string | null
-          registration_count?: never
           registration_number?: string | null
           source?: string | null
           source_id?: string | null
@@ -3827,8 +3835,6 @@ export type Database = {
         }
         Update: {
           address?: string | null
-          all_categories?: never
-          all_registration_numbers?: never
           all_registrations?: Json | null
           city?: string | null
           claimed_at?: string | null
@@ -3839,12 +3845,15 @@ export type Database = {
           entity_name?: string | null
           entity_type?: string | null
           id?: string | null
+          is_primary_record?: boolean | null
           is_public?: boolean | null
           last_synced_at?: string | null
+          mapped_role?: string | null
+          mapped_sub_type?: string | null
           matched_user_id?: string | null
           pincode?: string | null
+          raw_data?: Json | null
           registration_category?: string | null
-          registration_count?: never
           registration_number?: string | null
           source?: string | null
           source_id?: string | null
