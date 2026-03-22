@@ -34,6 +34,7 @@ const intermediarySubTypes: SubTypeOption[] = [
   { value: "insurance_agent", label: "Insurance Agent" },
   { value: "research_analyst", label: "Research Analyst" },
   { value: "ca_cs", label: "CA / CS" },
+  { value: "pop", label: "Point of Presence (PoP)" },
 ];
 
 const issuerSubTypes: SubTypeOption[] = [
@@ -50,7 +51,6 @@ const enablerSubTypes: SubTypeOption[] = [
   { value: "depository", label: "Depository (CDSL/NSDL)" },
   { value: "rta", label: "Registrar & Transfer Agent (RTA)" },
   { value: "custodian", label: "Custodian" },
-  { value: "pop", label: "Point of Presence (PoP)" },
   { value: "vault_manager", label: "Vault Manager" },
   { value: "asba_bank", label: "ASBA Bank" },
   { value: "esg_provider", label: "ESG Rating Provider" },

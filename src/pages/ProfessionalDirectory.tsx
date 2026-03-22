@@ -30,7 +30,7 @@ const PAGE_SIZE = 24;
 const TABS = [
   { key: "intermediaries", label: "Intermediaries", icon: Briefcase, description: "MF Distributors, Advisers, Brokers & Analysts" },
   { key: "issuers", label: "Issuers", icon: Building2, description: "Portfolio Managers, AMCs & Finance Companies" },
-  { key: "enablers", label: "Enablers", icon: Settings2, description: "KRAs, Depositories, RTAs, Custodians & PoPs" },
+  { key: "enablers", label: "Enablers", icon: Settings2, description: "KRAs, Depositories, RTAs, Custodians & Vault Managers" },
 ] as const;
 
 type TabKey = typeof TABS[number]["key"];
@@ -51,6 +51,8 @@ const INTERMEDIARY_CATEGORIES = [
   "Debentures Trustee",
   "Credit Rating Agency",
   "Merchant Banker",
+  "Point of Presence",
+  "Pension Fund",
 ];
 
 const ISSUER_CATEGORIES = [
@@ -73,7 +75,6 @@ const ENABLER_CATEGORIES = [
   "ESG Rating Provider",
   "SCSB",
   "UPI Mobile App",
-  "Point of Presence",
 ];
 
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
@@ -100,6 +101,8 @@ const cardVariant = {
 };
 
 function classifyEntity(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): TabKey {
+  // PFRDA PoPs are intermediaries, not enablers — check intermediary categories first for source=pfrda
+  if (entity.source === "pfrda") return "intermediaries";
   if (entity.entity_type === "enabler") return "enablers";
   if (entity.registration_category && ENABLER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "enablers";
   if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "issuers";
