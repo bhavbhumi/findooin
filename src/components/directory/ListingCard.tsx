@@ -1,5 +1,6 @@
-import { memo } from "react";
-import { Star, Eye, MessageCircle, MapPin, BadgeCheck, TrendingUp, Package, Wrench } from "lucide-react";
+import { memo, useState } from "react";
+import { Star, Eye, MessageCircle, MapPin, BadgeCheck, TrendingUp, Package, Wrench, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ interface ListingCardProps {
 }
 
 export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: ListingCardProps) => {
+  const [hovered, setHovered] = useState(false);
   const categoryLabel =
     listing.listing_type === "product"
       ? PRODUCT_CATEGORIES.find((c) => c.value === listing.product_category)?.label
@@ -24,15 +26,30 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
 
   return (
     <Card
-      className={`group cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 border-border hover:border-primary/20 hover:bg-card/80 hover:backdrop-blur-sm ${
+      className={`group cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-border hover:border-primary/25 hover:bg-card/80 hover:backdrop-blur-sm relative overflow-hidden ${
         isComparing ? "ring-2 ring-primary/20 border-primary" : ""
       }`}
       onClick={() => onSelect(listing)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(listing); } }}
     >
-      <CardContent className="p-4 space-y-3">
+      {/* Hover glow accent */}
+      <AnimatePresence>
+        {hovered && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+        )}
+      </AnimatePresence>
+
+      <CardContent className="p-4 space-y-3 relative z-10">
         {/* Type + Category */}
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="text-[10px] gap-1">
@@ -55,8 +72,10 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
           {listing.title}
         </h3>
 
-        {/* Description */}
-        <p className="text-xs text-muted-foreground line-clamp-2">{listing.description}</p>
+        {/* Description — expands on hover */}
+        <p className={`text-xs text-muted-foreground transition-all duration-300 ${hovered ? "line-clamp-3" : "line-clamp-2"}`}>
+          {listing.description}
+        </p>
 
         {/* Key metrics */}
         <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
@@ -73,6 +92,28 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
             <MessageCircle className="h-3 w-3" /> {listing.enquiry_count}
           </span>
         </div>
+
+        {/* Certifications preview on hover */}
+        <AnimatePresence>
+          {hovered && listing.certifications && listing.certifications.length > 0 && (
+            <motion.div
+              className="flex flex-wrap gap-1"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {listing.certifications.slice(0, 3).map((cert) => (
+                <Badge key={cert} variant="outline" className="text-[9px] px-1.5 py-0 border-accent/30 text-accent">
+                  {cert}
+                </Badge>
+              ))}
+              {listing.certifications.length > 3 && (
+                <span className="text-[9px] text-muted-foreground">+{listing.certifications.length - 3}</span>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Min investment / pricing */}
         {listing.min_investment && (
@@ -109,8 +150,46 @@ export const ListingCard = memo(({ listing, onSelect, onCompare, isComparing }: 
           )}
         </div>
 
-        {/* Compare button */}
-        {onCompare && (
+        {/* Hover CTA bar */}
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              className="flex items-center gap-2 pt-2"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button
+                variant="default"
+                size="sm"
+                className="flex-1 text-xs h-7 gap-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(listing);
+                }}
+              >
+                View Details <ArrowRight className="h-3 w-3" />
+              </Button>
+              {onCompare && (
+                <Button
+                  variant={isComparing ? "secondary" : "outline"}
+                  size="sm"
+                  className="text-xs h-7 gap-1"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCompare(listing);
+                  }}
+                >
+                  {isComparing ? "Remove" : "Compare"}
+                </Button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Compare button - always visible when not hovered */}
+        {!hovered && onCompare && (
           <Button
             variant={isComparing ? "default" : "outline"}
             size="sm"
