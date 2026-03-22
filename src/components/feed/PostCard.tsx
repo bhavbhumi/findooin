@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { differenceInMinutes } from "date-fns";
 import { ReportDialog } from "@/components/feed/ReportDialog";
+import { LinkPreviewCard } from "@/components/feed/LinkPreviewCard";
 import { CommentSection } from "@/components/feed/CommentSection";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { UserCheck } from "lucide-react";
