@@ -13,6 +13,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type PlanTier = "free" | "pro" | "enterprise";
 export type SubscriptionStatus = "trialing" | "active" | "past_due" | "cancelled" | "expired" | "paused";
