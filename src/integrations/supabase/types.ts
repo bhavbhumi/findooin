@@ -4015,7 +4015,7 @@ export type Database = {
       update_login_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
-      app_role: "issuer" | "intermediary" | "investor" | "admin"
+      app_role: "issuer" | "intermediary" | "investor" | "admin" | "enabler"
       application_status:
         | "submitted"
         | "viewed"
@@ -4272,7 +4272,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["issuer", "intermediary", "investor", "admin"],
+      app_role: ["issuer", "intermediary", "investor", "admin", "enabler"],
       application_status: [
         "submitted",
         "viewed",
