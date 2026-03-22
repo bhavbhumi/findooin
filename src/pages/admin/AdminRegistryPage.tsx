@@ -122,7 +122,7 @@ export default function AdminRegistryPage() {
     },
   });
 
-  // Sync logs
+  // Sync logs — auto-fix stale "running" entries for display
   const { data: syncLogs = [] } = useQuery({
     queryKey: ["admin-sync-logs"],
     queryFn: async () => {
@@ -132,7 +132,17 @@ export default function AdminRegistryPage() {
         .order("started_at", { ascending: false })
         .limit(50);
       if (error) throw error;
-      return data;
+      // Mark logs stuck as "running" for over 10 minutes as timed_out in UI display
+      return (data || []).map((log: any) => {
+        if (log.status === "running" && !log.completed_at) {
+          const startedAt = new Date(log.started_at).getTime();
+          const elapsed = Date.now() - startedAt;
+          if (elapsed > 10 * 60 * 1000) {
+            return { ...log, status: "failed", error_message: log.error_message || "Timed out" };
+          }
+        }
+        return log;
+      });
     },
     refetchInterval: syncingSource ? 5000 : false,
   });

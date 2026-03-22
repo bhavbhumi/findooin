@@ -217,56 +217,149 @@ function parseSebiCards(html: string): RawEntity[] {
 
     if (!fields["Name"] || fields["Name"].length < 2) continue;
 
-    // Extract address parts
-    const addr = fields["Address"] || fields["Correspondence Address"] || "";
-    let city = "", state = "", pincode = "";
-    const pincodeMatch = addr.match(/(\d{6})\s*$/);
-    if (pincodeMatch) pincode = pincodeMatch[1];
-    const parts = addr.split(",").map(p => p.trim());
-    if (parts.length >= 3) {
-      const last = parts[parts.length - 1];
-      const secondLast = parts[parts.length - 2];
-      const thirdLast = parts[parts.length - 3];
-      if (/^\d{6}$/.test(last)) {
-        state = secondLast;
-        city = thirdLast;
-      } else if (/\d{6}/.test(last)) {
-        state = secondLast;
-        city = thirdLast;
-      } else {
-        state = last;
-        city = secondLast;
-      }
+    records.push(mapSebiFieldsToEntity(fields));
+  }
+
+  // Fallback: try parsing as HTML table if no card records found
+  if (records.length === 0) {
+    const tableRecords = parseSebiTable(html);
+    records.push(...tableRecords);
+  }
+
+  return records;
+}
+
+// Maps extracted key-value fields to a RawEntity
+function mapSebiFieldsToEntity(fields: Record<string, string>): RawEntity {
+  const addr = fields["Address"] || fields["Correspondence Address"] || "";
+  let city = "", state = "", pincode = "";
+  const pincodeMatch = addr.match(/(\d{6})\s*$/);
+  if (pincodeMatch) pincode = pincodeMatch[1];
+  const parts = addr.split(",").map(p => p.trim());
+  if (parts.length >= 3) {
+    const last = parts[parts.length - 1];
+    const secondLast = parts[parts.length - 2];
+    const thirdLast = parts[parts.length - 3];
+    if (/^\d{6}$/.test(last) || /\d{6}/.test(last)) {
+      state = secondLast;
+      city = thirdLast;
+    } else {
+      state = last;
+      city = secondLast;
+    }
+  }
+
+  const email = fields["E-mail"] || fields["Email"] || fields["Correspondence E-mail"] || fields["Correspondence Email"] || "";
+  const phone = fields["Telephone"] || fields["Correspondence Telephone"] || fields["Tel."] || "";
+
+  return {
+    entity_name: fields["Name"],
+    registration_number: fields["Registration No."] || fields["Registration No"] || "",
+    contact_email: email,
+    contact_phone: phone,
+    address: addr,
+    city: city.replace(/^\d+/, "").trim(),
+    state: state.replace(/\d/g, "").trim(),
+    pincode,
+    raw_data: {
+      trade_name: fields["Trade Name"] || "",
+      contact_person: fields["Contact Person"] || "",
+      validity: (fields["Validity"] || fields[" Validity "] || "").trim(),
+      exchange_name: fields["Exchange Name"] || "",
+      correspondence_address: fields["Correspondence Address"] || "",
+      fax: fields["Fax No."] || fields["Fax No"] || "",
+      principal_officer: fields["Principal Officer"] || "",
+      compliance_officer: fields["Compliance Officer"] || "",
+      category: fields["Category"] || "",
+      sponsor: fields["Sponsor"] || "",
+      manager: fields["Manager"] || "",
+      source_url: "sebi.gov.in",
+    },
+  };
+}
+
+// Fallback: parse SEBI table-based layouts (used by SCSB, UPI, and some enabler categories)
+function parseSebiTable(html: string): RawEntity[] {
+  const records: RawEntity[] = [];
+
+  // Find <table> blocks and extract <thead> headers + <tbody> rows
+  const tableRegex = /<table[^>]*class=["'][^"']*table[^"']*["'][^>]*>([\s\S]*?)<\/table>/gi;
+  let tableMatch;
+
+  while ((tableMatch = tableRegex.exec(html)) !== null) {
+    const tableHtml = tableMatch[1];
+
+    // Extract headers
+    const headers: string[] = [];
+    const thRegex = /<th[^>]*>([\s\S]*?)<\/th>/gi;
+    let thMatch;
+    while ((thMatch = thRegex.exec(tableHtml)) !== null) {
+      headers.push(decodeHtmlEntities(thMatch[1].replace(/<[^>]*>/g, "").trim()));
     }
 
-    // Map various email/phone label variants
-    const email = fields["E-mail"] || fields["Email"] || fields["Correspondence E-mail"] || fields["Correspondence Email"] || "";
-    const phone = fields["Telephone"] || fields["Correspondence Telephone"] || fields["Tel."] || "";
+    if (headers.length < 2) continue;
 
-    records.push({
-      entity_name: fields["Name"],
-      registration_number: fields["Registration No."] || fields["Registration No"] || "",
-      contact_email: email,
-      contact_phone: phone,
-      address: addr,
-      city: city.replace(/^\d+/, "").trim(),
-      state: state.replace(/\d/g, "").trim(),
-      pincode,
-      raw_data: {
-        trade_name: fields["Trade Name"] || "",
-        contact_person: fields["Contact Person"] || "",
-        validity: (fields["Validity"] || fields[" Validity "] || "").trim(),
-        exchange_name: fields["Exchange Name"] || "",
-        correspondence_address: fields["Correspondence Address"] || "",
-        fax: fields["Fax No."] || fields["Fax No"] || "",
-        principal_officer: fields["Principal Officer"] || "",
-        compliance_officer: fields["Compliance Officer"] || "",
-        category: fields["Category"] || "",
-        sponsor: fields["Sponsor"] || "",
-        manager: fields["Manager"] || "",
-        source_url: "sebi.gov.in",
-      },
-    });
+    // Find header indices for known fields
+    const nameIdx = headers.findIndex(h => /^(name|entity\s*name|bank\s*name|app\s*name|sponsor\s*name)/i.test(h));
+    const regIdx = headers.findIndex(h => /^(reg|registration|sr\.?\s*no|s\.?\s*no)/i.test(h));
+    const emailIdx = headers.findIndex(h => /e-?mail/i.test(h));
+    const phoneIdx = headers.findIndex(h => /tel|phone|contact/i.test(h));
+    const addressIdx = headers.findIndex(h => /address/i.test(h));
+
+    if (nameIdx < 0) continue; // Must have at least a name column
+
+    // Extract rows
+    const trRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+    let trMatch;
+    let isFirstRow = true;
+
+    while ((trMatch = trRegex.exec(tableHtml)) !== null) {
+      // Skip header row(s)
+      if (trMatch[1].includes("<th")) continue;
+
+      const cells: string[] = [];
+      const tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+      let tdMatch;
+      while ((tdMatch = tdRegex.exec(trMatch[1])) !== null) {
+        cells.push(decodeHtmlEntities(tdMatch[1].replace(/<[^>]*>/g, "").trim()));
+      }
+
+      if (cells.length < 2) continue;
+      // Skip if first data row looks like a repeated header
+      if (isFirstRow && cells[nameIdx] && /^(name|entity|sr)/i.test(cells[nameIdx])) {
+        isFirstRow = false;
+        continue;
+      }
+      isFirstRow = false;
+
+      const name = cells[nameIdx] || "";
+      if (name.length < 2) continue;
+
+      records.push({
+        entity_name: name,
+        registration_number: regIdx >= 0 ? (cells[regIdx] || "") : "",
+        contact_email: emailIdx >= 0 ? (cells[emailIdx] || "") : "",
+        contact_phone: phoneIdx >= 0 ? (cells[phoneIdx] || "") : "",
+        address: addressIdx >= 0 ? (cells[addressIdx] || "") : "",
+        raw_data: {
+          all_columns: Object.fromEntries(headers.map((h, i) => [h, cells[i] || ""])),
+          source_url: "sebi.gov.in",
+        },
+      });
+    }
+  }
+
+  // Additional fallback: look for plain-text list patterns (e.g. numbered lists)
+  if (records.length === 0) {
+    // Some SEBI pages list entities as simple text blocks
+    const listItemRegex = /(?:^|\n)\s*\d+[\.\)]\s+([A-Z][A-Za-z\s&().,'/-]{3,}?)(?:\s*[-–]\s*|\s*\()/gm;
+    let listMatch;
+    while ((listMatch = listItemRegex.exec(html)) !== null) {
+      const name = listMatch[1].trim();
+      if (name.length > 3 && name.length < 200) {
+        records.push({ entity_name: name, raw_data: { source_url: "sebi.gov.in" } });
+      }
+    }
   }
 
   return records;
