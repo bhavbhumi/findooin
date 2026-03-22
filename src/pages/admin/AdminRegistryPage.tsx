@@ -92,6 +92,7 @@ const SEBI_TYPE_GROUPS = [
 
 const SEBI_SYNC_MAX_PAGES = 8;
 const SEBI_SYNC_MAX_CONTINUATIONS = 40;
+const SEBI_TYPE_BY_ID = new Map(SEBI_TYPE_GROUPS.flatMap((group) => group.types.map((type) => [type.intmId, type])));
 
 const parseSyncDetails = (detailsRaw: unknown): Record<string, any> | null => {
   if (!detailsRaw) return null;
@@ -101,6 +102,36 @@ const parseSyncDetails = (detailsRaw: unknown): Record<string, any> | null => {
   } catch {
     return null;
   }
+};
+
+const getSebiTypeLabel = (intmId: number, fallback?: string) => {
+  return SEBI_TYPE_BY_ID.get(intmId)?.label || fallback || `intm${intmId}`;
+};
+
+const formatSebiScopeSummary = (detailsRaw: unknown, maxItems = 3): string | null => {
+  const details = parseSyncDetails(detailsRaw);
+  const typeResults = details?.types;
+  if (!typeResults || typeof typeResults !== "object") return null;
+
+  const parsed = Object.entries(typeResults as Record<string, any>)
+    .map(([key, result]) => {
+      const separatorIndex = key.indexOf("_");
+      const intmId = Number(separatorIndex > -1 ? key.slice(0, separatorIndex) : key);
+      const fallbackCategory = separatorIndex > -1 ? key.slice(separatorIndex + 1) : key;
+      const found = Number(result?.found || 0);
+      return {
+        label: getSebiTypeLabel(intmId, fallbackCategory),
+        found,
+      };
+    })
+    .filter((entry) => entry.found > 0)
+    .sort((a, b) => b.found - a.found);
+
+  if (parsed.length === 0) return null;
+
+  const shown = parsed.slice(0, maxItems).map((entry) => `${entry.label} (${entry.found})`);
+  const remaining = parsed.length - shown.length;
+  return remaining > 0 ? `${shown.join(", ")} +${remaining} more` : shown.join(", ");
 };
 
 const extractSebiTypeResult = (detailsRaw: unknown, intmId: number, regCategory: string) => {
@@ -217,23 +248,35 @@ export default function AdminRegistryPage() {
     queryKey: ["admin-registry-category-counts"],
     queryFn: async () => {
       const allTypes = SEBI_TYPE_GROUPS.flatMap(g => g.types);
-      const counts: Record<string, number> = {};
+      const counts: Record<string, { total: number; primary: number }> = {};
       
       // Fetch counts in parallel batches
       const results = await Promise.all(
         allTypes.map(async (t) => {
-          const { count, error } = await supabase
-            .from("registry_entities")
-            .select("*", { count: "exact", head: true })
-            .eq("source", "sebi")
-            .eq("registration_category", t.regCategory)
-            .eq("is_primary_record", true);
-          return { category: t.regCategory, count: error ? 0 : (count || 0) };
+          const [totalResult, primaryResult] = await Promise.all([
+            supabase
+              .from("registry_entities")
+              .select("*", { count: "exact", head: true })
+              .eq("source", "sebi")
+              .eq("registration_category", t.regCategory),
+            supabase
+              .from("registry_entities")
+              .select("*", { count: "exact", head: true })
+              .eq("source", "sebi")
+              .eq("registration_category", t.regCategory)
+              .eq("is_primary_record", true),
+          ]);
+
+          return {
+            category: t.regCategory,
+            total: totalResult.error ? 0 : (totalResult.count || 0),
+            primary: primaryResult.error ? 0 : (primaryResult.count || 0),
+          };
         })
       );
       
       for (const r of results) {
-        counts[r.category] = r.count;
+        counts[r.category] = { total: r.total, primary: r.primary };
       }
       return counts;
     },
@@ -401,19 +444,27 @@ export default function AdminRegistryPage() {
         const data = await invokeRegistrySync();
         const results = data.results || {};
         const summaries = Object.entries(results).map(([src, r]: [string, any]) =>
-          `${src.toUpperCase()}: ${r.found} found, ${r.inserted} new, ${r.updated} updated`
+          {
+            const base = `${src.toUpperCase()}: ${r.found} found, ${r.inserted} new, ${r.updated} updated`;
+            if (src !== "sebi") return base;
+            const scope = formatSebiScopeSummary(r?.details, 2);
+            return scope ? `${base} — ${scope}` : base;
+          }
         );
 
         for (const [, r] of Object.entries(results) as [string, any][]) {
           const details = parseSyncDetails(r?.details);
           if (details?.partial_types?.length > 0) {
             const partialInfo = details.partial_types
-              .map((p: any) => `intm${p.intmId}: page ${p.nextPage}/${p.totalPages}`)
+              .map((p: any) => `${getSebiTypeLabel(Number(p.intmId))}: page ${p.nextPage}/${p.totalPages}`)
               .join(", ");
             toast.info(`Partial sync — more pages available: ${partialInfo}.`, { duration: 10000 });
           }
           if (details?.deferred_type_ids?.length > 0) {
-            toast.info(`Deferred SEBI types for next run: ${details.deferred_type_ids.join(", ")}`, { duration: 10000 });
+            const deferredLabels = details.deferred_type_ids
+              .map((id: number) => getSebiTypeLabel(Number(id)))
+              .join(", ");
+            toast.info(`Deferred SEBI types for next run: ${deferredLabels}`, { duration: 10000 });
           }
         }
 
@@ -456,10 +507,7 @@ export default function AdminRegistryPage() {
       if (meta.sebi_type_ids && Array.isArray(meta.sebi_type_ids)) return meta.sebi_type_ids.includes(intmId);
       if (meta.sub_source && typeof meta.sub_source === "string") return meta.sub_source.includes(regCategory);
       if (meta.details) {
-        try {
-          const details = typeof meta.details === "string" ? JSON.parse(meta.details) : meta.details;
-          return !!details[`${intmId}_${regCategory}`];
-        } catch { return false; }
+        return !!extractSebiTypeResult(meta.details, intmId, regCategory);
       }
       return false;
     });
@@ -647,8 +695,13 @@ export default function AdminRegistryPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               {SEBI_TYPE_GROUPS.map((group) => {
-                const groupDbCount = group.types.reduce((s, t) => s + ((categoryCounts as any)[t.regCategory] || 0), 0);
-                const groupExpected = group.types.reduce((s, t) => s + t.expected, 0);
+                const groupDbCount = group.types.reduce((s, t) => s + (((categoryCounts as any)[t.regCategory]?.total) || 0), 0);
+                const groupFoundCount = group.types.reduce((sum, type) => {
+                  const groupLog = getLastSebiTypeSync(type.intmId, type.regCategory);
+                  const groupTypeResult = groupLog ? getTypeResultFromLog(groupLog, type.intmId, type.regCategory) : null;
+                  const foundFromLog = Number(groupTypeResult?.found);
+                  return sum + (Number.isFinite(foundFromLog) && foundFromLog > 0 ? foundFromLog : type.expected);
+                }, 0);
                 const allGroupPaused = group.types.every(t => isSebiTypePaused(t.intmId));
                 const someGroupPaused = group.types.some(t => isSebiTypePaused(t.intmId));
 
@@ -662,7 +715,7 @@ export default function AdminRegistryPage() {
                           {group.types.length} types
                         </Badge>
                         <span className="text-[9px] text-muted-foreground font-mono">
-                          {groupDbCount.toLocaleString()} / {groupExpected.toLocaleString()} scraped
+                          {groupDbCount.toLocaleString()} / {groupFoundCount.toLocaleString()} in DB/found
                         </span>
                         {someGroupPaused && (
                           <Badge variant="outline" className="text-[8px] text-destructive border-destructive/30">
@@ -706,10 +759,14 @@ export default function AdminRegistryPage() {
                     <CollapsibleContent>
                       <div className="ml-6 mt-1 space-y-1">
                         {group.types.map((type) => {
-                          const dbCount = (categoryCounts as any)[type.regCategory] || 0;
-                          const pct = type.expected > 0 ? Math.round((dbCount / type.expected) * 100) : 0;
+                          const counts = (categoryCounts as any)[type.regCategory] || { total: 0, primary: 0 };
+                          const dbCount = Number(counts.total || 0);
+                          const primaryCount = Number(counts.primary || 0);
                           const lastTypeSync = getLastSebiTypeSync(type.intmId, type.regCategory);
                           const typeResult = lastTypeSync ? getTypeResultFromLog(lastTypeSync, type.intmId, type.regCategory) : null;
+                          const foundFromLog = Number(typeResult?.found);
+                          const foundCount = Number.isFinite(foundFromLog) && foundFromLog > 0 ? foundFromLog : type.expected;
+                          const pct = foundCount > 0 ? Math.round((dbCount / foundCount) * 100) : 0;
                           const nextPageFromLog = getNextPageFromTypeResult(typeResult);
                           const typePaused = isSebiTypePaused(type.intmId);
 
@@ -726,16 +783,21 @@ export default function AdminRegistryPage() {
                                   variant={pct >= 90 ? "default" : pct > 0 ? "secondary" : "outline"}
                                   className="text-[8px] font-mono shrink-0"
                                 >
-                                  {dbCount.toLocaleString()} / {type.expected.toLocaleString()}
+                                  {dbCount.toLocaleString()} / {foundCount.toLocaleString()}
                                   {pct > 0 && pct < 100 && ` (${pct}%)`}
                                 </Badge>
+                                {primaryCount !== dbCount && (
+                                  <Badge variant="outline" className="text-[8px] font-mono shrink-0">
+                                    {primaryCount.toLocaleString()} unique
+                                  </Badge>
+                                )}
                               </div>
                               <div className="flex items-center gap-1 shrink-0">
                                 {lastTypeSync && (
                                   <span className="text-[9px] text-muted-foreground flex items-center gap-1">
                                     {statusIcon(lastTypeSync.status)}
                                     {typeResult
-                                      ? `${typeResult.found} found`
+                                      ? `${typeResult.found} found${Number(typeResult.updated || 0) > 0 ? `, ${typeResult.updated} updated` : ""}`
                                       : formatDistanceToNow(new Date(lastTypeSync.started_at), { addSuffix: true })}
                                   </span>
                                 )}
@@ -749,7 +811,7 @@ export default function AdminRegistryPage() {
                                 >
                                   {typePaused ? <Play className="h-2.5 w-2.5" /> : <Pause className="h-2.5 w-2.5" />}
                                 </Button>
-                                {(nextPageFromLog !== null || (dbCount > 0 && dbCount < type.expected && pct < 90)) && (
+                                {(nextPageFromLog !== null || (foundCount > 0 && dbCount > 0 && dbCount < foundCount && pct < 98)) && (
                                   <Button
                                     size="sm"
                                     variant="ghost"
@@ -1024,6 +1086,8 @@ export default function AdminRegistryPage() {
                       {syncLogs.map((log: any) => {
                         const meta = log.metadata as any;
                         const subSource = meta?.sub_source;
+                        const parsedScope = log.source === "sebi" ? formatSebiScopeSummary(meta?.details, 2) : null;
+                        const scopeLabel = subSource || parsedScope;
 
                         return (
                           <TableRow key={log.id}>
@@ -1032,9 +1096,9 @@ export default function AdminRegistryPage() {
                             </TableCell>
                             <TableCell>
                               <span className="text-xs capitalize">{log.sync_type}</span>
-                              {subSource && (
-                                <p className="text-[9px] text-muted-foreground truncate max-w-[150px]" title={subSource}>
-                                  {subSource}
+                              {scopeLabel && (
+                                <p className="text-[9px] text-muted-foreground truncate max-w-[260px]" title={scopeLabel}>
+                                  {scopeLabel}
                                 </p>
                               )}
                             </TableCell>
