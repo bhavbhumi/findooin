@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
   TrendingUp, Users, Heart, MessageSquare, Eye, Calendar, Award,
-  Zap, Trophy, Star, Share2, Download, ChevronRight, ChevronLeft,
+  Zap, Trophy, Star, Share2, ChevronRight, ChevronLeft,
   Sparkles, Flame, Target, BadgeCheck, Hash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
