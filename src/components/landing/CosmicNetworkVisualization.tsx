@@ -26,9 +26,10 @@ const ROLE_META: Record<string, { color: string; glow: string; label: string; pl
 };
 
 const ORBITS = {
-  issuer:       { radius: 90,  nodes: 5 },
-  intermediary: { radius: 145, nodes: 7 },
-  investor:     { radius: 200, nodes: 9 },
+  issuer:       { radius: 80,  nodes: 4 },
+  intermediary: { radius: 125, nodes: 6 },
+  enabler:      { radius: 165, nodes: 4 },
+  investor:     { radius: 205, nodes: 8 },
 } as const;
 
 const CENTER = 250; // SVG viewBox center
