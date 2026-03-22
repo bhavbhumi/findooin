@@ -191,6 +191,9 @@ export function PostCard({ post }: { post: FeedPost }) {
         {post.content.replace(/\n*(?:#\w+\s*)+$/g, "").trim()}
       </p>
 
+      {/* Link Preview */}
+      <LinkPreviewCard content={post.content} />
+
       {/* Image Attachment - render inline */}
       {post.attachment_url && isImageAttachment(post.attachment_type) && !post.attachment_url.startsWith("attachment://") && (
         <div className="rounded-lg overflow-hidden border border-border mb-3">
