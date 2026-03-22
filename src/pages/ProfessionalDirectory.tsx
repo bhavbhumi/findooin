@@ -286,7 +286,7 @@ export default function ProfessionalDirectory() {
               <tab.icon className="h-4 w-4" />
               {tab.label}
               <Badge variant="outline" className="text-[10px] h-5 px-1.5 font-normal">
-                {tab.key === "intermediaries" ? intermediaries.length : issuers.length}
+                {tab.key === "intermediaries" ? intermediaries.length : tab.key === "issuers" ? issuers.length : enablers.length}
               </Badge>
               {activeTab === tab.key && (
                 <motion.div
