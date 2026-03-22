@@ -86,7 +86,7 @@ export function useUserBadges(userId?: string) {
 
 export function useBadgeDefinitions() {
   return useQuery({
-    queryKey: ["badge-definitions"],
+    queryKey: QUERY_KEYS.badgeDefinitions(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("badge_definitions")
