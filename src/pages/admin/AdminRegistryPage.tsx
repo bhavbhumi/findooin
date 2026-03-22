@@ -710,6 +710,7 @@ export default function AdminRegistryPage() {
                           const pct = type.expected > 0 ? Math.round((dbCount / type.expected) * 100) : 0;
                           const lastTypeSync = getLastSebiTypeSync(type.intmId, type.regCategory);
                           const typeResult = lastTypeSync ? getTypeResultFromLog(lastTypeSync, type.intmId, type.regCategory) : null;
+                          const nextPageFromLog = getNextPageFromTypeResult(typeResult);
                           const typePaused = isSebiTypePaused(type.intmId);
 
                           return (
@@ -748,18 +749,18 @@ export default function AdminRegistryPage() {
                                 >
                                   {typePaused ? <Play className="h-2.5 w-2.5" /> : <Pause className="h-2.5 w-2.5" />}
                                 </Button>
-                                {dbCount > 0 && dbCount < type.expected && pct < 90 && (
+                                {(nextPageFromLog !== null || (dbCount > 0 && dbCount < type.expected && pct < 90)) && (
                                   <Button
                                     size="sm"
                                     variant="ghost"
                                     className="h-5 text-[9px] px-1.5 text-amber-600 hover:text-amber-700"
                                     onClick={() => {
-                                      // Calculate approximate start page from existing records
-                                      const approxPage = Math.floor(dbCount / 25);
-                                      triggerSync(["sebi"], [type.intmId], approxPage);
+                                      const fallbackPage = Math.floor(dbCount / 25);
+                                      const startAtPage = nextPageFromLog ?? fallbackPage;
+                                      triggerSync(["sebi"], [type.intmId], startAtPage);
                                     }}
                                     disabled={!!syncingSource || typePaused}
-                                    title={`Continue sync from page ~${Math.floor(dbCount / 25) + 1}`}
+                                    title={`Continue sync from page ${((nextPageFromLog ?? Math.floor(dbCount / 25)) + 1).toLocaleString()}`}
                                   >
                                     <ChevronRight className="h-2.5 w-2.5 mr-0.5" /> Continue
                                   </Button>
