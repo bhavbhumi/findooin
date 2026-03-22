@@ -9,7 +9,7 @@ vi.mock("@/integrations/supabase/client", () => ({
       in: vi.fn().mockReturnThis(),
       or: vi.fn().mockReturnThis(),
       limit: vi.fn().mockResolvedValue({ data: [], error: null }),
-      insert: vi.fn().mockReturnThis(),
+      insert: vi.fn().mockReturnValue({ then: vi.fn((cb: any) => cb()) }),
       update: vi.fn().mockReturnThis(),
       delete: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({ data: null, error: null }),
