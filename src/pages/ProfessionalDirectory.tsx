@@ -135,10 +135,10 @@ export default function ProfessionalDirectory() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Split entities by tab
-  const intermediaries = useMemo(() => allEntities.filter(e => classifyEntity(e) === "intermediaries"), [allEntities]);
-  const issuers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "issuers"), [allEntities]);
-  const enablers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "enablers"), [allEntities]);
+  // Split entities by tab using mapped_role from database
+  const intermediaries = useMemo(() => allEntities.filter(e => (ROLE_TO_TAB[e.mapped_role] || "intermediaries") === "intermediaries"), [allEntities]);
+  const issuers = useMemo(() => allEntities.filter(e => (ROLE_TO_TAB[e.mapped_role] || "intermediaries") === "issuers"), [allEntities]);
+  const enablers = useMemo(() => allEntities.filter(e => (ROLE_TO_TAB[e.mapped_role] || "intermediaries") === "enablers"), [allEntities]);
   const tabEntities = activeTab === "intermediaries" ? intermediaries : activeTab === "issuers" ? issuers : enablers;
 
   // Cities for current tab
