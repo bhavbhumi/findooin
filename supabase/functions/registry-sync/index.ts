@@ -30,6 +30,173 @@ interface RawEntity {
 const DEFAULT_MAX_PAGES = 8;
 const SAFE_EXECUTION_BUDGET_MS = 45_000;
 
+const HEADER_LIKE_NAME_PATTERN = /^(name|reg(?:istration)?\.?\s*no\.?|sr\.?\s*no\.?|s\.?\s*no\.?|category|address|telephone|phone|email)$/i;
+
+const SEBI_OPTIONAL_REGISTRATION_CATEGORIES = new Set([
+  "Qualified Depository Participant",
+  "Designated Depository Participant",
+  "Custodian",
+  "KYC Registration Agency",
+  "Registrar & Transfer Agent",
+  "SCSB - Syndicate ASBA Equity",
+  "SCSB - Direct ASBA Equity",
+  "SCSB - Issuer Bank UPI",
+  "SCSB - Sponsor Bank UPI",
+  "UPI Mobile App",
+  "SCSB - Direct ASBA Debt",
+  "SCSB - Syndicate ASBA Debt",
+  "Vault Manager",
+]);
+
+const STATE_ALIASES: Record<string, string> = {
+  "ANDAMAN AND NICOBAR": "Andaman and Nicobar Islands",
+  "ANDAMAN AND NICOBAR ISLANDS": "Andaman and Nicobar Islands",
+  "ARUNACHAL PRADESH": "Arunachal Pradesh",
+  "ASSAM": "Assam",
+  "BIHAR": "Bihar",
+  "CHANDIGARH": "Chandigarh",
+  "CHHATTISGARH": "Chhattisgarh",
+  "DADRA AND NAGAR HAVELI": "Dadra and Nagar Haveli and Daman and Diu",
+  "DADRA AND NAGAR HAVELI AND DAMAN AND DIU": "Dadra and Nagar Haveli and Daman and Diu",
+  "DAMAN AND DIU": "Dadra and Nagar Haveli and Daman and Diu",
+  "DELHI": "Delhi",
+  "GOA": "Goa",
+  "GUJARAT": "Gujarat",
+  "HARYANA": "Haryana",
+  "HIMACHAL PRADESH": "Himachal Pradesh",
+  "JAMMU AND KASHMIR": "Jammu and Kashmir",
+  "JHARKHAND": "Jharkhand",
+  "KARNATAKA": "Karnataka",
+  "KERALA": "Kerala",
+  "LADAKH": "Ladakh",
+  "LAKSHADWEEP": "Lakshadweep",
+  "MADHYA PRADESH": "Madhya Pradesh",
+  "MAHARASHTRA": "Maharashtra",
+  "MANIPUR": "Manipur",
+  "MEGHALAYA": "Meghalaya",
+  "MIZORAM": "Mizoram",
+  "NAGALAND": "Nagaland",
+  "ODISHA": "Odisha",
+  "ORISSA": "Odisha",
+  "PUDUCHERRY": "Puducherry",
+  "PONDICHERRY": "Puducherry",
+  "PUNJAB": "Punjab",
+  "RAJASTHAN": "Rajasthan",
+  "SIKKIM": "Sikkim",
+  "TAMIL NADU": "Tamil Nadu",
+  "TELANGANA": "Telangana",
+  "TRIPURA": "Tripura",
+  "UTTAR PRADESH": "Uttar Pradesh",
+  "UTTARAKHAND": "Uttarakhand",
+  "UTTRAKHAND": "Uttarakhand",
+  "WEST BENGAL": "West Bengal",
+};
+
+function normalizeWhitespace(value: string): string {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function normalizeEntityName(value: string): string {
+  return normalizeWhitespace(value)
+    .replace(/\bLTD\.?\b/gi, "LIMITED")
+    .replace(/\bPVT\.?\b/gi, "PRIVATE")
+    .replace(/\bCO\.?\b/gi, "COMPANY")
+    .replace(/[\u0000-\u001F]/g, "")
+    .replace(/\s+\.$/, "")
+    .trim();
+}
+
+function isHeaderLikeName(value: string): boolean {
+  return HEADER_LIKE_NAME_PATTERN.test(normalizeWhitespace(value));
+}
+
+function normalizeEmail(value?: string): string | null {
+  if (!value) return null;
+  const trimmed = normalizeWhitespace(value).toLowerCase();
+  if (!trimmed || !trimmed.includes("@")) return null;
+  return trimmed;
+}
+
+function normalizePhone(value?: string): string | null {
+  if (!value) return null;
+  const digitsOnly = value.replace(/[^0-9]/g, "");
+  return digitsOnly.length >= 7 ? digitsOnly : null;
+}
+
+function normalizeState(value?: string): string | null {
+  if (!value) return null;
+  const cleaned = normalizeWhitespace(value)
+    .replace(/[^a-zA-Z\s]/g, "")
+    .toUpperCase();
+  if (!cleaned) return null;
+  return STATE_ALIASES[cleaned] || null;
+}
+
+function normalizeRegistrationNumber(value?: string): string | null {
+  if (!value) return null;
+  const cleaned = normalizeWhitespace(value)
+    .replace(/^REG(?:ISTRATION)?\.?\s*NO\.?\s*:?/i, "")
+    .replace(/\s+/g, "")
+    .toUpperCase();
+
+  if (!cleaned) return null;
+  if (["-", "NA", "N/A", "NIL", "NONE"].includes(cleaned)) return null;
+  if (/^\d{1,4}$/.test(cleaned)) return null; // serial numbers are not stable registration IDs
+
+  return cleaned;
+}
+
+function extractEmailFromText(value?: string): string | null {
+  if (!value) return null;
+  const match = value.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  return match ? normalizeEmail(match[0]) : null;
+}
+
+function extractPhoneFromText(value?: string): string | null {
+  if (!value) return null;
+  const match = value.match(/(?:\+?\d[\d\s().-]{6,}\d)/);
+  return match ? normalizePhone(match[0]) : null;
+}
+
+function parseDateToIso(dateRaw?: string): string | null {
+  if (!dateRaw) return null;
+  const normalized = normalizeWhitespace(dateRaw);
+  if (!normalized) return null;
+  const parsed = new Date(normalized);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return parsed.toISOString();
+}
+
+function parseValidity(rawValidity: unknown): { code: "P" | "T" | null; from: string | null; to: string | null; raw: string } {
+  const raw = typeof rawValidity === "string" ? normalizeWhitespace(rawValidity) : "";
+  if (!raw) return { code: null, from: null, to: null, raw: "" };
+
+  const [fromRaw = "", toRaw = ""] = raw.split(/\s+-\s+/, 2);
+  const from = parseDateToIso(fromRaw);
+  const isPerpetual = /perpetual|permanen/i.test(toRaw || raw);
+
+  if (isPerpetual) {
+    return { code: "P", from, to: null, raw };
+  }
+
+  const to = parseDateToIso(toRaw || raw);
+  return { code: to ? "T" : null, from, to, raw };
+}
+
+function createRecordHash(parts: string[]): string {
+  let hash = 5381;
+  const payload = parts.join("|");
+  for (let i = 0; i < payload.length; i++) {
+    hash = ((hash << 5) + hash) ^ payload.charCodeAt(i);
+  }
+  return `rh_${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
+
+function isRegistrationExpected(source: string, regCategory: string): boolean {
+  if (source !== "sebi") return false;
+  return !SEBI_OPTIONAL_REGISTRATION_CATEGORIES.has(regCategory);
+}
+
 const HEADERS: Record<string, string> = {
   Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -123,31 +290,70 @@ async function upsertEntities(
     return out;
   };
 
-  const normalizedRows: Record<string, unknown>[] = [];
+  const dedupedRowsByHash = new Map<string, Record<string, unknown>>();
+  const nowIso = new Date().toISOString();
+
   for (const rec of records) {
-    if (!rec.entity_name || rec.entity_name.trim().length < 2) {
+    const normalizedName = normalizeEntityName(rec.entity_name || "");
+    if (!normalizedName || normalizedName.length < 2 || isHeaderLikeName(normalizedName)) {
       skipped++;
       continue;
     }
 
-    normalizedRows.push({
-      entity_name: rec.entity_name.trim(),
+    const normalizedRegistration = normalizeRegistrationNumber(rec.registration_number);
+    const requiresRegistration = isRegistrationExpected(source, regCategory);
+
+    if (requiresRegistration && !normalizedRegistration) {
+      skipped++;
+      continue;
+    }
+
+    const normalizedEmail = normalizeEmail(rec.contact_email) || extractEmailFromText(rec.address);
+    const normalizedPhone = normalizePhone(rec.contact_phone) || extractPhoneFromText(rec.address);
+    const validity = parseValidity((rec.raw_data as Record<string, unknown> | undefined)?.validity);
+    const sourceId = normalizedRegistration ? `${regCategory}::${normalizedRegistration}` : null;
+    const recordHash = createRecordHash([
+      source,
+      regCategory,
+      normalizedName.toLowerCase(),
+      normalizedRegistration || "",
+      normalizedEmail || "",
+      normalizedPhone || "",
+    ]);
+
+    if (dedupedRowsByHash.has(recordHash)) {
+      skipped++;
+      continue;
+    }
+
+    dedupedRowsByHash.set(recordHash, {
+      entity_name: normalizedName,
       entity_type: entityType,
-      registration_number: rec.registration_number?.trim() || null,
+      registration_number: normalizedRegistration,
       registration_category: regCategory,
       source,
-      source_id: rec.registration_number?.trim() || null,
-      contact_email: rec.contact_email?.toLowerCase().trim() || null,
-      contact_phone: rec.contact_phone?.trim() || null,
+      source_id: sourceId,
+      contact_email: normalizedEmail,
+      contact_phone: normalizedPhone,
       address: rec.address?.trim() || null,
       city: rec.city?.trim() || null,
-      state: rec.state?.trim() || null,
+      state: normalizeState(rec.state),
       pincode: rec.pincode?.trim() || null,
-      status: "active",
-      last_synced_at: new Date().toISOString(),
-      raw_data: rec.raw_data || {},
+      status: "Active",
+      last_synced_at: nowIso,
+      raw_data: {
+        ...(rec.raw_data || {}),
+        record_hash: recordHash,
+        validity_code: validity.code,
+        validity_from: validity.from,
+        validity_to: validity.to,
+        validity_text: validity.raw,
+        legacy_source_id: normalizedRegistration,
+      },
     });
   }
+
+  const normalizedRows = Array.from(dedupedRowsByHash.values());
 
   if (normalizedRows.length === 0) {
     return { inserted, updated, skipped };
@@ -169,7 +375,15 @@ async function upsertEntities(
 
   const withSourceIdRows = Array.from(withSourceIdMap.values());
   if (withSourceIdRows.length > 0) {
-    const sourceIds = withSourceIdRows.map((r) => String(r.source_id));
+    const sourceIdsSet = new Set<string>();
+    for (const row of withSourceIdRows) {
+      const canonicalSourceId = String(row.source_id || "").trim();
+      const legacySourceId = String((row.raw_data as Record<string, unknown> | undefined)?.legacy_source_id || "").trim();
+      if (canonicalSourceId) sourceIdsSet.add(canonicalSourceId);
+      if (legacySourceId && legacySourceId !== canonicalSourceId) sourceIdsSet.add(legacySourceId);
+    }
+
+    const sourceIds = Array.from(sourceIdsSet);
     const existingBySourceId = new Map<string, string>();
 
     for (const idsChunk of chunk(sourceIds, DB_BATCH_SIZE)) {
@@ -190,7 +404,8 @@ async function upsertEntities(
 
     for (const row of withSourceIdRows) {
       const sourceId = String(row.source_id || "");
-      const existingId = existingBySourceId.get(sourceId);
+      const legacySourceId = String((row.raw_data as Record<string, unknown> | undefined)?.legacy_source_id || "");
+      const existingId = existingBySourceId.get(sourceId) || existingBySourceId.get(legacySourceId);
       if (existingId) {
         toUpdateById.push({ ...row, id: existingId });
       } else {
@@ -226,7 +441,6 @@ async function upsertEntities(
         .select("id, entity_name")
         .eq("source", source)
         .eq("registration_category", regCategory)
-        .is("source_id", null)
         .in("entity_name", namesChunk);
 
       if (error) throw new Error(`Lookup failed for name dedupe: ${error.message}`);
@@ -319,13 +533,18 @@ function parseSebiCards(html: string): RawEntity[] {
     records.push(mapSebiFieldsToEntity(fields));
   }
 
-  // Fallback: try parsing as HTML table if no card records found
-  if (records.length === 0) {
+  const sanitizedCardRecords = records.filter((r) => {
+    const normalizedName = normalizeEntityName(r.entity_name || "");
+    return normalizedName.length >= 2 && !isHeaderLikeName(normalizedName);
+  });
+
+  // Fallback: try parsing as HTML table if no trustworthy card records found
+  if (sanitizedCardRecords.length === 0) {
     const tableRecords = parseSebiTable(html);
-    records.push(...tableRecords);
+    return tableRecords;
   }
 
-  return records;
+  return sanitizedCardRecords;
 }
 
 // Maps extracted key-value fields to a RawEntity
@@ -400,10 +619,13 @@ function parseSebiTable(html: string): RawEntity[] {
 
     // Find header indices for known fields
     const nameIdx = headers.findIndex(h => /^(name|entity\s*name|bank\s*name|app\s*name|sponsor\s*name)/i.test(h));
-    const regIdx = headers.findIndex(h => /^(reg|registration|sr\.?\s*no|s\.?\s*no)/i.test(h));
+    const regIdx = headers.findIndex(h => /reg\.?\s*no|registration/i.test(h));
+    const serialIdx = headers.findIndex(h => /^sr\.?\s*no|s\.?\s*no|serial/i.test(h));
     const emailIdx = headers.findIndex(h => /e-?mail/i.test(h));
     const phoneIdx = headers.findIndex(h => /tel|phone|contact/i.test(h));
     const addressIdx = headers.findIndex(h => /address/i.test(h));
+    const validityIdx = headers.findIndex(h => /validity/i.test(h));
+    const categoryIdx = headers.findIndex(h => /^category$/i.test(h));
 
     if (nameIdx < 0) continue; // Must have at least a name column
 
@@ -432,16 +654,25 @@ function parseSebiTable(html: string): RawEntity[] {
       isFirstRow = false;
 
       const name = cells[nameIdx] || "";
-      if (name.length < 2) continue;
+      if (name.length < 2 || isHeaderLikeName(name)) continue;
+
+      const address = addressIdx >= 0 ? (cells[addressIdx] || "") : "";
+      const validity = validityIdx >= 0 ? (cells[validityIdx] || "") : "";
+      const category = categoryIdx >= 0 ? (cells[categoryIdx] || "") : "";
+      const email = emailIdx >= 0 ? (cells[emailIdx] || "") : "";
+      const phone = phoneIdx >= 0 ? (cells[phoneIdx] || "") : "";
 
       records.push({
         entity_name: name,
         registration_number: regIdx >= 0 ? (cells[regIdx] || "") : "",
-        contact_email: emailIdx >= 0 ? (cells[emailIdx] || "") : "",
-        contact_phone: phoneIdx >= 0 ? (cells[phoneIdx] || "") : "",
-        address: addressIdx >= 0 ? (cells[addressIdx] || "") : "",
+        contact_email: email || extractEmailFromText(address) || "",
+        contact_phone: phone || extractPhoneFromText(address) || "",
+        address,
         raw_data: {
           all_columns: Object.fromEntries(headers.map((h, i) => [h, cells[i] || ""])),
+          serial_no: serialIdx >= 0 ? (cells[serialIdx] || "") : "",
+          validity,
+          category,
           source_url: "sebi.gov.in",
         },
       });
@@ -558,10 +789,16 @@ async function scrapeSebiType(
   const seenKeys = new Set<string>();
   const PER_PAGE = 25;
   const startedAt = Date.now();
+  let totalInserted = 0;
+  let totalUpdated = 0;
+  let totalSkipped = 0;
 
   const addUnique = (records: RawEntity[]) => {
     for (const r of records) {
-      const key = r.registration_number || r.entity_name;
+      const registration = normalizeRegistrationNumber(r.registration_number);
+      const key = registration
+        ? `reg:${registration}`
+        : `name:${normalizeWhitespace(r.entity_name || "").toLowerCase()}`;
       if (key && !seenKeys.has(key)) {
         seenKeys.add(key);
         allRecords.push(r);
@@ -586,7 +823,10 @@ async function scrapeSebiType(
 
       // Upsert page 1 immediately
       if (firstRecords.length > 0) {
-        await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, firstRecords);
+        const pageResult = await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, firstRecords);
+        totalInserted += pageResult.inserted;
+        totalUpdated += pageResult.updated;
+        totalSkipped += pageResult.skipped;
       }
     }
 
@@ -616,7 +856,10 @@ async function scrapeSebiType(
           } else {
             consecutiveFailures = 0;
             // Upsert each page's records immediately to save progress
-            await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, parsed);
+            const pageResult = await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, parsed);
+            totalInserted += pageResult.inserted;
+            totalUpdated += pageResult.updated;
+            totalSkipped += pageResult.skipped;
             addUnique(parsed);
             if ((pageIdx + 1) % 10 === 0 || pageIdx === effectiveEnd - 1) {
               console.log(`[SEBI:${typeConfig.intmId}] Page ${pageIdx + 1}/${totalPages}: +${parsed.length}, batch total=${allRecords.length}`);
@@ -648,9 +891,9 @@ async function scrapeSebiType(
 
   return {
     found: allRecords.length,
-    inserted: allRecords.length, // Already upserted page-by-page
-    updated: 0,
-    skipped: 0,
+    inserted: totalInserted,
+    updated: totalUpdated,
+    skipped: totalSkipped,
     lastPage,
     totalPages,
     partial: isPartial,
