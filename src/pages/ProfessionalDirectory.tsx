@@ -43,14 +43,25 @@ const INTERMEDIARY_CATEGORIES = [
   "Compliance Consultant",
   "Insurance Agent",
   "Insurance Broker",
+  "Depository Participant",
+  "Banker to Issue",
+  "Qualified Depository Participant",
+  "Designated Depository Participant",
+  "Debentures Trustee",
+  "Credit Rating Agency",
+  "Merchant Banker",
 ];
 
 const ISSUER_CATEGORIES = [
   "Portfolio Manager",
+  "Alternative Investment Fund",
+  "Mutual Fund",
+  "Venture Capital Fund",
+  "Infrastructure Investment Trust",
+  "REIT",
+  "SM REIT",
+  "FVCI",
   "Infrastructure Finance Specialist",
-  "Merchant Banker",
-  "Asset Management Company",
-  "Depository Participant",
 ];
 
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
