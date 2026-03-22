@@ -296,7 +296,7 @@ export default function ProfessionalProfile() {
                   <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
                   <div>
                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Type</p>
-                    <p className="text-xs capitalize">{entity.entity_type}</p>
+                    <p className="text-xs capitalize">{entity.entity_type === 'non_individual' ? 'Non Individual' : entity.entity_type}</p>
                   </div>
                 </div>
               )}
