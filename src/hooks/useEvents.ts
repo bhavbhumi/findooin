@@ -171,7 +171,7 @@ export function useMyEvents() {
 export function useMyRegistrations() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["my-registrations", userId],
+    queryKey: QUERY_KEYS.myEventRegistrations(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
