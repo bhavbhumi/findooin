@@ -56,7 +56,6 @@ const enablerSubTypes: SubTypeOption[] = [
   { value: "depository", label: "Depository (CDSL/NSDL)" },
   { value: "rta", label: "Registrar & Transfer Agent (RTA)" },
   { value: "custodian", label: "Custodian" },
-  { value: "pop", label: "Point of Presence (PoP)" },
   { value: "vault_manager", label: "Vault Manager" },
   { value: "asba_bank", label: "ASBA Bank" },
   { value: "esg_provider", label: "ESG Rating Provider" },
