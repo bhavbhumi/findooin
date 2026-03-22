@@ -99,13 +99,15 @@ const cardVariant = {
   }),
 };
 
-function isIntermediary(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): boolean {
-  if (entity.registration_category && INTERMEDIARY_CATEGORIES.some(c => entity.registration_category!.includes(c))) return true;
-  if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return false;
+function classifyEntity(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): TabKey {
+  if (entity.entity_type === "enabler") return "enablers";
+  if (entity.registration_category && ENABLER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "enablers";
+  if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "issuers";
+  if (entity.registration_category && INTERMEDIARY_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "intermediaries";
   // Fallback: AMFI entities are typically intermediaries, individuals too
-  if (entity.source === "amfi") return true;
-  if (entity.entity_type === "individual") return true;
-  return false;
+  if (entity.source === "amfi") return "intermediaries";
+  if (entity.entity_type === "individual") return "intermediaries";
+  return "intermediaries";
 }
 
 export default function ProfessionalDirectory() {
