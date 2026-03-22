@@ -115,7 +115,7 @@ export function useCastPollVote(blogPostId: string) {
 /* ── Survey Questions + Options + Response Counts ── */
 export function useSurveyQuestions(blogPostId: string) {
   return useQuery({
-    queryKey: ["blog-survey-questions", blogPostId],
+    queryKey: QUERY_KEYS.blogSurveyQuestions(blogPostId),
     queryFn: async () => {
       const { data: questions, error } = await supabase
         .from("blog_survey_questions")
