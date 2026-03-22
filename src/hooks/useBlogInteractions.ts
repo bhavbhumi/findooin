@@ -36,7 +36,7 @@ export interface SurveyOption {
 /* ── Poll Options + Vote Counts ── */
 export function usePollOptions(blogPostId: string) {
   return useQuery({
-    queryKey: ["blog-poll-options", blogPostId],
+    queryKey: QUERY_KEYS.blogPollOptions(blogPostId),
     queryFn: async () => {
       const { data: options, error } = await supabase
         .from("blog_poll_options")
