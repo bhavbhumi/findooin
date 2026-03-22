@@ -162,7 +162,7 @@ export function useSurveyQuestions(blogPostId: string) {
 /* ── Check if user already submitted survey ── */
 export function useUserSurveySubmitted(blogPostId: string, userId?: string) {
   return useQuery({
-    queryKey: ["blog-survey-submitted", blogPostId, userId],
+    queryKey: QUERY_KEYS.blogSurveySubmitted(blogPostId, userId),
     queryFn: async () => {
       const { count, error } = await supabase
         .from("blog_survey_responses")
