@@ -139,7 +139,7 @@ export function useListings(filters?: {
 
 export function useMyListings() {
   return useQuery({
-    queryKey: ["my-listings"],
+    queryKey: QUERY_KEYS.myListings(),
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return [];
