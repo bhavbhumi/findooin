@@ -119,7 +119,7 @@ export function useJobs(filters?: { category?: string; type?: string; location?:
 
 export function useJob(id: string | undefined) {
   return useQuery({
-    queryKey: ["job", id],
+    queryKey: QUERY_KEYS.job(id),
     enabled: !!id,
     queryFn: async () => {
       const { data, error } = await supabase
