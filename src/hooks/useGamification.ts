@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface UserXP {
   total_xp: number;
