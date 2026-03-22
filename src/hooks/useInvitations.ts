@@ -8,7 +8,7 @@ export type Invitation = Tables<"invitations">;
 
 export function useInvitations(filters?: { status?: string; role?: string }) {
   return useQuery({
-    queryKey: ["admin-invitations", filters],
+    queryKey: QUERY_KEYS.adminInvitations(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("invitations")
