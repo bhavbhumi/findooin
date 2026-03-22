@@ -226,7 +226,8 @@ export default function AdminRegistryPage() {
             .from("registry_entities")
             .select("*", { count: "exact", head: true })
             .eq("source", "sebi")
-            .eq("registration_category", t.regCategory);
+            .eq("registration_category", t.regCategory)
+            .eq("is_primary_record", true);
           return { category: t.regCategory, count: error ? 0 : (count || 0) };
         })
       );
@@ -466,11 +467,18 @@ export default function AdminRegistryPage() {
 
   const getTypeResultFromLog = (log: any, intmId: number, regCategory: string) => {
     const meta = log?.metadata as any;
-    if (!meta?.details) return null;
-    try {
-      const details = typeof meta.details === "string" ? JSON.parse(meta.details) : meta.details;
-      return details[`${intmId}_${regCategory}`] || null;
-    } catch { return null; }
+    return extractSebiTypeResult(meta?.details, intmId, regCategory);
+  };
+
+  const getNextPageFromTypeResult = (typeResult: any): number | null => {
+    if (!typeResult) return null;
+    if (typeResult.partial && Number.isFinite(typeResult.lastPage)) {
+      return Number(typeResult.lastPage) + 1;
+    }
+    if (Number.isFinite(typeResult.nextPage)) {
+      return Number(typeResult.nextPage);
+    }
+    return null;
   };
 
   const statusIcon = (status: string) => {
