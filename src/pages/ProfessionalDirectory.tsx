@@ -51,6 +51,8 @@ const INTERMEDIARY_CATEGORIES = [
   "Debentures Trustee",
   "Credit Rating Agency",
   "Merchant Banker",
+  "Point of Presence",
+  "Pension Fund",
 ];
 
 const ISSUER_CATEGORIES = [
