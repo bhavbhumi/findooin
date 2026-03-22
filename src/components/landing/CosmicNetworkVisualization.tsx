@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 /* ── Types ── */
 interface OrbitNode {
   id: string;
-  role: "issuer" | "intermediary" | "investor";
+  role: "issuer" | "intermediary" | "investor" | "enabler";
   label: string;
   angle: number;          // degrees
   verified: boolean;
