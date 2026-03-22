@@ -48,7 +48,7 @@ export interface LeaderboardEntry {
 
 export function useUserXP(userId?: string) {
   return useQuery({
-    queryKey: ["user-xp", userId],
+    queryKey: QUERY_KEYS.userXP(userId),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
