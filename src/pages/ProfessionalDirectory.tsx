@@ -62,6 +62,27 @@ const SUB_TYPE_LABELS: Record<string, string> = {
 
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
 
+const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: "name_asc", label: "Name A → Z" },
+  { value: "name_desc", label: "Name Z → A" },
+  { value: "recent", label: "Recently Added" },
+  { value: "views", label: "Most Viewed" },
+];
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35 } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
+};
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 16, scale: 0.97 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0, scale: 1,
+    transition: { delay: i * 0.03, duration: 0.3, ease: "easeOut" as const },
+  }),
+};
+
 export default function ProfessionalDirectory() {
   usePageMeta({
     title: "Financial Professionals Directory — findoo",
