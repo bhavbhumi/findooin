@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type OpinionFormat = "binary" | "multiple_choice" | "scale" | "over_under";
 export type OpinionStatus = "draft" | "active" | "closed" | "archived";
