@@ -48,7 +48,7 @@ export function useKBArticles(category?: string) {
 
 export function useKBArticleBySlug(slug: string | null) {
   return useQuery({
-    queryKey: ["kb-article", slug],
+    queryKey: QUERY_KEYS.kbArticle(slug ?? undefined),
     enabled: !!slug,
     queryFn: async (): Promise<KBArticle | null> => {
       const { data, error } = await supabase
