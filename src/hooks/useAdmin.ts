@@ -42,7 +42,7 @@ async function logAdminAction(action: string, resourceType: string, resourceId?:
 
 export function useIsAdmin() {
   return useQuery({
-    queryKey: ["is-admin"],
+    queryKey: QUERY_KEYS.isAdmin(),
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return false;
