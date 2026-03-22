@@ -237,6 +237,22 @@ export default function ProfessionalProfile() {
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2 mb-6">
+              {entity.mapped_role && ROLE_CONFIG[entity.mapped_role] && (() => {
+                const rc = ROLE_CONFIG[entity.mapped_role];
+                const RoleIcon = rc.icon;
+                return (
+                  <Badge className={`gap-1.5 ${rc.bgColor}`}>
+                    <RoleIcon className="h-3 w-3" />
+                    {rc.label}
+                  </Badge>
+                );
+              })()}
+              {entity.mapped_sub_type && SUB_TYPE_LABELS[entity.mapped_sub_type] && (
+                <Badge variant="secondary" className="gap-1.5">
+                  <Tag className="h-3 w-3" />
+                  {SUB_TYPE_LABELS[entity.mapped_sub_type]}
+                </Badge>
+              )}
               <Badge className="gap-1.5 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15">
                 <Shield className="h-3 w-3" />
                 {sourceLabel} Registered
