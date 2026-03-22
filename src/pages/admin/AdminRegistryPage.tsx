@@ -292,45 +292,97 @@ export default function AdminRegistryPage() {
     const label = sebiTypeIds
       ? `SEBI (${sebiTypeIds.length} type${sebiTypeIds.length > 1 ? "s" : ""})`
       : sources.length === 1 ? sources[0].toUpperCase() : "All Sources";
-    const resumeLabel = startPage ? ` (resuming from page ${startPage + 1})` : "";
+    const resumeLabel = typeof startPage === "number" ? ` (resuming from page ${startPage + 1})` : "";
     setSyncingSource(sources[0] || "all");
     toast.info(`Syncing ${label}${resumeLabel}... This may take a few minutes.`);
 
     try {
-      const body: Record<string, unknown> = { sources, sync_type: "manual" };
-      if (sebiTypeIds) body.sebi_type_ids = sebiTypeIds;
-      if (startPage) body.start_page = startPage;
+      const isSingleSebiTypeSync =
+        sources.length === 1 && sources[0] === "sebi" && !!sebiTypeIds && sebiTypeIds.length === 1;
 
-      const { data, error } = await supabase.functions.invoke("registry-sync", { body });
+      const invokeRegistrySync = async (overrides?: Record<string, unknown>) => {
+        const body: Record<string, unknown> = {
+          sources,
+          sync_type: "manual",
+          ...(sebiTypeIds ? { sebi_type_ids: sebiTypeIds } : {}),
+          ...(sources.includes("sebi") ? { max_pages: SEBI_SYNC_MAX_PAGES } : {}),
+          ...(typeof startPage === "number" ? { start_page: startPage } : {}),
+          ...(overrides || {}),
+        };
 
-      if (error) throw error;
-      if (data?.success) {
+        const { data, error } = await supabase.functions.invoke("registry-sync", { body });
+        if (error) throw error;
+        if (!data?.success) throw new Error(data?.error || "Sync failed");
+        return data;
+      };
+
+      if (isSingleSebiTypeSync && sebiTypeIds) {
+        const intmId = sebiTypeIds[0];
+        const currentType = SEBI_TYPE_GROUPS.flatMap((g) => g.types).find((t) => t.intmId === intmId);
+        const regCategory = currentType?.regCategory || "";
+
+        let nextPage = typeof startPage === "number" ? startPage : 0;
+        let continueSync = true;
+        let loops = 0;
+        let totalFound = 0;
+        let totalInserted = 0;
+        let totalUpdated = 0;
+
+        while (continueSync && loops < SEBI_SYNC_MAX_CONTINUATIONS) {
+          loops += 1;
+          const data = await invokeRegistrySync({ start_page: nextPage });
+          const sebiResult = data?.results?.sebi || {};
+
+          totalFound += Number(sebiResult.found || 0);
+          totalInserted += Number(sebiResult.inserted || 0);
+          totalUpdated += Number(sebiResult.updated || 0);
+
+          const typeResult = extractSebiTypeResult(sebiResult.details, intmId, regCategory);
+          const partialType = extractSebiPartialType(sebiResult.details, intmId);
+          const nextFromTypeResult = getNextPageFromTypeResult(typeResult);
+          const nextFromPartialType = Number.isFinite(partialType?.nextPage) ? Number(partialType.nextPage) : null;
+          const computedNextPage = nextFromTypeResult ?? nextFromPartialType;
+
+          if (Number.isFinite(computedNextPage) && computedNextPage !== null) {
+            nextPage = computedNextPage;
+            toast.info(`Continuing ${currentType?.label || `SEBI type ${intmId}`} from page ${nextPage + 1}...`);
+          } else {
+            continueSync = false;
+          }
+        }
+
+        if (continueSync) {
+          toast.warning("Large sync reached safety limit. Click Continue once more to finish remaining pages.");
+        }
+
+        toast.success(`${currentType?.label || label}: ${totalFound} found, ${totalInserted} new, ${totalUpdated} updated`);
+      } else {
+        const data = await invokeRegistrySync();
         const results = data.results || {};
         const summaries = Object.entries(results).map(([src, r]: [string, any]) =>
           `${src.toUpperCase()}: ${r.found} found, ${r.inserted} new, ${r.updated} updated`
         );
-        
-        // Check if any results have partial types
-        let hasPartial = false;
+
         for (const [, r] of Object.entries(results) as [string, any][]) {
-          try {
-            const details = typeof r.details === "string" ? JSON.parse(r.details) : r.details;
-            if (details?.partial_types?.length > 0) {
-              hasPartial = true;
-              const partialInfo = details.partial_types.map((p: any) => `intm${p.intmId}: page ${p.nextPage}/${p.totalPages}`).join(", ");
-              toast.info(`Partial sync — more pages available: ${partialInfo}. Click "Continue" to fetch more.`, { duration: 10000 });
-            }
-          } catch { /* ignore */ }
+          const details = parseSyncDetails(r?.details);
+          if (details?.partial_types?.length > 0) {
+            const partialInfo = details.partial_types
+              .map((p: any) => `intm${p.intmId}: page ${p.nextPage}/${p.totalPages}`)
+              .join(", ");
+            toast.info(`Partial sync — more pages available: ${partialInfo}.`, { duration: 10000 });
+          }
+          if (details?.deferred_type_ids?.length > 0) {
+            toast.info(`Deferred SEBI types for next run: ${details.deferred_type_ids.join(", ")}`, { duration: 10000 });
+          }
         }
-        
+
         toast.success(summaries.join(" | ") || "Sync complete");
-        refetch();
-        queryClient.invalidateQueries({ queryKey: ["admin-sync-logs"] });
-        queryClient.invalidateQueries({ queryKey: ["admin-registry-stats"] });
-        queryClient.invalidateQueries({ queryKey: ["admin-registry-category-counts"] });
-      } else {
-        toast.error(data?.error || "Sync failed");
       }
+
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["admin-sync-logs"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-registry-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-registry-category-counts"] });
     } catch (err: any) {
       toast.error(err.message || "Failed to sync");
     } finally {
