@@ -101,8 +101,9 @@ const cardVariant = {
 };
 
 function classifyEntity(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): TabKey {
-  // PFRDA PoPs are intermediaries, not enablers — check intermediary categories first for source=pfrda
-  if (entity.source === "pfrda") return "intermediaries";
+  const src = entity.source?.toLowerCase() ?? "";
+  // PFRDA PoPs are intermediaries, not enablers
+  if (src === "pfrda") return "intermediaries";
   if (entity.entity_type === "enabler") return "enablers";
   if (entity.registration_category && ENABLER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "enablers";
   if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "issuers";
