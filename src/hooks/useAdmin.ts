@@ -87,7 +87,7 @@ export interface VerificationRequest {
  */
 export function useVerificationQueue(includeArchived = false) {
   return useQuery({
-    queryKey: ["admin-verification-queue", includeArchived],
+    queryKey: QUERY_KEYS.adminVerificationQueue(includeArchived),
     queryFn: async (): Promise<VerificationRequest[]> => {
       let query = supabase
         .from("verification_requests")
