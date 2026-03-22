@@ -376,30 +376,59 @@ export const ProfileHeader = ({
             <p className="text-sm text-muted-foreground mt-2 leading-relaxed line-clamp-3">{profile.bio}</p>
           )}
 
-          {/* Location + Followers/Following/Connections inline */}
-          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-wrap mt-3 pb-4 text-[11px] sm:text-xs text-muted-foreground">
-            {profile.location && (
-              <span className="flex items-center gap-1">
-                <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
-              </span>
-            )}
-            {profile.location && <span className="text-border hidden sm:inline">·</span>}
-            <button onClick={canViewNetwork ? onNavigateToNetwork : undefined} className={`transition-colors ${canViewNetwork ? "hover:text-foreground cursor-pointer" : "cursor-default"}`}>
-              <span className="font-semibold text-card-foreground">{stats.followers}</span> Followers
-            </button>
-            <span className="text-border">·</span>
-            <button onClick={canViewNetwork ? onNavigateToNetwork : undefined} className={`transition-colors ${canViewNetwork ? "hover:text-foreground cursor-pointer" : "cursor-default"}`}>
-              <span className="font-semibold text-card-foreground">{stats.following}</span> Following
-            </button>
-            <span className="text-border">·</span>
-            <button onClick={canViewNetwork ? onNavigateToNetwork : undefined} className={`transition-colors ${canViewNetwork ? "hover:text-foreground cursor-pointer" : "cursor-default"}`}>
-              <span className="font-semibold text-card-foreground">{stats.connections}</span> Connections
-            </button>
-            <span className="text-border hidden sm:inline">·</span>
-            <span className="inline-flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              Joined {format(new Date(profile.created_at), "MMM yyyy")}
-            </span>
+          {/* Glassmorphic Stat Bar */}
+          <div className="mt-4 mb-4 rounded-xl border border-border/40 bg-card/60 backdrop-blur-md shadow-sm p-3">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
+                {profile.location && (
+                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3 shrink-0" /> {profile.location}
+                  </span>
+                )}
+                {profile.website && (
+                  <a href={profile.website.startsWith("http") ? profile.website : `https://${profile.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-accent hover:text-primary transition-colors">
+                    <Globe className="h-3 w-3 shrink-0" /> Website
+                  </a>
+                )}
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Calendar className="h-3 w-3" />
+                  Joined {format(new Date(profile.created_at), "MMM yyyy")}
+                </span>
+              </div>
+              <div className="flex items-center gap-4 sm:gap-6">
+                <button
+                  onClick={canViewNetwork ? onNavigateToNetwork : undefined}
+                  className={`text-center transition-colors ${canViewNetwork ? "hover:opacity-80 cursor-pointer" : "cursor-default"}`}
+                >
+                  <span className="block text-sm font-bold text-card-foreground">{stats.posts}</span>
+                  <span className="block text-[10px] text-muted-foreground">Posts</span>
+                </button>
+                <div className="w-px h-6 bg-border/60" />
+                <button
+                  onClick={canViewNetwork ? onNavigateToNetwork : undefined}
+                  className={`text-center transition-colors ${canViewNetwork ? "hover:opacity-80 cursor-pointer" : "cursor-default"}`}
+                >
+                  <span className="block text-sm font-bold text-card-foreground">{stats.connections}</span>
+                  <span className="block text-[10px] text-muted-foreground">Connections</span>
+                </button>
+                <div className="w-px h-6 bg-border/60" />
+                <button
+                  onClick={canViewNetwork ? onNavigateToNetwork : undefined}
+                  className={`text-center transition-colors ${canViewNetwork ? "hover:opacity-80 cursor-pointer" : "cursor-default"}`}
+                >
+                  <span className="block text-sm font-bold text-card-foreground">{stats.followers}</span>
+                  <span className="block text-[10px] text-muted-foreground">Followers</span>
+                </button>
+                <div className="w-px h-6 bg-border/60 hidden sm:block" />
+                <button
+                  onClick={canViewNetwork ? onNavigateToNetwork : undefined}
+                  className={`text-center transition-colors hidden sm:block ${canViewNetwork ? "hover:opacity-80 cursor-pointer" : "cursor-default"}`}
+                >
+                  <span className="block text-sm font-bold text-card-foreground">{stats.following}</span>
+                  <span className="block text-[10px] text-muted-foreground">Following</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
