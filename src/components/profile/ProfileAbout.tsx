@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import type { ProfileData, RoleData } from "./ProfileHeader";
+import type { LanguageEntry } from "@/lib/jsonb-types";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { VerificationRequestForm } from "@/components/admin/VerificationRequestForm";
 import { ManageRolesDialog } from "@/components/profile/ManageRolesDialog";
