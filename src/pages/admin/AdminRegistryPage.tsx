@@ -648,6 +648,22 @@ export default function AdminRegistryPage() {
                                 >
                                   {typePaused ? <Play className="h-2.5 w-2.5" /> : <Pause className="h-2.5 w-2.5" />}
                                 </Button>
+                                {dbCount > 0 && dbCount < type.expected && pct < 90 && (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-5 text-[9px] px-1.5 text-amber-600 hover:text-amber-700"
+                                    onClick={() => {
+                                      // Calculate approximate start page from existing records
+                                      const approxPage = Math.floor(dbCount / 25);
+                                      triggerSync(["sebi"], [type.intmId], approxPage);
+                                    }}
+                                    disabled={!!syncingSource || typePaused}
+                                    title={`Continue sync from page ~${Math.floor(dbCount / 25) + 1}`}
+                                  >
+                                    <ChevronRight className="h-2.5 w-2.5 mr-0.5" /> Continue
+                                  </Button>
+                                )}
                                 <Button
                                   size="sm"
                                   variant="ghost"
