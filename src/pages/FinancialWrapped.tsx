@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AppLayout } from "@/components/AppLayout";
+import AppLayout from "@/components/AppLayout";
 import { PageHero } from "@/components/PageHero";
 import { FindooLoader } from "@/components/FindooLoader";
 import { toast } from "sonner";
