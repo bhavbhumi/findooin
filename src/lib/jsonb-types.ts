@@ -32,6 +32,7 @@ export interface DigitalCardFields {
   custom_tagline?: string;
   card_theme?: string;
   card_layout?: "standard" | "compact" | "detailed";
+  [key: string]: boolean | string | undefined;
 }
 
 /** profiles.regulatory_ids */
