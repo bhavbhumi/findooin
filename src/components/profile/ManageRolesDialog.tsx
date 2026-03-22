@@ -61,10 +61,11 @@ const getSubTypesForRole = (role: Role): SubTypeOption[] => {
     case "investor": return investorSubTypes;
     case "intermediary": return intermediarySubTypes;
     case "issuer": return issuerSubTypes;
+    case "enabler": return enablerSubTypes;
   }
 };
 
-const ALL_ROLES: Role[] = ["investor", "intermediary", "issuer"];
+const ALL_ROLES: Role[] = ["investor", "intermediary", "issuer", "enabler"];
 
 interface RoleRow {
   role: string;
