@@ -435,6 +435,11 @@ export default function ProfessionalDirectory() {
                                 </FlairAvatarWrapper>
                                 <div className="flex items-center gap-1.5 flex-wrap justify-end">
                                   {level > 0 && <LevelBadge level={level} size="xs" />}
+                                  {entity.mapped_sub_type && SUB_TYPE_LABELS[entity.mapped_sub_type] && (
+                                    <Badge variant="secondary" className="text-[9px]">
+                                      {SUB_TYPE_LABELS[entity.mapped_sub_type]}
+                                    </Badge>
+                                  )}
                                   <Badge variant="outline" className="text-[9px] uppercase tracking-wider">
                                     {entity.source}
                                   </Badge>

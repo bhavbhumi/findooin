@@ -19,8 +19,27 @@ import { FlairAvatarWrapper, FlairName } from "@/components/gamification/Profile
 import { LevelBadge } from "@/components/gamification/LevelBadge";
 import {
   Shield, MapPin, Building2, Hash, UserCheck, Users,
-  ArrowRight, CheckCircle2, Clock, Eye, Briefcase
+  ArrowRight, CheckCircle2, Clock, Eye, Briefcase, Tag
 } from "lucide-react";
+import { getRoleIcon, ROLE_CONFIG } from "@/lib/role-config";
+
+const SUB_TYPE_LABELS: Record<string, string> = {
+  stock_broker: "Stock Broker",
+  depository_participant: "Depository Participant",
+  mutual_fund_distributor: "MF Distributor",
+  point_of_presence: "Point of Presence",
+  foreign_portfolio_investor: "FPI",
+  kra: "KRA",
+  depository: "Depository",
+  rta: "RTA",
+  custodian: "Custodian",
+  vault_manager: "Vault Manager",
+  asba_bank: "ASBA Bank",
+  upi_app: "UPI App",
+  esg_provider: "ESG Provider",
+  clearing_corporation: "Clearing Corporation",
+  collectibles_exchange: "Collectibles Exchange",
+};
 
 export default function ProfessionalProfile() {
   const { registrationNumber } = useParams<{ registrationNumber: string }>();
