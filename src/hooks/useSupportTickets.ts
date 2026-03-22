@@ -36,7 +36,7 @@ export interface TicketReply {
 // ── Admin: all tickets ──────────────────────────────
 export function useAdminTickets(statusFilter?: string) {
   return useQuery({
-    queryKey: ["admin-tickets", statusFilter],
+    queryKey: QUERY_KEYS.adminTickets(statusFilter),
     queryFn: async (): Promise<SupportTicket[]> => {
       let query = supabase
         .from("support_tickets")
