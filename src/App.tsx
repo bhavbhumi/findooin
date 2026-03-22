@@ -107,6 +107,7 @@ const AdminOpinionsPage = lazy(() => import("./pages/admin/AdminOpinionsPage"));
 const AdminPremiumFeaturesPage = lazy(() => import("./pages/admin/AdminPremiumFeaturesPage"));
 const AdminSecurityPage = lazy(() => import("./pages/admin/AdminSecurityPage"));
 const AdminCodedMessagingPage = lazy(() => import("./pages/admin/AdminCodedMessagingPage"));
+const FinancialWrapped = lazy(() => import("./pages/FinancialWrapped"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
