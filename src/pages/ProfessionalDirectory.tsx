@@ -22,7 +22,7 @@ import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { resolveProfileFlair } from "@/lib/profile-flair";
 import {
   Search, Shield, MapPin, CheckCircle2, ArrowRight, ArrowUpDown,
-  Users, ChevronLeft, ChevronRight, Briefcase, Building2, SlidersHorizontal, X
+  Users, ChevronLeft, ChevronRight, Briefcase, Building2, SlidersHorizontal, X, Settings2
 } from "lucide-react";
 
 const PAGE_SIZE = 24;
