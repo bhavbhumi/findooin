@@ -172,19 +172,27 @@ export default function AdminRegistryPage() {
     },
   });
 
-  // Per-category counts
+  // Per-category counts — use individual count queries to avoid 1000-row limit
   const { data: categoryCounts = {} } = useQuery({
     queryKey: ["admin-registry-category-counts"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("registry_entities")
-        .select("registration_category")
-        .eq("source", "sebi");
-      if (error) throw error;
+      const allTypes = SEBI_TYPE_GROUPS.flatMap(g => g.types);
       const counts: Record<string, number> = {};
-      for (const row of data || []) {
-        const cat = row.registration_category || "Unknown";
-        counts[cat] = (counts[cat] || 0) + 1;
+      
+      // Fetch counts in parallel batches
+      const results = await Promise.all(
+        allTypes.map(async (t) => {
+          const { count, error } = await supabase
+            .from("registry_entities")
+            .select("*", { count: "exact", head: true })
+            .eq("source", "sebi")
+            .eq("registration_category", t.regCategory);
+          return { category: t.regCategory, count: error ? 0 : (count || 0) };
+        })
+      );
+      
+      for (const r of results) {
+        counts[r.category] = r.count;
       }
       return counts;
     },
