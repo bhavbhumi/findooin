@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, UserCheck, BarChart3, ArrowRight, ArrowLeft, Loader2, CheckCircle2,
-  Upload, ShieldCheck, File, X, Users, Smartphone,
+  Upload, ShieldCheck, File, X, Users, Smartphone, Settings2,
 } from "lucide-react";
 import { uploadFile } from "@/lib/storage";
 import { ContactImportDialog } from "@/components/network/ContactImportDialog";
