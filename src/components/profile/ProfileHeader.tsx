@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { SocialLinks, RegulatoryIds, LanguageEntry } from "@/lib/jsonb-types";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
