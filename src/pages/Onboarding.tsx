@@ -191,6 +191,13 @@ const Onboarding = () => {
       description: "Raise capital & publish information",
       disabled: userType === "individual",
     },
+    {
+      role: "enabler",
+      icon: Settings2,
+      label: "Enabler",
+      description: "Provide infrastructure & support services",
+      disabled: userType === "individual",
+    },
   ];
 
   const actualTotalSteps = needsVerification(selectedRoles) ? TOTAL_STEPS : 4;
