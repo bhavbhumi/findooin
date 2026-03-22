@@ -118,7 +118,7 @@ export default function ProfessionalDirectory() {
       while (hasMore) {
         const { data, error } = await supabase
           .from("registry_entities")
-          .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record")
+          .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record, mapped_role, mapped_sub_type")
           .eq("is_public", true)
           .eq("status", "active")
           .eq("is_primary_record", true)
