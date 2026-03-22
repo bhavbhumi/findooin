@@ -375,9 +375,10 @@ export default function FinancialWrapped() {
   return (
     <AppLayout>
       <PageHero
-        title="Financial Wrapped"
+        breadcrumb="Wrapped"
+        title="Financial"
+        titleAccent="Wrapped"
         subtitle="Your personalized journey on findoo"
-        icon={Sparkles}
       />
 
       <div className="max-w-md mx-auto px-4 pb-12">
