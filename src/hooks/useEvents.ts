@@ -154,7 +154,7 @@ export function useEvents(filters?: { category?: string; mode?: string; search?:
 export function useMyEvents() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["my-events", userId],
+    queryKey: QUERY_KEYS.myOrganizedEvents(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
