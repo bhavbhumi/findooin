@@ -866,6 +866,8 @@ Deno.serve(async (req) => {
     const syncType = (body.sync_type as string) || "manual";
     const triggeredBy = (body.triggered_by as string) || null;
     const sebiTypeIds = body.sebi_type_ids as number[] | undefined;
+    const startPage = (body.start_page as number) || 0;
+    const maxPages = (body.max_pages as number) || 40;
 
     const results: Record<string, ScrapeSummary & { log_id?: string }> = {};
 
