@@ -60,7 +60,7 @@ export interface OpinionVote {
   voter_profile?: {
     verification_status: string;
     certifications: string[] | null;
-    regulatory_ids: Record<string, string> | null;
+    regulatory_ids: RegulatoryIds | null;
     user_type: string;
   };
 }

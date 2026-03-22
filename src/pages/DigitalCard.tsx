@@ -28,11 +28,11 @@ interface CardProfile {
   avatar_url: string | null;
   verification_status: string;
   user_type: string;
-  social_links: Record<string, string> | null;
+  social_links: SocialLinks | null;
   specializations: string[] | null;
   certifications: string[] | null;
-  regulatory_ids: Record<string, string> | null;
-  digital_card_fields: Record<string, boolean> | null;
+  regulatory_ids: RegulatoryIds | null;
+  digital_card_fields: DigitalCardFields | null;
 }
 
 interface CardRole {
