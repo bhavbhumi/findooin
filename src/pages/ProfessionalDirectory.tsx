@@ -75,7 +75,6 @@ const ENABLER_CATEGORIES = [
   "ESG Rating Provider",
   "SCSB",
   "UPI Mobile App",
-  "Point of Presence",
 ];
 
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
