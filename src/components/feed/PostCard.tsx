@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { differenceInMinutes } from "date-fns";
 import { ReportDialog } from "@/components/feed/ReportDialog";
+import { LinkPreviewCard } from "@/components/feed/LinkPreviewCard";
 import { CommentSection } from "@/components/feed/CommentSection";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { UserCheck } from "lucide-react";
@@ -189,6 +190,9 @@ export function PostCard({ post }: { post: FeedPost }) {
       <p className="text-card-foreground text-sm leading-relaxed whitespace-pre-line mb-3">
         {post.content.replace(/\n*(?:#\w+\s*)+$/g, "").trim()}
       </p>
+
+      {/* Link Preview */}
+      <LinkPreviewCard content={post.content} />
 
       {/* Image Attachment - render inline */}
       {post.attachment_url && isImageAttachment(post.attachment_type) && !post.attachment_url.startsWith("attachment://") && (
