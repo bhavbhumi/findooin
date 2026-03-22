@@ -64,7 +64,7 @@ export function useUserXP(userId?: string) {
 
 export function useUserBadges(userId?: string) {
   return useQuery({
-    queryKey: ["user-badges", userId],
+    queryKey: QUERY_KEYS.userBadges(userId),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
