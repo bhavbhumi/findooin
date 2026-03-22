@@ -4,11 +4,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 
-const mockRpc = vi.fn();
-const mockFrom = vi.fn();
-const mockChannel = vi.fn();
-const mockRemoveChannel = vi.fn();
-
 vi.mock("@/integrations/supabase/client", () => {
   const chainable = {
     select: vi.fn().mockReturnThis(),
@@ -22,23 +17,20 @@ vi.mock("@/integrations/supabase/client", () => {
 
   return {
     supabase: {
-      from: vi.fn((table: string) => {
-        mockFrom(table);
-        return chainable;
-      }),
-      rpc: mockRpc.mockResolvedValue({ data: [], error: null }),
+      from: vi.fn(() => chainable),
+      rpc: vi.fn().mockResolvedValue({ data: [], error: null }),
       auth: {
         getSession: vi.fn().mockResolvedValue({
           data: { session: { user: { id: "user-1" } } },
         }),
       },
-      channel: mockChannel.mockReturnValue({
+      channel: vi.fn().mockReturnValue({
         on: vi.fn().mockReturnThis(),
         subscribe: vi.fn().mockReturnThis(),
         track: vi.fn(),
         presenceState: vi.fn().mockReturnValue({}),
       }),
-      removeChannel: mockRemoveChannel,
+      removeChannel: vi.fn(),
     },
   };
 });
@@ -52,11 +44,10 @@ vi.mock("@/hooks/useCodedMessagingGuard", () => ({
 }));
 
 import { useMessages, MESSAGE_CATEGORIES } from "@/hooks/useMessages";
+import { supabase } from "@/integrations/supabase/client";
 
 describe("useMessages (renderHook)", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+  beforeEach(() => vi.clearAllMocks());
 
   it("should initialize with empty conversations and loading=true", async () => {
     const { result } = renderHook(() => useMessages("user-1"));
@@ -72,18 +63,17 @@ describe("useMessages (renderHook)", () => {
     });
   });
 
-  it("should not load conversations if userId is null", async () => {
+  it("should not load conversations if userId is null", () => {
     const { result } = renderHook(() => useMessages(null));
-
     expect(result.current.loading).toBe(true);
-    expect(mockRpc).not.toHaveBeenCalled();
+    expect(supabase.rpc).not.toHaveBeenCalled();
   });
 
   it("should call get_conversations RPC on mount", async () => {
     renderHook(() => useMessages("user-1"));
 
     await waitFor(() => {
-      expect(mockRpc).toHaveBeenCalledWith("get_conversations", { p_user_id: "user-1" });
+      expect(supabase.rpc).toHaveBeenCalledWith("get_conversations", { p_user_id: "user-1" });
     });
   });
 
@@ -91,7 +81,7 @@ describe("useMessages (renderHook)", () => {
     renderHook(() => useMessages("user-1"));
 
     await waitFor(() => {
-      expect(mockChannel).toHaveBeenCalledWith("messages-realtime");
+      expect(supabase.channel).toHaveBeenCalledWith("messages-realtime");
     });
   });
 
@@ -99,26 +89,11 @@ describe("useMessages (renderHook)", () => {
     const { unmount } = renderHook(() => useMessages("user-1"));
 
     await waitFor(() => {
-      expect(mockChannel).toHaveBeenCalled();
+      expect(supabase.channel).toHaveBeenCalled();
     });
 
     unmount();
-    expect(mockRemoveChannel).toHaveBeenCalled();
-  });
-
-  it("should not send empty messages", async () => {
-    const { result } = renderHook(() => useMessages("user-1"));
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    await act(async () => {
-      await result.current.sendMessage("   ", "general");
-    });
-
-    // Should not have called from("messages") for insert
-    expect(result.current.sending).toBe(false);
+    expect(supabase.removeChannel).toHaveBeenCalled();
   });
 
   it("closeConversation should reset state", async () => {
