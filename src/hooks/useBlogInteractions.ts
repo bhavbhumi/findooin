@@ -69,7 +69,7 @@ export function usePollOptions(blogPostId: string) {
 /* ── User's existing poll votes ── */
 export function useUserPollVotes(blogPostId: string, userId?: string) {
   return useQuery({
-    queryKey: ["blog-poll-user-votes", blogPostId, userId],
+    queryKey: QUERY_KEYS.blogPollUserVotes(blogPostId, userId),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_poll_votes")
