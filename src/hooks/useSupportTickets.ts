@@ -82,7 +82,7 @@ export function useAdminTickets(statusFilter?: string) {
 // ── User: own tickets ──────────────────────────────
 export function useMyTickets() {
   return useQuery({
-    queryKey: ["my-tickets"],
+    queryKey: QUERY_KEYS.supportTickets(),
     queryFn: async (): Promise<SupportTicket[]> => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return [];
