@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
 import { QUERY_KEYS } from "@/lib/query-keys";
+import type { RegulatoryIds } from "@/lib/jsonb-types";
 
 export type OpinionFormat = "binary" | "multiple_choice" | "scale" | "over_under";
 export type OpinionStatus = "draft" | "active" | "closed" | "archived";

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { SocialLinks, RegulatoryIds, DigitalCardFields } from "@/lib/jsonb-types";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { useParams, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
