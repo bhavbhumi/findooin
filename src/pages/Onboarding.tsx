@@ -66,6 +66,7 @@ const getSubTypesForRole = (role: Role): SubTypeOption[] => {
     case "investor": return investorSubTypes;
     case "intermediary": return intermediarySubTypes;
     case "issuer": return issuerSubTypes;
+    case "enabler": return enablerSubTypes;
   }
 };
 
