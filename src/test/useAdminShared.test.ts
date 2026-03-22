@@ -42,8 +42,8 @@ describe("useAdminShared", () => {
     const fromSpy = vi.spyOn(supabase, "from");
     const callsBefore = fromSpy.mock.calls.length;
     await logAdminAction("test", "test");
-    // Should not have called from() for audit_logs
-    const auditCalls = fromSpy.mock.calls.slice(callsBefore).filter((c) => c[0] === "audit_logs");
-    expect(auditCalls).toHaveLength(0);
+    // Should not have called from() after getSession returned null
+    const newCalls = fromSpy.mock.calls.slice(callsBefore);
+    expect(newCalls).toHaveLength(0);
   });
 });

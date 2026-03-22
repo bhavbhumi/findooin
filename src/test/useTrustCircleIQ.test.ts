@@ -63,8 +63,8 @@ describe("TrustCircle IQ", () => {
       const fromSpy = vi.spyOn(supabase, "from");
       const before = fromSpy.mock.calls.length;
       await trackIntentSignal("test");
-      const intentCalls = fromSpy.mock.calls.slice(before).filter((c) => c[0] === "intent_signals");
-      expect(intentCalls).toHaveLength(0);
+      const newCalls = fromSpy.mock.calls.slice(before);
+      expect(newCalls).toHaveLength(0);
     });
   });
 
