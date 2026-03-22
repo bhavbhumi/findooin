@@ -35,47 +35,30 @@ const TABS = [
 
 type TabKey = typeof TABS[number]["key"];
 
-// Categories that map to Intermediaries vs Issuers
-const INTERMEDIARY_CATEGORIES = [
-  "Mutual Fund Distributor",
-  "Investment Adviser",
-  "Stock Broker",
-  "Research Analyst",
-  "Compliance Consultant",
-  "Insurance Agent",
-  "Insurance Broker",
-  "Depository Participant",
-  "Banker to Issue",
-  "Qualified Depository Participant",
-  "Designated Depository Participant",
-  "Debentures Trustee",
-  "Credit Rating Agency",
-  "Merchant Banker",
-  "Point of Presence",
-  "Pension Fund",
-];
+const ROLE_TO_TAB: Record<string, TabKey> = {
+  intermediary: "intermediaries",
+  issuer: "issuers",
+  enabler: "enablers",
+  investor: "intermediaries", // FPI falls under intermediaries tab for directory display
+};
 
-const ISSUER_CATEGORIES = [
-  "Portfolio Manager",
-  "Alternative Investment Fund",
-  "Mutual Fund",
-  "Venture Capital Fund",
-  "Infrastructure Investment Trust",
-  "REIT",
-  "SM REIT",
-  "FVCI",
-  "Infrastructure Finance Specialist",
-];
-
-const ENABLER_CATEGORIES = [
-  "KYC Registration Agency",
-  "Registrar & Transfer Agent",
-  "Custodian",
-  "Vault Manager",
-  "ESG Rating Provider",
-  "SCSB",
-  "UPI Mobile App",
-];
+const SUB_TYPE_LABELS: Record<string, string> = {
+  stock_broker: "Stock Broker",
+  depository_participant: "Depository Participant",
+  mutual_fund_distributor: "MF Distributor",
+  point_of_presence: "Point of Presence",
+  foreign_portfolio_investor: "FPI",
+  kra: "KRA",
+  depository: "Depository",
+  rta: "RTA",
+  custodian: "Custodian",
+  vault_manager: "Vault Manager",
+  asba_bank: "ASBA Bank",
+  upi_app: "UPI App",
+  esg_provider: "ESG Provider",
+  clearing_corporation: "Clearing Corporation",
+  collectibles_exchange: "Collectibles Exchange",
+};
 
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
 
@@ -99,22 +82,6 @@ const cardVariant = {
     transition: { delay: i * 0.03, duration: 0.3, ease: "easeOut" as const },
   }),
 };
-
-function classifyEntity(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): TabKey {
-  const src = entity.source?.toLowerCase() ?? "";
-  const cat = entity.registration_category ?? "";
-  // PFRDA PoPs are intermediaries, not enablers
-  if (src === "pfrda") return "intermediaries";
-  if (entity.entity_type === "enabler") return "enablers";
-  if (ENABLER_CATEGORIES.some(c => cat.includes(c))) return "enablers";
-  // Check intermediaries BEFORE issuers to prevent "Mutual Fund" matching "Mutual Fund Distributor"
-  if (INTERMEDIARY_CATEGORIES.some(c => cat.includes(c))) return "intermediaries";
-  if (ISSUER_CATEGORIES.some(c => cat.includes(c))) return "issuers";
-  // Fallback: AMFI entities are typically intermediaries, individuals too
-  if (entity.source === "amfi") return "intermediaries";
-  if (entity.entity_type === "individual") return "intermediaries";
-  return "intermediaries";
-}
 
 export default function ProfessionalDirectory() {
   usePageMeta({
@@ -151,7 +118,7 @@ export default function ProfessionalDirectory() {
       while (hasMore) {
         const { data, error } = await supabase
           .from("registry_entities")
-          .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record")
+          .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record, mapped_role, mapped_sub_type")
           .eq("is_public", true)
           .eq("status", "active")
           .eq("is_primary_record", true)
@@ -168,10 +135,10 @@ export default function ProfessionalDirectory() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Split entities by tab
-  const intermediaries = useMemo(() => allEntities.filter(e => classifyEntity(e) === "intermediaries"), [allEntities]);
-  const issuers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "issuers"), [allEntities]);
-  const enablers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "enablers"), [allEntities]);
+  // Split entities by tab using mapped_role from database
+  const intermediaries = useMemo(() => allEntities.filter(e => (ROLE_TO_TAB[e.mapped_role] || "intermediaries") === "intermediaries"), [allEntities]);
+  const issuers = useMemo(() => allEntities.filter(e => (ROLE_TO_TAB[e.mapped_role] || "intermediaries") === "issuers"), [allEntities]);
+  const enablers = useMemo(() => allEntities.filter(e => (ROLE_TO_TAB[e.mapped_role] || "intermediaries") === "enablers"), [allEntities]);
   const tabEntities = activeTab === "intermediaries" ? intermediaries : activeTab === "issuers" ? issuers : enablers;
 
   // Cities for current tab
@@ -468,6 +435,11 @@ export default function ProfessionalDirectory() {
                                 </FlairAvatarWrapper>
                                 <div className="flex items-center gap-1.5 flex-wrap justify-end">
                                   {level > 0 && <LevelBadge level={level} size="xs" />}
+                                  {entity.mapped_sub_type && SUB_TYPE_LABELS[entity.mapped_sub_type] && (
+                                    <Badge variant="secondary" className="text-[9px]">
+                                      {SUB_TYPE_LABELS[entity.mapped_sub_type]}
+                                    </Badge>
+                                  )}
                                   <Badge variant="outline" className="text-[9px] uppercase tracking-wider">
                                     {entity.source}
                                   </Badge>

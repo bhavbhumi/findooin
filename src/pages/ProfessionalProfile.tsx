@@ -19,8 +19,27 @@ import { FlairAvatarWrapper, FlairName } from "@/components/gamification/Profile
 import { LevelBadge } from "@/components/gamification/LevelBadge";
 import {
   Shield, MapPin, Building2, Hash, UserCheck, Users,
-  ArrowRight, CheckCircle2, Clock, Eye, Briefcase
+  ArrowRight, CheckCircle2, Clock, Eye, Briefcase, Tag
 } from "lucide-react";
+import { getRoleIcon, ROLE_CONFIG } from "@/lib/role-config";
+
+const SUB_TYPE_LABELS: Record<string, string> = {
+  stock_broker: "Stock Broker",
+  depository_participant: "Depository Participant",
+  mutual_fund_distributor: "MF Distributor",
+  point_of_presence: "Point of Presence",
+  foreign_portfolio_investor: "FPI",
+  kra: "KRA",
+  depository: "Depository",
+  rta: "RTA",
+  custodian: "Custodian",
+  vault_manager: "Vault Manager",
+  asba_bank: "ASBA Bank",
+  upi_app: "UPI App",
+  esg_provider: "ESG Provider",
+  clearing_corporation: "Clearing Corporation",
+  collectibles_exchange: "Collectibles Exchange",
+};
 
 export default function ProfessionalProfile() {
   const { registrationNumber } = useParams<{ registrationNumber: string }>();
@@ -218,6 +237,22 @@ export default function ProfessionalProfile() {
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2 mb-6">
+              {entity.mapped_role && ROLE_CONFIG[entity.mapped_role] && (() => {
+                const rc = ROLE_CONFIG[entity.mapped_role];
+                const RoleIcon = rc.icon;
+                return (
+                  <Badge className={`gap-1.5 ${rc.bgColor}`}>
+                    <RoleIcon className="h-3 w-3" />
+                    {rc.label}
+                  </Badge>
+                );
+              })()}
+              {entity.mapped_sub_type && SUB_TYPE_LABELS[entity.mapped_sub_type] && (
+                <Badge variant="secondary" className="gap-1.5">
+                  <Tag className="h-3 w-3" />
+                  {SUB_TYPE_LABELS[entity.mapped_sub_type]}
+                </Badge>
+              )}
               <Badge className="gap-1.5 bg-primary/10 text-primary border-primary/20 hover:bg-primary/15">
                 <Shield className="h-3 w-3" />
                 {sourceLabel} Registered
@@ -261,7 +296,7 @@ export default function ProfessionalProfile() {
                   <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
                   <div>
                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Type</p>
-                    <p className="text-xs capitalize">{entity.entity_type}</p>
+                    <p className="text-xs capitalize">{entity.entity_type === 'non_individual' ? 'Non Individual' : entity.entity_type}</p>
                   </div>
                 </div>
               )}
