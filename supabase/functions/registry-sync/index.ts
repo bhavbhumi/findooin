@@ -555,22 +555,31 @@ async function scrapeSebiType(
 // Entry: scrape ALL or specific SEBI types
 async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string, unknown>): Promise<ScrapeSummary> {
   const typeIds = opts?.sebi_type_ids as number[] | undefined;
+  const startPage = (opts?.start_page as number) || 0;
+  const maxPages = (opts?.max_pages as number) || 40;
   const configs = typeIds
     ? SEBI_TYPES.filter(t => typeIds.includes(t.intmId))
     : SEBI_TYPES;
 
   let totalFound = 0, totalInserted = 0, totalUpdated = 0, totalSkipped = 0;
-  const typeResults: Record<string, ScrapeSummary> = {};
+  const typeResults: Record<string, any> = {};
+  const partialTypes: { intmId: number; nextPage: number; totalPages: number }[] = [];
 
   for (const config of configs) {
     console.log(`\n── SEBI Type: ${config.label} (intmId=${config.intmId}) ──`);
-    const result = await scrapeSebiType(supabase, config);
+    // For single-type syncs, use the provided startPage; for multi-type, always start at 0
+    const effectiveStartPage = configs.length === 1 ? startPage : 0;
+    const result = await scrapeSebiType(supabase, config, effectiveStartPage, maxPages);
     totalFound += result.found;
     totalInserted += result.inserted;
     totalUpdated += result.updated;
     totalSkipped += result.skipped;
     typeResults[`${config.intmId}_${config.registration_category}`] = result;
     console.log(`   found=${result.found} ins=${result.inserted} upd=${result.updated} skip=${result.skipped}`);
+
+    if (result.partial && result.lastPage !== undefined && result.totalPages !== undefined) {
+      partialTypes.push({ intmId: config.intmId, nextPage: result.lastPage + 1, totalPages: result.totalPages });
+    }
 
     // Breathing room between types
     await new Promise(r => setTimeout(r, 1000));
@@ -581,7 +590,10 @@ async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string
     inserted: totalInserted,
     updated: totalUpdated,
     skipped: totalSkipped,
-    details: JSON.stringify(typeResults),
+    details: JSON.stringify({
+      types: typeResults,
+      ...(partialTypes.length > 0 ? { partial_types: partialTypes, resume_hint: "Re-trigger with start_page for each partial type" } : {}),
+    }),
   };
 }
 
