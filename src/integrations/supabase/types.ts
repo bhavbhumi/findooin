@@ -3932,6 +3932,10 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      generate_registry_source_id: {
+        Args: { p_category: string; p_name: string; p_source: string }
+        Returns: string
+      }
       get_admin_module_stats: { Args: never; Returns: Json }
       get_conversations: { Args: { p_user_id: string }; Returns: Json }
       get_feed_posts: {
@@ -4008,6 +4012,7 @@ export type Database = {
           profile_theme: string
         }[]
       }
+      title_case_name: { Args: { input_text: string }; Returns: string }
       track_challenge_progress: {
         Args: { p_action: string; p_user_id: string }
         Returns: undefined
