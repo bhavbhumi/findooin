@@ -147,7 +147,7 @@ const DEFAULT_DISCLAIMER = "This is a professional sentiment indicator only. It 
 
 export function useOpinions(category?: OpinionCategory, status?: OpinionStatus) {
   return useQuery({
-    queryKey: ["opinions", category, status],
+    queryKey: QUERY_KEYS.opinions(category, status),
     queryFn: async () => {
       let query = supabase
         .from("opinions")
