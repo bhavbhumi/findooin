@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import type { ProfileData, RoleData } from "./ProfileHeader";
+import type { LanguageEntry } from "@/lib/jsonb-types";
 import { ROLE_CONFIG } from "@/lib/role-config";
 import { VerificationRequestForm } from "@/components/admin/VerificationRequestForm";
 import { ManageRolesDialog } from "@/components/profile/ManageRolesDialog";
@@ -40,7 +41,7 @@ export const ProfileAbout = ({ profile, roles, isOwnProfile, onRolesChanged, cur
   const hasRegulatoryIds = profile.regulatory_ids && Object.keys(profile.regulatory_ids).length > 0;
   const hasCertifications = profile.certifications && profile.certifications.length > 0;
   const hasSpecializations = profile.specializations && profile.specializations.length > 0;
-  const langArray: any[] = Array.isArray(profile.languages) ? profile.languages : [];
+  const langArray: LanguageEntry[] = Array.isArray(profile.languages) ? profile.languages : [];
   const hasLanguages = langArray.length > 0;
   const hasSocialLinks = profile.social_links && Object.keys(profile.social_links).length > 0;
   const hasAnyDetail = profile.bio || profile.organization || profile.designation || profile.location || profile.website || profile.experience_years || hasRegulatoryIds || hasCertifications || hasSpecializations || hasLanguages;

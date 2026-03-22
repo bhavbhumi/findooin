@@ -90,7 +90,7 @@ const ScalingReport = () => {
       if (error) throw error;
       return data as Record<string, any>;
     },
-    staleTime: 0,
+    staleTime: 30_000,
   });
 
   const handleRefresh = useCallback(() => {

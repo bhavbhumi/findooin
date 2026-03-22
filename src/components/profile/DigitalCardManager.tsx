@@ -14,11 +14,12 @@ import {
 } from "lucide-react";
 import findooLogoIcon from "@/assets/findoo-logo-icon.png";
 import { LeadCaptureDashboard } from "./LeadCaptureDashboard";
+import type { DigitalCardFields } from "@/lib/jsonb-types";
 
 interface DigitalCardManagerProps {
   profileId: string;
   profileName?: string;
-  digitalCardFields: Record<string, boolean> | null;
+  digitalCardFields: DigitalCardFields | null;
   onFieldsUpdated: () => void;
 }
 
@@ -43,7 +44,14 @@ const DEFAULT_FIELDS: Record<string, boolean> = {
 };
 
 export const DigitalCardManager = ({ profileId, profileName, digitalCardFields, onFieldsUpdated }: DigitalCardManagerProps) => {
-  const [fields, setFields] = useState<Record<string, boolean>>(digitalCardFields ?? DEFAULT_FIELDS);
+  const [fields, setFields] = useState<Record<string, boolean>>(() => {
+    if (!digitalCardFields) return DEFAULT_FIELDS;
+    const boolOnly: Record<string, boolean> = {};
+    for (const [k, v] of Object.entries(digitalCardFields)) {
+      if (typeof v === "boolean") boolOnly[k] = v;
+    }
+    return Object.keys(boolOnly).length > 0 ? boolOnly : DEFAULT_FIELDS;
+  });
   const [saving, setSaving] = useState(false);
   const [nfcSupported, setNfcSupported] = useState(false);
   const [nfcWriting, setNfcWriting] = useState(false);
