@@ -35,3 +35,5 @@ project_id = "qvzvhmuosxdaqxwyokpg"
     verify_jwt = false
   [functions.registry-sync]
     verify_jwt = false
+  [functions.financial-wrapped]
+    verify_jwt = false

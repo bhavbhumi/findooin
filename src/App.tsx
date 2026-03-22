@@ -233,6 +233,7 @@ const App = () => {
                       <Route path="/showcase" element={<ProtectedRoute><FeatureFlagGate flagKey="directory_listings"><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/leaderboard" element={<ProtectedRoute><FeatureFlagGate flagKey="leaderboard"><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/bookmarks" element={<ProtectedRoute><RouteErrorBoundary routeName="Bookmarks"><Bookmarks /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/wrapped" element={<ProtectedRoute><RouteErrorBoundary routeName="Financial Wrapped"><FinancialWrapped /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/vault" element={<ProtectedRoute><FeatureFlagGate flagKey="vault_storage"><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/messages" element={<ProtectedRoute><FeatureFlagGate flagKey="messaging"><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       {/* Dev-only: test system pages */}
