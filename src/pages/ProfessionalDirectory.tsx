@@ -163,9 +163,10 @@ export default function ProfessionalDirectory() {
   });
 
   // Split entities by tab
-  const intermediaries = useMemo(() => allEntities.filter(isIntermediary), [allEntities]);
-  const issuers = useMemo(() => allEntities.filter(e => !isIntermediary(e)), [allEntities]);
-  const tabEntities = activeTab === "intermediaries" ? intermediaries : issuers;
+  const intermediaries = useMemo(() => allEntities.filter(e => classifyEntity(e) === "intermediaries"), [allEntities]);
+  const issuers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "issuers"), [allEntities]);
+  const enablers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "enablers"), [allEntities]);
+  const tabEntities = activeTab === "intermediaries" ? intermediaries : activeTab === "issuers" ? issuers : enablers;
 
   // Cities for current tab
   const cities = useMemo(() => {
