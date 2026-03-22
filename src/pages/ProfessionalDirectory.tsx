@@ -102,12 +102,14 @@ const cardVariant = {
 
 function classifyEntity(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): TabKey {
   const src = entity.source?.toLowerCase() ?? "";
+  const cat = entity.registration_category ?? "";
   // PFRDA PoPs are intermediaries, not enablers
   if (src === "pfrda") return "intermediaries";
   if (entity.entity_type === "enabler") return "enablers";
-  if (entity.registration_category && ENABLER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "enablers";
-  if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "issuers";
-  if (entity.registration_category && INTERMEDIARY_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "intermediaries";
+  if (ENABLER_CATEGORIES.some(c => cat.includes(c))) return "enablers";
+  // Check intermediaries BEFORE issuers to prevent "Mutual Fund" matching "Mutual Fund Distributor"
+  if (INTERMEDIARY_CATEGORIES.some(c => cat.includes(c))) return "intermediaries";
+  if (ISSUER_CATEGORIES.some(c => cat.includes(c))) return "issuers";
   // Fallback: AMFI entities are typically intermediaries, individuals too
   if (entity.source === "amfi") return "intermediaries";
   if (entity.entity_type === "individual") return "intermediaries";
