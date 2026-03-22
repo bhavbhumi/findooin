@@ -205,7 +205,7 @@ export interface AdminReport {
  */
 export function useAdminReports(includeArchived = false) {
   return useQuery({
-    queryKey: ["admin-reports", includeArchived],
+    queryKey: QUERY_KEYS.adminReports(includeArchived),
     queryFn: async (): Promise<AdminReport[]> => {
       let query = supabase
         .from("reports")
