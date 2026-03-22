@@ -13,7 +13,7 @@ import { Plus, X, Loader2, UserCog } from "lucide-react";
 import { toast } from "sonner";
 import { useRole } from "@/contexts/RoleContext";
 
-type Role = "investor" | "intermediary" | "issuer";
+type Role = "investor" | "intermediary" | "issuer" | "enabler";
 
 interface SubTypeOption {
   value: string;
