@@ -55,7 +55,7 @@ export function useSubscription() {
   const { userId, activeRole } = useRole();
 
   const { data: subscription, isLoading, refetch } = useQuery({
-    queryKey: ["user-subscription", userId, activeRole],
+    queryKey: QUERY_KEYS.subscription(userId ?? undefined, activeRole ?? undefined),
     queryFn: async () => {
       if (!userId) return null;
 

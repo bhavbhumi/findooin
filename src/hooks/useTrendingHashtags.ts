@@ -16,7 +16,7 @@ export interface TrendingHashtag {
 
 export function useTrendingHashtags(days = 7) {
   return useQuery({
-    queryKey: ["trending-hashtags", days],
+    queryKey: QUERY_KEYS.trendingHashtags(days),
     queryFn: async (): Promise<TrendingHashtag[]> => {
       const since = new Date();
       since.setDate(since.getDate() - days);

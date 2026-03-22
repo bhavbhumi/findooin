@@ -333,7 +333,7 @@ export function useAdminUsers() {
 /** Hook to check a single user's activity status (for messaging, jobs, etc.) */
 export function useUserActivityStatus(userId: string | null) {
   return useQuery({
-    queryKey: ["user-activity-status", userId],
+    queryKey: QUERY_KEYS.userActivityStatus(userId),
     queryFn: async () => {
       if (!userId) return null;
       const { data, error } = await supabase.rpc("compute_user_activity_status", { p_user_id: userId });

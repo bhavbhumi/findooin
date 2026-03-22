@@ -145,7 +145,7 @@ export function useReactivateInvitation() {
 
 export function useRegistryEntities(search?: string) {
   return useQuery({
-    queryKey: ["registry-entities-for-invite", search],
+    queryKey: QUERY_KEYS.registryEntities(search),
     queryFn: async () => {
       let query = supabase
         .from("registry_entities")

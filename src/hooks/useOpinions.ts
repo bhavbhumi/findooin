@@ -221,7 +221,7 @@ export function useOpinionVotes(opinionId: string | null) {
 
 export function useOpinionComments(opinionId: string | null) {
   return useQuery({
-    queryKey: ["opinion-comments", opinionId],
+    queryKey: QUERY_KEYS.opinionComments(opinionId),
     enabled: !!opinionId,
     queryFn: async () => {
       const { data: comments, error } = await supabase

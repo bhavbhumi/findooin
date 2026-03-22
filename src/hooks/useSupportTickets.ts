@@ -102,7 +102,7 @@ export function useMyTickets() {
 // ── Ticket replies ──────────────────────────────────
 export function useTicketReplies(ticketId: string | null) {
   return useQuery({
-    queryKey: ["ticket-replies", ticketId],
+    queryKey: QUERY_KEYS.ticketReplies(ticketId ?? undefined),
     enabled: !!ticketId,
     queryFn: async (): Promise<TicketReply[]> => {
       const { data, error } = await supabase

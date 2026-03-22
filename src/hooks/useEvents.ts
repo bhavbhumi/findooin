@@ -214,7 +214,7 @@ export function useEventSpeakers(eventId: string | undefined) {
 
 export function useEventRegistrations(eventId: string | undefined) {
   return useQuery({
-    queryKey: ["event-registrations", eventId],
+    queryKey: QUERY_KEYS.eventRegistrations(eventId),
     enabled: !!eventId,
     queryFn: async () => {
       const { data, error } = await supabase

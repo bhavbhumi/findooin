@@ -20,7 +20,7 @@ export function useTabPrivacy(userId: string | null) {
   const queryClient = useQueryClient();
 
   const { data: settings, isLoading } = useQuery({
-    queryKey: ["tab-privacy", userId],
+    queryKey: QUERY_KEYS.tabPrivacy(userId ?? undefined),
     enabled: !!userId,
     queryFn: async (): Promise<TabPrivacySettings> => {
       if (!userId) return defaults;

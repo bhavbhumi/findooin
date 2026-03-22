@@ -40,7 +40,7 @@ export function useContacts() {
   const qc = useQueryClient();
 
   const { data: contacts = [], isLoading } = useQuery({
-    queryKey: ["user-contacts", userId],
+    queryKey: QUERY_KEYS.contacts(userId ?? undefined),
     queryFn: async () => {
       if (!userId) return [];
       const { data, error } = await supabase

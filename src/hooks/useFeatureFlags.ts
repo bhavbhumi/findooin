@@ -19,7 +19,7 @@ export type FeatureFlag = {
 
 export function useFeatureFlags() {
   const query = useQuery({
-    queryKey: ["feature-flags"],
+    queryKey: QUERY_KEYS.featureFlags(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("feature_flags")

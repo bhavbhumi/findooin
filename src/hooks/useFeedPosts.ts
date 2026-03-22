@@ -72,7 +72,7 @@ function normalizePosts(data: any[]): FeedPost[] {
 
 export function useFeedPosts() {
   const query = useInfiniteQuery({
-    queryKey: ["feed-posts"],
+    queryKey: QUERY_KEYS.feedPosts(),
     queryFn: async ({ pageParam = 0 }): Promise<FeedPost[]> => {
       const { data, error } = await supabase.rpc("get_feed_posts", {
         p_limit: PAGE_SIZE,

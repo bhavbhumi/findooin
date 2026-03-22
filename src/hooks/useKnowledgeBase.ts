@@ -65,7 +65,7 @@ export function useKBArticleBySlug(slug: string | null) {
 
 export function useAdminKBArticles() {
   return useQuery({
-    queryKey: ["admin-kb-articles"],
+    queryKey: QUERY_KEYS.adminKBArticles(),
     queryFn: async (): Promise<KBArticle[]> => {
       const { data, error } = await supabase
         .from("kb_articles")

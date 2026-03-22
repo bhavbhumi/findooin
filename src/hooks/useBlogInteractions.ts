@@ -238,7 +238,7 @@ export function useBlogPollStats() {
 
 export function useBlogSurveyStats() {
   return useQuery({
-    queryKey: ["blog-survey-stats"],
+    queryKey: QUERY_KEYS.blogSurveyStats(),
     queryFn: async () => {
       // Count unique users per blog_post_id
       const { data, error } = await supabase

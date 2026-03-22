@@ -19,7 +19,7 @@ const DEFAULT_FLAIR: ProfileFlairData = {
 
 export function useProfileFlair(userId?: string) {
   return useQuery({
-    queryKey: ["profile-flair", userId],
+    queryKey: QUERY_KEYS.profileFlair(userId),
     enabled: !!userId,
     staleTime: 10 * 60 * 1000,
     queryFn: async (): Promise<ProfileFlairData> => {

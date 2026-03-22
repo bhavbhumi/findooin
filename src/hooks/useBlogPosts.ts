@@ -54,7 +54,7 @@ export function useBlogPosts(limit?: number) {
 
 export function useBlogPost(slug: string) {
   return useQuery({
-    queryKey: ["blog-post", slug],
+    queryKey: QUERY_KEYS.blogPost(slug),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")

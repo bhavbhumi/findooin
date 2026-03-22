@@ -113,7 +113,7 @@ export function useLeaderboard(limit = 20) {
 
 export function useWeeklyChallenges(userId?: string) {
   return useQuery({
-    queryKey: ["weekly-challenges", userId],
+    queryKey: QUERY_KEYS.weeklyChallenges(userId),
     enabled: !!userId,
     queryFn: async () => {
       const now = new Date().toISOString();

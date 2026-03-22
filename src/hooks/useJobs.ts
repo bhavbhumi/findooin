@@ -283,6 +283,7 @@ export function useToggleSaveJob() {
       }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["saved-jobs"] }),
+
   });
 }
 

@@ -12,7 +12,7 @@ export function useSubscriptionPlans(filters?: {
   billingInterval?: BillingInterval;
 }) {
   return useQuery({
-    queryKey: ["subscription-plans", filters?.targetRole, filters?.billingInterval],
+    queryKey: QUERY_KEYS.subscriptionPlans(filters?.targetRole, filters?.billingInterval),
     queryFn: async () => {
       let query = supabase
         .from("subscription_plans")

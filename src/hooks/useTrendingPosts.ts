@@ -14,7 +14,7 @@ import { QUERY_KEYS } from "@/lib/query-keys";
 
 export function useTrendingPosts() {
   return useQuery({
-    queryKey: ["trending-posts"],
+    queryKey: QUERY_KEYS.trendingPosts(),
     queryFn: async (): Promise<FeedPost[]> => {
       const since = new Date();
       since.setDate(since.getDate() - 7);

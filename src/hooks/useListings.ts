@@ -156,7 +156,7 @@ export function useMyListings() {
 
 export function useListingReviews(listingId: string | null) {
   return useQuery({
-    queryKey: ["listing-reviews", listingId],
+    queryKey: QUERY_KEYS.listingReviews(listingId ?? undefined),
     enabled: !!listingId,
     queryFn: async () => {
       const { data, error } = await supabase

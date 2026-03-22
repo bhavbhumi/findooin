@@ -27,7 +27,7 @@ export function useScheduledPosts(userId: string | null) {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["scheduled-posts", userId],
+    queryKey: QUERY_KEYS.scheduledPosts(userId ?? undefined),
     enabled: !!userId,
     queryFn: async (): Promise<ScheduledPost[]> => {
       const { data, error } = await supabase
