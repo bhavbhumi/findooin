@@ -59,9 +59,9 @@ export interface ProfileData {
   website: string | null;
   experience_years: number | null;
   specializations: string[] | null;
-  regulatory_ids: Record<string, string> | null;
-  social_links: Record<string, string> | null;
-  languages: any[] | null;
+  regulatory_ids: RegulatoryIds | null;
+  social_links: SocialLinks | null;
+  languages: LanguageEntry[] | null;
   certifications: string[] | null;
 }
 

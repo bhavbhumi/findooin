@@ -14,11 +14,12 @@ import {
 } from "lucide-react";
 import findooLogoIcon from "@/assets/findoo-logo-icon.png";
 import { LeadCaptureDashboard } from "./LeadCaptureDashboard";
+import type { DigitalCardFields } from "@/lib/jsonb-types";
 
 interface DigitalCardManagerProps {
   profileId: string;
   profileName?: string;
-  digitalCardFields: Record<string, boolean> | null;
+  digitalCardFields: DigitalCardFields | null;
   onFieldsUpdated: () => void;
 }
 
