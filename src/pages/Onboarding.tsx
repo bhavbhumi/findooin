@@ -71,7 +71,7 @@ const getSubTypesForRole = (role: Role): SubTypeOption[] => {
 };
 
 const needsVerification = (roles: Role[]) =>
-  roles.includes("issuer") || roles.includes("intermediary");
+  roles.includes("issuer") || roles.includes("intermediary") || roles.includes("enabler");
 
 const TOTAL_STEPS = 5; // Step 5 = verification nudge (conditional)
 
