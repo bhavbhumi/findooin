@@ -91,7 +91,7 @@ export const EVENT_MODE_LABELS: Record<string, string> = {
 export function useEvents(filters?: { category?: string; mode?: string; search?: string; upcoming?: boolean }) {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["events", filters],
+    queryKey: QUERY_KEYS.events(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("events")
