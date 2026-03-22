@@ -170,30 +170,48 @@ async function upsertEntities(
   const withSourceIdRows = Array.from(withSourceIdMap.values());
   if (withSourceIdRows.length > 0) {
     const sourceIds = withSourceIdRows.map((r) => String(r.source_id));
-    const existingSourceIds = new Set<string>();
+    const existingBySourceId = new Map<string, string>();
 
     for (const idsChunk of chunk(sourceIds, DB_BATCH_SIZE)) {
       const { data, error } = await supabase
         .from("registry_entities")
-        .select("source_id")
+        .select("id, source_id")
         .eq("source", source)
         .in("source_id", idsChunk);
 
       if (error) throw new Error(`Lookup failed for source IDs: ${error.message}`);
       for (const row of data || []) {
-        if (row?.source_id) existingSourceIds.add(String(row.source_id));
+        if (row?.source_id && row?.id) existingBySourceId.set(String(row.source_id), String(row.id));
       }
     }
 
-    for (const rowsChunk of chunk(withSourceIdRows, DB_BATCH_SIZE)) {
-      const { error } = await supabase
-        .from("registry_entities")
-        .upsert(rowsChunk, { onConflict: "source,source_id" });
-      if (error) throw new Error(`Upsert failed for source IDs: ${error.message}`);
+    const toInsert: Record<string, unknown>[] = [];
+    const toUpdateById: Record<string, unknown>[] = [];
+
+    for (const row of withSourceIdRows) {
+      const sourceId = String(row.source_id || "");
+      const existingId = existingBySourceId.get(sourceId);
+      if (existingId) {
+        toUpdateById.push({ ...row, id: existingId });
+      } else {
+        toInsert.push(row);
+      }
     }
 
-    updated += existingSourceIds.size;
-    inserted += withSourceIdRows.length - existingSourceIds.size;
+    for (const rowsChunk of chunk(toInsert, DB_BATCH_SIZE)) {
+      const { error } = await supabase.from("registry_entities").insert(rowsChunk);
+      if (error) throw new Error(`Insert failed for source IDs: ${error.message}`);
+    }
+
+    for (const rowsChunk of chunk(toUpdateById, DB_BATCH_SIZE)) {
+      const { error } = await supabase
+        .from("registry_entities")
+        .upsert(rowsChunk, { onConflict: "id" });
+      if (error) throw new Error(`Update failed for source IDs: ${error.message}`);
+    }
+
+    inserted += toInsert.length;
+    updated += toUpdateById.length;
   }
 
   // 2) Fallback path: rows without source_id (dedupe via source+category+entity_name)
