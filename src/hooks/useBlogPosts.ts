@@ -35,7 +35,7 @@ export interface BlogPost {
 
 export function useBlogPosts(limit?: number) {
   return useQuery({
-    queryKey: ["blog-posts", limit],
+    queryKey: QUERY_KEYS.blogPosts(limit),
     queryFn: async () => {
       let query = supabase
         .from("blog_posts")
