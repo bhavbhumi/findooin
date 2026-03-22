@@ -13,7 +13,7 @@ import { Plus, X, Loader2, UserCog } from "lucide-react";
 import { toast } from "sonner";
 import { useRole } from "@/contexts/RoleContext";
 
-type Role = "investor" | "intermediary" | "issuer";
+type Role = "investor" | "intermediary" | "issuer" | "enabler";
 
 interface SubTypeOption {
   value: string;
@@ -45,15 +45,27 @@ const issuerSubTypes: SubTypeOption[] = [
   { value: "government", label: "Government Entity" },
 ];
 
+const enablerSubTypes: SubTypeOption[] = [
+  { value: "kra", label: "KYC Registration Agency (KRA)" },
+  { value: "depository", label: "Depository (CDSL/NSDL)" },
+  { value: "rta", label: "Registrar & Transfer Agent (RTA)" },
+  { value: "custodian", label: "Custodian" },
+  { value: "pop", label: "Point of Presence (PoP)" },
+  { value: "vault_manager", label: "Vault Manager" },
+  { value: "asba_bank", label: "ASBA Bank" },
+  { value: "esg_provider", label: "ESG Rating Provider" },
+];
+
 const getSubTypesForRole = (role: Role): SubTypeOption[] => {
   switch (role) {
     case "investor": return investorSubTypes;
     case "intermediary": return intermediarySubTypes;
     case "issuer": return issuerSubTypes;
+    case "enabler": return enablerSubTypes;
   }
 };
 
-const ALL_ROLES: Role[] = ["investor", "intermediary", "issuer"];
+const ALL_ROLES: Role[] = ["investor", "intermediary", "issuer", "enabler"];
 
 interface RoleRow {
   role: string;

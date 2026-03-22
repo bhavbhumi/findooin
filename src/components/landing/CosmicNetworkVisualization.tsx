@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 /* ── Types ── */
 interface OrbitNode {
   id: string;
-  role: "issuer" | "intermediary" | "investor";
+  role: "issuer" | "intermediary" | "investor" | "enabler";
   label: string;
   angle: number;          // degrees
   verified: boolean;
@@ -22,12 +22,14 @@ const ROLE_META: Record<string, { color: string; glow: string; label: string; pl
   issuer:       { color: "hsl(var(--issuer))",       glow: "hsl(var(--issuer) / 0.5)",       label: "Issuer",       plural: "Issuers" },
   intermediary: { color: "hsl(var(--intermediary))",  glow: "hsl(var(--intermediary) / 0.5)",  label: "Intermediary", plural: "Intermediaries" },
   investor:     { color: "hsl(var(--investor))",      glow: "hsl(var(--investor) / 0.35)",     label: "Investor",     plural: "Investors" },
+  enabler:      { color: "hsl(var(--enabler))",       glow: "hsl(var(--enabler) / 0.4)",       label: "Enabler",      plural: "Enablers" },
 };
 
 const ORBITS = {
-  issuer:       { radius: 90,  nodes: 5 },
-  intermediary: { radius: 145, nodes: 7 },
-  investor:     { radius: 200, nodes: 9 },
+  issuer:       { radius: 80,  nodes: 4 },
+  intermediary: { radius: 125, nodes: 6 },
+  enabler:      { radius: 165, nodes: 4 },
+  investor:     { radius: 205, nodes: 8 },
 } as const;
 
 const CENTER = 250; // SVG viewBox center

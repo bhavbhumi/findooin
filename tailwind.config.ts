@@ -63,6 +63,10 @@ export default {
           DEFAULT: "hsl(var(--investor))",
           foreground: "hsl(var(--investor-foreground))",
         },
+        enabler: {
+          DEFAULT: "hsl(var(--enabler))",
+          foreground: "hsl(var(--enabler-foreground))",
+        },
         gold: {
           DEFAULT: "hsl(var(--gold))",
           foreground: "hsl(var(--gold-foreground))",

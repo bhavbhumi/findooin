@@ -27,11 +27,11 @@ interface DirectoryPublicSidebarProps {
   tabTotal: number;
   tabClaimed: number;
   tabLabel: string;
-  activeTab: "intermediaries" | "issuers";
+  activeTab: "intermediaries" | "issuers" | "enablers";
 }
 
 export function DirectoryPublicSidebar({ tabTotal, tabClaimed, tabLabel, activeTab }: DirectoryPublicSidebarProps) {
-  const roleFilter = activeTab === "intermediaries" ? "intermediary" : "issuer";
+  const roleFilter = activeTab === "intermediaries" ? "intermediary" : activeTab === "issuers" ? "issuer" : "enabler";
 
   // Fetch top users by XP filtered by tab role
   const { data: topUsers = [] } = useQuery({

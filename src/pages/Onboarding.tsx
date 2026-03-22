@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, UserCheck, BarChart3, ArrowRight, ArrowLeft, Loader2, CheckCircle2,
-  Upload, ShieldCheck, File, X, Users, Smartphone,
+  Upload, ShieldCheck, File, X, Users, Smartphone, Settings2,
 } from "lucide-react";
 import { uploadFile } from "@/lib/storage";
 import { ContactImportDialog } from "@/components/network/ContactImportDialog";
@@ -18,7 +18,7 @@ import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
 
 type UserType = "individual" | "entity";
-type Role = "investor" | "intermediary" | "issuer";
+type Role = "investor" | "intermediary" | "issuer" | "enabler";
 
 interface SubTypeOption {
   value: string;
@@ -50,16 +50,28 @@ const issuerSubTypes: SubTypeOption[] = [
   { value: "government", label: "Government Entity" },
 ];
 
+const enablerSubTypes: SubTypeOption[] = [
+  { value: "kra", label: "KYC Registration Agency (KRA)" },
+  { value: "depository", label: "Depository (CDSL/NSDL)" },
+  { value: "rta", label: "Registrar & Transfer Agent (RTA)" },
+  { value: "custodian", label: "Custodian" },
+  { value: "pop", label: "Point of Presence (PoP)" },
+  { value: "vault_manager", label: "Vault Manager" },
+  { value: "asba_bank", label: "ASBA Bank" },
+  { value: "esg_provider", label: "ESG Rating Provider" },
+];
+
 const getSubTypesForRole = (role: Role): SubTypeOption[] => {
   switch (role) {
     case "investor": return investorSubTypes;
     case "intermediary": return intermediarySubTypes;
     case "issuer": return issuerSubTypes;
+    case "enabler": return enablerSubTypes;
   }
 };
 
 const needsVerification = (roles: Role[]) =>
-  roles.includes("issuer") || roles.includes("intermediary");
+  roles.includes("issuer") || roles.includes("intermediary") || roles.includes("enabler");
 
 const TOTAL_STEPS = 5; // Step 5 = verification nudge (conditional)
 
@@ -72,6 +84,7 @@ const Onboarding = () => {
     investor: "",
     intermediary: "",
     issuer: "",
+    enabler: "",
   });
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
@@ -176,6 +189,13 @@ const Onboarding = () => {
       icon: Building2,
       label: "Issuer",
       description: "Raise capital & publish information",
+      disabled: userType === "individual",
+    },
+    {
+      role: "enabler",
+      icon: Settings2,
+      label: "Enabler",
+      description: "Provide infrastructure & support services",
       disabled: userType === "individual",
     },
   ];

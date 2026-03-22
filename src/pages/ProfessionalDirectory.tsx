@@ -22,7 +22,7 @@ import { LevelBadge } from "@/components/gamification/LevelBadge";
 import { resolveProfileFlair } from "@/lib/profile-flair";
 import {
   Search, Shield, MapPin, CheckCircle2, ArrowRight, ArrowUpDown,
-  Users, ChevronLeft, ChevronRight, Briefcase, Building2, SlidersHorizontal, X
+  Users, ChevronLeft, ChevronRight, Briefcase, Building2, SlidersHorizontal, X, Settings2
 } from "lucide-react";
 
 const PAGE_SIZE = 24;
@@ -30,6 +30,7 @@ const PAGE_SIZE = 24;
 const TABS = [
   { key: "intermediaries", label: "Intermediaries", icon: Briefcase, description: "MF Distributors, Advisers, Brokers & Analysts" },
   { key: "issuers", label: "Issuers", icon: Building2, description: "Portfolio Managers, AMCs & Finance Companies" },
+  { key: "enablers", label: "Enablers", icon: Settings2, description: "KRAs, Depositories, RTAs, Custodians & PoPs" },
 ] as const;
 
 type TabKey = typeof TABS[number]["key"];
@@ -64,6 +65,17 @@ const ISSUER_CATEGORIES = [
   "Infrastructure Finance Specialist",
 ];
 
+const ENABLER_CATEGORIES = [
+  "KYC Registration Agency",
+  "Registrar & Transfer Agent",
+  "Custodian",
+  "Vault Manager",
+  "ESG Rating Provider",
+  "SCSB",
+  "UPI Mobile App",
+  "Point of Presence",
+];
+
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
@@ -87,13 +99,15 @@ const cardVariant = {
   }),
 };
 
-function isIntermediary(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): boolean {
-  if (entity.registration_category && INTERMEDIARY_CATEGORIES.some(c => entity.registration_category!.includes(c))) return true;
-  if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return false;
+function classifyEntity(entity: { registration_category: string | null; entity_type: string | null; source: string | null }): TabKey {
+  if (entity.entity_type === "enabler") return "enablers";
+  if (entity.registration_category && ENABLER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "enablers";
+  if (entity.registration_category && ISSUER_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "issuers";
+  if (entity.registration_category && INTERMEDIARY_CATEGORIES.some(c => entity.registration_category!.includes(c))) return "intermediaries";
   // Fallback: AMFI entities are typically intermediaries, individuals too
-  if (entity.source === "amfi") return true;
-  if (entity.entity_type === "individual") return true;
-  return false;
+  if (entity.source === "amfi") return "intermediaries";
+  if (entity.entity_type === "individual") return "intermediaries";
+  return "intermediaries";
 }
 
 export default function ProfessionalDirectory() {
@@ -149,9 +163,10 @@ export default function ProfessionalDirectory() {
   });
 
   // Split entities by tab
-  const intermediaries = useMemo(() => allEntities.filter(isIntermediary), [allEntities]);
-  const issuers = useMemo(() => allEntities.filter(e => !isIntermediary(e)), [allEntities]);
-  const tabEntities = activeTab === "intermediaries" ? intermediaries : issuers;
+  const intermediaries = useMemo(() => allEntities.filter(e => classifyEntity(e) === "intermediaries"), [allEntities]);
+  const issuers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "issuers"), [allEntities]);
+  const enablers = useMemo(() => allEntities.filter(e => classifyEntity(e) === "enablers"), [allEntities]);
+  const tabEntities = activeTab === "intermediaries" ? intermediaries : activeTab === "issuers" ? issuers : enablers;
 
   // Cities for current tab
   const cities = useMemo(() => {
@@ -271,7 +286,7 @@ export default function ProfessionalDirectory() {
               <tab.icon className="h-4 w-4" />
               {tab.label}
               <Badge variant="outline" className="text-[10px] h-5 px-1.5 font-normal">
-                {tab.key === "intermediaries" ? intermediaries.length : issuers.length}
+                {tab.key === "intermediaries" ? intermediaries.length : tab.key === "issuers" ? issuers.length : enablers.length}
               </Badge>
               {activeTab === tab.key && (
                 <motion.div

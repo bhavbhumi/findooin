@@ -13,7 +13,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type AppRole = "investor" | "intermediary" | "issuer" | "admin";
+export type AppRole = "investor" | "intermediary" | "issuer" | "enabler" | "admin";
 
 interface RoleContextValue {
   /** All roles the current user holds */
@@ -32,7 +32,7 @@ interface RoleContextValue {
   refreshRoles: () => Promise<void>;
 }
 
-const ROLE_PRIORITY: AppRole[] = ["issuer", "intermediary", "investor"];
+const ROLE_PRIORITY: AppRole[] = ["issuer", "intermediary", "enabler", "investor"];
 const STORAGE_KEY = "findoo_active_role";
 
 const RoleContext = createContext<RoleContextValue>({
