@@ -411,6 +411,10 @@ export default function ProfessionalDirectory() {
                     const flair = isClaimed && entity.matched_user_id ? flairMap[entity.matched_user_id] : null;
                     const level = isClaimed && entity.matched_user_id ? xpMap[entity.matched_user_id] : 0;
                     const resolvedFlair = resolveProfileFlair(flair, level);
+                    const profileIdentifier = entity.registration_number
+                      ? encodeURIComponent(entity.registration_number)
+                      : entity.id;
+
                     return (
                       <motion.div
                         key={entity.id}
@@ -420,7 +424,7 @@ export default function ProfessionalDirectory() {
                         variants={cardVariant}
                       >
                         <Link
-                          to={`/professional/${entity.registration_number}`}
+                          to={`/professional/${profileIdentifier}`}
                           className="group block"
                         >
                           <Card className="h-full hover:shadow-lg transition-all duration-300 hover:border-primary/30 group-hover:bg-muted/20 hover:-translate-y-0.5">

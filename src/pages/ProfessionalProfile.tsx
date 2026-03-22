@@ -42,22 +42,28 @@ const SUB_TYPE_LABELS: Record<string, string> = {
 };
 
 export default function ProfessionalProfile() {
-  const { registrationNumber } = useParams<{ registrationNumber: string }>();
+  const { registrationNumber: profileIdentifier } = useParams<{ registrationNumber: string }>();
+  const decodedIdentifier = profileIdentifier ? decodeURIComponent(profileIdentifier) : "";
+  const isUuidIdentifier = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(decodedIdentifier);
 
   const { data: entity, isLoading, error } = useQuery({
-    queryKey: ["public-professional", registrationNumber],
+    queryKey: ["public-professional", decodedIdentifier],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("registry_entities")
         .select("*")
-        .eq("registration_number", registrationNumber!)
         .eq("is_public", true)
-        .eq("status", "active")
-        .maybeSingle();
+        .eq("status", "active");
+
+      query = isUuidIdentifier
+        ? query.eq("id", decodedIdentifier)
+        : query.eq("registration_number", decodedIdentifier);
+
+      const { data, error } = await query.maybeSingle();
       if (error) throw error;
       return data;
     },
-    enabled: !!registrationNumber,
+    enabled: !!decodedIdentifier,
   });
 
   // Fetch claimed profile data if matched
