@@ -22,6 +22,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { subDays } from "date-fns";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 /** Shared cache config for admin queries */
 const ADMIN_CACHE = { staleTime: 60_000, gcTime: 600_000 } as const;
