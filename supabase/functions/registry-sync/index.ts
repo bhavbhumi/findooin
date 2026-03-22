@@ -27,6 +27,9 @@ interface RawEntity {
   raw_data?: Record<string, unknown>;
 }
 
+const DEFAULT_MAX_PAGES = 8;
+const SAFE_EXECUTION_BUDGET_MS = 45_000;
+
 const HEADERS: Record<string, string> = {
   Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -108,63 +111,141 @@ async function upsertEntities(
   regCategory: string,
   records: RawEntity[]
 ): Promise<{ inserted: number; updated: number; skipped: number }> {
-  let inserted = 0, updated = 0, skipped = 0;
-  const BATCH_SIZE = 50;
+  let inserted = 0;
+  let updated = 0;
+  let skipped = 0;
 
-  for (let i = 0; i < records.length; i += BATCH_SIZE) {
-    const batch = records.slice(i, i + BATCH_SIZE);
-    for (const rec of batch) {
-      if (!rec.entity_name || rec.entity_name.length < 2) { skipped++; continue; }
+  const DB_BATCH_SIZE = 300;
 
-      const data: Record<string, unknown> = {
-        entity_name: rec.entity_name.trim(),
-        entity_type: entityType,
-        registration_number: rec.registration_number?.trim() || null,
-        registration_category: regCategory,
-        source,
-        source_id: rec.registration_number?.trim() || null,
-        contact_email: rec.contact_email?.toLowerCase().trim() || null,
-        contact_phone: rec.contact_phone?.trim() || null,
-        address: rec.address?.trim() || null,
-        city: rec.city?.trim() || null,
-        state: rec.state?.trim() || null,
-        pincode: rec.pincode?.trim() || null,
-        status: "active",
-        last_synced_at: new Date().toISOString(),
-        raw_data: rec.raw_data || {},
-      };
+  const chunk = <T>(arr: T[], size: number): T[][] => {
+    const out: T[][] = [];
+    for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+    return out;
+  };
 
-      // Deduplicate: prefer registration_number, fall back to name+category+source
-      let existing: any = null;
-      if (rec.registration_number) {
-        const { data: found } = await supabase
-          .from("registry_entities")
-          .select("id")
-          .eq("source", source)
-          .eq("source_id", rec.registration_number.trim())
-          .maybeSingle();
-        existing = found;
-      }
-      if (!existing) {
-        // Fallback: match by name + category + source to prevent duplicates for entities without reg numbers
-        const { data: found } = await supabase
-          .from("registry_entities")
-          .select("id")
-          .eq("source", source)
-          .eq("registration_category", regCategory)
-          .eq("entity_name", rec.entity_name.trim())
-          .maybeSingle();
-        existing = found;
-      }
+  const normalizedRows: Record<string, unknown>[] = [];
+  for (const rec of records) {
+    if (!rec.entity_name || rec.entity_name.trim().length < 2) {
+      skipped++;
+      continue;
+    }
 
-      if (existing) {
-        await supabase.from("registry_entities").update(data).eq("id", existing.id);
-        updated++;
-      } else {
-        await supabase.from("registry_entities").insert(data);
-        inserted++;
+    normalizedRows.push({
+      entity_name: rec.entity_name.trim(),
+      entity_type: entityType,
+      registration_number: rec.registration_number?.trim() || null,
+      registration_category: regCategory,
+      source,
+      source_id: rec.registration_number?.trim() || null,
+      contact_email: rec.contact_email?.toLowerCase().trim() || null,
+      contact_phone: rec.contact_phone?.trim() || null,
+      address: rec.address?.trim() || null,
+      city: rec.city?.trim() || null,
+      state: rec.state?.trim() || null,
+      pincode: rec.pincode?.trim() || null,
+      status: "active",
+      last_synced_at: new Date().toISOString(),
+      raw_data: rec.raw_data || {},
+    });
+  }
+
+  if (normalizedRows.length === 0) {
+    return { inserted, updated, skipped };
+  }
+
+  // 1) Fast path: rows with registration/source_id (unique on source + source_id)
+  const withSourceIdMap = new Map<string, Record<string, unknown>>();
+  const withoutSourceIdMap = new Map<string, Record<string, unknown>>();
+
+  for (const row of normalizedRows) {
+    const sourceId = String(row.source_id || "").trim();
+    if (sourceId) {
+      withSourceIdMap.set(sourceId, row);
+    } else {
+      const dedupKey = `${source}|${regCategory}|${String(row.entity_name).trim().toLowerCase()}`;
+      withoutSourceIdMap.set(dedupKey, row);
+    }
+  }
+
+  const withSourceIdRows = Array.from(withSourceIdMap.values());
+  if (withSourceIdRows.length > 0) {
+    const sourceIds = withSourceIdRows.map((r) => String(r.source_id));
+    const existingSourceIds = new Set<string>();
+
+    for (const idsChunk of chunk(sourceIds, DB_BATCH_SIZE)) {
+      const { data, error } = await supabase
+        .from("registry_entities")
+        .select("source_id")
+        .eq("source", source)
+        .in("source_id", idsChunk);
+
+      if (error) throw new Error(`Lookup failed for source IDs: ${error.message}`);
+      for (const row of data || []) {
+        if (row?.source_id) existingSourceIds.add(String(row.source_id));
       }
     }
+
+    for (const rowsChunk of chunk(withSourceIdRows, DB_BATCH_SIZE)) {
+      const { error } = await supabase
+        .from("registry_entities")
+        .upsert(rowsChunk, { onConflict: "source,source_id" });
+      if (error) throw new Error(`Upsert failed for source IDs: ${error.message}`);
+    }
+
+    updated += existingSourceIds.size;
+    inserted += withSourceIdRows.length - existingSourceIds.size;
+  }
+
+  // 2) Fallback path: rows without source_id (dedupe via source+category+entity_name)
+  const withoutSourceIdRows = Array.from(withoutSourceIdMap.values());
+  if (withoutSourceIdRows.length > 0) {
+    const entityNames = withoutSourceIdRows.map((r) => String(r.entity_name).trim());
+    const existingByName = new Map<string, string>();
+
+    for (const namesChunk of chunk(entityNames, DB_BATCH_SIZE)) {
+      const { data, error } = await supabase
+        .from("registry_entities")
+        .select("id, entity_name")
+        .eq("source", source)
+        .eq("registration_category", regCategory)
+        .is("source_id", null)
+        .in("entity_name", namesChunk);
+
+      if (error) throw new Error(`Lookup failed for name dedupe: ${error.message}`);
+      for (const row of data || []) {
+        if (row?.entity_name && row?.id) {
+          existingByName.set(String(row.entity_name).trim().toLowerCase(), String(row.id));
+        }
+      }
+    }
+
+    const toInsert: Record<string, unknown>[] = [];
+    const toUpdateById: Record<string, unknown>[] = [];
+
+    for (const row of withoutSourceIdRows) {
+      const key = String(row.entity_name).trim().toLowerCase();
+      const existingId = existingByName.get(key);
+      if (existingId) {
+        toUpdateById.push({ ...row, id: existingId });
+      } else {
+        toInsert.push(row);
+      }
+    }
+
+    for (const rowsChunk of chunk(toInsert, DB_BATCH_SIZE)) {
+      const { error } = await supabase.from("registry_entities").insert(rowsChunk);
+      if (error) throw new Error(`Insert failed for null source_id rows: ${error.message}`);
+    }
+
+    for (const rowsChunk of chunk(toUpdateById, DB_BATCH_SIZE)) {
+      const { error } = await supabase
+        .from("registry_entities")
+        .upsert(rowsChunk, { onConflict: "id" });
+      if (error) throw new Error(`Update failed for null source_id rows: ${error.message}`);
+    }
+
+    inserted += toInsert.length;
+    updated += toUpdateById.length;
   }
 
   return { inserted, updated, skipped };
@@ -283,7 +364,7 @@ function parseSebiTable(html: string): RawEntity[] {
   const records: RawEntity[] = [];
 
   // Find <table> blocks and extract <thead> headers + <tbody> rows
-  const tableRegex = /<table[^>]*class=["'][^"']*table[^"']*["'][^>]*>([\s\S]*?)<\/table>/gi;
+  const tableRegex = /<table[^>]*>([\s\S]*?)<\/table>/gi;
   let tableMatch;
 
   while ((tableMatch = tableRegex.exec(html)) !== null) {
@@ -453,10 +534,12 @@ async function scrapeSebiType(
   typeConfig: SebiTypeConfig,
   startPage: number = 0,
   maxPages: number = 40,
+  executionBudgetMs: number = SAFE_EXECUTION_BUDGET_MS,
 ): Promise<ScrapeSummary & { lastPage?: number; totalPages?: number; partial?: boolean }> {
   const allRecords: RawEntity[] = [];
   const seenKeys = new Set<string>();
   const PER_PAGE = 25;
+  const startedAt = Date.now();
 
   const addUnique = (records: RawEntity[]) => {
     for (const r of records) {
@@ -468,7 +551,7 @@ async function scrapeSebiType(
     }
   };
 
-  let lastPage = startPage;
+  let lastPage = Math.max(startPage - 1, -1);
   let totalPages = 1;
 
   try {
@@ -484,8 +567,8 @@ async function scrapeSebiType(
       console.log(`[SEBI:${typeConfig.intmId}] Page 1/${totalPages}: ${firstRecords.length} parsed`);
 
       // Upsert page 1 immediately
-      if (allRecords.length > 0) {
-        await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, [...allRecords]);
+      if (firstRecords.length > 0) {
+        await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, firstRecords);
       }
     }
 
@@ -500,6 +583,11 @@ async function scrapeSebiType(
       const effectiveEnd = Math.min(effectiveStart + maxPages, totalPages);
 
       for (let pageIdx = effectiveStart; pageIdx < effectiveEnd; pageIdx++) {
+        if (Date.now() - startedAt > executionBudgetMs) {
+          console.warn(`[SEBI:${typeConfig.intmId}] Safety budget reached, stopping at page ${pageIdx + 1}`);
+          break;
+        }
+
         try {
           const html = await fetchSebiAjaxPage(typeConfig.intmId, pageIdx, sessionId);
           const parsed = parseSebiCards(html);
@@ -530,7 +618,7 @@ async function scrapeSebiType(
           if (consecutiveFailures >= 3) break;
         }
         // Rate limit between pages
-        await new Promise(r => setTimeout(r, 400));
+        await new Promise(r => setTimeout(r, 120));
       }
     }
   } catch (err) {
@@ -556,20 +644,33 @@ async function scrapeSebiType(
 async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string, unknown>): Promise<ScrapeSummary> {
   const typeIds = opts?.sebi_type_ids as number[] | undefined;
   const startPage = (opts?.start_page as number) || 0;
-  const maxPages = (opts?.max_pages as number) || 40;
+  const maxPages = (opts?.max_pages as number) || DEFAULT_MAX_PAGES;
   const configs = typeIds
     ? SEBI_TYPES.filter(t => typeIds.includes(t.intmId))
     : SEBI_TYPES;
 
+  const runStartedAt = Date.now();
+  const runBudgetMs = SAFE_EXECUTION_BUDGET_MS + 5_000;
+
   let totalFound = 0, totalInserted = 0, totalUpdated = 0, totalSkipped = 0;
   const typeResults: Record<string, any> = {};
   const partialTypes: { intmId: number; nextPage: number; totalPages: number }[] = [];
+  const deferredTypeIds: number[] = [];
 
-  for (const config of configs) {
+  const effectiveMaxPages = configs.length === 1 ? maxPages : Math.min(maxPages, 3);
+
+  for (let index = 0; index < configs.length; index++) {
+    const config = configs[index];
+    if (Date.now() - runStartedAt > runBudgetMs) {
+      deferredTypeIds.push(...configs.slice(index).map((c) => c.intmId));
+      console.warn(`[SEBI] Time budget reached. Deferring ${deferredTypeIds.length} type(s).`);
+      break;
+    }
+
     console.log(`\n── SEBI Type: ${config.label} (intmId=${config.intmId}) ──`);
     // For single-type syncs, use the provided startPage; for multi-type, always start at 0
     const effectiveStartPage = configs.length === 1 ? startPage : 0;
-    const result = await scrapeSebiType(supabase, config, effectiveStartPage, maxPages);
+    const result = await scrapeSebiType(supabase, config, effectiveStartPage, effectiveMaxPages);
     totalFound += result.found;
     totalInserted += result.inserted;
     totalUpdated += result.updated;
@@ -582,7 +683,7 @@ async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string
     }
 
     // Breathing room between types
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, 150));
   }
 
   return {
@@ -593,6 +694,7 @@ async function scrapeSebiAll(supabase: any, _logId: string, opts?: Record<string
     details: JSON.stringify({
       types: typeResults,
       ...(partialTypes.length > 0 ? { partial_types: partialTypes, resume_hint: "Re-trigger with start_page for each partial type" } : {}),
+      ...(deferredTypeIds.length > 0 ? { deferred_type_ids: deferredTypeIds, resume_hint: "Re-trigger to continue deferred SEBI types" } : {}),
     }),
   };
 }
@@ -867,7 +969,7 @@ Deno.serve(async (req) => {
     const triggeredBy = (body.triggered_by as string) || null;
     const sebiTypeIds = body.sebi_type_ids as number[] | undefined;
     const startPage = (body.start_page as number) || 0;
-    const maxPages = (body.max_pages as number) || 40;
+    const maxPages = (body.max_pages as number) || DEFAULT_MAX_PAGES;
 
     const results: Record<string, ScrapeSummary & { log_id?: string }> = {};
 
@@ -944,7 +1046,7 @@ Deno.serve(async (req) => {
           records_skipped: summary.skipped,
           completed_at: new Date().toISOString(),
           metadata: {
-            ...(subSource ? { sub_source: subSource, sebi_type_ids: sebiTypeIds } : {}),
+            ...(subSource ? { sub_source: subSource, sebi_type_ids: effectiveSebiTypeIds } : {}),
             ...(summary.details ? { details: summary.details } : {}),
           },
         }).eq("id", logId);
