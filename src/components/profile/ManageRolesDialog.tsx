@@ -34,6 +34,7 @@ const intermediarySubTypes: SubTypeOption[] = [
   { value: "insurance_agent", label: "Insurance Agent" },
   { value: "research_analyst", label: "Research Analyst" },
   { value: "ca_cs", label: "CA / CS" },
+  { value: "pop", label: "Point of Presence (PoP)" },
 ];
 
 const issuerSubTypes: SubTypeOption[] = [
