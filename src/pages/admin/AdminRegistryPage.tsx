@@ -288,16 +288,18 @@ export default function AdminRegistryPage() {
     }
   };
 
-  const triggerSync = async (sources: string[], sebiTypeIds?: number[]) => {
+  const triggerSync = async (sources: string[], sebiTypeIds?: number[], startPage?: number) => {
     const label = sebiTypeIds
       ? `SEBI (${sebiTypeIds.length} type${sebiTypeIds.length > 1 ? "s" : ""})`
       : sources.length === 1 ? sources[0].toUpperCase() : "All Sources";
+    const resumeLabel = startPage ? ` (resuming from page ${startPage + 1})` : "";
     setSyncingSource(sources[0] || "all");
-    toast.info(`Syncing ${label}... This may take a few minutes.`);
+    toast.info(`Syncing ${label}${resumeLabel}... This may take a few minutes.`);
 
     try {
       const body: Record<string, unknown> = { sources, sync_type: "manual" };
       if (sebiTypeIds) body.sebi_type_ids = sebiTypeIds;
+      if (startPage) body.start_page = startPage;
 
       const { data, error } = await supabase.functions.invoke("registry-sync", { body });
 
@@ -307,6 +309,20 @@ export default function AdminRegistryPage() {
         const summaries = Object.entries(results).map(([src, r]: [string, any]) =>
           `${src.toUpperCase()}: ${r.found} found, ${r.inserted} new, ${r.updated} updated`
         );
+        
+        // Check if any results have partial types
+        let hasPartial = false;
+        for (const [, r] of Object.entries(results) as [string, any][]) {
+          try {
+            const details = typeof r.details === "string" ? JSON.parse(r.details) : r.details;
+            if (details?.partial_types?.length > 0) {
+              hasPartial = true;
+              const partialInfo = details.partial_types.map((p: any) => `intm${p.intmId}: page ${p.nextPage}/${p.totalPages}`).join(", ");
+              toast.info(`Partial sync — more pages available: ${partialInfo}. Click "Continue" to fetch more.`, { duration: 10000 });
+            }
+          } catch { /* ignore */ }
+        }
+        
         toast.success(summaries.join(" | ") || "Sync complete");
         refetch();
         queryClient.invalidateQueries({ queryKey: ["admin-sync-logs"] });
