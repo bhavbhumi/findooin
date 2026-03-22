@@ -102,7 +102,7 @@ export function useBadgeDefinitions() {
 
 export function useLeaderboard(limit = 20) {
   return useQuery({
-    queryKey: ["leaderboard", limit],
+    queryKey: QUERY_KEYS.leaderboard(limit),
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_leaderboard", { p_limit: limit, p_offset: 0 });
       if (error) throw error;
