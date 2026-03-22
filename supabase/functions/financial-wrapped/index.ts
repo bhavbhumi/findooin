@@ -60,7 +60,6 @@ Deno.serve(async (req) => {
       endorsementsRes,
       viewsRes,
       rolesRes,
-      topHashtagsRes,
       totalUsersRes,
     ] = await Promise.all([
       admin.from("profiles").select("full_name, display_name, avatar_url, verification_status, created_at").eq("id", userId).single().abortSignal(signal),
