@@ -447,10 +447,13 @@ async function fetchSebiAjaxPage(intmId: number, pageIndex: number, sessionId: s
 }
 
 // Scrape a single SEBI intermediary type with session-based pagination
+// Supports chunked sync: startPage/maxPages allow resuming from where we left off
 async function scrapeSebiType(
   supabase: any,
   typeConfig: SebiTypeConfig,
-): Promise<ScrapeSummary> {
+  startPage: number = 0,
+  maxPages: number = 40,
+): Promise<ScrapeSummary & { lastPage?: number; totalPages?: number; partial?: boolean }> {
   const allRecords: RawEntity[] = [];
   const seenKeys = new Set<string>();
   const PER_PAGE = 25;
@@ -465,24 +468,38 @@ async function scrapeSebiType(
     }
   };
 
+  let lastPage = startPage;
+  let totalPages = 1;
+
   try {
     // Step 1: Fetch initial page (gets session cookie + page 1 data)
     const { html: firstHtml, totalRecords, sessionId } = await fetchSebiInitialPage(typeConfig.intmId);
-    const firstRecords = parseSebiCards(firstHtml);
-    addUnique(firstRecords);
+    totalPages = Math.ceil(totalRecords / PER_PAGE);
+    console.log(`[SEBI:${typeConfig.intmId}] ${typeConfig.label}: ${totalRecords} total, ${totalPages} pages, session=${sessionId ? sessionId.substring(0, 8) + "..." : "NONE"}, startPage=${startPage}, maxPages=${maxPages}`);
 
-    const totalPages = Math.ceil(totalRecords / PER_PAGE);
-    console.log(`[SEBI:${typeConfig.intmId}] ${typeConfig.label}: ${totalRecords} total, ${totalPages} pages, session=${sessionId ? sessionId.substring(0, 8) + "..." : "NONE"}, page1=${firstRecords.length} parsed`);
+    if (startPage === 0) {
+      const firstRecords = parseSebiCards(firstHtml);
+      addUnique(firstRecords);
+      lastPage = 0;
+      console.log(`[SEBI:${typeConfig.intmId}] Page 1/${totalPages}: ${firstRecords.length} parsed`);
 
-    if (!sessionId) {
-      console.warn(`[SEBI:${typeConfig.intmId}] No session cookie found — will try pagination anyway using form action jsessionid`);
+      // Upsert page 1 immediately
+      if (allRecords.length > 0) {
+        await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, [...allRecords]);
+      }
     }
 
-    // Step 2: Fetch remaining pages via AJAX with session cookie
+    if (!sessionId) {
+      console.warn(`[SEBI:${typeConfig.intmId}] No session cookie found`);
+    }
+
+    // Step 2: Fetch pages via AJAX with session cookie
     if (totalPages > 1 && sessionId) {
       let consecutiveFailures = 0;
+      const effectiveStart = startPage === 0 ? 1 : startPage;
+      const effectiveEnd = Math.min(effectiveStart + maxPages, totalPages);
 
-      for (let pageIdx = 1; pageIdx < totalPages; pageIdx++) {
+      for (let pageIdx = effectiveStart; pageIdx < effectiveEnd; pageIdx++) {
         try {
           const html = await fetchSebiAjaxPage(typeConfig.intmId, pageIdx, sessionId);
           const parsed = parseSebiCards(html);
@@ -492,11 +509,15 @@ async function scrapeSebiType(
             consecutiveFailures++;
           } else {
             consecutiveFailures = 0;
+            // Upsert each page's records immediately to save progress
+            await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, parsed);
             addUnique(parsed);
-            if ((pageIdx + 1) % 10 === 0 || pageIdx === totalPages - 1) {
-              console.log(`[SEBI:${typeConfig.intmId}] Page ${pageIdx + 1}/${totalPages}: +${parsed.length}, total=${allRecords.length}`);
+            if ((pageIdx + 1) % 10 === 0 || pageIdx === effectiveEnd - 1) {
+              console.log(`[SEBI:${typeConfig.intmId}] Page ${pageIdx + 1}/${totalPages}: +${parsed.length}, batch total=${allRecords.length}`);
             }
           }
+
+          lastPage = pageIdx;
 
           if (consecutiveFailures >= 3) {
             console.warn(`[SEBI:${typeConfig.intmId}] Stopping after 3 consecutive empty pages at page ${pageIdx + 1}`);
@@ -505,24 +526,30 @@ async function scrapeSebiType(
         } catch (err) {
           console.error(`[SEBI:${typeConfig.intmId}] Page ${pageIdx + 1} error: ${err}`);
           consecutiveFailures++;
+          lastPage = pageIdx;
           if (consecutiveFailures >= 3) break;
         }
         // Rate limit between pages
-        await new Promise(r => setTimeout(r, 500));
+        await new Promise(r => setTimeout(r, 400));
       }
     }
   } catch (err) {
     return { found: 0, inserted: 0, updated: 0, skipped: 0, details: `Failed intmId=${typeConfig.intmId}: ${err}` };
   }
 
-  console.log(`[SEBI:${typeConfig.intmId}] Final: ${allRecords.length} unique records`);
+  const isPartial = lastPage + 1 < totalPages;
+  console.log(`[SEBI:${typeConfig.intmId}] Batch done: ${allRecords.length} records, pages ${startPage}-${lastPage}/${totalPages}${isPartial ? " (PARTIAL — more pages remain)" : ""}`);
 
-  if (allRecords.length === 0) {
-    return { found: 0, inserted: 0, updated: 0, skipped: 0, details: `No records parsed for ${typeConfig.label}` };
-  }
-
-  const result = await upsertEntities(supabase, "sebi", typeConfig.entity_type, typeConfig.registration_category, allRecords);
-  return { found: allRecords.length, ...result };
+  return {
+    found: allRecords.length,
+    inserted: allRecords.length, // Already upserted page-by-page
+    updated: 0,
+    skipped: 0,
+    lastPage,
+    totalPages,
+    partial: isPartial,
+    details: isPartial ? `Partial sync: pages ${startPage}-${lastPage} of ${totalPages}. Resume with startPage=${lastPage + 1}` : undefined,
+  };
 }
 
 // Entry: scrape ALL or specific SEBI types
