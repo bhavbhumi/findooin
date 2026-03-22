@@ -18,7 +18,7 @@ import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
 
 type UserType = "individual" | "entity";
-type Role = "investor" | "intermediary" | "issuer";
+type Role = "investor" | "intermediary" | "issuer" | "enabler";
 
 interface SubTypeOption {
   value: string;
