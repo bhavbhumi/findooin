@@ -228,6 +228,7 @@ export function useCreateJob() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["my-posted-jobs"] });
+
       toast.success("Job posted successfully!");
     },
     onError: (e: any) => toast.error(e.message),
