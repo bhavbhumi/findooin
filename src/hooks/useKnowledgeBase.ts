@@ -27,7 +27,7 @@ export interface KBArticle {
 
 export function useKBArticles(category?: string) {
   return useQuery({
-    queryKey: ["kb-articles", category],
+    queryKey: QUERY_KEYS.kbArticles(category),
     queryFn: async (): Promise<KBArticle[]> => {
       let query = supabase
         .from("kb_articles")
