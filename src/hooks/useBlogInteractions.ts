@@ -3,6 +3,7 @@
  */
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 /* ── Types ── */
 export interface PollOption {
@@ -35,7 +36,7 @@ export interface SurveyOption {
 /* ── Poll Options + Vote Counts ── */
 export function usePollOptions(blogPostId: string) {
   return useQuery({
-    queryKey: ["blog-poll-options", blogPostId],
+    queryKey: QUERY_KEYS.blogPollOptions(blogPostId),
     queryFn: async () => {
       const { data: options, error } = await supabase
         .from("blog_poll_options")
@@ -68,7 +69,7 @@ export function usePollOptions(blogPostId: string) {
 /* ── User's existing poll votes ── */
 export function useUserPollVotes(blogPostId: string, userId?: string) {
   return useQuery({
-    queryKey: ["blog-poll-user-votes", blogPostId, userId],
+    queryKey: QUERY_KEYS.blogPollUserVotes(blogPostId, userId),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_poll_votes")
@@ -114,7 +115,7 @@ export function useCastPollVote(blogPostId: string) {
 /* ── Survey Questions + Options + Response Counts ── */
 export function useSurveyQuestions(blogPostId: string) {
   return useQuery({
-    queryKey: ["blog-survey-questions", blogPostId],
+    queryKey: QUERY_KEYS.blogSurveyQuestions(blogPostId),
     queryFn: async () => {
       const { data: questions, error } = await supabase
         .from("blog_survey_questions")
@@ -161,7 +162,7 @@ export function useSurveyQuestions(blogPostId: string) {
 /* ── Check if user already submitted survey ── */
 export function useUserSurveySubmitted(blogPostId: string, userId?: string) {
   return useQuery({
-    queryKey: ["blog-survey-submitted", blogPostId, userId],
+    queryKey: QUERY_KEYS.blogSurveySubmitted(blogPostId, userId),
     queryFn: async () => {
       const { count, error } = await supabase
         .from("blog_survey_responses")
@@ -220,7 +221,7 @@ export function useSubmitSurvey(blogPostId: string) {
 /* ── Aggregate stats for listing cards ── */
 export function useBlogPollStats() {
   return useQuery({
-    queryKey: ["blog-poll-stats"],
+    queryKey: QUERY_KEYS.blogPollStats(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_poll_votes")
@@ -237,7 +238,7 @@ export function useBlogPollStats() {
 
 export function useBlogSurveyStats() {
   return useQuery({
-    queryKey: ["blog-survey-stats"],
+    queryKey: QUERY_KEYS.blogSurveyStats(),
     queryFn: async () => {
       // Count unique users per blog_post_id
       const { data, error } = await supabase

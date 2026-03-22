@@ -4,6 +4,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type FeatureFlag = {
   id: string;
@@ -18,7 +19,7 @@ export type FeatureFlag = {
 
 export function useFeatureFlags() {
   const query = useQuery({
-    queryKey: ["feature-flags"],
+    queryKey: QUERY_KEYS.featureFlags(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("feature_flags")

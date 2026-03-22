@@ -10,10 +10,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { FeedPost } from "./useFeedPosts";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export function useTrendingPosts() {
   return useQuery({
-    queryKey: ["trending-posts"],
+    queryKey: QUERY_KEYS.trendingPosts(),
     queryFn: async (): Promise<FeedPost[]> => {
       const since = new Date();
       since.setDate(since.getDate() - 7);

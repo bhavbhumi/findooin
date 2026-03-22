@@ -5,13 +5,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { SubscriptionPlan, BillingInterval } from "./useSubscription";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export function useSubscriptionPlans(filters?: {
   targetRole?: string;
   billingInterval?: BillingInterval;
 }) {
   return useQuery({
-    queryKey: ["subscription-plans", filters?.targetRole, filters?.billingInterval],
+    queryKey: QUERY_KEYS.subscriptionPlans(filters?.targetRole, filters?.billingInterval),
     queryFn: async () => {
       let query = supabase
         .from("subscription_plans")

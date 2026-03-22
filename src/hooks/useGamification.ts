@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface UserXP {
   total_xp: number;
@@ -47,7 +48,7 @@ export interface LeaderboardEntry {
 
 export function useUserXP(userId?: string) {
   return useQuery({
-    queryKey: ["user-xp", userId],
+    queryKey: QUERY_KEYS.userXP(userId),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -63,7 +64,7 @@ export function useUserXP(userId?: string) {
 
 export function useUserBadges(userId?: string) {
   return useQuery({
-    queryKey: ["user-badges", userId],
+    queryKey: QUERY_KEYS.userBadges(userId),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -85,7 +86,7 @@ export function useUserBadges(userId?: string) {
 
 export function useBadgeDefinitions() {
   return useQuery({
-    queryKey: ["badge-definitions"],
+    queryKey: QUERY_KEYS.badgeDefinitions(),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("badge_definitions")
@@ -101,7 +102,7 @@ export function useBadgeDefinitions() {
 
 export function useLeaderboard(limit = 20) {
   return useQuery({
-    queryKey: ["leaderboard", limit],
+    queryKey: QUERY_KEYS.leaderboard(limit),
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_leaderboard", { p_limit: limit, p_offset: 0 });
       if (error) throw error;
@@ -112,7 +113,7 @@ export function useLeaderboard(limit = 20) {
 
 export function useWeeklyChallenges(userId?: string) {
   return useQuery({
-    queryKey: ["weekly-challenges", userId],
+    queryKey: QUERY_KEYS.weeklyChallenges(userId),
     enabled: !!userId,
     queryFn: async () => {
       const now = new Date().toISOString();

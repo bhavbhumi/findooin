@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type ListingType = "product" | "service";
 export type ListingStatus = "draft" | "active" | "paused" | "archived";
@@ -95,7 +96,7 @@ export function useListings(filters?: {
   search?: string;
 }) {
   return useQuery({
-    queryKey: ["listings", filters],
+    queryKey: QUERY_KEYS.listings(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("listings")
@@ -138,7 +139,7 @@ export function useListings(filters?: {
 
 export function useMyListings() {
   return useQuery({
-    queryKey: ["my-listings"],
+    queryKey: QUERY_KEYS.myListings(),
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return [];
@@ -155,7 +156,7 @@ export function useMyListings() {
 
 export function useListingReviews(listingId: string | null) {
   return useQuery({
-    queryKey: ["listing-reviews", listingId],
+    queryKey: QUERY_KEYS.listingReviews(listingId ?? undefined),
     enabled: !!listingId,
     queryFn: async () => {
       const { data, error } = await supabase

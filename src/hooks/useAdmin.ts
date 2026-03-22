@@ -22,6 +22,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { subDays } from "date-fns";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 /** Shared cache config for admin queries */
 const ADMIN_CACHE = { staleTime: 60_000, gcTime: 600_000 } as const;
@@ -41,7 +42,7 @@ async function logAdminAction(action: string, resourceType: string, resourceId?:
 
 export function useIsAdmin() {
   return useQuery({
-    queryKey: ["is-admin"],
+    queryKey: QUERY_KEYS.isAdmin(),
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return false;
@@ -86,7 +87,7 @@ export interface VerificationRequest {
  */
 export function useVerificationQueue(includeArchived = false) {
   return useQuery({
-    queryKey: ["admin-verification-queue", includeArchived],
+    queryKey: QUERY_KEYS.adminVerificationQueue(includeArchived),
     queryFn: async (): Promise<VerificationRequest[]> => {
       let query = supabase
         .from("verification_requests")
@@ -204,7 +205,7 @@ export interface AdminReport {
  */
 export function useAdminReports(includeArchived = false) {
   return useQuery({
-    queryKey: ["admin-reports", includeArchived],
+    queryKey: QUERY_KEYS.adminReports(includeArchived),
     queryFn: async (): Promise<AdminReport[]> => {
       let query = supabase
         .from("reports")
@@ -284,7 +285,7 @@ export function useUpdateReportStatus() {
 
 export function useAdminUsers() {
   return useQuery({
-    queryKey: ["admin-users"],
+    queryKey: QUERY_KEYS.adminUsers(),
     queryFn: async () => {
       const { data: profiles, error } = await supabase
         .from("profiles")
@@ -332,7 +333,7 @@ export function useAdminUsers() {
 /** Hook to check a single user's activity status (for messaging, jobs, etc.) */
 export function useUserActivityStatus(userId: string | null) {
   return useQuery({
-    queryKey: ["user-activity-status", userId],
+    queryKey: QUERY_KEYS.userActivityStatus(userId),
     queryFn: async () => {
       if (!userId) return null;
       const { data, error } = await supabase.rpc("compute_user_activity_status", { p_user_id: userId });

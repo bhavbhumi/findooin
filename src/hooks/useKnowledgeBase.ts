@@ -4,6 +4,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface KBArticle {
   id: string;
@@ -26,7 +27,7 @@ export interface KBArticle {
 
 export function useKBArticles(category?: string) {
   return useQuery({
-    queryKey: ["kb-articles", category],
+    queryKey: QUERY_KEYS.kbArticles(category),
     queryFn: async (): Promise<KBArticle[]> => {
       let query = supabase
         .from("kb_articles")
@@ -47,7 +48,7 @@ export function useKBArticles(category?: string) {
 
 export function useKBArticleBySlug(slug: string | null) {
   return useQuery({
-    queryKey: ["kb-article", slug],
+    queryKey: QUERY_KEYS.kbArticle(slug ?? undefined),
     enabled: !!slug,
     queryFn: async (): Promise<KBArticle | null> => {
       const { data, error } = await supabase
@@ -64,7 +65,7 @@ export function useKBArticleBySlug(slug: string | null) {
 
 export function useAdminKBArticles() {
   return useQuery({
-    queryKey: ["admin-kb-articles"],
+    queryKey: QUERY_KEYS.adminKBArticles(),
     queryFn: async (): Promise<KBArticle[]> => {
       const { data, error } = await supabase
         .from("kb_articles")

@@ -11,6 +11,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type StaffPermission =
   | "manage_users"
@@ -64,7 +65,7 @@ export const ALL_PERMISSIONS: { value: StaffPermission; label: string; group: st
 
 export function useStaffPermissions() {
   const query = useQuery({
-    queryKey: ["staff-permissions"],
+    queryKey: QUERY_KEYS.staffPermissions(),
     queryFn: async (): Promise<StaffPermission[]> => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return [];

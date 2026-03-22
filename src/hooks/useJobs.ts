@@ -14,6 +14,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface Job {
   id: string;
@@ -73,7 +74,7 @@ export interface JobApplication {
 
 export function useJobs(filters?: { category?: string; type?: string; location?: string; search?: string }) {
   return useQuery({
-    queryKey: ["jobs", filters],
+    queryKey: QUERY_KEYS.jobs(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("jobs")
@@ -118,7 +119,7 @@ export function useJobs(filters?: { category?: string; type?: string; location?:
 
 export function useJob(id: string | undefined) {
   return useQuery({
-    queryKey: ["job", id],
+    queryKey: QUERY_KEYS.job(id),
     enabled: !!id,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -139,7 +140,7 @@ export function useJob(id: string | undefined) {
 export function useMyPostedJobs() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["my-posted-jobs", userId],
+    queryKey: QUERY_KEYS.myPostedJobs(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -156,7 +157,7 @@ export function useMyPostedJobs() {
 export function useMyApplications() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["my-applications", userId],
+    queryKey: QUERY_KEYS.myApplications(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -172,7 +173,7 @@ export function useMyApplications() {
 
 export function useJobApplications(jobId: string | undefined) {
   return useQuery({
-    queryKey: ["job-applications", jobId],
+    queryKey: QUERY_KEYS.jobApplications(jobId),
     enabled: !!jobId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -203,7 +204,7 @@ export function useJobApplications(jobId: string | undefined) {
 export function useSavedJobs() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["saved-jobs", userId],
+    queryKey: QUERY_KEYS.savedJobs(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -227,6 +228,7 @@ export function useCreateJob() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs"] });
       qc.invalidateQueries({ queryKey: ["my-posted-jobs"] });
+
       toast.success("Job posted successfully!");
     },
     onError: (e: any) => toast.error(e.message),
@@ -281,6 +283,7 @@ export function useToggleSaveJob() {
       }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["saved-jobs"] }),
+
   });
 }
 

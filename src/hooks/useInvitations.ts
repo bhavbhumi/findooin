@@ -2,12 +2,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type Invitation = Tables<"invitations">;
 
 export function useInvitations(filters?: { status?: string; role?: string }) {
   return useQuery({
-    queryKey: ["admin-invitations", filters],
+    queryKey: QUERY_KEYS.adminInvitations(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("invitations")
@@ -144,7 +145,7 @@ export function useReactivateInvitation() {
 
 export function useRegistryEntities(search?: string) {
   return useQuery({
-    queryKey: ["registry-entities-for-invite", search],
+    queryKey: QUERY_KEYS.registryEntities(search),
     queryFn: async () => {
       let query = supabase
         .from("registry_entities")

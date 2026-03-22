@@ -4,6 +4,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface SupportTicket {
   id: string;
@@ -35,7 +36,7 @@ export interface TicketReply {
 // ── Admin: all tickets ──────────────────────────────
 export function useAdminTickets(statusFilter?: string) {
   return useQuery({
-    queryKey: ["admin-tickets", statusFilter],
+    queryKey: QUERY_KEYS.adminTickets(statusFilter),
     queryFn: async (): Promise<SupportTicket[]> => {
       let query = supabase
         .from("support_tickets")
@@ -81,7 +82,7 @@ export function useAdminTickets(statusFilter?: string) {
 // ── User: own tickets ──────────────────────────────
 export function useMyTickets() {
   return useQuery({
-    queryKey: ["my-tickets"],
+    queryKey: QUERY_KEYS.supportTickets(),
     queryFn: async (): Promise<SupportTicket[]> => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return [];
@@ -101,7 +102,7 @@ export function useMyTickets() {
 // ── Ticket replies ──────────────────────────────────
 export function useTicketReplies(ticketId: string | null) {
   return useQuery({
-    queryKey: ["ticket-replies", ticketId],
+    queryKey: QUERY_KEYS.ticketReplies(ticketId ?? undefined),
     enabled: !!ticketId,
     queryFn: async (): Promise<TicketReply[]> => {
       const { data, error } = await supabase

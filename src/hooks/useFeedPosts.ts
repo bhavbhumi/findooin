@@ -12,6 +12,7 @@
  */
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 /** Number of posts fetched per page */
 const PAGE_SIZE = 15;
@@ -71,7 +72,7 @@ function normalizePosts(data: any[]): FeedPost[] {
 
 export function useFeedPosts() {
   const query = useInfiniteQuery({
-    queryKey: ["feed-posts"],
+    queryKey: QUERY_KEYS.feedPosts(),
     queryFn: async ({ pageParam = 0 }): Promise<FeedPost[]> => {
       const { data, error } = await supabase.rpc("get_feed_posts", {
         p_limit: PAGE_SIZE,

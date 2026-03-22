@@ -13,6 +13,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type PlanTier = "free" | "pro" | "enterprise";
 export type SubscriptionStatus = "trialing" | "active" | "past_due" | "cancelled" | "expired" | "paused";
@@ -54,7 +55,7 @@ export function useSubscription() {
   const { userId, activeRole } = useRole();
 
   const { data: subscription, isLoading, refetch } = useQuery({
-    queryKey: ["user-subscription", userId, activeRole],
+    queryKey: QUERY_KEYS.subscription(userId ?? undefined, activeRole ?? undefined),
     queryFn: async () => {
       if (!userId) return null;
 

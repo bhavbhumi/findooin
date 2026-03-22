@@ -9,6 +9,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface ScheduledPost {
   id: string;
@@ -26,7 +27,7 @@ export function useScheduledPosts(userId: string | null) {
   const queryClient = useQueryClient();
 
   const query = useQuery({
-    queryKey: ["scheduled-posts", userId],
+    queryKey: QUERY_KEYS.scheduledPosts(userId ?? undefined),
     enabled: !!userId,
     queryFn: async (): Promise<ScheduledPost[]> => {
       const { data, error } = await supabase

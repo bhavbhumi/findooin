@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type TabVisibility = "everyone" | "logged_in" | "connections" | "only_me";
 
@@ -19,7 +20,7 @@ export function useTabPrivacy(userId: string | null) {
   const queryClient = useQueryClient();
 
   const { data: settings, isLoading } = useQuery({
-    queryKey: ["tab-privacy", userId],
+    queryKey: QUERY_KEYS.tabPrivacy(userId ?? undefined),
     enabled: !!userId,
     queryFn: async (): Promise<TabPrivacySettings> => {
       if (!userId) return defaults;

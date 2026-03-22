@@ -9,10 +9,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { FeedPost } from "./useFeedPosts";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export function useViralPosts() {
   return useQuery({
-    queryKey: ["viral-posts"],
+    queryKey: QUERY_KEYS.viralPosts(),
     queryFn: async (): Promise<FeedPost[]> => {
       // Get posts from last 7 days
       const since = new Date();

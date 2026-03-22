@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface EventData {
   id: string;
@@ -90,7 +91,7 @@ export const EVENT_MODE_LABELS: Record<string, string> = {
 export function useEvents(filters?: { category?: string; mode?: string; search?: string; upcoming?: boolean }) {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["events", filters],
+    queryKey: QUERY_KEYS.events(filters as any),
     queryFn: async () => {
       let query = supabase
         .from("events")
@@ -153,7 +154,7 @@ export function useEvents(filters?: { category?: string; mode?: string; search?:
 export function useMyEvents() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["my-events", userId],
+    queryKey: QUERY_KEYS.myOrganizedEvents(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -170,7 +171,7 @@ export function useMyEvents() {
 export function useMyRegistrations() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["my-registrations", userId],
+    queryKey: QUERY_KEYS.myEventRegistrations(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -197,7 +198,7 @@ export function useMyRegistrations() {
 
 export function useEventSpeakers(eventId: string | undefined) {
   return useQuery({
-    queryKey: ["event-speakers", eventId],
+    queryKey: QUERY_KEYS.eventSpeakers(eventId),
     enabled: !!eventId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -213,7 +214,7 @@ export function useEventSpeakers(eventId: string | undefined) {
 
 export function useEventRegistrations(eventId: string | undefined) {
   return useQuery({
-    queryKey: ["event-registrations", eventId],
+    queryKey: QUERY_KEYS.eventRegistrations(eventId),
     enabled: !!eventId,
     queryFn: async () => {
       const { data, error } = await supabase

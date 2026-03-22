@@ -10,6 +10,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export type BlogPostType = "article" | "survey" | "poll" | "bulletin";
 
@@ -34,7 +35,7 @@ export interface BlogPost {
 
 export function useBlogPosts(limit?: number) {
   return useQuery({
-    queryKey: ["blog-posts", limit],
+    queryKey: QUERY_KEYS.blogPosts(limit),
     queryFn: async () => {
       let query = supabase
         .from("blog_posts")
@@ -53,7 +54,7 @@ export function useBlogPosts(limit?: number) {
 
 export function useBlogPost(slug: string) {
   return useQuery({
-    queryKey: ["blog-post", slug],
+    queryKey: QUERY_KEYS.blogPost(slug),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")

@@ -6,6 +6,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
+import { QUERY_KEYS } from "@/lib/query-keys";
+import type { RegulatoryIds } from "@/lib/jsonb-types";
 
 export type OpinionFormat = "binary" | "multiple_choice" | "scale" | "over_under";
 export type OpinionStatus = "draft" | "active" | "closed" | "archived";
@@ -59,7 +61,7 @@ export interface OpinionVote {
   voter_profile?: {
     verification_status: string;
     certifications: string[] | null;
-    regulatory_ids: Record<string, string> | null;
+    regulatory_ids: RegulatoryIds | null;
     user_type: string;
   };
 }
@@ -146,7 +148,7 @@ const DEFAULT_DISCLAIMER = "This is a professional sentiment indicator only. It 
 
 export function useOpinions(category?: OpinionCategory, status?: OpinionStatus) {
   return useQuery({
-    queryKey: ["opinions", category, status],
+    queryKey: QUERY_KEYS.opinions(category, status),
     queryFn: async () => {
       let query = supabase
         .from("opinions")
@@ -170,7 +172,7 @@ export function useOpinions(category?: OpinionCategory, status?: OpinionStatus) 
 
 export function useOpinionDetail(opinionId: string | null) {
   return useQuery({
-    queryKey: ["opinion-detail", opinionId],
+    queryKey: QUERY_KEYS.opinionDetail(opinionId),
     enabled: !!opinionId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -190,7 +192,7 @@ export function useOpinionDetail(opinionId: string | null) {
 
 export function useOpinionVotes(opinionId: string | null) {
   return useQuery({
-    queryKey: ["opinion-votes", opinionId],
+    queryKey: QUERY_KEYS.opinionVotes(opinionId),
     enabled: !!opinionId,
     queryFn: async () => {
       const { data, error } = await supabase
@@ -220,7 +222,7 @@ export function useOpinionVotes(opinionId: string | null) {
 
 export function useOpinionComments(opinionId: string | null) {
   return useQuery({
-    queryKey: ["opinion-comments", opinionId],
+    queryKey: QUERY_KEYS.opinionComments(opinionId),
     enabled: !!opinionId,
     queryFn: async () => {
       const { data: comments, error } = await supabase

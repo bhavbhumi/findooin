@@ -3,6 +3,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { QUERY_KEYS } from "@/lib/query-keys";
 
 export interface ProfileFlairData {
   avatar_border: string;
@@ -18,7 +19,7 @@ const DEFAULT_FLAIR: ProfileFlairData = {
 
 export function useProfileFlair(userId?: string) {
   return useQuery({
-    queryKey: ["profile-flair", userId],
+    queryKey: QUERY_KEYS.profileFlair(userId),
     enabled: !!userId,
     staleTime: 10 * 60 * 1000,
     queryFn: async (): Promise<ProfileFlairData> => {
