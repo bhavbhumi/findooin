@@ -107,7 +107,7 @@ export default function ProfessionalDirectory() {
   }, [setSearchParams]);
 
   const { data: allEntities = [], isLoading } = useQuery({
-    queryKey: ["public-professionals-consolidated"],
+    queryKey: ["public-professionals-consolidated", "v2"],
     queryFn: async () => {
       // Fetch in batches to bypass 1000-row limit
       const batchSize = 1000;
