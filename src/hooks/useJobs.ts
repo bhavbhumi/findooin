@@ -157,7 +157,7 @@ export function useMyPostedJobs() {
 export function useMyApplications() {
   const { userId } = useRole();
   return useQuery({
-    queryKey: ["my-applications", userId],
+    queryKey: QUERY_KEYS.myApplications(userId ?? undefined),
     enabled: !!userId,
     queryFn: async () => {
       const { data, error } = await supabase
