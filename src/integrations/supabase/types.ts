@@ -3556,6 +3556,7 @@ export type Database = {
           id: string
           is_shared: boolean
           public_url: string | null
+          share_expires_at: string | null
           share_token: string | null
           source: string
           source_ref: string | null
@@ -3574,6 +3575,7 @@ export type Database = {
           id?: string
           is_shared?: boolean
           public_url?: string | null
+          share_expires_at?: string | null
           share_token?: string | null
           source?: string
           source_ref?: string | null
@@ -3592,6 +3594,7 @@ export type Database = {
           id?: string
           is_shared?: boolean
           public_url?: string | null
+          share_expires_at?: string | null
           share_token?: string | null
           source?: string
           source_ref?: string | null
@@ -3600,6 +3603,41 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      vault_share_access_log: {
+        Row: {
+          accessed_at: string
+          id: string
+          share_token: string
+          user_agent_hint: string | null
+          vault_file_id: string
+          viewer_ip_hint: string | null
+        }
+        Insert: {
+          accessed_at?: string
+          id?: string
+          share_token: string
+          user_agent_hint?: string | null
+          vault_file_id: string
+          viewer_ip_hint?: string | null
+        }
+        Update: {
+          accessed_at?: string
+          id?: string
+          share_token?: string
+          user_agent_hint?: string | null
+          vault_file_id?: string
+          viewer_ip_hint?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vault_share_access_log_vault_file_id_fkey"
+            columns: ["vault_file_id"]
+            isOneToOne: false
+            referencedRelation: "vault_files"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       verification_requests: {
         Row: {

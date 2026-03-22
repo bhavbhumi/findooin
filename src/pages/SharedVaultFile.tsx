@@ -42,16 +42,33 @@ const SharedVaultFile = () => {
     const fetchFile = async () => {
       const { data, error: fetchError } = await supabase
         .from("vault_files")
-        .select("id, file_name, file_type, file_size, file_path, category, description, created_at")
+        .select("id, file_name, file_type, file_size, file_path, category, description, created_at, share_expires_at")
         .eq("share_token", shareToken)
         .eq("is_shared", true)
         .maybeSingle();
 
       if (fetchError || !data) {
         setError(true);
-      } else {
-        setFile(data as SharedFile);
+        setLoading(false);
+        return;
       }
+
+      // Enforce TTL: reject expired share tokens
+      if ((data as any).share_expires_at && new Date((data as any).share_expires_at) < new Date()) {
+        setError(true);
+        setLoading(false);
+        return;
+      }
+
+      setFile(data as SharedFile);
+
+      // Log access for audit trail
+      await supabase.from("vault_share_access_log").insert({
+        vault_file_id: data.id,
+        share_token: shareToken,
+        user_agent_hint: navigator.userAgent?.slice(0, 200) || null,
+      } as any);
+
       setLoading(false);
     };
 
