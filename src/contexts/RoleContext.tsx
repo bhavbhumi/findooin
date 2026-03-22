@@ -32,7 +32,7 @@ interface RoleContextValue {
   refreshRoles: () => Promise<void>;
 }
 
-const ROLE_PRIORITY: AppRole[] = ["issuer", "intermediary", "investor"];
+const ROLE_PRIORITY: AppRole[] = ["issuer", "intermediary", "enabler", "investor"];
 const STORAGE_KEY = "findoo_active_role";
 
 const RoleContext = createContext<RoleContextValue>({
