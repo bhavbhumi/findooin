@@ -173,7 +173,7 @@ export function useMyApplications() {
 
 export function useJobApplications(jobId: string | undefined) {
   return useQuery({
-    queryKey: ["job-applications", jobId],
+    queryKey: QUERY_KEYS.jobApplications(jobId),
     enabled: !!jobId,
     queryFn: async () => {
       const { data, error } = await supabase
