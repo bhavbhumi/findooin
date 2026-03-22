@@ -122,16 +122,28 @@ export default function ProfessionalDirectory() {
   const { data: allEntities = [], isLoading } = useQuery({
     queryKey: ["public-professionals-consolidated"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("registry_entities")
-        .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record")
-        .eq("is_public", true)
-        .eq("status", "active")
-        .eq("is_primary_record", true)
-        .order("entity_name", { ascending: true })
-        .limit(1000);
-      if (error) throw error;
-      return data;
+      // Fetch in batches to bypass 1000-row limit
+      const batchSize = 1000;
+      let allData: any[] = [];
+      let offset = 0;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { data, error } = await supabase
+          .from("registry_entities")
+          .select("id, entity_name, registration_number, registration_category, entity_type, source, city, state, matched_user_id, claimed_at, view_count, created_at, all_registrations, is_primary_record")
+          .eq("is_public", true)
+          .eq("status", "active")
+          .eq("is_primary_record", true)
+          .order("entity_name", { ascending: true })
+          .range(offset, offset + batchSize - 1);
+        if (error) throw error;
+        allData = allData.concat(data || []);
+        hasMore = (data?.length ?? 0) === batchSize;
+        offset += batchSize;
+      }
+
+      return allData;
     },
     staleTime: 5 * 60 * 1000,
   });
