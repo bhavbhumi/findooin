@@ -928,7 +928,11 @@ Deno.serve(async (req) => {
       try {
         const config = SOURCE_CONFIG[source];
         const opts: Record<string, unknown> = {};
-        if (source === "sebi" && effectiveSebiTypeIds) opts.sebi_type_ids = effectiveSebiTypeIds;
+        if (source === "sebi") {
+          if (effectiveSebiTypeIds) opts.sebi_type_ids = effectiveSebiTypeIds;
+          if (startPage > 0) opts.start_page = startPage;
+          opts.max_pages = maxPages;
+        }
 
         const summary = await config.scraper(supabase, logId, opts);
 
