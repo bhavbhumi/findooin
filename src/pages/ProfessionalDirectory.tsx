@@ -30,7 +30,7 @@ const PAGE_SIZE = 24;
 const TABS = [
   { key: "intermediaries", label: "Intermediaries", icon: Briefcase, description: "MF Distributors, Advisers, Brokers & Analysts" },
   { key: "issuers", label: "Issuers", icon: Building2, description: "Portfolio Managers, AMCs & Finance Companies" },
-  { key: "enablers", label: "Enablers", icon: Settings2, description: "KRAs, Depositories, RTAs, Custodians & Vault Managers" },
+  { key: "enablers", label: "Enablers", icon: Settings2, description: "Stock Exchanges, KRAs, Depositories, RTAs & Custodians" },
 ] as const;
 
 type TabKey = typeof TABS[number]["key"];
