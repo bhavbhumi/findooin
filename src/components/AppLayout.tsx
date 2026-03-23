@@ -71,6 +71,7 @@ export default function AppLayout({
       <ScrollToTop />
       <LevelUpModal />
       <SocialProofToasts />
+      <MobileInstallBanner />
     </div>
   );
 }
