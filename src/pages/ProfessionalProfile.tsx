@@ -39,6 +39,7 @@ const SUB_TYPE_LABELS: Record<string, string> = {
   esg_provider: "ESG Provider",
   clearing_corporation: "Clearing Corporation",
   collectibles_exchange: "Collectibles Exchange",
+  stock_exchange: "Stock Exchange",
 };
 
 export default function ProfessionalProfile() {
