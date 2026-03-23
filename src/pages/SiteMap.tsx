@@ -78,16 +78,6 @@ const sitemapData = [
     ],
   },
   {
-    title: "Developers",
-    links: [
-      { label: "Developer Docs", to: "/developer" },
-      { label: "Architecture", to: "/developer?tab=architecture" },
-      { label: "API Reference", to: "/developer?tab=api-reference" },
-      { label: "Edge Functions", to: "/developer?tab=edge-functions" },
-      { label: "Getting Started", to: "/developer?tab=getting-started" },
-    ],
-  },
-  {
     title: "Legal",
     links: [
       { label: "Terms of Service", to: "/legal" },

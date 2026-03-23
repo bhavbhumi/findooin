@@ -60,15 +60,6 @@ const linkGroups = [
     ],
   },
   {
-    title: "Developers",
-    links: [
-      { icon: Code2, label: "Developer Docs", to: "/developer", desc: "Architecture & API reference" },
-      { icon: Code2, label: "API Reference", to: "/developer?tab=api-reference", desc: "Hook documentation (authenticated)" },
-      { icon: Code2, label: "Edge Functions", to: "/developer?tab=edge-functions", desc: "Backend function schemas" },
-      { icon: Code2, label: "Getting Started", to: "/developer?tab=getting-started", desc: "Setup & conventions guide" },
-    ],
-  },
-  {
     title: "Legal",
     links: [
       { icon: FileText, label: "Terms of Service", to: "/legal", desc: "Platform terms and conditions" },

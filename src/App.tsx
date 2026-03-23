@@ -87,7 +87,7 @@ const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
 const SharedVaultFile = lazy(() => import("./pages/SharedVaultFile"));
-const DeveloperDocs = lazy(() => import("./pages/DeveloperDocs"));
+// const DeveloperDocs = lazy(() => import("./pages/DeveloperDocs")); // Disabled for now
 const CostReport = lazy(() => import("./pages/CostReport"));
 const ScalingReport = lazy(() => import("./pages/ScalingReport"));
 const PitchIndex = lazy(() => import("./pages/PitchIndex"));
