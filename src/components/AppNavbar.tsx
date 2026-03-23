@@ -230,6 +230,12 @@ const AppNavbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <Link to="/install" className="flex items-center gap-2 cursor-pointer">
+                    <Download className="h-4 w-4" />
+                    Install App
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
                     <Settings className="h-4 w-4" />
                     Settings
