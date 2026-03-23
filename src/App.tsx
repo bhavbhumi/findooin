@@ -87,7 +87,7 @@ const DigitalCard = lazy(() => import("./pages/DigitalCard"));
 const EventCheckin = lazy(() => import("./pages/EventCheckin"));
 const Vault = lazy(() => import("./pages/Vault"));
 const SharedVaultFile = lazy(() => import("./pages/SharedVaultFile"));
-const DeveloperDocs = lazy(() => import("./pages/DeveloperDocs"));
+// const DeveloperDocs = lazy(() => import("./pages/DeveloperDocs")); // Disabled for now
 const CostReport = lazy(() => import("./pages/CostReport"));
 const ScalingReport = lazy(() => import("./pages/ScalingReport"));
 const PitchIndex = lazy(() => import("./pages/PitchIndex"));
@@ -178,8 +178,7 @@ const App = () => {
                       <Route path="/card/:userId" element={<RouteErrorBoundary routeName="Digital Card"><DigitalCard /></RouteErrorBoundary>} />
                       <Route path="/event-checkin/:eventId" element={<RouteErrorBoundary routeName="Event Check-in"><EventCheckin /></RouteErrorBoundary>} />
                       <Route path="/vault/shared/:shareToken" element={<RouteErrorBoundary routeName="Shared File"><SharedVaultFile /></RouteErrorBoundary>} />
-                      <Route path="/developer" element={<RouteErrorBoundary routeName="Developer Docs"><DeveloperDocs /></RouteErrorBoundary>} />
-                      <Route path="/developer-docs" element={<RouteErrorBoundary routeName="Developer Docs"><DeveloperDocs /></RouteErrorBoundary>} />
+                      {/* Developer Docs routes disabled for now */}
                       <Route path="/cost-report" element={<CostReport />} />
                       <Route path="/scaling-report" element={<ScalingReport />} />
                       <Route path="/pitch" element={<PitchIndex />} />
