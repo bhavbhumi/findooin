@@ -58,6 +58,7 @@ const SUB_TYPE_LABELS: Record<string, string> = {
   esg_provider: "ESG Provider",
   clearing_corporation: "Clearing Corporation",
   collectibles_exchange: "Collectibles Exchange",
+  stock_exchange: "Stock Exchange",
 };
 
 type SortOption = "name_asc" | "name_desc" | "recent" | "views";
