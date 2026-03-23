@@ -55,6 +55,7 @@ const footerLinkSections = [
     links: [
       { label: "Contact Us", to: "/contact" },
       { label: "Help Desk", to: "/helpdesk" },
+      { label: "Install App", to: "/install" },
       { label: "Quick Links", to: "/quick-links" },
       { label: "Community Guidelines", to: "/community-guidelines" },
       { label: "Developer Docs", to: "/developer" },
