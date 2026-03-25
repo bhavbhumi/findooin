@@ -977,4 +977,3 @@ const moduleSpecs: Record<string, ModuleSpec> = {
 };
 
 export default moduleSpecs;
-export type { ModuleSpec };
