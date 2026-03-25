@@ -589,6 +589,7 @@ export default function AdminRegistryPage() {
   };
 
   return (
+    <AdminModuleWrapper moduleKey="registry">
     <div className="space-y-4">
       <Tabs defaultValue="dashboard">
         <TabsList>
