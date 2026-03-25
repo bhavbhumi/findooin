@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AdminModuleWrapper } from "@/components/admin/AdminModuleWrapper";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -588,6 +589,7 @@ export default function AdminRegistryPage() {
   };
 
   return (
+    <AdminModuleWrapper moduleKey="registry">
     <div className="space-y-4">
       <Tabs defaultValue="dashboard">
         <TabsList>
@@ -1204,5 +1206,6 @@ export default function AdminRegistryPage() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+    </AdminModuleWrapper>
   );
 }

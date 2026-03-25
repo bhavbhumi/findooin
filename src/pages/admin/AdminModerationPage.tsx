@@ -1,1 +1,10 @@
-export { AdminContentModeration as default } from "@/components/admin/AdminContentModeration";
+import { AdminContentModeration } from "@/components/admin/AdminContentModeration";
+import { AdminModuleWrapper } from "@/components/admin/AdminModuleWrapper";
+
+export default function AdminModerationPage() {
+  return (
+    <AdminModuleWrapper moduleKey="moderation">
+      <AdminContentModeration />
+    </AdminModuleWrapper>
+  );
+}
