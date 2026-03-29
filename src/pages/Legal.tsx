@@ -13,7 +13,7 @@ const fadeUp = {
   }),
 };
 
-const tabs = ["Terms", "Privacy", "Policies", "Cookie Policy", "Accessibility", "Refund Policy", "Transparency", "Disclosures"];
+const tabs = ["Privacy", "Terms", "Policies", "Disclosures"];
 
 /* ───────────────────── TERMS OF SERVICE ───────────────────── */
 const termsSections = [
