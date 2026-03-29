@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   AlertCircle, Pin, PinOff, Merge, Ban, ArrowUp, MessageSquare,
-  Search, ChevronRight, Clock, Calendar,
+  Search, ChevronRight, Clock, Calendar, Plus, X, FileText,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
