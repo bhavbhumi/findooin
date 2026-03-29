@@ -534,7 +534,7 @@ export function FeedbackAdminPanel() {
         ))}
       </div>
 
-      {/* Filters */}
+      {/* Filters + Changelog button */}
       <div className="flex flex-wrap gap-2">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
@@ -557,6 +557,10 @@ export function FeedbackAdminPanel() {
             <SelectItem value="rejected" className="text-xs">Rejected</SelectItem>
           </SelectContent>
         </Select>
+        <Button variant="outline" size="sm" className="h-9 gap-1.5 text-xs" onClick={() => setShowChangelog(true)}>
+          <FileText className="h-3.5 w-3.5" />
+          New Changelog
+        </Button>
       </div>
 
       {/* Feature list */}
