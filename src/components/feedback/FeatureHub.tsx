@@ -2,9 +2,10 @@ import { useState, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
-import { useFeatureRequests, type FeatureFilters, type FeatureStatus, type FeatureCategory, type FeatureSortBy } from "@/hooks/useFeedback";
+import { useFeatureRequests, type FeatureFilters, type FeatureStatus, type FeatureCategory, type FeatureSortBy, type FeatureRequest } from "@/hooks/useFeedback";
 import { FeatureCard } from "./FeatureCard";
 import { SubmitFeatureModal } from "./SubmitFeatureModal";
+import { CommentDrawer } from "./CommentDrawer";
 
 const STATUS_OPTIONS: { value: FeatureStatus | "all"; label: string }[] = [
   { value: "all", label: "All Statuses" },
@@ -41,6 +42,7 @@ export function FeatureHub({ showSubmitModal, onCloseSubmitModal }: FeatureHubPr
   const [statusFilter, setStatusFilter] = useState<FeatureStatus | "all">("all");
   const [categoryFilter, setCategoryFilter] = useState<FeatureCategory | "all">("all");
   const [sortBy, setSortBy] = useState<FeatureSortBy>("priority");
+  const [commentFeature, setCommentFeature] = useState<FeatureRequest | null>(null);
 
   const filters: FeatureFilters = useMemo(() => ({
     status: statusFilter,
@@ -121,13 +123,20 @@ export function FeatureHub({ showSubmitModal, onCloseSubmitModal }: FeatureHubPr
       ) : (
         <div className="space-y-3">
           {features.map(feature => (
-            <FeatureCard key={feature.id} feature={feature} />
+            <FeatureCard key={feature.id} feature={feature} onOpenComments={() => setCommentFeature(feature)} />
           ))}
         </div>
       )}
 
       {/* Submit Modal */}
       <SubmitFeatureModal open={showSubmitModal} onOpenChange={onCloseSubmitModal} />
+
+      {/* Comment Drawer */}
+      <CommentDrawer
+        feature={commentFeature}
+        open={!!commentFeature}
+        onOpenChange={(open) => { if (!open) setCommentFeature(null); }}
+      />
     </div>
   );
 }

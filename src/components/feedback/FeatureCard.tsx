@@ -52,9 +52,10 @@ const ROLE_LABELS: Record<string, string> = {
 
 interface FeatureCardProps {
   feature: FeatureRequest;
+  onOpenComments?: () => void;
 }
 
-export function FeatureCard({ feature }: FeatureCardProps) {
+export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   const [expanded, setExpanded] = useState(false);
   const voteMutation = useFeatureVote();
 
@@ -223,7 +224,7 @@ export function FeatureCard({ feature }: FeatureCardProps) {
 
             {/* Actions */}
             <div className="ml-auto flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground px-2">
+              <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground px-2" onClick={onOpenComments}>
                 <MessageSquare className="h-3.5 w-3.5" />
                 {feature.comment_count}
               </Button>
