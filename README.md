@@ -357,7 +357,7 @@ Key tables (60+ total — see `src/integrations/supabase/types.ts` for full sche
 | Table                  | Purpose                                    |
 | ---------------------- | ------------------------------------------ |
 | `profiles`             | User profiles with verification status     |
-| `user_roles`           | Role assignments (investor/intermediary/issuer/admin) |
+| `user_roles`           | Role assignments (investor/intermediary/issuer/enabler/admin) |
 | `posts`                | Feed content (text, polls, surveys)        |
 | `post_interactions`    | Likes and bookmarks                        |
 | `post_drafts`          | Unsaved post drafts per user               |
