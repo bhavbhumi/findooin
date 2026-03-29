@@ -42,6 +42,7 @@ export function FeatureHub({ showSubmitModal, onCloseSubmitModal }: FeatureHubPr
   const [statusFilter, setStatusFilter] = useState<FeatureStatus | "all">("all");
   const [categoryFilter, setCategoryFilter] = useState<FeatureCategory | "all">("all");
   const [sortBy, setSortBy] = useState<FeatureSortBy>("priority");
+  const [commentFeature, setCommentFeature] = useState<FeatureRequest | null>(null);
 
   const filters: FeatureFilters = useMemo(() => ({
     status: statusFilter,
