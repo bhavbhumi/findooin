@@ -524,6 +524,103 @@ export type Database = {
           },
         ]
       }
+      changelog_entries: {
+        Row: {
+          bug_fixes: Json
+          created_at: string
+          created_by: string
+          features_added: Json
+          id: string
+          improvements: Json
+          release_date: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          bug_fixes?: Json
+          created_at?: string
+          created_by: string
+          features_added?: Json
+          id?: string
+          improvements?: Json
+          release_date?: string
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          bug_fixes?: Json
+          created_at?: string
+          created_by?: string
+          features_added?: Json
+          id?: string
+          improvements?: Json
+          release_date?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      changelog_reactions: {
+        Row: {
+          changelog_id: string
+          created_at: string
+          id: string
+          reaction_type: string
+          user_id: string
+        }
+        Insert: {
+          changelog_id: string
+          created_at?: string
+          id?: string
+          reaction_type?: string
+          user_id: string
+        }
+        Update: {
+          changelog_id?: string
+          created_at?: string
+          id?: string
+          reaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "changelog_reactions_changelog_id_fkey"
+            columns: ["changelog_id"]
+            isOneToOne: false
+            referencedRelation: "changelog_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comment_upvotes: {
+        Row: {
+          comment_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          comment_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          comment_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_upvotes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "feature_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comments: {
         Row: {
           author_id: string
@@ -935,6 +1032,51 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_comments: {
+        Row: {
+          content: string
+          created_at: string
+          feature_id: string
+          id: string
+          parent_id: string | null
+          upvote_count: number
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          feature_id: string
+          id?: string
+          parent_id?: string | null
+          upvote_count?: number
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          feature_id?: string
+          id?: string
+          parent_id?: string | null
+          upvote_count?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_comments_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feature_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "feature_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_flags: {
         Row: {
           created_at: string
@@ -976,6 +1118,203 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      feature_merge_log: {
+        Row: {
+          created_at: string
+          id: string
+          merged_by: string
+          source_feature_id: string
+          source_votes_transferred: number
+          target_feature_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          merged_by: string
+          source_feature_id: string
+          source_votes_transferred?: number
+          target_feature_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          merged_by?: string
+          source_feature_id?: string
+          source_votes_transferred?: number
+          target_feature_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_merge_log_target_feature_id_fkey"
+            columns: ["target_feature_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_requests: {
+        Row: {
+          author_id: string
+          beneficiary_roles: string[]
+          category: Database["public"]["Enums"]["feature_category"]
+          comment_count: number
+          created_at: string
+          description: string
+          enb_votes: number
+          expected_quarter: string | null
+          id: string
+          impact_tags: string[]
+          int_votes: number
+          inv_votes: number
+          is_anonymous: boolean
+          is_regulatory: boolean
+          iss_votes: number
+          merged_into_id: string | null
+          pin_label: string | null
+          pinned: boolean
+          priority_score: number | null
+          rejection_reason: string | null
+          roadmap_rationale: string | null
+          status: Database["public"]["Enums"]["feature_status"]
+          title: string
+          updated_at: string
+          workaround: string
+        }
+        Insert: {
+          author_id: string
+          beneficiary_roles?: string[]
+          category?: Database["public"]["Enums"]["feature_category"]
+          comment_count?: number
+          created_at?: string
+          description?: string
+          enb_votes?: number
+          expected_quarter?: string | null
+          id?: string
+          impact_tags?: string[]
+          int_votes?: number
+          inv_votes?: number
+          is_anonymous?: boolean
+          is_regulatory?: boolean
+          iss_votes?: number
+          merged_into_id?: string | null
+          pin_label?: string | null
+          pinned?: boolean
+          priority_score?: number | null
+          rejection_reason?: string | null
+          roadmap_rationale?: string | null
+          status?: Database["public"]["Enums"]["feature_status"]
+          title: string
+          updated_at?: string
+          workaround?: string
+        }
+        Update: {
+          author_id?: string
+          beneficiary_roles?: string[]
+          category?: Database["public"]["Enums"]["feature_category"]
+          comment_count?: number
+          created_at?: string
+          description?: string
+          enb_votes?: number
+          expected_quarter?: string | null
+          id?: string
+          impact_tags?: string[]
+          int_votes?: number
+          inv_votes?: number
+          is_anonymous?: boolean
+          is_regulatory?: boolean
+          iss_votes?: number
+          merged_into_id?: string | null
+          pin_label?: string | null
+          pinned?: boolean
+          priority_score?: number | null
+          rejection_reason?: string | null
+          roadmap_rationale?: string | null
+          status?: Database["public"]["Enums"]["feature_status"]
+          title?: string
+          updated_at?: string
+          workaround?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_requests_merged_into_id_fkey"
+            columns: ["merged_into_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_status_history: {
+        Row: {
+          changed_by: string
+          created_at: string
+          feature_id: string
+          id: string
+          new_status: Database["public"]["Enums"]["feature_status"]
+          notes: string | null
+          old_status: Database["public"]["Enums"]["feature_status"] | null
+        }
+        Insert: {
+          changed_by: string
+          created_at?: string
+          feature_id: string
+          id?: string
+          new_status: Database["public"]["Enums"]["feature_status"]
+          notes?: string | null
+          old_status?: Database["public"]["Enums"]["feature_status"] | null
+        }
+        Update: {
+          changed_by?: string
+          created_at?: string
+          feature_id?: string
+          id?: string
+          new_status?: Database["public"]["Enums"]["feature_status"]
+          notes?: string | null
+          old_status?: Database["public"]["Enums"]["feature_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_status_history_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_votes: {
+        Row: {
+          created_at: string
+          feature_id: string
+          id: string
+          role_at_vote: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature_id: string
+          id?: string
+          role_at_vote?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feature_id?: string
+          id?: string
+          role_at_vote?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_votes_feature_id_fkey"
+            columns: ["feature_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       featured_posts: {
         Row: {
@@ -4136,6 +4475,21 @@ export type Database = {
         | "other"
       event_mode: "virtual" | "physical" | "hybrid"
       event_status: "draft" | "published" | "cancelled" | "completed"
+      feature_category:
+        | "ui_ux"
+        | "investment"
+        | "insurance"
+        | "compliance"
+        | "community"
+        | "data"
+        | "jobs"
+      feature_status:
+        | "under_review"
+        | "planned"
+        | "in_progress"
+        | "beta"
+        | "released"
+        | "rejected"
       job_category:
         | "fund_management"
         | "research_analysis"
@@ -4395,6 +4749,23 @@ export const Constants = {
       ],
       event_mode: ["virtual", "physical", "hybrid"],
       event_status: ["draft", "published", "cancelled", "completed"],
+      feature_category: [
+        "ui_ux",
+        "investment",
+        "insurance",
+        "compliance",
+        "community",
+        "data",
+        "jobs",
+      ],
+      feature_status: [
+        "under_review",
+        "planned",
+        "in_progress",
+        "beta",
+        "released",
+        "rejected",
+      ],
       job_category: [
         "fund_management",
         "research_analysis",
