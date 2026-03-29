@@ -347,6 +347,23 @@ playful · whimsical · neon · startup-y · gamified · loud · trendy · gener
 - Pain point: Relies on personal networks; no structured discovery of verified wealth managers
 - Uses findoo for: Network connections with verified RIAs, PMS managers, and AIF specialists
 
+### Enabler Personas
+
+**KRA Operations Head** — Mumbai/Delhi, 35–50 yrs
+- Manages KYC verification infrastructure for the securities market
+- Pain point: No B2B discovery platform to connect with intermediaries needing KRA services
+- Uses findoo for: API access showcase, featured directory listing, lead capture from digital cards, B2B event hosting
+
+**Depository (CDSL/NSDL) Regional Manager** — Metro cities, 40–55 yrs
+- Manages depository participant relationships and onboarding
+- Pain point: Reaching new DPs and intermediaries requires manual outreach
+- Uses findoo for: Infrastructure showcase, professional directory, campaign management
+
+**RTA Service Head** — Pan-India, 35–50 yrs
+- Manages registrar and transfer agent operations for AMCs and corporates
+- Pain point: No unified platform to showcase RTA services to issuers and intermediaries
+- Uses findoo for: B2B service listing, API integration showcase, webhook-based lead capture
+
 ---
 
 ## 11. Competitive Positioning
