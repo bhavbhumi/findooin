@@ -123,13 +123,20 @@ export function FeatureHub({ showSubmitModal, onCloseSubmitModal }: FeatureHubPr
       ) : (
         <div className="space-y-3">
           {features.map(feature => (
-            <FeatureCard key={feature.id} feature={feature} />
+            <FeatureCard key={feature.id} feature={feature} onOpenComments={() => setCommentFeature(feature)} />
           ))}
         </div>
       )}
 
       {/* Submit Modal */}
       <SubmitFeatureModal open={showSubmitModal} onOpenChange={onCloseSubmitModal} />
+
+      {/* Comment Drawer */}
+      <CommentDrawer
+        feature={commentFeature}
+        open={!!commentFeature}
+        onOpenChange={(open) => { if (!open) setCommentFeature(null); }}
+      />
     </div>
   );
 }
