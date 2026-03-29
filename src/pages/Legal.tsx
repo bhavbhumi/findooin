@@ -524,32 +524,133 @@ Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cine
   },
 ];
 
-const contentMap: Record<string, { sections: typeof termsSections; lastUpdated: string }> = {
-  Privacy: { sections: [...privacySections, ...cookiePolicySections.map((s, i) => ({ ...s, title: `Cookie Policy — ${s.title}` }))], lastUpdated: "March 2026" },
-  Terms: { sections: [...termsSections, ...accessibilitySections.map(s => ({ ...s, title: `Accessibility — ${s.title}` }))], lastUpdated: "March 2026" },
-  Policies: { sections: [...policiesSections, ...refundPolicySections.map(s => ({ ...s, title: `Refund & Cancellation — ${s.title}` }))], lastUpdated: "March 2026" },
-  Disclosures: { sections: [...disclosureSections, ...transparencyReportSections.map(s => ({ ...s, title: `Transparency — ${s.title}` }))], lastUpdated: "March 2026" },
+type GroupedContent = {
+  title: string;
+  id: string;
+  sections: { title: string; content: string }[];
+}[];
+
+const groupedContentMap: Record<string, { groups: GroupedContent; lastUpdated: string }> = {
+  Privacy: {
+    groups: [
+      { title: "Privacy Policy", id: "privacy-policy", sections: privacySections },
+      { title: "Cookie Policy", id: "cookie-policy", sections: cookiePolicySections },
+    ],
+    lastUpdated: "March 2026",
+  },
+  Terms: {
+    groups: [
+      { title: "Terms of Service", id: "terms-of-service", sections: termsSections },
+      { title: "Accessibility Statement", id: "accessibility", sections: accessibilitySections },
+    ],
+    lastUpdated: "March 2026",
+  },
+  Policies: {
+    groups: [
+      { title: "Platform Policies", id: "platform-policies", sections: policiesSections },
+      { title: "Refund & Cancellation", id: "refund-cancellation", sections: refundPolicySections },
+    ],
+    lastUpdated: "March 2026",
+  },
+  Disclosures: {
+    groups: [
+      { title: "Regulatory Disclosures", id: "regulatory-disclosures", sections: disclosureSections },
+      { title: "Transparency Report", id: "transparency-report", sections: transparencyReportSections },
+    ],
+    lastUpdated: "March 2026",
+  },
 };
 
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+/* ───────────────────── TOC COMPONENT ───────────────────── */
+const TableOfContents = ({ groups, activeId }: { groups: GroupedContent; activeId: string }) => {
+  const handleClick = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 140;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
+  return (
+    <ScrollArea className="h-[calc(100vh-12rem)]">
+      <nav className="space-y-4 pr-4">
+        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">On this page</p>
+        {groups.map((group) => (
+          <div key={group.id} className="space-y-1">
+            <button
+              onClick={() => handleClick(group.id)}
+              className={cn(
+                "text-sm font-semibold text-left w-full hover:text-primary transition-colors",
+                activeId === group.id ? "text-primary" : "text-foreground"
+              )}
+            >
+              {group.title}
+            </button>
+            <div className="ml-3 border-l border-border pl-3 space-y-0.5">
+              {group.sections.map((s) => {
+                const sId = `${group.id}--${slugify(s.title)}`;
+                return (
+                  <button
+                    key={sId}
+                    onClick={() => handleClick(sId)}
+                    className={cn(
+                      "text-xs text-left w-full py-0.5 hover:text-primary transition-colors flex items-start gap-1",
+                      activeId === sId ? "text-primary font-medium" : "text-muted-foreground"
+                    )}
+                  >
+                    <ChevronRight className="h-3 w-3 mt-0.5 shrink-0" />
+                    <span className="line-clamp-1">{s.title}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </nav>
+    </ScrollArea>
+  );
+};
+
+/* ───────────────────── MAIN COMPONENT ───────────────────── */
 const Legal = () => {
   usePageMeta({ title: "Legal & Compliance", description: "findoo terms of service, privacy policy, platform policies, and regulatory disclosures — Indian jurisdiction, DPDP Act compliant." });
   const [searchParams] = useSearchParams();
   const tabParamMap: Record<string, string> = {
     privacy: "Privacy", terms: "Terms", policies: "Policies",
     disclosures: "Disclosures",
-    // Legacy aliases for old URLs
     "cookie-policy": "Privacy", accessibility: "Terms",
     "refund-policy": "Policies", transparency: "Disclosures",
   };
   const initialTab = tabParamMap[searchParams.get("tab") || ""] || "Privacy";
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeTocId, setActiveTocId] = useState("");
 
   useEffect(() => {
     const mapped = tabParamMap[searchParams.get("tab") || ""];
     if (mapped) setActiveTab(mapped);
   }, [searchParams]);
 
-  const { sections, lastUpdated } = contentMap[activeTab];
+  const { groups, lastUpdated } = groupedContentMap[activeTab];
+
+  // Intersection observer for TOC highlighting
+  const contentRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const headings = contentRef.current?.querySelectorAll("[data-toc-id]");
+    if (!headings?.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length > 0) {
+          setActiveTocId(visible[0].target.getAttribute("data-toc-id") || "");
+        }
+      },
+      { rootMargin: "-140px 0px -60% 0px", threshold: 0 }
+    );
+    headings.forEach((h) => observer.observe(h));
+    return () => observer.disconnect();
+  }, [activeTab]);
 
   return (
     <PublicPageLayout>
@@ -581,17 +682,50 @@ const Legal = () => {
       </div>
 
       <section className="py-14">
-        <div className="container max-w-3xl">
-          <motion.p className="text-sm text-muted-foreground mb-8" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
-            Last updated: {lastUpdated}
-          </motion.p>
-          <div className="space-y-8">
-            {sections.map((s, i) => (
-              <motion.div key={`${activeTab}-${s.title}`} initial="hidden" animate="visible" variants={fadeUp} custom={i + 1}>
-                <h2 className="text-lg font-bold font-heading text-foreground mb-2">{s.title}</h2>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{s.content}</p>
-              </motion.div>
-            ))}
+        <div className="container">
+          <div className="flex gap-10 items-start max-w-6xl">
+            {/* Main content — left */}
+            <div className="flex-1 min-w-0 max-w-3xl" ref={contentRef}>
+              <motion.p className="text-sm text-muted-foreground mb-8" initial="hidden" animate="visible" variants={fadeUp} custom={0}>
+                Last updated: {lastUpdated}
+              </motion.p>
+
+              {groups.map((group, gi) => (
+                <div key={group.id} className={gi > 0 ? "mt-14" : ""}>
+                  <h2
+                    id={group.id}
+                    data-toc-id={group.id}
+                    className="text-xl font-bold font-heading text-foreground mb-6 pb-3 border-b border-border"
+                  >
+                    {group.title}
+                  </h2>
+                  <div className="space-y-8">
+                    {group.sections.map((s, i) => {
+                      const sId = `${group.id}--${slugify(s.title)}`;
+                      return (
+                        <motion.div
+                          key={sId}
+                          id={sId}
+                          data-toc-id={sId}
+                          initial="hidden"
+                          animate="visible"
+                          variants={fadeUp}
+                          custom={gi * 5 + i + 1}
+                        >
+                          <h3 className="text-lg font-semibold font-heading text-foreground mb-2">{s.title}</h3>
+                          <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{s.content}</p>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* TOC sidebar — right (hidden on mobile) */}
+            <aside className="hidden lg:block w-64 shrink-0 sticky top-32">
+              <TableOfContents groups={groups} activeId={activeTocId} />
+            </aside>
           </div>
         </div>
       </section>
