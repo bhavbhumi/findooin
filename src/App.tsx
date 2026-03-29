@@ -107,6 +107,7 @@ const AdminOpinionsPage = lazy(() => import("./pages/admin/AdminOpinionsPage"));
 const AdminPremiumFeaturesPage = lazy(() => import("./pages/admin/AdminPremiumFeaturesPage"));
 const AdminSecurityPage = lazy(() => import("./pages/admin/AdminSecurityPage"));
 const AdminCodedMessagingPage = lazy(() => import("./pages/admin/AdminCodedMessagingPage"));
+const AdminFeedbackPage = lazy(() => import("./pages/admin/AdminFeedbackPage"));
 const FinancialWrapped = lazy(() => import("./pages/FinancialWrapped"));
 const Feedback = lazy(() => import("./pages/Feedback"));
 
