@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFeatureRequests, type FeatureRequest, type FeatureStatus } from "@/hooks/useFeedback";
-import { useAdminUpdateStatus, useAdminReject, useAdminPin, useAdminMerge } from "@/hooks/useFeedbackAdmin";
+import { useAdminUpdateStatus, useAdminReject, useAdminPin, useAdminMerge, useCreateChangelog } from "@/hooks/useFeedbackAdmin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
   AlertCircle, Pin, PinOff, Merge, Ban, ArrowUp, MessageSquare,
-  Search, ChevronRight, Clock, Calendar,
+  Search, ChevronRight, Clock, Calendar, Plus, X, FileText,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -342,6 +342,131 @@ function MergeDialog({
   );
 }
 
+// ─── Create Changelog Dialog ───
+function CreateChangelogDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  const [version, setVersion] = useState("");
+  const [releaseDate, setReleaseDate] = useState(new Date().toISOString().split("T")[0]);
+  const [features, setFeatures] = useState<string[]>([""]);
+  const [improvements, setImprovements] = useState<string[]>([""]);
+  const [bugFixes, setBugFixes] = useState<string[]>([""]);
+  const createChangelog = useCreateChangelog();
+
+  const addItem = (setter: React.Dispatch<React.SetStateAction<string[]>>) => {
+    setter(prev => [...prev, ""]);
+  };
+
+  const updateItem = (setter: React.Dispatch<React.SetStateAction<string[]>>, idx: number, value: string) => {
+    setter(prev => prev.map((v, i) => i === idx ? value : v));
+  };
+
+  const removeItem = (setter: React.Dispatch<React.SetStateAction<string[]>>, idx: number) => {
+    setter(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmit = () => {
+    createChangelog.mutate(
+      {
+        version: version.trim(),
+        releaseDate,
+        featuresAdded: features.filter(Boolean),
+        improvements: improvements.filter(Boolean),
+        bugFixes: bugFixes.filter(Boolean),
+      },
+      {
+        onSuccess: () => {
+          onOpenChange(false);
+          setVersion("");
+          setFeatures([""]);
+          setImprovements([""]);
+          setBugFixes([""]);
+        },
+      }
+    );
+  };
+
+  const hasContent = features.some(Boolean) || improvements.some(Boolean) || bugFixes.some(Boolean);
+
+  const renderList = (
+    label: string,
+    items: string[],
+    setter: React.Dispatch<React.SetStateAction<string[]>>,
+    placeholder: string,
+    accentClass: string
+  ) => (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <label className={cn("text-xs font-medium", accentClass)}>{label}</label>
+        <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2 gap-0.5" onClick={() => addItem(setter)}>
+          <Plus className="h-2.5 w-2.5" /> Add
+        </Button>
+      </div>
+      {items.map((item, idx) => (
+        <div key={idx} className="flex gap-1.5">
+          <Input
+            value={item}
+            onChange={e => updateItem(setter, idx, e.target.value)}
+            placeholder={placeholder}
+            className="h-8 text-xs flex-1"
+          />
+          {items.length > 1 && (
+            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => removeItem(setter, idx)}>
+              <X className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-base">Create Changelog Entry</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-medium text-foreground mb-1 block">Version</label>
+              <Input
+                value={version}
+                onChange={e => setVersion(e.target.value)}
+                placeholder="e.g. v2.4.0"
+                className="h-9 text-xs font-mono"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-foreground mb-1 block">Release Date</label>
+              <Input
+                type="date"
+                value={releaseDate}
+                onChange={e => setReleaseDate(e.target.value)}
+                className="h-9 text-xs"
+              />
+            </div>
+          </div>
+
+          {renderList("New Features", features, setFeatures, "e.g. Role-weighted voting engine", "text-emerald-600 dark:text-emerald-400")}
+          {renderList("Improvements", improvements, setImprovements, "e.g. Faster search results", "text-blue-600 dark:text-blue-400")}
+          {renderList("Bug Fixes", bugFixes, setBugFixes, "e.g. Fixed comment threading on mobile", "text-amber-600 dark:text-amber-400")}
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button
+            size="sm"
+            onClick={handleSubmit}
+            disabled={!version.trim() || !hasContent || createChangelog.isPending}
+          >
+            {createChangelog.isPending ? "Publishing..." : "Publish Changelog"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ─── Main Admin Panel ───
 export function FeedbackAdminPanel() {
   const { data: features, isLoading, isError, error } = useFeatureRequests({ sortBy: "recent" });
@@ -351,6 +476,7 @@ export function FeedbackAdminPanel() {
   const [statusTarget, setStatusTarget] = useState<FeatureRequest | null>(null);
   const [rejectTarget, setRejectTarget] = useState<FeatureRequest | null>(null);
   const [mergeTarget, setMergeTarget] = useState<FeatureRequest | null>(null);
+  const [showChangelog, setShowChangelog] = useState(false);
 
   const filtered = (features || []).filter(f => {
     if (statusFilter !== "all" && f.status !== statusFilter) return false;
@@ -408,7 +534,7 @@ export function FeedbackAdminPanel() {
         ))}
       </div>
 
-      {/* Filters */}
+      {/* Filters + Changelog button */}
       <div className="flex flex-wrap gap-2">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
@@ -431,6 +557,10 @@ export function FeedbackAdminPanel() {
             <SelectItem value="rejected" className="text-xs">Rejected</SelectItem>
           </SelectContent>
         </Select>
+        <Button variant="outline" size="sm" className="h-9 gap-1.5 text-xs" onClick={() => setShowChangelog(true)}>
+          <FileText className="h-3.5 w-3.5" />
+          New Changelog
+        </Button>
       </div>
 
       {/* Feature list */}
@@ -458,6 +588,7 @@ export function FeedbackAdminPanel() {
       <StatusChangeDialog feature={statusTarget} open={!!statusTarget} onOpenChange={o => { if (!o) setStatusTarget(null); }} />
       <RejectDialog feature={rejectTarget} open={!!rejectTarget} onOpenChange={o => { if (!o) setRejectTarget(null); }} />
       <MergeDialog feature={mergeTarget} open={!!mergeTarget} onOpenChange={o => { if (!o) setMergeTarget(null); }} allFeatures={features || []} />
+      <CreateChangelogDialog open={showChangelog} onOpenChange={setShowChangelog} />
     </div>
   );
 }
