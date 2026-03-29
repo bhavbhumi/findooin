@@ -104,6 +104,8 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
           <Button
             variant={feature.user_voted ? "default" : "outline"}
             size="sm"
+            aria-label={feature.user_voted ? `Remove vote (${totalVotes} total)` : `Vote (${totalVotes} total)`}
+            aria-pressed={feature.user_voted}
             className={cn(
               "h-12 w-12 flex flex-col gap-0 p-0 rounded-lg",
               feature.user_voted && "bg-primary text-primary-foreground"
