@@ -358,6 +358,8 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
             ))}
           </div>
         </div>
+        {/* Regulatory Disclosure */}
+        <RegulatoryDisclosure />
         <div className="border-t border-border">
           <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground">
