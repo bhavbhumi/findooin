@@ -43,6 +43,9 @@ export interface FeatureRequest {
   pin_label: string | null;
   rejection_reason: string | null;
   merged_into_id: string | null;
+  is_seeded: boolean;
+  avg_satisfaction: number;
+  satisfaction_count: number;
   created_at: string;
   updated_at: string;
   // Joined
@@ -54,6 +57,7 @@ export interface FeatureRequest {
   };
   author_roles?: string[];
   user_voted?: boolean;
+  user_satisfaction?: { rating: number; sentiment: string } | null;
 }
 
 export interface CreateFeatureInput {
