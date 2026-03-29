@@ -52,9 +52,10 @@ const ROLE_LABELS: Record<string, string> = {
 
 interface FeatureCardProps {
   feature: FeatureRequest;
+  onOpenComments?: () => void;
 }
 
-export function FeatureCard({ feature }: FeatureCardProps) {
+export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   const [expanded, setExpanded] = useState(false);
   const voteMutation = useFeatureVote();
 
