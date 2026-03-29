@@ -482,15 +482,82 @@ function CreateChangelogDialog({ open, onOpenChange }: { open: boolean; onOpenCh
   );
 }
 
+// ─── Edit Feature Dialog ───
+function EditFeatureDialog({
+  feature,
+  open,
+  onOpenChange,
+}: {
+  feature: FeatureRequest | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const [title, setTitle] = useState(feature?.title || "");
+  const [description, setDescription] = useState(feature?.description || "");
+  const editMutation = useEditFeatureDescription();
+
+  // Sync state when feature changes
+  useState(() => {
+    if (feature) {
+      setTitle(feature.title);
+      setDescription(feature.description);
+    }
+  });
+
+  const handleSubmit = () => {
+    if (!feature) return;
+    editMutation.mutate(
+      { featureId: feature.id, title: title.trim(), description: description.trim() },
+      { onSuccess: () => onOpenChange(false) }
+    );
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="text-base">Edit Feature</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div>
+            <label className="text-xs font-medium text-foreground mb-1 block">Title</label>
+            <Input
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              className="h-9 text-xs"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-foreground mb-1 block">Description</label>
+            <Textarea
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              className="text-xs min-h-[120px]"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button size="sm" onClick={handleSubmit} disabled={!title.trim() || editMutation.isPending}>
+            {editMutation.isPending ? "Saving..." : "Save Changes"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ─── Main Admin Panel ───
 export function FeedbackAdminPanel() {
   const { data: features, isLoading, isError, error } = useFeatureRequests({ sortBy: "recent" });
   const pinMutation = useAdminPin();
+  const seedMutation = useSeedModules();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<FeatureStatus | "all">("all");
   const [statusTarget, setStatusTarget] = useState<FeatureRequest | null>(null);
   const [rejectTarget, setRejectTarget] = useState<FeatureRequest | null>(null);
   const [mergeTarget, setMergeTarget] = useState<FeatureRequest | null>(null);
+  const [editTarget, setEditTarget] = useState<FeatureRequest | null>(null);
   const [showChangelog, setShowChangelog] = useState(false);
 
   const filtered = (features || []).filter(f => {
@@ -498,6 +565,8 @@ export function FeedbackAdminPanel() {
     if (search && !f.title.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
+
+  const seededCount = features?.filter(f => f.is_seeded).length || 0;
 
   // Stats
   const stats = {
@@ -549,7 +618,29 @@ export function FeedbackAdminPanel() {
         ))}
       </div>
 
-      {/* Filters + Changelog button */}
+      {/* Seed banner */}
+      {seededCount === 0 && (
+        <div className="flex items-center justify-between gap-3 p-3 rounded-lg border border-dashed border-primary/30 bg-primary/5">
+          <div className="flex items-center gap-2">
+            <Sprout className="h-4 w-4 text-primary" />
+            <div>
+              <p className="text-xs font-medium text-foreground">Seed existing modules</p>
+              <p className="text-[10px] text-muted-foreground">Auto-populate the Feature Hub with findoo's 29+ modules so users can rate and comment on them.</p>
+            </div>
+          </div>
+          <Button
+            size="sm"
+            className="gap-1.5 text-xs shrink-0"
+            onClick={() => seedMutation.mutate()}
+            disabled={seedMutation.isPending}
+          >
+            <Sprout className="h-3.5 w-3.5" />
+            {seedMutation.isPending ? "Seeding..." : "Seed Modules"}
+          </Button>
+        </div>
+      )}
+
+      {/* Filters + actions */}
       <div className="flex flex-wrap gap-2">
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
@@ -572,6 +663,18 @@ export function FeedbackAdminPanel() {
             <SelectItem value="rejected" className="text-xs">Rejected</SelectItem>
           </SelectContent>
         </Select>
+        {seededCount > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 gap-1.5 text-xs"
+            onClick={() => seedMutation.mutate()}
+            disabled={seedMutation.isPending}
+          >
+            <Sprout className="h-3.5 w-3.5" />
+            {seedMutation.isPending ? "Seeding..." : "Re-seed"}
+          </Button>
+        )}
         <Button variant="outline" size="sm" className="h-9 gap-1.5 text-xs" onClick={() => setShowChangelog(true)}>
           <FileText className="h-3.5 w-3.5" />
           New Changelog
@@ -594,6 +697,7 @@ export function FeedbackAdminPanel() {
               onReject={setRejectTarget}
               onTogglePin={(feat) => pinMutation.mutate({ featureId: feat.id, pinned: !feat.pinned })}
               onMerge={setMergeTarget}
+              onEdit={setEditTarget}
             />
           ))}
         </div>
@@ -603,6 +707,7 @@ export function FeedbackAdminPanel() {
       <StatusChangeDialog feature={statusTarget} open={!!statusTarget} onOpenChange={o => { if (!o) setStatusTarget(null); }} />
       <RejectDialog feature={rejectTarget} open={!!rejectTarget} onOpenChange={o => { if (!o) setRejectTarget(null); }} />
       <MergeDialog feature={mergeTarget} open={!!mergeTarget} onOpenChange={o => { if (!o) setMergeTarget(null); }} allFeatures={features || []} />
+      <EditFeatureDialog feature={editTarget} open={!!editTarget} onOpenChange={o => { if (!o) setEditTarget(null); }} />
       <CreateChangelogDialog open={showChangelog} onOpenChange={setShowChangelog} />
     </div>
   );
