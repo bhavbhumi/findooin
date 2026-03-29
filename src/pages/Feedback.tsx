@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Lightbulb, Map, FileText, User, Shield, Plus } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
 import { FeatureHub } from "@/components/feedback/FeatureHub";
+import { RoadmapSwimlane } from "@/components/feedback/RoadmapSwimlane";
+import { ChangelogTimeline } from "@/components/feedback/ChangelogTimeline";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const Feedback = () => {
