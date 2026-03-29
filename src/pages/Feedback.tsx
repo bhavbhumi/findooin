@@ -9,6 +9,7 @@ import { ChangelogTimeline } from "@/components/feedback/ChangelogTimeline";
 import { MyActivityPanel } from "@/components/feedback/MyActivityPanel";
 import { FeedbackAdminPanel } from "@/components/feedback/FeedbackAdminPanel";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import AppLayout from "@/components/AppLayout";
 
 const Feedback = () => {
   usePageMeta({ title: "Feedback — findoo", description: "Share your ideas and vote on features for findoo" });
