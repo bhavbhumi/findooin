@@ -125,7 +125,7 @@ export function FeatureCard({ feature }: FeatureCardProps) {
             {feature.is_regulatory && (
               <Tooltip>
                 <TooltipTrigger>
-                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                  <AlertTriangle className="h-3.5 w-3.5 text-warning" />
                 </TooltipTrigger>
                 <TooltipContent className="text-xs">May require regulatory approval</TooltipContent>
               </Tooltip>
