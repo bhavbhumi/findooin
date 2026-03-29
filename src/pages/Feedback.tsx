@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Lightbulb, Map, FileText, User, Shield, Plus } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
 import { FeatureHub } from "@/components/feedback/FeatureHub";
+import { RoadmapSwimlane } from "@/components/feedback/RoadmapSwimlane";
+import { ChangelogTimeline } from "@/components/feedback/ChangelogTimeline";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const Feedback = () => {
@@ -59,16 +61,10 @@ const Feedback = () => {
             <FeatureHub showSubmitModal={showSubmitModal} onCloseSubmitModal={() => setShowSubmitModal(false)} />
           </TabsContent>
           <TabsContent value="roadmap">
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Map className="h-12 w-12 text-muted-foreground/40 mb-3" />
-              <p className="text-muted-foreground text-sm">Roadmap — coming in Sprint 5</p>
-            </div>
+            <RoadmapSwimlane />
           </TabsContent>
           <TabsContent value="changelog">
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground/40 mb-3" />
-              <p className="text-muted-foreground text-sm">Changelog — coming in Sprint 6</p>
-            </div>
+            <ChangelogTimeline />
           </TabsContent>
           <TabsContent value="activity">
             <div className="flex flex-col items-center justify-center py-16 text-center">
