@@ -192,9 +192,20 @@ findoo enforces strict role-based access control aligned with regulatory status:
 
 - **Issuers** (AMCs, NBFCs, Insurance Companies, Banks): Can list and showcase regulated financial products. Cannot provide individual advice.
 - **Intermediaries** (MFDs, RIAs, Insurance Agents, CAs, CFAs): Can publish Opinions classified as Education or Sentiment Signal. Cannot issue buy/sell recommendations.
+- **Enablers** (KRAs, Depositories, RTAs, Custodians, Vault Managers, ASBA Banks, ESG Rating Providers): India's Market Infrastructure Institutions (MIIs) and RegTech/FinTech providers. Provide API access, infrastructure services, and B2B discovery. Cannot provide individual financial advice.
 - **Investors** (Individual and Institutional): Can post Requirements (pull-based intent signals). Cannot publish financial opinions or tips.
 
 This role-based separation is regulatory architecture — not a product feature.
+
+### Subscription Tiers
+Each role has Free, Pro, and Enterprise tiers. Annual plans at 10× monthly rate.
+
+| Role | Pro (₹/mo) | Enterprise (₹/mo) |
+|------|-----------|-------------------|
+| Investor | ₹399 | ₹999 |
+| Intermediary | ₹799 | ₹1,999 |
+| Enabler | ₹999 | ₹2,999 |
+| Issuer | ₹1,499 | ₹4,999 |
 
 ---
 
