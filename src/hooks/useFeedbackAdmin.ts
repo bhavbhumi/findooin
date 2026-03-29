@@ -1,11 +1,60 @@
 /**
  * Admin hooks for Feedback Engine — status updates, pin, merge, reject actions.
+ * Includes voter notification on status changes.
  */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
 import type { FeatureStatus } from "./useFeedback";
+
+const STATUS_LABELS: Record<string, string> = {
+  under_review: "Under Review",
+  planned: "Planned",
+  in_progress: "In Progress",
+  beta: "Beta",
+  released: "Released",
+  rejected: "Rejected",
+};
+
+/** Notify all voters of a feature about a status change */
+async function notifyVoters(featureId: string, featureTitle: string, newStatus: string, actorId: string) {
+  // Get all voters for this feature (excluding the actor)
+  const { data: voters } = await supabase
+    .from("feature_votes")
+    .select("user_id")
+    .eq("feature_id", featureId)
+    .neq("user_id", actorId);
+
+  if (!voters?.length) return;
+
+  const uniqueUserIds = [...new Set(voters.map(v => v.user_id))];
+  const statusLabel = STATUS_LABELS[newStatus] || newStatus;
+  const message = `Feature "${featureTitle}" has moved to ${statusLabel}`;
+
+  // Also notify the author
+  const { data: feature } = await supabase
+    .from("feature_requests")
+    .select("author_id")
+    .eq("id", featureId)
+    .single();
+
+  if (feature?.author_id && feature.author_id !== actorId && !uniqueUserIds.includes(feature.author_id)) {
+    uniqueUserIds.push(feature.author_id);
+  }
+
+  // Batch insert notifications
+  const notifications = uniqueUserIds.map(userId => ({
+    user_id: userId,
+    type: "feature_status",
+    message,
+    actor_id: actorId,
+    reference_id: featureId,
+    reference_type: "feature_request",
+  }));
+
+  await supabase.from("notifications").insert(notifications);
+}
 
 // ─── Update feature status ───
 export function useAdminUpdateStatus() {
@@ -28,10 +77,10 @@ export function useAdminUpdateStatus() {
     }) => {
       if (!userId) throw new Error("Not authenticated");
 
-      // Get current status for history
+      // Get current status and title for history + notifications
       const { data: current } = await supabase
         .from("feature_requests")
-        .select("status")
+        .select("status, title")
         .eq("id", featureId)
         .single();
 
@@ -54,10 +103,15 @@ export function useAdminUpdateStatus() {
         changed_by: userId,
         notes: notes || null,
       });
+
+      // Notify voters
+      if (current?.title) {
+        await notifyVoters(featureId, current.title, newStatus, userId);
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["feature-requests"] });
-      toast.success("Status updated");
+      toast.success("Status updated — voters notified");
     },
     onError: (err: any) => toast.error(err.message || "Failed to update status"),
   });
@@ -75,7 +129,7 @@ export function useAdminReject() {
 
       const { data: current } = await supabase
         .from("feature_requests")
-        .select("status")
+        .select("status, title")
         .eq("id", featureId)
         .single();
 
@@ -96,10 +150,15 @@ export function useAdminReject() {
         changed_by: userId,
         notes: `Rejected: ${reason.trim()}`,
       });
+
+      // Notify voters about rejection
+      if (current?.title) {
+        await notifyVoters(featureId, current.title, "rejected", userId);
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["feature-requests"] });
-      toast.success("Feature rejected");
+      toast.success("Feature rejected — voters notified");
     },
     onError: (err: any) => toast.error(err.message || "Failed to reject"),
   });
@@ -135,7 +194,6 @@ export function useAdminMerge() {
       if (!userId) throw new Error("Not authenticated");
       if (sourceId === targetId) throw new Error("Cannot merge into itself");
 
-      // Get source vote count for log
       const { data: source } = await supabase
         .from("feature_requests")
         .select("inv_votes, int_votes, iss_votes, enb_votes")
@@ -146,14 +204,12 @@ export function useAdminMerge() {
         ? source.inv_votes + source.int_votes + source.iss_votes + source.enb_votes
         : 0;
 
-      // Mark source as merged
       const { error } = await supabase
         .from("feature_requests")
         .update({ merged_into_id: targetId, updated_at: new Date().toISOString() })
         .eq("id", sourceId);
       if (error) throw error;
 
-      // Log merge
       await supabase.from("feature_merge_log").insert({
         source_feature_id: sourceId,
         target_feature_id: targetId,
@@ -166,5 +222,38 @@ export function useAdminMerge() {
       toast.success("Features merged");
     },
     onError: (err: any) => toast.error(err.message || "Failed to merge"),
+  });
+}
+
+// ─── Create Changelog Entry ───
+export function useCreateChangelog() {
+  const { userId } = useRole();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: {
+      version: string;
+      releaseDate: string;
+      featuresAdded: string[];
+      improvements: string[];
+      bugFixes: string[];
+    }) => {
+      if (!userId) throw new Error("Not authenticated");
+
+      const { error } = await supabase.from("changelog_entries").insert({
+        version: input.version,
+        release_date: input.releaseDate,
+        features_added: input.featuresAdded.filter(Boolean) as any,
+        improvements: input.improvements.filter(Boolean) as any,
+        bug_fixes: input.bugFixes.filter(Boolean) as any,
+        created_by: userId,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["changelog-entries"] });
+      toast.success("Changelog entry published");
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to create changelog entry"),
   });
 }
