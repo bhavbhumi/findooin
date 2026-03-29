@@ -404,7 +404,7 @@ No existing platform serves the financial network use case. findoo occupies this
 Every design decision prioritises trust signals:
 - Verification badges are visible on every profile, post, and card
 - Credential information (ARN, SEBI Reg, IRDAI License) is prominently displayed — never hidden behind clicks
-- Role-based colour coding (Royal Blue for Issuers, Deep Emerald for Intermediaries, Amber Gold for Investors) provides instant visual classification
+- Role-based colour coding (Royal Blue for Issuers, Deep Emerald for Intermediaries, Amber Gold for Investors, Cyan Teal for Enablers) provides instant visual classification
 - Trust proximity indicators (circle tiers) in the feed show connection strength
 
 ### Verification-Forward Flows
