@@ -1,5 +1,5 @@
 /**
- * Admin hooks for Feedback Engine — status updates, pin, merge, reject actions.
+ * Admin hooks for Feedback Engine — status updates, pin, merge, reject, seed, edit actions.
  * Includes voter notification on status changes.
  */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
 import type { FeatureStatus } from "./useFeedback";
+import moduleSpecs from "@/data/module-specs";
 
 const STATUS_LABELS: Record<string, string> = {
   under_review: "Under Review",
@@ -255,5 +256,116 @@ export function useCreateChangelog() {
       toast.success("Changelog entry published");
     },
     onError: (err: any) => toast.error(err.message || "Failed to create changelog entry"),
+  });
+}
+
+// ─── Seed modules from module-specs ───
+const MODULE_CATEGORY_MAP: Record<string, string> = {
+  overview: "ui_ux",
+  users: "community",
+  verification: "compliance",
+  audit: "compliance",
+  feed: "community",
+  jobs: "jobs",
+  events: "community",
+  listings: "investment",
+  messages: "community",
+  opinions: "community",
+  gamification: "community",
+  invitations: "community",
+  registry: "data",
+  sales: "data",
+  campaigns: "community",
+  email: "community",
+  notifications: "ui_ux",
+  blog: "community",
+  moderation: "compliance",
+  support: "ui_ux",
+  kb: "ui_ux",
+  monitoring: "data",
+  scorecard: "data",
+  security: "compliance",
+  module_audit: "data",
+  seo: "data",
+  patent: "data",
+  features: "ui_ux",
+  billing: "data",
+  premium: "investment",
+  feedback: "community",
+  coded_messaging: "compliance",
+};
+
+export function useSeedModules() {
+  const { userId } = useRole();
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!userId) throw new Error("Not authenticated");
+
+      // Check which modules are already seeded
+      const { data: existing } = await supabase
+        .from("feature_requests")
+        .select("title")
+        .eq("is_seeded", true);
+
+      const existingTitles = new Set((existing || []).map((e: any) => e.title));
+
+      const entries = Object.values(moduleSpecs)
+        .filter(spec => !existingTitles.has(spec.title))
+        .map(spec => ({
+          title: spec.title,
+          description: `${spec.solution}\n\n**Current Features:**\n${spec.currentScope.map(s => `• ${s}`).join("\n")}`,
+          workaround: "",
+          impact_tags: ["platform"],
+          is_regulatory: false,
+          beneficiary_roles: ["investor", "intermediary", "issuer"],
+          is_anonymous: false,
+          category: (MODULE_CATEGORY_MAP[spec.moduleKey] || "ui_ux") as any,
+          status: "released" as any,
+          author_id: userId,
+          is_seeded: true,
+          pinned: false,
+        }));
+
+      if (entries.length === 0) {
+        toast.info("All modules already seeded");
+        return 0;
+      }
+
+      const { error } = await supabase.from("feature_requests").insert(entries);
+      if (error) throw error;
+
+      return entries.length;
+    },
+    onSuccess: (count) => {
+      qc.invalidateQueries({ queryKey: ["feature-requests"] });
+      if (count && count > 0) {
+        toast.success(`Seeded ${count} module${count > 1 ? "s" : ""} as feature entries`);
+      }
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to seed modules"),
+  });
+}
+
+// ─── Edit seeded feature description ───
+export function useEditFeatureDescription() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ featureId, title, description }: { featureId: string; title?: string; description: string }) => {
+      const updates: Record<string, any> = { description, updated_at: new Date().toISOString() };
+      if (title) updates.title = title;
+      const { error } = await supabase
+        .from("feature_requests")
+        .update(updates)
+        .eq("id", featureId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["feature-requests"] });
+      toast.success("Feature updated");
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to update"),
   });
 }

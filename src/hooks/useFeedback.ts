@@ -43,6 +43,9 @@ export interface FeatureRequest {
   pin_label: string | null;
   rejection_reason: string | null;
   merged_into_id: string | null;
+  is_seeded: boolean;
+  avg_satisfaction: number;
+  satisfaction_count: number;
   created_at: string;
   updated_at: string;
   // Joined
@@ -54,6 +57,7 @@ export interface FeatureRequest {
   };
   author_roles?: string[];
   user_voted?: boolean;
+  user_satisfaction?: { rating: number; sentiment: string } | null;
 }
 
 export interface CreateFeatureInput {
@@ -120,6 +124,18 @@ export function useFeatureRequests(filters: FeatureFilters = {}) {
         userVotes = (votes || []).map((v: any) => v.feature_id);
       }
 
+      // Fetch current user's satisfaction ratings
+      let userSatisfactions = new Map<string, { rating: number; sentiment: string }>();
+      if (userId) {
+        const { data: ratings } = await supabase
+          .from("feature_satisfaction_ratings")
+          .select("feature_id, rating, sentiment")
+          .eq("user_id", userId);
+        (ratings || []).forEach((r: any) => {
+          userSatisfactions.set(r.feature_id, { rating: r.rating, sentiment: r.sentiment });
+        });
+      }
+
       const profileMap = new Map((profiles || []).map((p: any) => [p.id, p]));
       const roleMap = new Map<string, string[]>();
       (roles || []).forEach((r: any) => {
@@ -133,6 +149,7 @@ export function useFeatureRequests(filters: FeatureFilters = {}) {
         author_profile: profileMap.get(f.author_id) || null,
         author_roles: roleMap.get(f.author_id) || ["investor"],
         user_voted: userVotes.includes(f.id),
+        user_satisfaction: userSatisfactions.get(f.id) || null,
       })) as FeatureRequest[];
     },
     enabled: !!userId,
@@ -372,5 +389,58 @@ export function useCommentUpvote() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.featureComments(vars.featureId) });
     },
     onError: (err: any) => toast.error(err.message || "Failed to upvote"),
+  });
+}
+
+// ─── Satisfaction Rating ───
+export function useSatisfactionRating() {
+  const { userId } = useRole();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      featureId,
+      rating,
+      sentiment,
+    }: {
+      featureId: string;
+      rating: number;
+      sentiment: "positive" | "negative";
+    }) => {
+      if (!userId) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from("feature_satisfaction_ratings")
+        .upsert(
+          { feature_id: featureId, user_id: userId, rating, sentiment, updated_at: new Date().toISOString() },
+          { onConflict: "feature_id,user_id" }
+        );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feature-requests"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to rate"),
+  });
+}
+
+export function useRemoveSatisfactionRating() {
+  const { userId } = useRole();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ featureId }: { featureId: string }) => {
+      if (!userId) throw new Error("Not authenticated");
+      const { error } = await supabase
+        .from("feature_satisfaction_ratings")
+        .delete()
+        .eq("feature_id", featureId)
+        .eq("user_id", userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feature-requests"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to remove rating"),
   });
 }
