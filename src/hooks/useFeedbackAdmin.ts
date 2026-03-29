@@ -1,5 +1,5 @@
 /**
- * Admin hooks for Feedback Engine — status updates, pin, merge, reject actions.
+ * Admin hooks for Feedback Engine — status updates, pin, merge, reject, seed, edit actions.
  * Includes voter notification on status changes.
  */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
 import type { FeatureStatus } from "./useFeedback";
+import moduleSpecs from "@/data/module-specs";
 
 const STATUS_LABELS: Record<string, string> = {
   under_review: "Under Review",
