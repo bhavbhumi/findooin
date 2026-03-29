@@ -191,8 +191,8 @@ export function SubmitFeatureModal({ open, onOpenChange }: SubmitFeatureModalPro
 
                 {/* Duplicate detection */}
                 {duplicates && duplicates.length > 0 && (
-                  <div className="rounded-md border border-amber-500/20 bg-amber-500/5 p-3 space-y-2">
-                    <p className="text-xs font-medium text-amber-600 flex items-center gap-1">
+                  <div className="rounded-md border border-warning/20 bg-warning/5 p-3 space-y-2">
+                    <p className="text-xs font-medium text-warning flex items-center gap-1">
                       <AlertTriangle className="h-3.5 w-3.5" /> Similar requests found
                     </p>
                     {duplicates.map((d: any) => (
