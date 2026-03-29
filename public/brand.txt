@@ -9,7 +9,7 @@
 - **Capitalisation**: Always "findoo" — capital F, lowercase i-n-d, capital O-O
 - **Never**: Findoo, FINDOO, Find OO, Find-OO, findoo
 - **Tagline**: Financially Social
-- **One-liner**: India's first financial network for verified Issuers, Intermediaries & Investors
+- **One-liner**: India's first financial network for verified Issuers, Intermediaries, Enablers & Investors
 
 ### Category Definition
 findoo is a **Financial Network** — a distinct, new category of internet infrastructure.
