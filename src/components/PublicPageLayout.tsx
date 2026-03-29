@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, ChevronDown, MapPin, ShieldAlert } from "lucide-react";
+import { Menu, X, ChevronDown, MapPin, ShieldAlert, Lock, ShieldCheck, Database, Fingerprint, Eye, Server, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
@@ -214,6 +214,23 @@ const RegulatoryDisclosure = () => {
       <p>
         Grievance Officer: compliance@findoo.in | Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India.
       </p>
+      {/* Trust Seals */}
+      <div className="flex flex-wrap items-center gap-3 pt-3 mt-3 border-t border-border/50">
+        {([
+          { Icon: Lock, label: "256-bit SSL" },
+          { Icon: ShieldCheck, label: "DPDP Act 2023" },
+          { Icon: Database, label: "Encrypted at Rest" },
+          { Icon: Fingerprint, label: "2FA Ready" },
+          { Icon: Eye, label: "RLS Protected" },
+          { Icon: Server, label: "SOC-2 Infra" },
+          { Icon: FileCheck, label: "IT Act 2000" },
+        ] as const).map((seal) => (
+          <span key={seal.label} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border/60 bg-background/50 text-[10px] font-medium text-muted-foreground">
+            <seal.Icon className="h-3 w-3 text-primary/70" />
+            {seal.label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 
