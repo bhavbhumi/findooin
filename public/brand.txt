@@ -563,9 +563,10 @@ findoo is installable as a PWA on all platforms:
 - **Digital Business Cards**: Verified vCard with QR code sharing — credentials included
 - **Vault**: Secure document storage for financial professionals
 - **Verification System**: Identity and credential verification via SEBI/RBI/IRDAI/AMFI registries
-- **Network**: Role-aware connections between Issuers, Intermediaries, and Investors
+- **Network**: Role-aware connections between Issuers, Intermediaries, Enablers, and Investors
 - **Gamification**: XP system, streaks, badges, leaderboard, and weekly challenges
 - **Compare**: Side-by-side comparisons with social networks, professional networks, and financial media
+- **Pricing**: Role-based freemium subscription plans (Free, Pro, Enterprise)
 
 ---
 
