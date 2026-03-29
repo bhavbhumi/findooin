@@ -8,6 +8,7 @@ import {
   Clock, Heart, Sparkles as SparklesIcon
 } from "lucide-react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { format } from "date-fns";
 import CosmicValueSection from "@/components/landing/CosmicValueSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
