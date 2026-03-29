@@ -7,6 +7,7 @@ import { FeatureHub } from "@/components/feedback/FeatureHub";
 import { RoadmapSwimlane } from "@/components/feedback/RoadmapSwimlane";
 import { ChangelogTimeline } from "@/components/feedback/ChangelogTimeline";
 import { MyActivityPanel } from "@/components/feedback/MyActivityPanel";
+import { FeedbackAdminPanel } from "@/components/feedback/FeedbackAdminPanel";
 import { usePageMeta } from "@/hooks/usePageMeta";
 
 const Feedback = () => {
@@ -72,10 +73,7 @@ const Feedback = () => {
           </TabsContent>
           {isAdmin && (
             <TabsContent value="admin">
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <Shield className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                <p className="text-muted-foreground text-sm">Admin Panel — coming in Sprint 8</p>
-              </div>
+              <FeedbackAdminPanel />
             </TabsContent>
           )}
         </Tabs>
