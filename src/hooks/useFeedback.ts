@@ -124,6 +124,18 @@ export function useFeatureRequests(filters: FeatureFilters = {}) {
         userVotes = (votes || []).map((v: any) => v.feature_id);
       }
 
+      // Fetch current user's satisfaction ratings
+      let userSatisfactions = new Map<string, { rating: number; sentiment: string }>();
+      if (userId) {
+        const { data: ratings } = await supabase
+          .from("feature_satisfaction_ratings")
+          .select("feature_id, rating, sentiment")
+          .eq("user_id", userId);
+        (ratings || []).forEach((r: any) => {
+          userSatisfactions.set(r.feature_id, { rating: r.rating, sentiment: r.sentiment });
+        });
+      }
+
       const profileMap = new Map((profiles || []).map((p: any) => [p.id, p]));
       const roleMap = new Map<string, string[]>();
       (roles || []).forEach((r: any) => {
@@ -137,6 +149,7 @@ export function useFeatureRequests(filters: FeatureFilters = {}) {
         author_profile: profileMap.get(f.author_id) || null,
         author_roles: roleMap.get(f.author_id) || ["investor"],
         user_voted: userVotes.includes(f.id),
+        user_satisfaction: userSatisfactions.get(f.id) || null,
       })) as FeatureRequest[];
     },
     enabled: !!userId,
