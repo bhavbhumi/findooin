@@ -332,7 +332,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
             {/* Column 1: findoo brand */}
             <div className="col-span-2 md:col-span-1">
               <Link to="/" className="inline-flex items-center gap-2 leading-none">
-                <img src={findooLogo} alt="findoo" className="h-7 w-7 dark:brightness-0 dark:invert" />
+                <img src={findooLogo} alt="findoo" className="h-9 w-9 dark:brightness-0 dark:invert" />
                 <span className="text-xl font-bold font-heading text-primary tracking-tight">findoo</span>
               </Link>
               {/* Everything below aligns with the wordmark, indented past the logo icon */}
