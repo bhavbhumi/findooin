@@ -60,6 +60,15 @@ const footerLinkSections = [
       { label: "Community Guidelines", to: "/community-guidelines" },
     ],
   },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy", to: "/legal?tab=privacy" },
+      { label: "Terms", to: "/legal?tab=terms" },
+      { label: "Policies", to: "/legal?tab=policies" },
+      { label: "Disclosures", to: "/legal?tab=disclosures" },
+    ],
+  },
 ];
 
 const NewsletterForm = () => {
