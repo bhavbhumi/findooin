@@ -423,10 +423,10 @@ export default function TestimonialsSection() {
         }}
       >
         <h2 className="text-3xl sm:text-4xl font-bold font-heading text-foreground mb-1">
-          Gaining Trust
+          Build the Trust Together
         </h2>
         <p className="text-muted-foreground text-base">
-          Be a founding voice in India's trust-verified financial network
+          Be among findoo's founding voices — your experience shapes the network.
         </p>
       </motion.div>
 
