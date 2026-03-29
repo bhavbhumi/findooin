@@ -128,9 +128,10 @@ export function SubmitFeatureModal({ open, onOpenChange }: SubmitFeatureModalPro
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto" aria-describedby="submit-feature-desc">
         <DialogHeader>
           <DialogTitle className="text-base">Suggest a Feature</DialogTitle>
+          <p id="submit-feature-desc" className="sr-only">A 5-step form to submit a feature request for findoo</p>
         </DialogHeader>
 
         {submitted ? (

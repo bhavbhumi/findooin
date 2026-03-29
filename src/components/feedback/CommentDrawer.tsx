@@ -145,6 +145,7 @@ export function CommentDrawer({ feature, open, onOpenChange }: CommentDrawerProp
               className="h-10 w-10 p-0 shrink-0"
               disabled={!newComment.trim() || addComment.isPending}
               onClick={handleSubmitComment}
+              aria-label="Send comment"
             >
               <Send className="h-4 w-4" />
             </Button>

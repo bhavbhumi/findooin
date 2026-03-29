@@ -82,10 +82,14 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   const primaryRole = feature.author_roles?.[0] || "investor";
 
   return (
-    <div className={cn(
-      "rounded-lg border bg-card p-4 transition-all hover:shadow-sm",
-      feature.pinned && "border-primary/30 bg-primary/[0.02]"
-    )}>
+    <article
+      role="article"
+      aria-label={`Feature request: ${feature.title}`}
+      className={cn(
+        "rounded-lg border bg-card p-4 transition-all hover:shadow-sm focus-within:ring-2 focus-within:ring-primary/20",
+        feature.pinned && "border-primary/30 bg-primary/[0.02]"
+      )}
+    >
       {/* Pinned badge */}
       {feature.pinned && (
         <div className="flex items-center gap-1 text-[10px] font-medium text-primary mb-2">
@@ -100,6 +104,8 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
           <Button
             variant={feature.user_voted ? "default" : "outline"}
             size="sm"
+            aria-label={feature.user_voted ? `Remove vote (${totalVotes} total)` : `Vote (${totalVotes} total)`}
+            aria-pressed={feature.user_voted}
             className={cn(
               "h-12 w-12 flex flex-col gap-0 p-0 rounded-lg",
               feature.user_voted && "bg-primary text-primary-foreground"
@@ -224,17 +230,17 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
 
             {/* Actions */}
             <div className="ml-auto flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground px-2" onClick={onOpenComments}>
+              <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground px-2" onClick={onOpenComments} aria-label={`${feature.comment_count} comments — open discussion`}>
                 <MessageSquare className="h-3.5 w-3.5" />
                 {feature.comment_count}
               </Button>
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-foreground px-2" onClick={handleShare}>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-foreground px-2" onClick={handleShare} aria-label="Copy link to this feature">
                 <Link2 className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

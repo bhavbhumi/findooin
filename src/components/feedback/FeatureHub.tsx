@@ -90,6 +90,13 @@ export function FeatureHub({ showSubmitModal, onCloseSubmitModal }: FeatureHubPr
         </Select>
       </div>
 
+      {/* Result count */}
+      {!isLoading && !isError && features && (
+        <p className="text-xs text-muted-foreground" aria-live="polite">
+          {features.length} {features.length === 1 ? "request" : "requests"} found
+        </p>
+      )}
+
       {/* Content */}
       {isLoading ? (
         <div className="space-y-3">
