@@ -230,11 +230,11 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
 
             {/* Actions */}
             <div className="ml-auto flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground px-2" onClick={onOpenComments}>
+              <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground px-2" onClick={onOpenComments} aria-label={`${feature.comment_count} comments — open discussion`}>
                 <MessageSquare className="h-3.5 w-3.5" />
                 {feature.comment_count}
               </Button>
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-foreground px-2" onClick={handleShare}>
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-foreground px-2" onClick={handleShare} aria-label="Copy link to this feature">
                 <Link2 className="h-3.5 w-3.5" />
               </Button>
             </div>
