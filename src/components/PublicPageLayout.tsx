@@ -172,7 +172,7 @@ const RegulatoryDisclosure = () => {
           { Icon: Database, label: "Encrypted at Rest" },
           { Icon: Fingerprint, label: "2FA Ready" },
           { Icon: Eye, label: "RLS Protected" },
-          { Icon: Server, label: "SOC-2 Infra" },
+          { Icon: Server, label: "Built on SOC-2 Infra" },
           { Icon: FileCheck, label: "IT Act 2000" },
         ] as const).map((seal) => (
           <span key={seal.label} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border/60 bg-background/50 text-[10px] font-medium text-muted-foreground">
