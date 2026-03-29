@@ -1,7 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store, Bookmark, Trophy, Download } from "lucide-react";
+import { Home, Search, Bell, MessageSquare, User, LogOut, Users, Settings, BarChart3, FileEdit, Clock, Shield, Briefcase, CalendarDays, Compass, FolderLock, Store, Bookmark, Trophy, Download, Lightbulb } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useRole, type AppRole } from "@/contexts/RoleContext";
 import findooLogo from "@/assets/findoo-logo-icon.png";
@@ -233,6 +233,12 @@ const AppNavbar = () => {
                   <Link to="/install" className="flex items-center gap-2 cursor-pointer">
                     <Download className="h-4 w-4" />
                     Install App
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/feedback" className="flex items-center gap-2 cursor-pointer">
+                    <Lightbulb className="h-4 w-4" />
+                    Feedback
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
