@@ -241,6 +241,6 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
