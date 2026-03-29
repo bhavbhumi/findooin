@@ -134,24 +134,38 @@ const RegulatoryDisclosure = () => {
   const [open, setOpen] = useState(false);
 
   const disclosureText = (
-    <div className="space-y-2 text-[11px] leading-relaxed text-muted-foreground">
-      <p>
-        <strong className="text-foreground/80">findoo Solutions LLP</strong> (LLPIN: AAA-7870) is a technology platform and operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000. findoo is <strong className="text-foreground/80">NOT</strong> registered with SEBI, RBI, IRDAI, AMFI, PFRDA, or any financial regulator as a stock broker, investment advisor, research analyst, portfolio manager, depository participant, insurance broker, or any other market intermediary.
-      </p>
-      <p>
-        The Platform does not provide investment advice, portfolio management, or facilitate securities transactions. Content shared by users — including market commentary, opinions, and research notes — does not constitute financial advice or recommendations. <strong className="text-foreground/80">Investments in securities/financial instruments are subject to market risks. There is no assurance or guarantee of returns. Past performance is not indicative of future results.</strong>
-      </p>
-      <p>
-        Verified badges confirm regulatory registration status at the time of verification only and do not constitute an endorsement of competence, conduct, or ongoing compliance. Users should independently verify credentials via official regulatory websites (sebi.gov.in, amfiindia.com, irdai.gov.in).
-      </p>
-      <p>
-        Mutual fund investments are subject to market risks. Read all scheme-related documents carefully. | Disputes are subject to arbitration under the Arbitration and Conciliation Act, 1996, seated in Mumbai, Maharashtra. | Data processed in compliance with the Digital Personal Data Protection Act, 2023.
-      </p>
-      <p>
-        Grievance Officer: compliance@findoo.in | Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India.
-      </p>
+    <div className="space-y-3 text-[11px] leading-relaxed text-muted-foreground">
+      {/* Block 1: Legal Classification */}
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-foreground/60 mb-1">Legal Classification</p>
+        <p>
+          <strong className="text-foreground/80">findoo Solutions LLP</strong> (LLPIN: AAA-7870) is a technology platform and operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000. findoo is <strong className="text-foreground/80">NOT</strong> registered with SEBI, RBI, IRDAI, AMFI, PFRDA, or any financial regulator as a stock broker, investment advisor, research analyst, portfolio manager, depository participant, insurance broker, or any other market intermediary.
+        </p>
+      </div>
+      <div className="border-t border-border/40" />
+      {/* Block 2: Content & Advice Disclaimer */}
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-foreground/60 mb-1">Content &amp; Advice Disclaimer</p>
+        <p>
+          The Platform does not provide investment advice, portfolio management, or facilitate securities transactions. Content shared by users — including market commentary, opinions, and research notes — does not constitute financial advice or recommendations. <strong className="text-foreground/80">Investments in securities/financial instruments are subject to market risks. There is no assurance or guarantee of returns. Past performance is not indicative of future results.</strong>
+        </p>
+      </div>
+      <div className="border-t border-border/40" />
+      {/* Block 3: Verification & Data */}
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-foreground/60 mb-1">Verification &amp; Data</p>
+        <p>
+          Verified badges confirm regulatory registration status at the time of verification only and do not constitute an endorsement of competence, conduct, or ongoing compliance. Users should independently verify credentials via official regulatory websites (sebi.gov.in, amfiindia.com, irdai.gov.in).
+        </p>
+        <p className="mt-1.5">
+          Mutual fund investments are subject to market risks. Read all scheme-related documents carefully. | Disputes are subject to arbitration under the Arbitration and Conciliation Act, 1996, seated in Mumbai, Maharashtra. | Data processed in compliance with the Digital Personal Data Protection Act, 2023.
+        </p>
+        <p className="mt-1.5">
+          Grievance Officer: compliance@findoo.in | Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India.
+        </p>
+      </div>
       {/* Trust Seals */}
-      <div className="flex flex-wrap items-center gap-3 pt-3 mt-3 border-t border-border/50">
+      <div className="flex flex-wrap items-center gap-3 pt-3 mt-1 border-t border-border/50">
         {([
           { Icon: Lock, label: "256-bit SSL" },
           { Icon: ShieldCheck, label: "DPDP Act 2023" },
@@ -318,7 +332,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
             {/* Column 1: findoo brand */}
             <div className="col-span-2 md:col-span-1">
               <Link to="/" className="inline-flex items-center gap-2 leading-none">
-                <img src={findooLogo} alt="findoo" className="h-7 w-7 dark:brightness-0 dark:invert" />
+                <img src={findooLogo} alt="findoo" className="h-9 w-9 dark:brightness-0 dark:invert" />
                 <span className="text-xl font-bold font-heading text-primary tracking-tight">findoo</span>
               </Link>
               {/* Everything below aligns with the wordmark, indented past the logo icon */}
