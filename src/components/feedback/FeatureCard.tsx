@@ -58,6 +58,11 @@ interface FeatureCardProps {
 export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   const [expanded, setExpanded] = useState(false);
   const voteMutation = useFeatureVote();
+  const rateMutation = useSatisfactionRating();
+  const removeRatingMutation = useRemoveSatisfactionRating();
+
+  const isShipped = feature.status === "released";
+  const [hoveredStar, setHoveredStar] = useState(0);
 
   const totalVotes = feature.inv_votes + feature.int_votes + feature.iss_votes + feature.enb_votes;
   const maxVotes = Math.max(totalVotes, 1);
