@@ -232,3 +232,145 @@ export function useFeatureDuplicateSearch(searchTerm: string) {
     enabled: searchTerm.length >= 3,
   });
 }
+
+// ─── Feature Comments ───
+export interface FeatureComment {
+  id: string;
+  feature_id: string;
+  user_id: string;
+  content: string;
+  parent_id: string | null;
+  upvote_count: number;
+  created_at: string;
+  profile?: {
+    full_name: string;
+    display_name: string | null;
+    avatar_url: string | null;
+    verification_status: string;
+  };
+  roles?: string[];
+  user_upvoted?: boolean;
+  replies?: FeatureComment[];
+}
+
+export function useFeatureComments(featureId: string | null) {
+  const { userId } = useRole();
+
+  return useQuery({
+    queryKey: QUERY_KEYS.featureComments(featureId || undefined),
+    queryFn: async () => {
+      if (!featureId) return [];
+
+      const { data, error } = await supabase
+        .from("feature_comments")
+        .select("*")
+        .eq("feature_id", featureId)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+
+      const userIds = [...new Set((data || []).map((c: any) => c.user_id))];
+      const { data: profiles } = userIds.length
+        ? await supabase.from("profiles").select("id, full_name, display_name, avatar_url, verification_status").in("id", userIds)
+        : { data: [] };
+      const { data: roles } = userIds.length
+        ? await supabase.from("user_roles").select("user_id, role").in("user_id", userIds)
+        : { data: [] };
+
+      let userUpvotes: string[] = [];
+      if (userId) {
+        const commentIds = (data || []).map((c: any) => c.id);
+        if (commentIds.length) {
+          const { data: upvotes } = await supabase
+            .from("comment_upvotes")
+            .select("comment_id")
+            .eq("user_id", userId)
+            .in("comment_id", commentIds);
+          userUpvotes = (upvotes || []).map((u: any) => u.comment_id);
+        }
+      }
+
+      const profileMap = new Map((profiles || []).map((p: any) => [p.id, p]));
+      const roleMap = new Map<string, string[]>();
+      (roles || []).forEach((r: any) => {
+        const arr = roleMap.get(r.user_id) || [];
+        arr.push(r.role);
+        roleMap.set(r.user_id, arr);
+      });
+
+      const comments = (data || []).map((c: any) => ({
+        ...c,
+        profile: profileMap.get(c.user_id) || null,
+        roles: roleMap.get(c.user_id) || ["investor"],
+        user_upvoted: userUpvotes.includes(c.id),
+      })) as FeatureComment[];
+
+      // Thread: group replies under parents
+      const topLevel: FeatureComment[] = [];
+      const replyMap = new Map<string, FeatureComment[]>();
+
+      comments.forEach(c => {
+        if (c.parent_id) {
+          const arr = replyMap.get(c.parent_id) || [];
+          arr.push(c);
+          replyMap.set(c.parent_id, arr);
+        } else {
+          topLevel.push(c);
+        }
+      });
+
+      topLevel.forEach(c => {
+        c.replies = replyMap.get(c.id) || [];
+      });
+
+      return topLevel;
+    },
+    enabled: !!featureId,
+  });
+}
+
+// ─── Add Comment ───
+export function useAddFeatureComment() {
+  const { userId } = useRole();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ featureId, content, parentId }: { featureId: string; content: string; parentId?: string }) => {
+      if (!userId) throw new Error("Not authenticated");
+      const { error } = await supabase.from("feature_comments").insert({
+        feature_id: featureId,
+        user_id: userId,
+        content: content.trim(),
+        parent_id: parentId || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.featureComments(vars.featureId) });
+      queryClient.invalidateQueries({ queryKey: ["feature-requests"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to post comment"),
+  });
+}
+
+// ─── Upvote Comment ───
+export function useCommentUpvote() {
+  const { userId } = useRole();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ commentId, featureId, action }: { commentId: string; featureId: string; action: "upvote" | "remove" }) => {
+      if (!userId) throw new Error("Not authenticated");
+      if (action === "upvote") {
+        const { error } = await supabase.from("comment_upvotes").insert({ comment_id: commentId, user_id: userId });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("comment_upvotes").delete().eq("comment_id", commentId).eq("user_id", userId);
+        if (error) throw error;
+      }
+    },
+    onSuccess: (_, vars) => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.featureComments(vars.featureId) });
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to upvote"),
+  });
+}
