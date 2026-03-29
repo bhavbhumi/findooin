@@ -1,263 +1,246 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Star, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  MessageSquarePlus,
+  Quote,
+  Rocket,
+  Shield,
+  Users,
+  Star,
+  Send,
+  Award,
+  Zap,
+  Target,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
 
-type RoleType = "issuer" | "intermediary" | "investor";
+/* ── Submit Review Card ── */
+function SubmitReviewCard() {
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(0);
+  const [hoveredStar, setHoveredStar] = useState(0);
 
-interface Testimonial {
-  quote: string;
-  name: string;
-  role: string;
-  location: string;
-  rating: number;
-  roleType: RoleType;
-}
-
-const testimonials: Testimonial[] = [
-  {
-    quote: "findoo has completely transformed how I discover and connect with verified financial professionals. The trust badges give me confidence that I'm dealing with regulated entities.",
-    name: "Priya Mehta",
-    role: "Wealth Advisor",
-    location: "Mumbai",
-    rating: 5,
-    roleType: "intermediary",
-  },
-  {
-    quote: "As a SEBI-registered RIA, findoo gives me the credibility platform I was looking for. My client inquiries increased 3x after getting verified on the network.",
-    name: "Varun Kapoor",
-    role: "Registered Investment Adviser",
-    location: "Delhi",
-    rating: 5,
-    roleType: "intermediary",
-  },
-  {
-    quote: "Finally, a network where I can verify credentials before taking financial advice. The verification engine is a game-changer for retail investors like me.",
-    name: "Anita Krishnan",
-    role: "Retail Investor",
-    location: "Chennai",
-    rating: 5,
-    roleType: "investor",
-  },
-  {
-    quote: "Our NFO reach increased significantly after listing on findoo's verified directory. The quality of connections is unmatched compared to generic platforms.",
-    name: "Rajesh Sharma",
-    role: "Product Head, AMC",
-    location: "Mumbai",
-    rating: 5,
-    roleType: "issuer",
-  },
-  {
-    quote: "The BFSI job board on findoo is exactly what the industry needed. We found pre-verified candidates with the right certifications in record time.",
-    name: "Deepak Malhotra",
-    role: "HR Director, NBFC",
-    location: "Bangalore",
-    rating: 5,
-    roleType: "issuer",
-  },
-  {
-    quote: "What sets findoo apart is accountability. Every profile, every post comes from a verified entity. No more anonymous noise — just signal.",
-    name: "Karan Patel",
-    role: "Research Analyst",
-    location: "Mumbai",
-    rating: 5,
-    roleType: "investor",
-  },
-];
-
-/* ── Role gradient configs ── */
-const roleGradients: Record<RoleType, { from: string; via: string; to: string; accent: string }> = {
-  issuer: {
-    from: "hsl(var(--issuer))",
-    via: "hsl(165 50% 30%)",
-    to: "hsl(200 45% 20%)",
-    accent: "hsl(var(--issuer) / 0.15)",
-  },
-  intermediary: {
-    from: "hsl(var(--intermediary))",
-    via: "hsl(240 60% 40%)",
-    to: "hsl(260 50% 25%)",
-    accent: "hsl(var(--intermediary) / 0.15)",
-  },
-  investor: {
-    from: "hsl(var(--investor))",
-    via: "hsl(45 65% 40%)",
-    to: "hsl(20 50% 25%)",
-    accent: "hsl(var(--investor) / 0.15)",
-  },
-};
-
-/* ── Generative network art SVG ── */
-function NetworkArt({ roleType, seed }: { roleType: RoleType; seed: number }) {
-  const g = roleGradients[roleType];
-  const gradId = `net-grad-${seed}`;
-
-  // Generate deterministic nodes
-  const rng = (s: number) => {
-    let x = Math.sin(s) * 10000;
-    return x - Math.floor(x);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!review.trim() || rating === 0) {
+      toast.error("Please add a rating and your review.");
+      return;
+    }
+    toast.success("Thank you! Your review has been submitted for moderation.");
+    setName("");
+    setRole("");
+    setReview("");
+    setRating(0);
   };
 
-  const nodes: { x: number; y: number; r: number }[] = [];
-  for (let i = 0; i < 28; i++) {
-    nodes.push({
-      x: rng(seed + i * 7) * 300,
-      y: rng(seed + i * 13 + 3) * 120,
-      r: 1.2 + rng(seed + i * 11) * 2.5,
-    });
-  }
-
-  // Generate connections between nearby nodes
-  const connections: { x1: number; y1: number; x2: number; y2: number }[] = [];
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 80 && connections.length < 40) {
-        connections.push({ x1: nodes[i].x, y1: nodes[i].y, x2: nodes[j].x, y2: nodes[j].y });
-      }
-    }
-  }
-
   return (
-    <svg
-      viewBox="0 0 300 120"
-      className="absolute inset-0 w-full h-full"
-      preserveAspectRatio="xMidYMid slice"
-    >
-      <defs>
-        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor={g.from} stopOpacity="0.7" />
-          <stop offset="50%" stopColor={g.via} stopOpacity="0.5" />
-          <stop offset="100%" stopColor={g.to} stopOpacity="0.9" />
-        </linearGradient>
-        <radialGradient id={`${gradId}-glow`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor={g.from} stopOpacity="0.3" />
-          <stop offset="100%" stopColor={g.to} stopOpacity="0" />
-        </radialGradient>
-      </defs>
+    <Card className="h-full border-primary/20 bg-gradient-to-br from-primary/[0.03] to-accent/[0.02] hover:border-primary/30 transition-all duration-300">
+      <CardContent className="p-6 flex flex-col h-full">
+        <div className="flex items-center gap-2 mb-1">
+          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <MessageSquarePlus className="h-4 w-4 text-primary" />
+          </div>
+          <h3 className="font-semibold text-foreground text-sm">Submit Your Review</h3>
+        </div>
+        <p className="text-xs text-muted-foreground mb-4">
+          Be among the first to share your experience on findoo.
+        </p>
 
-      {/* Dark base */}
-      <rect width="300" height="120" fill={`url(#${gradId})`} />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 flex-1">
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <Label className="text-xs text-muted-foreground">Name</Label>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                className="h-8 text-xs"
+              />
+            </div>
+            <div>
+              <Label className="text-xs text-muted-foreground">Role</Label>
+              <Input
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                placeholder="e.g. MFD, RIA"
+                className="h-8 text-xs"
+              />
+            </div>
+          </div>
 
-      {/* Glow cluster */}
-      <circle cx={150 + (rng(seed + 99) - 0.5) * 100} cy={60} r="60" fill={`url(#${gradId}-glow)`} />
+          {/* Star rating */}
+          <div>
+            <Label className="text-xs text-muted-foreground">Rating</Label>
+            <div className="flex gap-1 mt-1">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <button
+                  type="button"
+                  key={s}
+                  onMouseEnter={() => setHoveredStar(s)}
+                  onMouseLeave={() => setHoveredStar(0)}
+                  onClick={() => setRating(s)}
+                  className="focus:outline-none"
+                >
+                  <Star
+                    className={`h-4 w-4 transition-colors ${
+                      s <= (hoveredStar || rating)
+                        ? "fill-gold text-gold"
+                        : "text-muted-foreground/30"
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
 
-      {/* Connection lines */}
-      {connections.map((c, i) => (
-        <line
-          key={i}
-          x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
-          stroke="rgba(255,255,255,0.15)"
-          strokeWidth="0.5"
-        />
-      ))}
+          <div className="flex-1">
+            <Label className="text-xs text-muted-foreground">Your Review</Label>
+            <Textarea
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+              placeholder="Share how findoo is helping your professional journey..."
+              className="text-xs min-h-[60px] resize-none"
+              maxLength={500}
+            />
+          </div>
 
-      {/* Nodes */}
-      {nodes.map((n, i) => (
-        <circle
-          key={i}
-          cx={n.x}
-          cy={n.y}
-          r={n.r}
-          fill="rgba(255,255,255,0.6)"
-          opacity={0.4 + rng(seed + i * 5) * 0.6}
-        />
-      ))}
-    </svg>
+          <Button type="submit" size="sm" className="w-full gap-1.5 text-xs">
+            <Send className="h-3 w-3" />
+            Submit Review
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
 
-/* ── Role label badge ── */
-const roleBadgeClasses: Record<RoleType, string> = {
-  issuer: "bg-issuer/15 text-issuer border-issuer/25",
-  intermediary: "bg-intermediary/15 text-intermediary border-intermediary/25",
-  investor: "bg-investor/15 text-investor border-investor/25",
-};
-
-const roleLabels: Record<RoleType, string> = {
-  issuer: "Issuer",
-  intermediary: "Intermediary",
-  investor: "Investor",
-};
-
-/* ── Testimonial Card ── */
-function TestimonialCard({ t, index }: { t: Testimonial; index: number }) {
+/* ── Founder Quote Card ── */
+function FounderQuoteCard() {
   return (
-    <motion.div
-      className="min-w-[300px] sm:min-w-[320px] lg:min-w-0 snap-start rounded-xl border border-border bg-card overflow-hidden flex flex-col hover:shadow-xl hover:border-primary/10 transition-all duration-300 group"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={{
-        hidden: { opacity: 0, y: 24 },
-        visible: {
-          opacity: 1, y: 0,
-          transition: { delay: index * 0.1, duration: 0.5, ease: "easeOut" },
-        },
-      }}
-    >
-      {/* Network art header */}
-      <div className="relative h-24 overflow-hidden">
-        <NetworkArt roleType={t.roleType} seed={index * 37 + 42} />
-        {/* Role badge overlay */}
-        <div className="absolute top-3 left-3">
-          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border backdrop-blur-sm ${roleBadgeClasses[t.roleType]}`}>
-            {roleLabels[t.roleType]}
-          </span>
+    <Card className="h-full border-border bg-card hover:shadow-lg transition-all duration-300 overflow-hidden relative group">
+      {/* Decorative gradient header */}
+      <div className="h-20 relative overflow-hidden bg-gradient-to-br from-primary/80 via-primary/60 to-accent/40">
+        <div className="absolute inset-0 opacity-20">
+          {/* Subtle pattern */}
+          <svg viewBox="0 0 300 80" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            {Array.from({ length: 15 }).map((_, i) => (
+              <circle
+                key={i}
+                cx={20 + i * 20}
+                cy={40 + Math.sin(i) * 20}
+                r={2 + (i % 3)}
+                fill="white"
+                opacity={0.3 + (i % 5) * 0.1}
+              />
+            ))}
+          </svg>
         </div>
-        {/* Quote mark overlay */}
-        <div className="absolute bottom-2 right-3 text-white/20 text-4xl font-serif leading-none select-none">"</div>
+        <div className="absolute bottom-2 left-4">
+          <Quote className="h-8 w-8 text-white/30" />
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5 flex flex-col flex-1">
-        {/* Rating */}
-        <div className="flex items-center gap-0.5 mb-3">
-          {Array.from({ length: t.rating }).map((_, s) => (
-            <Star key={s} className="h-3.5 w-3.5 fill-gold text-gold" />
+      <CardContent className="p-5 flex flex-col flex-1">
+        <blockquote className="text-sm text-muted-foreground leading-relaxed italic flex-1 mb-4">
+          "We built findoo because India's financial ecosystem deserved a network where trust isn't
+          assumed — it's verified. Every connection, every credential, every conversation is
+          anchored in accountability. This is just the beginning."
+        </blockquote>
+
+        <div className="flex items-center gap-3 pt-3 border-t border-border/60">
+          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center text-sm font-bold text-primary shrink-0">
+            F
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-foreground">Founding Team</p>
+            <p className="text-xs text-muted-foreground">findoo · Building Trust Infrastructure</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+/* ── Early Adopter Badges Card ── */
+function EarlyAdopterCard() {
+  const milestones = [
+    {
+      icon: Rocket,
+      label: "Beta Pioneer",
+      description: "Join before public launch",
+      color: "text-primary bg-primary/10",
+    },
+    {
+      icon: Shield,
+      label: "Verified Early",
+      description: "Get verified as a founding member",
+      color: "text-intermediary bg-intermediary/10",
+    },
+    {
+      icon: Award,
+      label: "Founding Reviewer",
+      description: "First 100 reviews get a badge",
+      color: "text-gold bg-gold/10",
+    },
+    {
+      icon: Zap,
+      label: "Trust Builder",
+      description: "Shape the trust ecosystem",
+      color: "text-issuer bg-issuer/10",
+    },
+  ];
+
+  return (
+    <Card className="h-full border-border bg-card hover:shadow-lg transition-all duration-300">
+      <CardContent className="p-6 flex flex-col h-full">
+        <div className="flex items-center gap-2 mb-1">
+          <div className="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center">
+            <Target className="h-4 w-4 text-accent-foreground" />
+          </div>
+          <h3 className="font-semibold text-foreground text-sm">Early Adopter Badges</h3>
+        </div>
+        <p className="text-xs text-muted-foreground mb-4">
+          Exclusive recognition for founding members of the network.
+        </p>
+
+        <div className="grid grid-cols-1 gap-2.5 flex-1">
+          {milestones.map((m) => (
+            <div
+              key={m.label}
+              className="flex items-center gap-3 p-2.5 rounded-lg bg-muted/30 border border-border/40 hover:border-border/60 transition-colors"
+            >
+              <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${m.color}`}>
+                <m.icon className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold text-foreground">{m.label}</p>
+                <p className="text-[10px] text-muted-foreground">{m.description}</p>
+              </div>
+            </div>
           ))}
         </div>
 
-        <p className="text-sm text-muted-foreground leading-relaxed flex-1 mb-4">
-          "{t.quote}"
-        </p>
-
-        {/* Author */}
-        <div className="flex items-center gap-3 pt-3 border-t border-border/60">
-          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary/20 to-accent/10 flex items-center justify-center text-sm font-bold text-primary shrink-0">
-            {t.name.charAt(0)}
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-foreground truncate">{t.name}</p>
-            <p className="text-xs text-muted-foreground truncate">{t.role} · {t.location}</p>
-          </div>
-        </div>
-      </div>
-    </motion.div>
+        <Link to="/auth">
+          <Button variant="outline" size="sm" className="w-full mt-4 gap-1.5 text-xs">
+            <Users className="h-3 w-3" />
+            Claim Your Badge
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
   );
 }
 
 /* ── Main Section ── */
-const PAGE_SIZE = 3;
-
 export default function TestimonialsSection() {
-  const [page, setPage] = useState(0);
-  const totalPages = Math.ceil(testimonials.length / PAGE_SIZE);
-
-  const next = useCallback(() => setPage((p) => (p + 1) % totalPages), [totalPages]);
-  const prev = useCallback(() => setPage((p) => (p - 1 + totalPages) % totalPages), [totalPages]);
-
-  // Auto-advance
-  useEffect(() => {
-    const timer = setInterval(next, 6000);
-    return () => clearInterval(timer);
-  }, [next]);
-
-  const visible = testimonials.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
-
   return (
     <>
       {/* Section header */}
@@ -275,90 +258,39 @@ export default function TestimonialsSection() {
           Gaining Trust
         </h2>
         <p className="text-muted-foreground text-base">
-          Voices from the Ecosystem
+          Be a founding voice in India's trust-verified financial network
         </p>
       </motion.div>
 
-      {/* Desktop: animated grid, Tablet: 2 cols, Mobile: 1 col */}
-      <div className="relative">
-        {/* Desktop/Tablet grid */}
-        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          <AnimatePresence mode="popLayout">
-            {visible.map((t, i) => (
-              <motion.div
-                key={`${page}-${i}`}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.35, delay: i * 0.05 }}
-              >
-                <TestimonialCard t={t} index={i} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-
-        {/* Mobile: horizontal scroll */}
-        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:hidden scrollbar-hide">
-          {testimonials.map((t, i) => (
-            <TestimonialCard key={i} t={t} index={i} />
-          ))}
-        </div>
-
-        {/* Carousel controls (desktop/tablet) */}
-        <div className="hidden sm:flex items-center justify-center gap-3 mt-6">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 rounded-full"
-            onClick={prev}
-            aria-label="Previous testimonials"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-
-          {/* Dots */}
-          <div className="flex gap-1.5">
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                key={i}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === page ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/25"
-                }`}
-                onClick={() => setPage(i)}
-                aria-label={`Page ${i + 1}`}
-              />
-            ))}
-          </div>
-
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 rounded-full"
-            onClick={next}
-            aria-label="Next testimonials"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* CTA Footer */}
-      <motion.div
-        className="text-center mt-6"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.3 }}
-      >
-        <Link
-          to="/explore"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80 transition-colors story-link"
+      {/* 3-column grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
         >
-          View all voices
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </motion.div>
+          <SubmitReviewCard />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          <FounderQuoteCard />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
+          <EarlyAdopterCard />
+        </motion.div>
+      </div>
     </>
   );
 }
