@@ -300,6 +300,20 @@ src/
 - **Pitch Decks** (`/pitch`) — Stakeholder presentations
 - **Cost Report** (`/cost-report`) — Development cost & efficiency analysis (printable)
 
+### 14. Roles & Onboarding
+
+| Role | Sub-types | Pro (₹/mo) | Enterprise (₹/mo) |
+|------|-----------|------------|-------------------|
+| **Investor** | Retail, HNI, Institutional, NRI | ₹399 | ₹999 |
+| **Intermediary** | Broker, RIA, MFD, Insurance Agent, Research Analyst, CA/CS, PoP | ₹799 | ₹1,999 |
+| **Issuer** | Listed Company, AMC, NBFC, Insurance Company, Bank, Government | ₹1,499 | ₹4,999 |
+| **Enabler** | KRA, Depository (CDSL/NSDL), RTA, Custodian, Vault Manager, ASBA Bank, ESG Rating Provider | ₹999 | ₹2,999 |
+
+- All roles include a **Free** tier with core platform access
+- Annual plans priced at 10× monthly rate
+- Enabler Pro features: API access, lead capture, featured directory listing
+- Enabler Enterprise adds: webhooks, white-labeling, campaign management
+
 ---
 
 ## Design System
