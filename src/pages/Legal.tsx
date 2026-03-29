@@ -300,6 +300,80 @@ Mutual fund investments are subject to market risks. Read all scheme-related doc
   },
 ];
 
+/* ───────────────────── INTELLECTUAL PROPERTY RIGHTS ───────────────────── */
+const iprSections = [
+  {
+    title: "1. Trademarks",
+    content: `The following are trademarks or service marks of findoo Solutions LLP, whether registered or unregistered, and may not be used without prior written permission:
+
+(a) "findoo" — the platform name and wordmark;
+(b) "Financially Social" — the official tagline;
+(c) "India's First Financial Network" — the positioning statement;
+(d) "TrustCircle IQ" — the proprietary trust-scoring algorithm and methodology;
+(e) The findoo logo, icon, and all associated visual branding elements;
+(f) Any combination of the above with other words, symbols, or design elements.
+
+Unauthorized use of any findoo trademark — including in domain names, social media handles, advertising, or product names — may constitute trademark infringement under the Trade Marks Act, 1999, and will be subject to legal action. Third parties may reference "findoo" in editorial or descriptive contexts provided it does not imply endorsement, affiliation, or sponsorship.`,
+  },
+  {
+    title: "2. Copyright",
+    content: `© 2025 findoo Solutions LLP. All rights reserved.
+
+All original content on the findoo platform, including but not limited to: (a) source code, software architecture, algorithms, and database structures; (b) user interface designs, layouts, icons, and visual elements; (c) written content including legal documents, blog posts, help articles, and marketing materials; (d) images, graphics, illustrations, and multimedia created by findoo; and (e) data compilations and curated datasets — are protected under the Copyright Act, 1957, and international copyright treaties.
+
+No part of the Platform's proprietary content may be reproduced, distributed, modified, displayed, performed, or transmitted in any form without the prior written consent of findoo Solutions LLP, except as expressly permitted by applicable law (e.g., fair dealing under Section 52 of the Copyright Act, 1957).
+
+User-generated content remains the intellectual property of respective authors, subject to the license granted under our Terms of Service (Section 6.1).`,
+  },
+  {
+    title: "3. Patents & Proprietary Technology",
+    content: `findoo Solutions LLP has developed proprietary technology, algorithms, and methodologies that may be the subject of patent applications and/or trade secret protections:
+
+(a) TrustCircle IQ™ — a multi-signal trust and affinity scoring system that evaluates trust proximity, role weighting, activity resonance, intent multipliers, and freshness decay to rank professional connections. A provisional patent application has been filed for this technology.
+
+(b) Affinity Rank Algorithm — the proprietary system for personalized content and connection ranking within the financial professional network context.
+
+(c) Regulatory Verification Pipeline — the automated process for validating professional credentials against official regulatory registries (SEBI, AMFI, IRDAI, RBI, PFRDA).
+
+These technologies constitute trade secrets of findoo Solutions LLP. Any attempt to reverse-engineer, decompile, or replicate these systems is prohibited under these Terms, the Information Technology Act, 2000, and applicable patent law.`,
+  },
+  {
+    title: "4. Brand Usage Guidelines",
+    content: `Third parties wishing to reference, display, or use findoo's brand assets must adhere to the following guidelines:
+
+(a) Logo Usage: The findoo logo must not be altered, distorted, recolored, or combined with other logos without written permission. Minimum clear space and size requirements apply as specified in our brand guidelines (available at brand.txt).
+
+(b) Color Palette: Brand Teal (#2DBFA5) and Midnight Blue (#00008A) are the official brand colors and should not be modified when reproducing brand assets.
+
+(c) Prohibited Uses: findoo brand assets may NOT be used: (i) in any manner that implies endorsement, sponsorship, or partnership without a written agreement; (ii) in connection with illegal activities, misleading claims, or content that violates Indian financial regulations; (iii) in a manner that disparages or dilutes the findoo brand; (iv) as part of another company's product name, service name, or trademark.
+
+(d) Press & Media: For press inquiries and permission to use brand assets, contact hello@findoo.in.`,
+  },
+  {
+    title: "5. DMCA & Takedown Process",
+    content: `If you believe that content on the findoo platform infringes your intellectual property rights, you may submit a complaint under the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021:
+
+(a) Identify the copyrighted work, trademark, or patent you claim has been infringed;
+(b) Identify the specific content on findoo that you allege is infringing, with sufficient detail to locate it (e.g., URL, post ID);
+(c) Provide your full name, contact information (address, email, phone number), and your relationship to the IP owner;
+(d) Include a statement that you have a good-faith belief that the use is not authorized by the IP owner, its agent, or the law;
+(e) Include a statement, under penalty of perjury, that the information in your notice is accurate and that you are authorized to act on behalf of the IP owner;
+(f) Provide your physical or electronic signature.
+
+Submit IP infringement notices to: legal@findoo.in
+
+findoo will: (i) acknowledge receipt within 24 hours; (ii) investigate the claim within 15 days; (iii) remove or disable access to infringing content where the complaint is valid; and (iv) notify the content creator of the action taken, providing them an opportunity to submit a counter-notice if they believe the takedown was made in error.`,
+  },
+  {
+    title: "6. Open-Source Attributions",
+    content: `The findoo platform uses certain open-source software libraries and frameworks in its technology stack. These components are used in accordance with their respective open-source licenses (MIT, Apache 2.0, BSD, etc.). The use of open-source components does not grant any rights to findoo's proprietary code, algorithms, or intellectual property built on top of these foundations. A list of open-source dependencies and their licenses is maintained in the project's source code repository.`,
+  },
+  {
+    title: "7. Reporting IP Violations",
+    content: `If you become aware of any unauthorized use of findoo's intellectual property — including counterfeit apps, phishing sites using the findoo brand, unauthorized reproductions of platform content, or trademark infringement — please report it immediately to legal@findoo.in with relevant details and evidence. findoo actively monitors and enforces its intellectual property rights and will take appropriate legal action against infringers under the Trade Marks Act, 1999, the Copyright Act, 1957, the Patents Act, 1970, and the Information Technology Act, 2000.`,
+  },
+];
+
 /* ───────────────────── COOKIE POLICY ───────────────────── */
 const cookiePolicySections = [
   {
