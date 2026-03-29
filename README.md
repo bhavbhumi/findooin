@@ -308,7 +308,7 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 
 ```css
 --background, --foreground, --card, --primary, --accent, --muted, --destructive
---investor, --intermediary, --issuer  /* Role-specific colors */
+--investor, --intermediary, --issuer, --enabler  /* Role-specific colors */
 --gold, --gold-foreground             /* Premium accent */
 ```
 
