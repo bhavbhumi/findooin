@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFeatureRequests, type FeatureRequest, type FeatureStatus } from "@/hooks/useFeedback";
-import { useAdminUpdateStatus, useAdminReject, useAdminPin, useAdminMerge, useCreateChangelog } from "@/hooks/useFeedbackAdmin";
+import { useAdminUpdateStatus, useAdminReject, useAdminPin, useAdminMerge, useCreateChangelog, useSeedModules, useEditFeatureDescription } from "@/hooks/useFeedbackAdmin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import {
   AlertCircle, Pin, PinOff, Merge, Ban, ArrowUp, MessageSquare,
   Search, ChevronRight, Clock, Calendar, Plus, X, FileText,
+  Sprout, Pencil, Star,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
