@@ -86,6 +86,15 @@ function AdminFeatureRow({
             variant="ghost"
             size="icon"
             className="h-7 w-7"
+            title="Edit"
+            onClick={() => onEdit(feature)}
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
             title={feature.pinned ? "Unpin" : "Pin"}
             onClick={() => onTogglePin(feature)}
           >
