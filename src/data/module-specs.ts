@@ -974,6 +974,57 @@ const moduleSpecs: Record<string, ModuleSpec> = {
       "Internal tool — improves development efficiency and stakeholder communication.",
     ],
   },
+
+  feedback: {
+    moduleKey: "feedback",
+    title: "Feedback Engine",
+    icon: "Lightbulb",
+    problem:
+      "Users have no structured way to suggest features, track their status, or understand product direction. Feedback is lost in support tickets, chat messages, and social media — making it impossible to prioritise based on real demand.",
+    solution:
+      "A Canny/Linear-grade feedback engine with structured feature requests, role-weighted voting (Investor/Intermediary/Issuer/Enabler), public roadmap swimlanes, changelog timeline, and admin triage tools — all within the platform's existing design system.",
+    useCases: [
+      "Feature discovery: User submits 'Add SIP calculator to listings' — other users vote, surfacing genuine demand.",
+      "Roadmap transparency: Product team moves a request to 'Planned' with a rationale note — all voters see the update and get notified.",
+      "Duplicate management: Admin merges 3 similar requests into one, consolidating 45 votes for accurate prioritisation.",
+      "Status communication: When a feature ships, admin marks it 'Shipped' — all voters receive a notification with a link to the changelog.",
+      "Role-weighted prioritisation: A feature with 10 Intermediary votes ranks higher than one with 20 Investor votes based on configurable role weights.",
+    ],
+    currentScope: [
+      "Feature Hub with search, category/status filters, and sort (votes/newest/trending).",
+      "Structured submission modal with title, description, category, role tags, impact tags, workaround, and anonymous option.",
+      "Role-weighted voting — 4 vote buckets (inv, int, iss, enb) with unique constraint per user.",
+      "Threaded comment drawer with reply support and upvotes.",
+      "Duplicate detection during submission via title similarity search.",
+      "Roadmap swimlane view grouped by status (Planned → In Progress → Shipped → Rejected).",
+      "Changelog timeline with version entries, feature/improvement/bugfix lists, and emoji reactions.",
+      "My Activity panel showing user's submissions, votes, and comments.",
+      "Admin triage panel — status transitions, pin/unpin, merge duplicates, reject with reason.",
+      "Voter notifications on status changes via notifications table.",
+      "Admin changelog entry creation with structured version/features/improvements/fixes.",
+      "Share via copy-link action on feature cards.",
+      "Full accessibility — semantic HTML, aria-labels, keyboard navigation, screen reader support.",
+      "Loading skeletons, empty states with CTAs, and inline error handling across all views.",
+    ],
+    futureScope: [
+      "Public (unauthenticated) read-only view of roadmap and changelog.",
+      "Email digest — weekly summary of new requests and status changes.",
+      "AI-powered duplicate detection using semantic similarity.",
+      "Priority score algorithm combining vote weight, recency, and comment activity.",
+      "Webhook integrations — push status changes to Slack/Discord.",
+      "Feature request templates per category.",
+      "Voting quotas — limit votes per user per month to encourage thoughtful prioritisation.",
+      "Changelog RSS feed generation.",
+      "Admin bulk actions — batch status updates, bulk merge.",
+      "Analytics dashboard — submission trends, vote distribution, resolution time.",
+    ],
+    monetisation: [
+      "Premium visibility: Paid users' requests get a 'Priority' badge and appear higher in the feed.",
+      "Private feature requests: Enterprise plan allows confidential submissions visible only to admins.",
+      "Custom roadmap embedding: White-label roadmap widget for enterprise clients' own portals.",
+      "SLA tracking: Premium support plan includes guaranteed response time on feature requests.",
+    ],
+  },
 };
 
 export default moduleSpecs;
