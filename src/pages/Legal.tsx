@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { usePageMeta } from "@/hooks/usePageMeta";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
 import { PageHero } from "@/components/PageHero";
 
