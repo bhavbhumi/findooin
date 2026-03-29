@@ -194,6 +194,59 @@ const DropdownMenu = ({
   );
 };
 
+const RegulatoryDisclosure = () => {
+  const [open, setOpen] = useState(false);
+
+  const disclosureText = (
+    <div className="space-y-2 text-[11px] leading-relaxed text-muted-foreground">
+      <p>
+        <strong className="text-foreground/80">findoo Solutions LLP</strong> (LLPIN: AAA-7870) is a technology platform and operates as an intermediary under Section 2(1)(w) of the Information Technology Act, 2000. findoo is <strong className="text-foreground/80">NOT</strong> registered with SEBI, RBI, IRDAI, AMFI, PFRDA, or any financial regulator as a stock broker, investment advisor, research analyst, portfolio manager, depository participant, insurance broker, or any other market intermediary.
+      </p>
+      <p>
+        The Platform does not provide investment advice, portfolio management, or facilitate securities transactions. Content shared by users — including market commentary, opinions, and research notes — does not constitute financial advice or recommendations. <strong className="text-foreground/80">Investments in securities/financial instruments are subject to market risks. There is no assurance or guarantee of returns. Past performance is not indicative of future results.</strong>
+      </p>
+      <p>
+        Verified badges confirm regulatory registration status at the time of verification only and do not constitute an endorsement of competence, conduct, or ongoing compliance. Users should independently verify credentials via official regulatory websites (sebi.gov.in, amfiindia.com, irdai.gov.in).
+      </p>
+      <p>
+        Mutual fund investments are subject to market risks. Read all scheme-related documents carefully. | Disputes are subject to arbitration under the Arbitration and Conciliation Act, 1996, seated in Mumbai, Maharashtra. | Data processed in compliance with the Digital Personal Data Protection Act, 2023.
+      </p>
+      <p>
+        Grievance Officer: compliance@findoo.in | Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India.
+      </p>
+    </div>
+  );
+
+  return (
+    <div className="border-t border-border bg-muted/30">
+      <div className="container py-4">
+        {/* Desktop: always visible */}
+        <div className="hidden lg:block">
+          <div className="flex items-start gap-2.5">
+            <ShieldAlert className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+            <div>
+              <p className="text-[11px] font-semibold text-foreground/80 mb-1.5 uppercase tracking-wider">Regulatory Disclosure</p>
+              {disclosureText}
+            </div>
+          </div>
+        </div>
+        {/* Mobile: collapsible */}
+        <div className="lg:hidden">
+          <button
+            onClick={() => setOpen(!open)}
+            className="flex items-center gap-2 w-full text-left"
+          >
+            <ShieldAlert className="h-4 w-4 text-primary shrink-0" />
+            <span className="text-[11px] font-semibold text-foreground/80 uppercase tracking-wider flex-1">Regulatory Disclosure</span>
+            <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+          </button>
+          {open && <div className="mt-3 pl-6">{disclosureText}</div>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
