@@ -308,7 +308,7 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
       {/* ── Footer ── */}
       <footer className="border-t border-primary/10 bg-primary/[0.04]">
         <div className="container py-8 md:py-10">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
             {/* Column 1: findoo brand */}
             <div className="col-span-2 md:col-span-1">
               <Link to="/" className="inline-flex items-center gap-2 leading-none">
