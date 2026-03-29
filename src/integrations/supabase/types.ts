@@ -1887,6 +1887,48 @@ export type Database = {
           },
         ]
       }
+      platform_reviews: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          id: string
+          rating: number
+          review_text: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_name: string
+          reviewer_role: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          review_text?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_name?: string
+          reviewer_role?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          review_text?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_name?: string
+          reviewer_role?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       poll_options: {
         Row: {
           created_at: string
