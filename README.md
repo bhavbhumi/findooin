@@ -37,9 +37,9 @@
 
 ## Overview
 
-findoo connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AMCs, insurance companies) on a single verified platform. It provides:
+findoo connects investors, intermediaries (MFDs, RIAs, brokers), issuers (AMCs, insurance companies), and enablers (KRAs, depositories, RTAs, custodians) on a single verified platform. It provides:
 
-- **Role-based access** — 4 roles: Investor, Intermediary, Issuer, Admin
+- **Role-based access** — 5 roles: Investor, Intermediary, Issuer, Enabler, Admin
 - **Verified profiles** — KYC document upload + admin verification queue
 - **Professional networking** — Follow / Connect with acceptance flow
 - **Content feed** — Posts, polls, surveys with hashtags and visibility controls
