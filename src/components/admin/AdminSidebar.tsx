@@ -10,7 +10,7 @@ import {
   Monitor, CreditCard, Bell, ToggleLeft, LifeBuoy,
   Mail, Database, TrendingUp, Megaphone, Send, Gauge, ClipboardList,
   IndianRupee, Server, Search, FileText, LogOut, ExternalLink, BarChart3,
-  Crown, ShieldAlert
+  Crown, ShieldAlert, Lightbulb
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -119,6 +119,7 @@ export function AdminSidebar() {
       label: "Content & Compliance",
       items: [
         { title: "Blog", url: "/admin/blog", icon: BookOpen, permission: "manage_blog" },
+        { title: "Feedback Engine", url: "/admin/feedback", icon: Lightbulb, permission: "manage_moderation" },
         { title: "Coded Messaging", url: "/admin/coded-messaging", icon: ShieldAlert, permission: "manage_moderation" },
         { title: "Support Tickets", url: "/admin/support", icon: LifeBuoy, permission: "manage_support" },
         { title: "Knowledge Base", url: "/admin/kb", icon: BookOpen, permission: "manage_kb" },

@@ -9,6 +9,7 @@ import { ChangelogTimeline } from "@/components/feedback/ChangelogTimeline";
 import { MyActivityPanel } from "@/components/feedback/MyActivityPanel";
 import { FeedbackAdminPanel } from "@/components/feedback/FeedbackAdminPanel";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import AppLayout from "@/components/AppLayout";
 
 const Feedback = () => {
   usePageMeta({ title: "Feedback — findoo", description: "Share your ideas and vote on features for findoo" });
@@ -17,8 +18,8 @@ const Feedback = () => {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container max-w-6xl mx-auto px-4 py-6">
+    <AppLayout maxWidth="max-w-6xl">
+      <div className="py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -78,7 +79,7 @@ const Feedback = () => {
           )}
         </Tabs>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
