@@ -384,7 +384,12 @@ const Blog = () => {
               >
                 {filteredPosts.map((post, i) => {
                   const sc = post.post_type === "poll" ? pollStats?.[post.id] : post.post_type === "survey" ? surveyStats?.[post.id] : undefined;
-                  return <BlogCard key={post.id} post={post} index={i} statCount={sc} />;
+                  return (
+                    <React.Fragment key={post.id}>
+                      <BlogCard post={post} index={i} statCount={sc} />
+                      {i === 1 && <NewsletterForm variant="card" />}
+                    </React.Fragment>
+                  );
                 })}
               </motion.div>
             ) : (
