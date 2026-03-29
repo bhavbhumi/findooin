@@ -37,9 +37,9 @@
 
 ## Overview
 
-findoo connects investors, intermediaries (MFDs, RIAs, brokers), and issuers (AMCs, insurance companies) on a single verified platform. It provides:
+findoo connects investors, intermediaries (MFDs, RIAs, brokers), issuers (AMCs, insurance companies), and enablers (KRAs, depositories, RTAs, custodians) on a single verified platform. It provides:
 
-- **Role-based access** — 4 roles: Investor, Intermediary, Issuer, Admin
+- **Role-based access** — 5 roles: Investor, Intermediary, Issuer, Enabler, Admin
 - **Verified profiles** — KYC document upload + admin verification queue
 - **Professional networking** — Follow / Connect with acceptance flow
 - **Content feed** — Posts, polls, surveys with hashtags and visibility controls
@@ -153,7 +153,7 @@ src/
 │   ├── RouteErrorBoundary.tsx # Per-route error handling with retry
 │   └── ErrorBoundary.tsx  # Graceful error handling per section
 ├── contexts/
-│   └── RoleContext.tsx  # Global role state (investor/intermediary/issuer/admin)
+│   └── RoleContext.tsx  # Global role state (investor/intermediary/issuer/enabler/admin)
 ├── hooks/               # 25 custom hooks — one per module
 │   ├── useFeedPosts.ts  # Infinite-scroll feed with pagination via RPC
 │   ├── usePostInteractions.ts # Batched like/bookmark with optimistic updates
@@ -300,6 +300,20 @@ src/
 - **Pitch Decks** (`/pitch`) — Stakeholder presentations
 - **Cost Report** (`/cost-report`) — Development cost & efficiency analysis (printable)
 
+### 14. Roles & Onboarding
+
+| Role | Sub-types | Pro (₹/mo) | Enterprise (₹/mo) |
+|------|-----------|------------|-------------------|
+| **Investor** | Retail, HNI, Institutional, NRI | ₹399 | ₹999 |
+| **Intermediary** | Broker, RIA, MFD, Insurance Agent, Research Analyst, CA/CS, PoP | ₹799 | ₹1,999 |
+| **Issuer** | Listed Company, AMC, NBFC, Insurance Company, Bank, Government | ₹1,499 | ₹4,999 |
+| **Enabler** | KRA, Depository (CDSL/NSDL), RTA, Custodian, Vault Manager, ASBA Bank, ESG Rating Provider | ₹999 | ₹2,999 |
+
+- All roles include a **Free** tier with core platform access
+- Annual plans priced at 10× monthly rate
+- Enabler Pro features: API access, lead capture, featured directory listing
+- Enabler Enterprise adds: webhooks, white-labeling, campaign management
+
 ---
 
 ## Design System
@@ -308,7 +322,7 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 
 ```css
 --background, --foreground, --card, --primary, --accent, --muted, --destructive
---investor, --intermediary, --issuer  /* Role-specific colors */
+--investor, --intermediary, --issuer, --enabler  /* Role-specific colors */
 --gold, --gold-foreground             /* Premium accent */
 ```
 
@@ -343,7 +357,8 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 2. **Onboarding gate** — `ProtectedRoute` checks `profiles.onboarding_completed`
 3. **Session management** — Max 3 concurrent sessions per user (`session-manager.ts`)
 4. **Role-based UI** — `RoleContext` determines available features per role
-5. **Admin guard** — `useIsAdmin()` hook checks `user_roles` table for `admin` role
+5. **Role self-management** — Users can add/remove Investor, Intermediary, Issuer, Enabler roles (min 1 required)
+6. **Admin guard** — `useIsAdmin()` hook checks `user_roles` table for `admin` role
 6. **RLS policies** — Row-level security on all tables in the database
 7. **Input sanitization** — DOMPurify via `sanitize.ts` on all user-generated content
 
@@ -356,7 +371,7 @@ Key tables (60+ total — see `src/integrations/supabase/types.ts` for full sche
 | Table                  | Purpose                                    |
 | ---------------------- | ------------------------------------------ |
 | `profiles`             | User profiles with verification status     |
-| `user_roles`           | Role assignments (investor/intermediary/issuer/admin) |
+| `user_roles`           | Role assignments (investor/intermediary/issuer/enabler/admin) |
 | `posts`                | Feed content (text, polls, surveys)        |
 | `post_interactions`    | Likes and bookmarks                        |
 | `post_drafts`          | Unsaved post drafts per user               |
