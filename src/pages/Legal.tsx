@@ -629,6 +629,7 @@ const groupedContentMap: Record<string, { groups: GroupedContent; lastUpdated: s
   Disclosures: {
     groups: [
       { title: "Regulatory Disclosures", id: "regulatory-disclosures", sections: disclosureSections },
+      { title: "Intellectual Property Rights", id: "intellectual-property", sections: iprSections },
       { title: "Transparency Report", id: "transparency-report", sections: transparencyReportSections },
     ],
     lastUpdated: "March 2026",
