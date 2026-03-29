@@ -236,6 +236,12 @@ const AppNavbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <Link to="/feedback" className="flex items-center gap-2 cursor-pointer">
+                    <Lightbulb className="h-4 w-4" />
+                    Feedback
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
                     <Settings className="h-4 w-4" />
                     Settings
