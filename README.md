@@ -343,7 +343,8 @@ All colors use HSL via CSS custom properties in `src/index.css`:
 2. **Onboarding gate** — `ProtectedRoute` checks `profiles.onboarding_completed`
 3. **Session management** — Max 3 concurrent sessions per user (`session-manager.ts`)
 4. **Role-based UI** — `RoleContext` determines available features per role
-5. **Admin guard** — `useIsAdmin()` hook checks `user_roles` table for `admin` role
+5. **Role self-management** — Users can add/remove Investor, Intermediary, Issuer, Enabler roles (min 1 required)
+6. **Admin guard** — `useIsAdmin()` hook checks `user_roles` table for `admin` role
 6. **RLS policies** — Row-level security on all tables in the database
 7. **Input sanitization** — DOMPurify via `sanitize.ts` on all user-generated content
 
