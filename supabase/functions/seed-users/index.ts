@@ -105,6 +105,15 @@ const SAMPLE_USERS = [
 ];
 
 Deno.serve(async (req) => {
+  // PRODUCTION KILL SWITCH: seed functions must never run in production
+  const environment = Deno.env.get("ENVIRONMENT") || "production";
+  if (environment !== "development") {
+    return new Response(
+      JSON.stringify({ error: "Forbidden: seed functions are disabled in production" }),
+      { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
