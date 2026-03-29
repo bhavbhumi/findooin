@@ -46,7 +46,7 @@ export const NewsletterForm = ({ variant = "inline" }: NewsletterFormProps) => {
 
   if (variant === "card") {
     return (
-      <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/5 p-6 flex flex-col justify-center h-full">
+      <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 via-background to-primary/5 p-6 flex flex-col justify-center h-full w-full">
         <div className="flex items-center gap-2 mb-3">
           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
             <Mail className="h-4.5 w-4.5 text-primary" />
