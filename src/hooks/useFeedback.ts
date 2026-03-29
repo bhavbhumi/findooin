@@ -72,7 +72,7 @@ export function useFeatureRequests(filters: FeatureFilters = {}) {
   const { userId } = useRole();
 
   return useQuery({
-    queryKey: QUERY_KEYS.featureRequests(filters),
+    queryKey: QUERY_KEYS.featureRequests(filters as Record<string, string | undefined>),
     queryFn: async () => {
       let query = supabase
         .from("feature_requests")
