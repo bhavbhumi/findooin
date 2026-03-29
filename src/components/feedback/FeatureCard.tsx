@@ -191,6 +191,95 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
             </TooltipContent>
           </Tooltip>
 
+          {/* Satisfaction Rating — only for shipped features */}
+          {isShipped && (
+            <div className="flex items-center gap-3 py-1.5 px-2.5 rounded-md bg-muted/30 border border-border/50">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] font-medium text-muted-foreground">How useful?</span>
+                <div className="flex items-center gap-0.5">
+                  {/* Thumbs */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn("h-6 w-6", feature.user_satisfaction?.sentiment === "positive" && "text-primary bg-primary/10")}
+                    onClick={() => {
+                      if (feature.user_satisfaction?.sentiment === "positive") {
+                        removeRatingMutation.mutate({ featureId: feature.id });
+                      } else {
+                        rateMutation.mutate({ featureId: feature.id, rating: feature.user_satisfaction?.rating || 4, sentiment: "positive" });
+                      }
+                    }}
+                    aria-label="Thumbs up"
+                  >
+                    <ThumbsUp className="h-3 w-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn("h-6 w-6", feature.user_satisfaction?.sentiment === "negative" && "text-destructive bg-destructive/10")}
+                    onClick={() => {
+                      if (feature.user_satisfaction?.sentiment === "negative") {
+                        removeRatingMutation.mutate({ featureId: feature.id });
+                      } else {
+                        rateMutation.mutate({ featureId: feature.id, rating: feature.user_satisfaction?.rating || 2, sentiment: "negative" });
+                      }
+                    }}
+                    aria-label="Thumbs down"
+                  >
+                    <ThumbsDown className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Star rating */}
+              <div className="flex items-center gap-0.5 border-l border-border/50 pl-3">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <button
+                    key={star}
+                    className="p-0 focus:outline-none"
+                    onMouseEnter={() => setHoveredStar(star)}
+                    onMouseLeave={() => setHoveredStar(0)}
+                    onClick={() => {
+                      const currentRating = feature.user_satisfaction?.rating;
+                      if (currentRating === star) {
+                        removeRatingMutation.mutate({ featureId: feature.id });
+                      } else {
+                        rateMutation.mutate({
+                          featureId: feature.id,
+                          rating: star,
+                          sentiment: star >= 3 ? "positive" : "negative",
+                        });
+                      }
+                    }}
+                    aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                  >
+                    <Star
+                      className={cn(
+                        "h-3.5 w-3.5 transition-colors",
+                        (hoveredStar >= star || (feature.user_satisfaction?.rating || 0) >= star)
+                          ? "text-amber-500 fill-amber-500"
+                          : "text-muted-foreground/30"
+                      )}
+                    />
+                  </button>
+                ))}
+                {feature.satisfaction_count > 0 && (
+                  <span className="text-[10px] text-muted-foreground ml-1.5 tabular-nums">
+                    {Number(feature.avg_satisfaction).toFixed(1)} ({feature.satisfaction_count})
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Seeded badge */}
+          {feature.is_seeded && (
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Sprout className="h-3 w-3" />
+              <span>Platform module</span>
+            </div>
+          )}
+
           {/* Meta row */}
           <div className="flex items-center gap-3 flex-wrap">
             {/* Priority Score */}
@@ -209,7 +298,9 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
 
             {/* Author */}
             <div className="flex items-center gap-1.5">
-              {authorDisplay ? (
+              {feature.is_seeded ? (
+                <span className="text-[10px] text-muted-foreground">findoo team</span>
+              ) : authorDisplay ? (
                 <>
                   {authorDisplay.avatar_url ? (
                     <img src={authorDisplay.avatar_url} className="h-4 w-4 rounded-full" alt="" />
@@ -226,7 +317,9 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
               ) : (
                 <span className="text-[10px] text-muted-foreground italic">Anonymous</span>
               )}
-              <Badge variant="outline" className="text-[8px] h-4 px-1">{ROLE_LABELS[primaryRole]}</Badge>
+              {!feature.is_seeded && (
+                <Badge variant="outline" className="text-[8px] h-4 px-1">{ROLE_LABELS[primaryRole]}</Badge>
+              )}
             </div>
 
             <span className="text-[10px] text-muted-foreground">
