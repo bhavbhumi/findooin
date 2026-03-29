@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useBlogPosts, BlogPost, BlogPostType } from "@/hooks/useBlogPosts";
 import { useBlogPollStats, useBlogSurveyStats } from "@/hooks/useBlogInteractions";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { PageHero } from "@/components/PageHero";
 import { formatDistanceToNow } from "date-fns";
 

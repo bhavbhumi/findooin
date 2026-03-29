@@ -3,9 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown, MapPin, ShieldAlert, Lock, ShieldCheck, Database, Fingerprint, Eye, Server, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { useToast } from "@/hooks/use-toast";
-import { isDisposableEmail, DISPOSABLE_EMAIL_ERROR } from "@/lib/disposable-email-domains";
-import { sanitizeText } from "@/lib/sanitize";
 import findooLogo from "@/assets/findoo-logo-icon.png";
 
 interface PublicPageLayoutProps {
