@@ -68,10 +68,7 @@ const Feedback = () => {
             <ChangelogTimeline />
           </TabsContent>
           <TabsContent value="activity">
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <User className="h-12 w-12 text-muted-foreground/40 mb-3" />
-              <p className="text-muted-foreground text-sm">My Activity — coming in Sprint 7</p>
-            </div>
+            <MyActivityPanel />
           </TabsContent>
           {isAdmin && (
             <TabsContent value="admin">
