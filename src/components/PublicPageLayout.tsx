@@ -335,9 +335,21 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
                     CIN : AAA-7870
                   </p>
                 </div>
-                <div className="space-y-1.5">
-                  <p className="text-xs font-medium text-foreground">Stay in the loop</p>
-                  <NewsletterForm />
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {[
+                    { label: "Investor", to: "/auth?mode=signup&role=investor" },
+                    { label: "Intermediary", to: "/auth?mode=signup&role=intermediary" },
+                    { label: "Issuer", to: "/auth?mode=signup&role=issuer" },
+                    { label: "Enabler", to: "/auth?mode=signup&role=enabler" },
+                  ].map((r) => (
+                    <Link
+                      key={r.label}
+                      to={r.to}
+                      className="inline-flex px-2.5 py-1 rounded-md border border-primary/20 bg-primary/5 text-[10px] font-semibold text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+                    >
+                      {r.label}
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>
