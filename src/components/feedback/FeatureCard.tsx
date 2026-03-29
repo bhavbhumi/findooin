@@ -82,10 +82,14 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   const primaryRole = feature.author_roles?.[0] || "investor";
 
   return (
-    <div className={cn(
-      "rounded-lg border bg-card p-4 transition-all hover:shadow-sm",
-      feature.pinned && "border-primary/30 bg-primary/[0.02]"
-    )}>
+    <article
+      role="article"
+      aria-label={`Feature request: ${feature.title}`}
+      className={cn(
+        "rounded-lg border bg-card p-4 transition-all hover:shadow-sm focus-within:ring-2 focus-within:ring-primary/20",
+        feature.pinned && "border-primary/30 bg-primary/[0.02]"
+      )}
+    >
       {/* Pinned badge */}
       {feature.pinned && (
         <div className="flex items-center gap-1 text-[10px] font-medium text-primary mb-2">
