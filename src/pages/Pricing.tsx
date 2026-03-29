@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
   Check, Sparkles, Building2, BarChart3, UserCheck, Landmark,
-  Crown, Zap, ArrowRight,
+  Crown, Zap, ArrowRight, Cpu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
