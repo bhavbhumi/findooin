@@ -671,3 +671,4 @@ Do not modify, animate, or create derivatives of the findoo logo without written
 | v2.0 | 2026-03-20 | Synchronised with llms.txt and robots.txt; added crawler strategy, AI directives, compliance posture |
 | v3.0 | 2026-03-20 | Added Hex codes and colour names; corrected fonts to Montserrat + DM Sans; added decorative elements, brand persona, voice/tone spectrum, mood board |
 | v4.0 | 2026-03-20 | Added origin story, target audience personas, competitive positioning matrix, UX principles, accessibility standards, platform behaviour (PWA), social media presence, co-branding guidelines, brand version history |
+| v5.0 | 2026-03-29 | Added Enabler as fourth user pillar (KRA, Depository, RTA, Custodian, Vault Manager, ASBA Bank, ESG Provider); added Enabler personas, pillar colour, subscription pricing table; updated all "3 pillars" references to "4 pillars"; synced with llms.txt v5.0 and sitemap.xml |
