@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useBlogPosts, BlogPost, BlogPostType } from "@/hooks/useBlogPosts";
 import { useBlogPollStats, useBlogSurveyStats } from "@/hooks/useBlogInteractions";
 import { PublicPageLayout } from "@/components/PublicPageLayout";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { PageHero } from "@/components/PageHero";
 import { formatDistanceToNow } from "date-fns";
 
@@ -383,7 +385,12 @@ const Blog = () => {
               >
                 {filteredPosts.map((post, i) => {
                   const sc = post.post_type === "poll" ? pollStats?.[post.id] : post.post_type === "survey" ? surveyStats?.[post.id] : undefined;
-                  return <BlogCard key={post.id} post={post} index={i} statCount={sc} />;
+                  return (
+                    <React.Fragment key={post.id}>
+                      <BlogCard post={post} index={i} statCount={sc} />
+                      {i === 1 && <NewsletterForm variant="card" />}
+                    </React.Fragment>
+                  );
                 })}
               </motion.div>
             ) : (
