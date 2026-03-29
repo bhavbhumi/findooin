@@ -79,7 +79,7 @@ const Feedback = () => {
           )}
         </Tabs>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 
