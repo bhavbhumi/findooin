@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFeatureRequests, type FeatureRequest, type FeatureStatus } from "@/hooks/useFeedback";
-import { useAdminUpdateStatus, useAdminReject, useAdminPin, useAdminMerge } from "@/hooks/useFeedbackAdmin";
+import { useAdminUpdateStatus, useAdminReject, useAdminPin, useAdminMerge, useCreateChangelog } from "@/hooks/useFeedbackAdmin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
