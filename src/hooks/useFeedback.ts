@@ -391,3 +391,56 @@ export function useCommentUpvote() {
     onError: (err: any) => toast.error(err.message || "Failed to upvote"),
   });
 }
+
+// ─── Satisfaction Rating ───
+export function useSatisfactionRating() {
+  const { userId } = useRole();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      featureId,
+      rating,
+      sentiment,
+    }: {
+      featureId: string;
+      rating: number;
+      sentiment: "positive" | "negative";
+    }) => {
+      if (!userId) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from("feature_satisfaction_ratings")
+        .upsert(
+          { feature_id: featureId, user_id: userId, rating, sentiment, updated_at: new Date().toISOString() },
+          { onConflict: "feature_id,user_id" }
+        );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feature-requests"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to rate"),
+  });
+}
+
+export function useRemoveSatisfactionRating() {
+  const { userId } = useRole();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ featureId }: { featureId: string }) => {
+      if (!userId) throw new Error("Not authenticated");
+      const { error } = await supabase
+        .from("feature_satisfaction_ratings")
+        .delete()
+        .eq("feature_id", featureId)
+        .eq("user_id", userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feature-requests"] });
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to remove rating"),
+  });
+}
