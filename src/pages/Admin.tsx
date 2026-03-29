@@ -37,6 +37,7 @@ const BREADCRUMB_MAP: Record<string, string> = {
   "/admin/notifications": "Notifications",
   // Content & Support
   "/admin/blog": "Blog",
+  "/admin/feedback": "Feedback Engine",
   "/admin/moderation": "Moderation",
   "/admin/support": "Support Tickets",
   "/admin/kb": "Knowledge Base",
