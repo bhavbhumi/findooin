@@ -40,12 +40,14 @@ function AdminFeatureRow({
   onReject,
   onTogglePin,
   onMerge,
+  onEdit,
 }: {
   feature: FeatureRequest;
   onStatusChange: (f: FeatureRequest) => void;
   onReject: (f: FeatureRequest) => void;
   onTogglePin: (f: FeatureRequest) => void;
   onMerge: (f: FeatureRequest) => void;
+  onEdit: (f: FeatureRequest) => void;
 }) {
   const totalVotes = feature.inv_votes + feature.int_votes + feature.iss_votes + feature.enb_votes;
 
