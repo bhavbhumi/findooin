@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
   Check, Sparkles, Building2, BarChart3, UserCheck, Landmark,
-  Crown, Zap, ArrowRight,
+  Crown, Zap, ArrowRight, Cpu,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +26,7 @@ const ROLE_TABS = [
   { key: "investor", label: "Investor", icon: BarChart3, color: "hsl(var(--investor))" },
   { key: "intermediary", label: "Intermediary", icon: UserCheck, color: "hsl(var(--intermediary))" },
   { key: "issuer", label: "Issuer", icon: Landmark, color: "hsl(var(--issuer))" },
+  { key: "enabler", label: "Enabler", icon: Cpu, color: "hsl(var(--accent))" },
 ] as const;
 
 const TIER_CONFIG = {
