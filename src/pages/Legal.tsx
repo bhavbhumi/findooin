@@ -522,14 +522,10 @@ Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cine
 ];
 
 const contentMap: Record<string, { sections: typeof termsSections; lastUpdated: string }> = {
-  Terms: { sections: termsSections, lastUpdated: "March 2026" },
-  Privacy: { sections: privacySections, lastUpdated: "March 2026" },
-  Policies: { sections: policiesSections, lastUpdated: "March 2026" },
-  "Cookie Policy": { sections: cookiePolicySections, lastUpdated: "March 2026" },
-  Accessibility: { sections: accessibilitySections, lastUpdated: "March 2026" },
-  "Refund Policy": { sections: refundPolicySections, lastUpdated: "March 2026" },
-  Transparency: { sections: transparencyReportSections, lastUpdated: "March 2026" },
-  Disclosures: { sections: disclosureSections, lastUpdated: "March 2026" },
+  Privacy: { sections: [...privacySections, ...cookiePolicySections.map((s, i) => ({ ...s, title: `Cookie Policy — ${s.title}` }))], lastUpdated: "March 2026" },
+  Terms: { sections: [...termsSections, ...accessibilitySections.map(s => ({ ...s, title: `Accessibility — ${s.title}` }))], lastUpdated: "March 2026" },
+  Policies: { sections: [...policiesSections, ...refundPolicySections.map(s => ({ ...s, title: `Refund & Cancellation — ${s.title}` }))], lastUpdated: "March 2026" },
+  Disclosures: { sections: [...disclosureSections, ...transparencyReportSections.map(s => ({ ...s, title: `Transparency — ${s.title}` }))], lastUpdated: "March 2026" },
 };
 
 const Legal = () => {
