@@ -18,8 +18,8 @@ const Feedback = () => {
   const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container max-w-6xl mx-auto px-4 py-6">
+    <AppLayout maxWidth="max-w-6xl">
+      <div className="py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
