@@ -538,7 +538,7 @@ const Legal = () => {
     "cookie-policy": "Privacy", accessibility: "Terms",
     "refund-policy": "Policies", transparency: "Disclosures",
   };
-  const initialTab = tabParamMap[searchParams.get("tab") || ""] || "Terms";
+  const initialTab = tabParamMap[searchParams.get("tab") || ""] || "Privacy";
   const [activeTab, setActiveTab] = useState(initialTab);
 
   useEffect(() => {
