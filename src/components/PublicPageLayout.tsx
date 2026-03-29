@@ -214,6 +214,26 @@ const RegulatoryDisclosure = () => {
       <p>
         Grievance Officer: compliance@findoo.in | Registered Office: B/201 Hemu Classic Premises CS Ltd, S V Road, Opp Newera Cinema, Malad West, Mumbai 400064, Maharashtra, India.
       </p>
+      {/* Trust Seals */}
+      <div className="flex flex-wrap items-center gap-3 pt-3 mt-3 border-t border-border/50">
+        {[
+          { icon: "Lock", label: "256-bit SSL" },
+          { icon: "ShieldCheck", label: "DPDP Act 2023" },
+          { icon: "Database", label: "Encrypted at Rest" },
+          { icon: "Fingerprint", label: "2FA Ready" },
+          { icon: "Eye", label: "RLS Protected" },
+          { icon: "Server", label: "SOC-2 Infra" },
+          { icon: "FileCheck", label: "IT Act 2000" },
+        ].map((seal) => {
+          const IconComp = LucideIcons[seal.icon as keyof typeof LucideIcons] as React.FC<{ className?: string }>;
+          return (
+            <span key={seal.label} className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-border/60 bg-background/50 text-[10px] font-medium text-muted-foreground">
+              {IconComp && <IconComp className="h-3 w-3 text-primary/70" />}
+              {seal.label}
+            </span>
+          );
+        })}
+      </div>
     </div>
   );
 
