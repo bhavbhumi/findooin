@@ -132,6 +132,7 @@ export function SubmitFeatureModal({ open, onOpenChange }: SubmitFeatureModalPro
         <DialogHeader>
           <DialogTitle className="text-base">Suggest a Feature</DialogTitle>
           <p id="submit-feature-desc" className="sr-only">A 5-step form to submit a feature request for findoo</p>
+        </DialogHeader>
 
         {submitted ? (
           <div className="flex flex-col items-center py-8 text-center space-y-3">
