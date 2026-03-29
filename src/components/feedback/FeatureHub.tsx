@@ -2,9 +2,10 @@ import { useState, useMemo } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
-import { useFeatureRequests, type FeatureFilters, type FeatureStatus, type FeatureCategory, type FeatureSortBy } from "@/hooks/useFeedback";
+import { useFeatureRequests, type FeatureFilters, type FeatureStatus, type FeatureCategory, type FeatureSortBy, type FeatureRequest } from "@/hooks/useFeedback";
 import { FeatureCard } from "./FeatureCard";
 import { SubmitFeatureModal } from "./SubmitFeatureModal";
+import { CommentDrawer } from "./CommentDrawer";
 
 const STATUS_OPTIONS: { value: FeatureStatus | "all"; label: string }[] = [
   { value: "all", label: "All Statuses" },
