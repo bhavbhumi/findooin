@@ -8,6 +8,7 @@ import {
   Clock, Heart, Sparkles as SparklesIcon
 } from "lucide-react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { format } from "date-fns";
 import CosmicValueSection from "@/components/landing/CosmicValueSection";
 import TestimonialsSection from "@/components/landing/TestimonialsSection";
@@ -442,43 +443,55 @@ const Landing = () => {
           {/* Horizontal scroll on mobile, grid on desktop */}
           <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
             {(blogPosts ?? []).map((post, i) => (
-              <motion.div
-                key={post.id}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i + 1}
-              >
-                <Link
-                  to={`/blog/${post.slug}`}
-                  className="block min-w-[280px] snap-start md:min-w-0 rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
+              <React.Fragment key={post.id}>
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={fadeUp}
+                  custom={i + 1}
                 >
-                  {/* Cover image or gradient placeholder */}
-                  <div className="h-36 bg-gradient-to-br from-primary/[0.1] via-accent/[0.05] to-muted/30 relative overflow-hidden">
-                    {post.cover_image_url ? (
-                      <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="absolute inset-0 opacity-[0.06]">
-                        <svg className="w-full h-full" viewBox="0 0 300 130" preserveAspectRatio="none">
-                          <line x1="30" y1="20" x2="120" y2="60" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                          <line x1="120" y1="60" x2="250" y2="30" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                          <line x1="80" y1="100" x2="200" y2="110" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
-                          <circle cx="30" cy="20" r="2" fill="currentColor" className="text-primary" />
-                          <circle cx="120" cy="60" r="2.5" fill="currentColor" className="text-primary" />
-                          <circle cx="250" cy="30" r="2" fill="currentColor" className="text-primary" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <p className="text-xs text-muted-foreground mb-2 capitalize">{post.category} · {post.read_time_minutes} min read</p>
-                    <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">{post.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.excerpt}</p>
-                    <p className="text-xs text-muted-foreground mt-3">{post.published_at ? format(new Date(post.published_at), "MMM yyyy") : ""}</p>
-                  </div>
-                </Link>
-              </motion.div>
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className="block min-w-[280px] snap-start md:min-w-0 rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden hover:shadow-lg hover:border-primary/10 transition-all duration-300 group"
+                  >
+                    <div className="h-36 bg-gradient-to-br from-primary/[0.1] via-accent/[0.05] to-muted/30 relative overflow-hidden">
+                      {post.cover_image_url ? (
+                        <img src={post.cover_image_url} alt={post.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="absolute inset-0 opacity-[0.06]">
+                          <svg className="w-full h-full" viewBox="0 0 300 130" preserveAspectRatio="none">
+                            <line x1="30" y1="20" x2="120" y2="60" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                            <line x1="120" y1="60" x2="250" y2="30" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                            <line x1="80" y1="100" x2="200" y2="110" stroke="currentColor" strokeWidth="0.5" className="text-primary" />
+                            <circle cx="30" cy="20" r="2" fill="currentColor" className="text-primary" />
+                            <circle cx="120" cy="60" r="2.5" fill="currentColor" className="text-primary" />
+                            <circle cx="250" cy="30" r="2" fill="currentColor" className="text-primary" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <p className="text-xs text-muted-foreground mb-2 capitalize">{post.category} · {post.read_time_minutes} min read</p>
+                      <h3 className="text-base font-bold font-heading text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">{post.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.excerpt}</p>
+                      <p className="text-xs text-muted-foreground mt-3">{post.published_at ? format(new Date(post.published_at), "MMM yyyy") : ""}</p>
+                    </div>
+                  </Link>
+                </motion.div>
+                {i === 1 && (
+                  <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={fadeUp}
+                    custom={3}
+                    className="min-w-[280px] snap-start md:min-w-0"
+                  >
+                    <NewsletterForm variant="card" />
+                  </motion.div>
+                )}
+              </React.Fragment>
             ))}
           </div>
         </div>
