@@ -413,7 +413,7 @@ Every design decision prioritises trust signals:
 - Verification status is a first-class data attribute — not an afterthought badge
 
 ### Role-Gated Experience
-- UI adapts based on user role — Issuers see Showcase management, Intermediaries see Opinion publishing, Investors see Requirements composer
+- UI adapts based on user role — Issuers see Showcase management, Intermediaries see Opinion publishing, Enablers see API/infrastructure tools, Investors see Requirements composer
 - Navigation, permissions, and content visibility are all role-aware
 - Role switching is explicit and auditable — never implicit
 
