@@ -588,6 +588,7 @@ export function FeedbackAdminPanel() {
       <StatusChangeDialog feature={statusTarget} open={!!statusTarget} onOpenChange={o => { if (!o) setStatusTarget(null); }} />
       <RejectDialog feature={rejectTarget} open={!!rejectTarget} onOpenChange={o => { if (!o) setRejectTarget(null); }} />
       <MergeDialog feature={mergeTarget} open={!!mergeTarget} onOpenChange={o => { if (!o) setMergeTarget(null); }} allFeatures={features || []} />
+      <CreateChangelogDialog open={showChangelog} onOpenChange={setShowChangelog} />
     </div>
   );
 }
