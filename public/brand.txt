@@ -128,6 +128,7 @@ All colours are defined as HSL (source of truth), with Hex and descriptive names
 | Royal Blue | Issuers | hsl(220, 90%, 56%) | #2563EB | Issuer identity colour |
 | Deep Emerald | Intermediaries (= Tertiary) | hsl(155, 50%, 33%) | #339978 | Intermediary identity colour |
 | Amber Gold | Investors (= Warning) | hsl(38, 92%, 50%) | #F59E0B | Investor identity colour |
+| Cyan Teal | Enablers | hsl(190, 70%, 45%) | #228B9D | Enabler identity colour |
 
 ### Typography
 
