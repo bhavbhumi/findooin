@@ -490,7 +490,7 @@ findoo is installable as a PWA on all platforms:
 ### Handle Format
 - **Primary handle**: @findoo_in (or @findooin where underscores are unavailable)
 - **Display name**: findoo
-- **Bio format**: "India's first financial network. Financially Social. Connecting verified Issuers, Intermediaries & Investors."
+- **Bio format**: "India's first financial network. Financially Social. Connecting verified Issuers, Intermediaries, Enablers & Investors."
 
 ### External Post Style
 | Platform | Tone | Content Types |
