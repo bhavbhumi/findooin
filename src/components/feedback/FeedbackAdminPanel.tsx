@@ -59,6 +59,9 @@ function AdminFeatureRow({
             {feature.pinned && (
               <Pin className="h-3 w-3 text-primary shrink-0" />
             )}
+            {feature.is_seeded && (
+              <Sprout className="h-3 w-3 text-muted-foreground shrink-0" />
+            )}
             <p className="text-sm font-medium text-foreground leading-snug truncate">{feature.title}</p>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
