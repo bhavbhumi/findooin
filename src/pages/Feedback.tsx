@@ -61,16 +61,10 @@ const Feedback = () => {
             <FeatureHub showSubmitModal={showSubmitModal} onCloseSubmitModal={() => setShowSubmitModal(false)} />
           </TabsContent>
           <TabsContent value="roadmap">
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Map className="h-12 w-12 text-muted-foreground/40 mb-3" />
-              <p className="text-muted-foreground text-sm">Roadmap — coming in Sprint 5</p>
-            </div>
+            <RoadmapSwimlane />
           </TabsContent>
           <TabsContent value="changelog">
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground/40 mb-3" />
-              <p className="text-muted-foreground text-sm">Changelog — coming in Sprint 6</p>
-            </div>
+            <ChangelogTimeline />
           </TabsContent>
           <TabsContent value="activity">
             <div className="flex flex-col items-center justify-center py-16 text-center">
