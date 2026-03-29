@@ -1157,6 +1157,7 @@ export type Database = {
       feature_requests: {
         Row: {
           author_id: string
+          avg_satisfaction: number | null
           beneficiary_roles: string[]
           category: Database["public"]["Enums"]["feature_category"]
           comment_count: number
@@ -1170,6 +1171,7 @@ export type Database = {
           inv_votes: number
           is_anonymous: boolean
           is_regulatory: boolean
+          is_seeded: boolean
           iss_votes: number
           merged_into_id: string | null
           pin_label: string | null
@@ -1177,6 +1179,7 @@ export type Database = {
           priority_score: number | null
           rejection_reason: string | null
           roadmap_rationale: string | null
+          satisfaction_count: number
           status: Database["public"]["Enums"]["feature_status"]
           title: string
           updated_at: string
@@ -1184,6 +1187,7 @@ export type Database = {
         }
         Insert: {
           author_id: string
+          avg_satisfaction?: number | null
           beneficiary_roles?: string[]
           category?: Database["public"]["Enums"]["feature_category"]
           comment_count?: number
@@ -1197,6 +1201,7 @@ export type Database = {
           inv_votes?: number
           is_anonymous?: boolean
           is_regulatory?: boolean
+          is_seeded?: boolean
           iss_votes?: number
           merged_into_id?: string | null
           pin_label?: string | null
@@ -1204,6 +1209,7 @@ export type Database = {
           priority_score?: number | null
           rejection_reason?: string | null
           roadmap_rationale?: string | null
+          satisfaction_count?: number
           status?: Database["public"]["Enums"]["feature_status"]
           title: string
           updated_at?: string
@@ -1211,6 +1217,7 @@ export type Database = {
         }
         Update: {
           author_id?: string
+          avg_satisfaction?: number | null
           beneficiary_roles?: string[]
           category?: Database["public"]["Enums"]["feature_category"]
           comment_count?: number
@@ -1224,6 +1231,7 @@ export type Database = {
           inv_votes?: number
           is_anonymous?: boolean
           is_regulatory?: boolean
+          is_seeded?: boolean
           iss_votes?: number
           merged_into_id?: string | null
           pin_label?: string | null
@@ -1231,6 +1239,7 @@ export type Database = {
           priority_score?: number | null
           rejection_reason?: string | null
           roadmap_rationale?: string | null
+          satisfaction_count?: number
           status?: Database["public"]["Enums"]["feature_status"]
           title?: string
           updated_at?: string
@@ -1240,6 +1249,44 @@ export type Database = {
           {
             foreignKeyName: "feature_requests_merged_into_id_fkey"
             columns: ["merged_into_id"]
+            isOneToOne: false
+            referencedRelation: "feature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_satisfaction_ratings: {
+        Row: {
+          created_at: string
+          feature_id: string
+          id: string
+          rating: number
+          sentiment: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature_id: string
+          id?: string
+          rating: number
+          sentiment: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feature_id?: string
+          id?: string
+          rating?: number
+          sentiment?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feature_satisfaction_ratings_feature_id_fkey"
+            columns: ["feature_id"]
             isOneToOne: false
             referencedRelation: "feature_requests"
             referencedColumns: ["id"]
