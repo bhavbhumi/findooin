@@ -532,10 +532,11 @@ const Legal = () => {
   usePageMeta({ title: "Legal & Compliance", description: "findoo terms of service, privacy policy, platform policies, and regulatory disclosures — Indian jurisdiction, DPDP Act compliant." });
   const [searchParams] = useSearchParams();
   const tabParamMap: Record<string, string> = {
-    terms: "Terms", privacy: "Privacy", policies: "Policies",
-    "cookie-policy": "Cookie Policy", accessibility: "Accessibility",
-    "refund-policy": "Refund Policy", transparency: "Transparency",
+    privacy: "Privacy", terms: "Terms", policies: "Policies",
     disclosures: "Disclosures",
+    // Legacy aliases for old URLs
+    "cookie-policy": "Privacy", accessibility: "Terms",
+    "refund-policy": "Policies", transparency: "Disclosures",
   };
   const initialTab = tabParamMap[searchParams.get("tab") || ""] || "Terms";
   const [activeTab, setActiveTab] = useState(initialTab);

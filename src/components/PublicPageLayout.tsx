@@ -364,33 +364,18 @@ export const PublicPageLayout = ({ children }: PublicPageLayoutProps) => {
               © {new Date().getFullYear()} findoo. All rights reserved.
             </p>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-              <Link to="/legal" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Terms
-              </Link>
-              <Link to="/legal?tab=privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Privacy
-              </Link>
-              <Link to="/legal?tab=policies" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Policies
-              </Link>
-              <Link to="/cookies" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Cookies
-              </Link>
-              <Link to="/accessibility" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Accessibility
-              </Link>
-              <Link to="/refund-policy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Refund Policy
-              </Link>
-              <Link to="/transparency" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Transparency
-              </Link>
-              <Link to="/legal?tab=disclosures" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                Disclosures
-              </Link>
               <Link to="/sitemap" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Sitemap
               </Link>
+              <a href="/robots.txt" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                Robots
+              </a>
+              <a href="/llms.txt" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                LLMS
+              </a>
+              <a href="/brand.txt" target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                Brand
+              </a>
             </div>
           </div>
         </div>
