@@ -153,7 +153,7 @@ src/
 │   ├── RouteErrorBoundary.tsx # Per-route error handling with retry
 │   └── ErrorBoundary.tsx  # Graceful error handling per section
 ├── contexts/
-│   └── RoleContext.tsx  # Global role state (investor/intermediary/issuer/admin)
+│   └── RoleContext.tsx  # Global role state (investor/intermediary/issuer/enabler/admin)
 ├── hooks/               # 25 custom hooks — one per module
 │   ├── useFeedPosts.ts  # Infinite-scroll feed with pagination via RPC
 │   ├── usePostInteractions.ts # Batched like/bookmark with optimistic updates
