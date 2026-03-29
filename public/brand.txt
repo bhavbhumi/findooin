@@ -545,6 +545,7 @@ findoo is installable as a PWA on all platforms:
 
 - 7,000+ Issuers (AMCs, NBFCs, Insurers)
 - 35,000+ Intermediaries (MFDs, RIAs, Agents, CAs)
+- 500+ Enablers (KRAs, Depositories, RTAs, Custodians, Clearing Corps, Stock Exchanges)
 - 7 Cr+ Investors
 - 6 Lakh+ Financial Professionals
 - Regulators: SEBI, RBI, IRDAI, AMFI, PFRDA, NPS Trust
