@@ -8,6 +8,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 User-agent: Bingbot
 Allow: /
@@ -15,6 +17,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 # Social Media Preview Crawlers
 User-agent: Twitterbot
@@ -39,6 +43,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 User-agent: ChatGPT-User
 Allow: /
@@ -46,6 +52,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 User-agent: PerplexityBot
 Allow: /
@@ -53,6 +61,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 User-agent: ClaudeBot
 Allow: /
@@ -60,6 +70,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 User-agent: anthropic-ai
 Allow: /
@@ -67,6 +79,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 User-agent: Google-Extended
 Allow: /
@@ -74,6 +88,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 User-agent: cohere-ai
 Allow: /
@@ -81,6 +97,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 
 # Default — All Other Crawlers
 User-agent: *
@@ -89,6 +107,8 @@ Disallow: /vault
 Disallow: /messages
 Disallow: /settings
 Disallow: /auth
+Disallow: /admin
+Disallow: /onboarding
 Disallow: /feed
 Disallow: /network
 Disallow: /bookmarks
