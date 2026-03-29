@@ -2,9 +2,9 @@ import { useState, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronUp, MessageSquare, Link2, AlertTriangle, Pin, ShieldCheck } from "lucide-react";
+import { ChevronUp, MessageSquare, Link2, AlertTriangle, Pin, ShieldCheck, ThumbsUp, ThumbsDown, Star, Sprout } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useFeatureVote, type FeatureRequest } from "@/hooks/useFeedback";
+import { useFeatureVote, useSatisfactionRating, useRemoveSatisfactionRating, type FeatureRequest } from "@/hooks/useFeedback";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 
