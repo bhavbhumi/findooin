@@ -19,6 +19,59 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const ROLE_OPTIONS = [
+  {
+    group: "Investor",
+    items: [
+      { value: "Retail Individual", label: "Retail Individual" },
+      { value: "HNI / Ultra HNI", label: "HNI / Ultra HNI" },
+      { value: "NRI Investor", label: "NRI Investor" },
+      { value: "Institutional Investor", label: "Institutional Investor" },
+    ],
+  },
+  {
+    group: "Intermediary",
+    items: [
+      { value: "Broker", label: "Broker" },
+      { value: "Registered Investment Adviser (RIA)", label: "RIA" },
+      { value: "Mutual Fund Distributor (MFD)", label: "MFD" },
+      { value: "Insurance Agent / Broker", label: "Insurance Agent / Broker" },
+      { value: "Portfolio Manager (PMS)", label: "PMS" },
+      { value: "Wealth Manager", label: "Wealth Manager" },
+    ],
+  },
+  {
+    group: "Issuer",
+    items: [
+      { value: "Listed Company", label: "Listed Company" },
+      { value: "Asset Management Company (AMC)", label: "AMC" },
+      { value: "Insurance Company", label: "Insurance Company" },
+      { value: "NBFC", label: "NBFC" },
+      { value: "Bank", label: "Bank" },
+    ],
+  },
+  {
+    group: "Enabler",
+    items: [
+      { value: "KYC Registration Agency (KRA)", label: "KRA" },
+      { value: "Depository (CDSL/NSDL)", label: "Depository" },
+      { value: "Credit Rating Agency", label: "Credit Rating Agency" },
+      { value: "Registrar & Transfer Agent (RTA)", label: "RTA" },
+      { value: "RegTech / FinTech", label: "RegTech / FinTech" },
+      { value: "Compliance / Legal", label: "Compliance / Legal" },
+    ],
+  },
+];
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
