@@ -239,7 +239,7 @@ Each role has Free, Pro, and Enterprise tiers. Annual plans at 10× monthly rate
 - "Opinions" (capitalised) — not "polls" or "surveys"
 - "Showcase" — not "marketplace" or "directory"
 - "Requirements" — not "tips" or "recommendations"
-- "Issuers, Intermediaries & Investors" — the three pillars, always in this order
+- "Issuers, Intermediaries, Enablers & Investors" — the four pillars, always in this order
 
 ### Content Classification
 All user-generated content is classified under one of three intent tags:
