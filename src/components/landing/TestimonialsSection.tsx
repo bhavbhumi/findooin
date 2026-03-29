@@ -228,13 +228,23 @@ function SubmitReviewCard() {
               </div>
               <div>
                 <Label className="text-xs text-muted-foreground">Role</Label>
-                <Input
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  placeholder="e.g. MFD, RIA"
-                  className="h-8 text-xs"
-                  maxLength={100}
-                />
+                <Select value={role} onValueChange={setRole}>
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue placeholder="Select your role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ROLE_OPTIONS.map((group) => (
+                      <SelectGroup key={group.group}>
+                        <SelectLabel className="text-xs font-semibold">{group.group}</SelectLabel>
+                        {group.items.map((item) => (
+                          <SelectItem key={item.value} value={item.value} className="text-xs">
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
