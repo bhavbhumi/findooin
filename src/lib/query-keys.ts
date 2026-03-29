@@ -122,4 +122,12 @@ export const QUERY_KEYS = {
   /* ── Admin Notifications ── */
   adminNotificationsLog: () => ["admin-notifications-log"] as const,
   adminNotificationStats: () => ["admin-notification-stats"] as const,
+
+  /* ── Feedback Engine ── */
+  featureRequests: (filters?: Record<string, string | undefined>) => ["feature-requests", filters] as const,
+  featureDuplicateSearch: (term?: string) => ["feature-duplicate-search", term] as const,
+  featureComments: (featureId?: string) => ["feature-comments", featureId] as const,
+  changelogEntries: () => ["changelog-entries"] as const,
+  myFeatureVotes: (userId?: string) => ["my-feature-votes", userId] as const,
+  myFeatureSuggestions: (userId?: string) => ["my-feature-suggestions", userId] as const,
 } as const;
