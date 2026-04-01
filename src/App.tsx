@@ -225,7 +225,7 @@ const App = () => {
                         <Route path="opinions" element={<Suspense fallback={<LazyFallback />}><AdminOpinionsPage /></Suspense>} />
                         <Route path="security" element={<Suspense fallback={<LazyFallback />}><AdminSecurityPage /></Suspense>} />
                         <Route path="coded-messaging" element={<Suspense fallback={<LazyFallback />}><AdminCodedMessagingPage /></Suspense>} />
-                        <Route path="feedback" element={<Suspense fallback={<LazyFallback />}><AdminFeedbackPage /></Suspense>} />
+                        <Route path="product-hub" element={<Suspense fallback={<LazyFallback />}><AdminFeedbackPage /></Suspense>} />
                         <Route path="premium-features" element={<Suspense fallback={<LazyFallback />}><AdminPremiumFeaturesPage /></Suspense>} />
                         <Route path="cost-report" element={<Suspense fallback={<LazyFallback />}><CostReport /></Suspense>} />
                         <Route path="scaling-report" element={<Suspense fallback={<LazyFallback />}><ScalingReport /></Suspense>} />
@@ -235,7 +235,7 @@ const App = () => {
                       <Route path="/showcase" element={<ProtectedRoute><FeatureFlagGate flagKey="directory_listings"><RouteErrorBoundary routeName="Showcase"><Showcase /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/leaderboard" element={<ProtectedRoute><FeatureFlagGate flagKey="leaderboard"><RouteErrorBoundary routeName="Leaderboard"><Leaderboard /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/bookmarks" element={<ProtectedRoute><RouteErrorBoundary routeName="Bookmarks"><Bookmarks /></RouteErrorBoundary></ProtectedRoute>} />
-                      <Route path="/feedback" element={<ProtectedRoute><RouteErrorBoundary routeName="Feedback"><Feedback /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/product-hub" element={<ProtectedRoute><RouteErrorBoundary routeName="Product Hub"><Feedback /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/wrapped" element={<ProtectedRoute><RouteErrorBoundary routeName="Financial Wrapped"><FinancialWrapped /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/vault" element={<ProtectedRoute><FeatureFlagGate flagKey="vault_storage"><RouteErrorBoundary routeName="Vault"><Vault /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />
                       <Route path="/messages" element={<ProtectedRoute><FeatureFlagGate flagKey="messaging"><RouteErrorBoundary routeName="Messages"><Messages /></RouteErrorBoundary></FeatureFlagGate></ProtectedRoute>} />

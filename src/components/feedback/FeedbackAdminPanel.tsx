@@ -624,8 +624,8 @@ export function FeedbackAdminPanel() {
           <div className="flex items-center gap-2">
             <Sprout className="h-4 w-4 text-primary" />
             <div>
-              <p className="text-xs font-medium text-foreground">Seed existing modules</p>
-              <p className="text-[10px] text-muted-foreground">Auto-populate the Feature Hub with findoo's 29+ modules so users can rate and comment on them.</p>
+              <p className="text-xs font-medium text-foreground">Seed Product Hub</p>
+              <p className="text-[10px] text-muted-foreground">Auto-populate with 29+ platform modules (as Released) and their future scope items (as Planned votable cards).</p>
             </div>
           </div>
           <Button

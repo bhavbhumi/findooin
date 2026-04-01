@@ -311,37 +311,69 @@ export function useSeedModules() {
 
       const existingTitles = new Set((existing || []).map((e: any) => e.title));
 
-      const entries = Object.values(moduleSpecs)
-        .filter(spec => !existingTitles.has(spec.title))
-        .map(spec => ({
-          title: spec.title,
-          description: `${spec.solution}\n\n**Current Features:**\n${spec.currentScope.map(s => `• ${s}`).join("\n")}`,
-          workaround: "",
-          impact_tags: ["platform"],
-          is_regulatory: false,
-          beneficiary_roles: ["investor", "intermediary", "issuer"],
-          is_anonymous: false,
-          category: (MODULE_CATEGORY_MAP[spec.moduleKey] || "ui_ux") as any,
-          status: "released" as any,
-          author_id: userId,
-          is_seeded: true,
-          pinned: false,
-        }));
+      const allEntries: any[] = [];
 
-      if (entries.length === 0) {
-        toast.info("All modules already seeded");
+      Object.values(moduleSpecs).forEach(spec => {
+        // Seed the module itself as "Released"
+        if (!existingTitles.has(spec.title)) {
+          allEntries.push({
+            title: spec.title,
+            description: `${spec.solution}\n\n**Current Features:**\n${spec.currentScope.map(s => `• ${s}`).join("\n")}`,
+            workaround: "",
+            impact_tags: ["platform"],
+            is_regulatory: false,
+            beneficiary_roles: ["investor", "intermediary", "issuer"],
+            is_anonymous: false,
+            category: (MODULE_CATEGORY_MAP[spec.moduleKey] || "ui_ux") as any,
+            status: "released" as any,
+            author_id: userId,
+            is_seeded: true,
+            pinned: false,
+          });
+        }
+
+        // Seed future scope items as "Planned" votable entries
+        spec.futureScope.forEach(item => {
+          const futureTitle = `${spec.title}: ${item.length > 80 ? item.slice(0, 77) + "…" : item}`;
+          if (!existingTitles.has(futureTitle)) {
+            allEntries.push({
+              title: futureTitle,
+              description: `**Planned enhancement for ${spec.title}**\n\n${item}\n\n_Part of the ${spec.title} module roadmap._`,
+              workaround: "",
+              impact_tags: ["platform", "roadmap"],
+              is_regulatory: false,
+              beneficiary_roles: ["investor", "intermediary", "issuer"],
+              is_anonymous: false,
+              category: (MODULE_CATEGORY_MAP[spec.moduleKey] || "ui_ux") as any,
+              status: "planned" as any,
+              author_id: userId,
+              is_seeded: true,
+              pinned: false,
+            });
+          }
+        });
+      });
+
+      if (allEntries.length === 0) {
+        toast.info("All modules and roadmap items already seeded");
         return 0;
       }
 
-      const { error } = await supabase.from("feature_requests").insert(entries);
-      if (error) throw error;
+      // Insert in batches of 50 to avoid payload limits
+      let inserted = 0;
+      for (let i = 0; i < allEntries.length; i += 50) {
+        const batch = allEntries.slice(i, i + 50);
+        const { error } = await supabase.from("feature_requests").insert(batch);
+        if (error) throw error;
+        inserted += batch.length;
+      }
 
-      return entries.length;
+      return inserted;
     },
     onSuccess: (count) => {
       qc.invalidateQueries({ queryKey: ["feature-requests"] });
       if (count && count > 0) {
-        toast.success(`Seeded ${count} module${count > 1 ? "s" : ""} as feature entries`);
+        toast.success(`Seeded ${count} entries (modules + roadmap items)`);
       }
     },
     onError: (err: any) => toast.error(err.message || "Failed to seed modules"),

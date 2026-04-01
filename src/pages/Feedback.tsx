@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Map, FileText, User, Shield, Plus } from "lucide-react";
+import { Lightbulb, Map, FileText, User, Shield, Plus, Package } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
 import { FeatureHub } from "@/components/feedback/FeatureHub";
 import { RoadmapSwimlane } from "@/components/feedback/RoadmapSwimlane";
@@ -12,7 +12,7 @@ import { usePageMeta } from "@/hooks/usePageMeta";
 import AppLayout from "@/components/AppLayout";
 
 const Feedback = () => {
-  usePageMeta({ title: "Feedback — findoo", description: "Share your ideas and vote on features for findoo" });
+  usePageMeta({ title: "Product Hub — findoo", description: "Explore platform modules, vote on features, and shape findoo's future" });
   const { hasRole } = useRole();
   const isAdmin = hasRole("admin");
   const [showSubmitModal, setShowSubmitModal] = useState(false);
@@ -23,8 +23,11 @@ const Feedback = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Feedback</h1>
-            <p className="text-sm text-muted-foreground mt-1">Shape findoo's future — suggest, vote, and track features</p>
+            <div className="flex items-center gap-2 mb-1">
+              <Package className="h-5 w-5 text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">Product Hub</h1>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">Explore modules, rate features, suggest improvements, and track our roadmap</p>
           </div>
           <Button onClick={() => setShowSubmitModal(true)} size="sm" className="gap-2">
             <Plus className="h-4 w-4" />

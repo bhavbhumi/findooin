@@ -1,10 +1,12 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronUp, MessageSquare, Link2, AlertTriangle, Pin, ShieldCheck, ThumbsUp, ThumbsDown, Star, Sprout } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronUp, ChevronDown, MessageSquare, Link2, AlertTriangle, Pin, ShieldCheck, ThumbsUp, ThumbsDown, Star, Sprout, BookOpen, Target, Telescope } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFeatureVote, useSatisfactionRating, useRemoveSatisfactionRating, type FeatureRequest } from "@/hooks/useFeedback";
+import moduleSpecs from "@/data/module-specs";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
 
@@ -50,6 +52,11 @@ const ROLE_LABELS: Record<string, string> = {
   enabler: "ENB",
 };
 
+/** Reverse-map a seeded feature title to its module-spec key */
+function findModuleSpec(title: string) {
+  return Object.values(moduleSpecs).find(spec => spec.title === title) || null;
+}
+
 interface FeatureCardProps {
   feature: FeatureRequest;
   onOpenComments?: () => void;
@@ -57,6 +64,7 @@ interface FeatureCardProps {
 
 export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const [specOpen, setSpecOpen] = useState(false);
   const voteMutation = useFeatureVote();
   const rateMutation = useSatisfactionRating();
   const removeRatingMutation = useRemoveSatisfactionRating();
@@ -67,6 +75,9 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   const totalVotes = feature.inv_votes + feature.int_votes + feature.iss_votes + feature.enb_votes;
   const maxVotes = Math.max(totalVotes, 1);
 
+  // Find matching module spec for seeded features
+  const spec = useMemo(() => feature.is_seeded ? findModuleSpec(feature.title) : null, [feature.is_seeded, feature.title]);
+
   const handleVote = useCallback(() => {
     voteMutation.mutate({
       featureId: feature.id,
@@ -75,7 +86,7 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
   }, [feature.id, feature.user_voted, voteMutation]);
 
   const handleShare = useCallback(() => {
-    const url = `${window.location.origin}/feedback?feature=${feature.id}`;
+    const url = `${window.location.origin}/product-hub?feature=${feature.id}`;
     navigator.clipboard.writeText(url);
     toast.success("Link copied!");
   }, [feature.id]);
@@ -160,6 +171,74 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
             </button>
           )}
 
+          {/* Module Spec Section — only for seeded features with matching spec */}
+          {spec && (
+            <Collapsible open={specOpen} onOpenChange={setSpecOpen}>
+              <CollapsibleTrigger asChild>
+                <button className="flex items-center gap-1.5 text-[11px] font-medium text-primary hover:text-primary/80 transition-colors py-1">
+                  <BookOpen className="h-3 w-3" />
+                  <span>Module Details</span>
+                  <ChevronDown className={cn("h-3 w-3 transition-transform", specOpen && "rotate-180")} />
+                </button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-3 pt-1">
+                {/* Problem & Solution */}
+                <div className="rounded-md border border-border/50 bg-muted/20 p-3 space-y-2">
+                  <div>
+                    <div className="flex items-center gap-1 mb-1">
+                      <Target className="h-3 w-3 text-destructive" />
+                      <span className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Problem</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{spec.problem}</p>
+                  </div>
+                  <div className="border-t border-border/30 pt-2">
+                    <div className="flex items-center gap-1 mb-1">
+                      <Sprout className="h-3 w-3 text-primary" />
+                      <span className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Solution</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{spec.solution}</p>
+                  </div>
+                </div>
+
+                {/* Current Scope */}
+                {spec.currentScope.length > 0 && (
+                  <div className="rounded-md border border-primary/10 bg-primary/[0.02] p-3">
+                    <div className="flex items-center gap-1 mb-2">
+                      <BookOpen className="h-3 w-3 text-primary" />
+                      <span className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Current Scope ({spec.currentScope.length})</span>
+                    </div>
+                    <ul className="space-y-1">
+                      {spec.currentScope.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-1.5 text-xs text-muted-foreground leading-relaxed">
+                          <span className="text-primary mt-0.5 shrink-0">•</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Future Scope */}
+                {spec.futureScope.length > 0 && (
+                  <div className="rounded-md border border-amber-500/10 bg-amber-500/[0.02] p-3">
+                    <div className="flex items-center gap-1 mb-2">
+                      <Telescope className="h-3 w-3 text-amber-600 dark:text-amber-400" />
+                      <span className="text-[10px] font-semibold text-foreground uppercase tracking-wider">Future Scope ({spec.futureScope.length})</span>
+                    </div>
+                    <ul className="space-y-1">
+                      {spec.futureScope.map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-1.5 text-xs text-muted-foreground leading-relaxed">
+                          <span className="text-amber-500 mt-0.5 shrink-0">◦</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+
           {/* Role Segmentation Bar */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -197,7 +276,6 @@ export function FeatureCard({ feature, onOpenComments }: FeatureCardProps) {
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px] font-medium text-muted-foreground">How useful?</span>
                 <div className="flex items-center gap-0.5">
-                  {/* Thumbs */}
                   <Button
                     variant="ghost"
                     size="icon"
