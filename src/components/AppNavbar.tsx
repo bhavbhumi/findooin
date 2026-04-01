@@ -236,9 +236,9 @@ const AppNavbar = () => {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/feedback" className="flex items-center gap-2 cursor-pointer">
+                  <Link to="/product-hub" className="flex items-center gap-2 cursor-pointer">
                     <Lightbulb className="h-4 w-4" />
-                    Feedback
+                    Product Hub
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
