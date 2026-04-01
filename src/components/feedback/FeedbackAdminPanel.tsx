@@ -618,14 +618,20 @@ export function FeedbackAdminPanel() {
         ))}
       </div>
 
-      {/* Seed banner */}
-      {seededCount === 0 && (
+      {/* Seed banner — show when no seeded items OR when planned items are missing */}
+      {(seededCount === 0 || stats.planned === 0) && (
         <div className="flex items-center justify-between gap-3 p-3 rounded-lg border border-dashed border-primary/30 bg-primary/5">
           <div className="flex items-center gap-2">
             <Sprout className="h-4 w-4 text-primary" />
             <div>
-              <p className="text-xs font-medium text-foreground">Seed Product Hub</p>
-              <p className="text-[10px] text-muted-foreground">Auto-populate with 29+ platform modules (as Released) and their future scope items (as Planned votable cards).</p>
+              <p className="text-xs font-medium text-foreground">
+                {seededCount === 0 ? "Seed Product Hub" : "Seed Roadmap Items"}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {seededCount === 0
+                  ? "Auto-populate with 29+ platform modules (as Released) and their future scope items (as Planned votable cards)."
+                  : "Future scope items from module specs haven't been added as Planned cards yet. Click to seed them now."}
+              </p>
             </div>
           </div>
           <Button
@@ -635,7 +641,7 @@ export function FeedbackAdminPanel() {
             disabled={seedMutation.isPending}
           >
             <Sprout className="h-3.5 w-3.5" />
-            {seedMutation.isPending ? "Seeding..." : "Seed Modules"}
+            {seedMutation.isPending ? "Seeding..." : seededCount === 0 ? "Seed Modules" : "Seed Roadmap"}
           </Button>
         </div>
       )}
