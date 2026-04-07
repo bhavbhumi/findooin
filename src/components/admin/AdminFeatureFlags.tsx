@@ -291,6 +291,7 @@ function CreateFlagDialog({ open, onOpenChange }: { open: boolean; onOpenChange:
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-feature-flags"] });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.featureFlags() });
       toast.success("Feature flag created");
       onOpenChange(false);
       setForm({ flag_key: "", label: "", description: "", is_enabled: false, rollout_percentage: 100, target_segment: "all" });
@@ -409,6 +410,7 @@ function EditFlagDialog({ flag, open, onOpenChange }: { flag: Flag; open: boolea
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-feature-flags"] });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.featureFlags() });
       toast.success("Flag updated");
       onOpenChange(false);
     },
@@ -432,6 +434,7 @@ function EditFlagDialog({ flag, open, onOpenChange }: { flag: Flag; open: boolea
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-feature-flags"] });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.featureFlags() });
       toast.success("Flag deleted");
       onOpenChange(false);
     },
