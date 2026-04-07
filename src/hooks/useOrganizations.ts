@@ -136,7 +136,7 @@ export function useOrgMembers(orgId?: string, statusFilter?: string) {
         .eq("org_id", orgId!);
 
       if (statusFilter && statusFilter !== "all") {
-        query = query.eq("status", statusFilter);
+        query = query.eq("status", statusFilter as "pending" | "verified" | "rejected" | "alumni");
       }
       query = query.order("created_at", { ascending: false });
 
@@ -255,11 +255,12 @@ export function useManageBranch() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: Partial<OrgBranch> & { org_id: string }) => {
+      const { id: _id, ...rest } = input;
       if (input.id) {
-        const { error } = await supabase.from("org_branches").update(input).eq("id", input.id);
+        const { error } = await supabase.from("org_branches").update(rest).eq("id", input.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("org_branches").insert(input);
+        const { error } = await supabase.from("org_branches").insert({ ...rest, branch_name: rest.branch_name || "" });
         if (error) throw error;
       }
     },
