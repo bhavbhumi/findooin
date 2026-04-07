@@ -2611,12 +2611,15 @@ export type Database = {
           digital_card_fields: Json | null
           display_name: string | null
           experience_years: number | null
+          first_name: string | null
           full_name: string
           headline: string | null
           id: string
           is_staff: boolean
           languages: Json | null
+          last_name: string | null
           location: string | null
+          middle_name: string | null
           onboarding_completed: boolean
           organization: string | null
           pan_number: string | null
@@ -2638,12 +2641,15 @@ export type Database = {
           digital_card_fields?: Json | null
           display_name?: string | null
           experience_years?: number | null
+          first_name?: string | null
           full_name?: string
           headline?: string | null
           id: string
           is_staff?: boolean
           languages?: Json | null
+          last_name?: string | null
           location?: string | null
+          middle_name?: string | null
           onboarding_completed?: boolean
           organization?: string | null
           pan_number?: string | null
@@ -2665,12 +2671,15 @@ export type Database = {
           digital_card_fields?: Json | null
           display_name?: string | null
           experience_years?: number | null
+          first_name?: string | null
           full_name?: string
           headline?: string | null
           id?: string
           is_staff?: boolean
           languages?: Json | null
+          last_name?: string | null
           location?: string | null
+          middle_name?: string | null
           onboarding_completed?: boolean
           organization?: string | null
           pan_number?: string | null
