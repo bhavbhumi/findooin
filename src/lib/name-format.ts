@@ -72,3 +72,14 @@ export function validatePAN(pan: string): string | null {
   if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(trimmed)) return "Invalid PAN format (e.g. ABCDE1234F)";
   return null;
 }
+
+/**
+ * Compose full_name from individual name parts.
+ * Filters out empty segments and joins with space.
+ */
+export function composeFullName(first: string, middle: string, last: string): string {
+  return [first, middle, last]
+    .map((s) => formatName(s.trim()))
+    .filter(Boolean)
+    .join(" ");
+}
