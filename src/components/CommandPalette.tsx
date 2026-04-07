@@ -54,6 +54,7 @@ export function CommandPalette() {
     "/showcase": "directory_listings",
     "/messages": "messaging",
     "/vault": "vault_storage",
+    "/leaderboard": "leaderboard",
   };
 
   const isPathEnabled = (path: string) => {
