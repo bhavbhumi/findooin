@@ -125,6 +125,7 @@ function useUserPosts(profileId: string | undefined) {
 
 const Profile = () => {
   usePageMeta({ title: "Profile" });
+  const { isEnabled: ffIsEnabled } = useFeatureFlags();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);

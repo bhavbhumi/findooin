@@ -39,6 +39,7 @@ interface FeedSidebarProps {
 }
 
 export const FeedSidebar = memo(function FeedSidebar({ userId, onLoadDraft, initialTab }: FeedSidebarProps) {
+  const { isEnabled: ffIsEnabled } = useFeatureFlags();
   const [tab, setTab] = useState(initialTab || "trending");
   // Track which tabs have been visited to keep them mounted after first visit
   const [visited, setVisited] = useState<Set<string>>(new Set([initialTab || "trending"]));
