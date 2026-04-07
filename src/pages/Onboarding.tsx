@@ -498,17 +498,36 @@ const Onboarding = () => {
                   This is how others will see you on findoo.
                 </p>
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="displayName">
-                      {userType === "entity" ? "Entity Name" : "Display Name"}
-                    </Label>
-                    <Input
-                      id="displayName"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      placeholder={userType === "entity" ? "Your company name" : "Your name"}
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="displayName">
+                        {userType === "entity" ? "Entity Name" : "Full Name"}
+                      </Label>
+                      <Input
+                        id="displayName"
+                        value={displayName}
+                        onChange={(e) => { setDisplayName(e.target.value); setNameError(null); }}
+                        onBlur={() => setNameError(validateName(displayName))}
+                        placeholder={userType === "entity" ? "Your company name" : "Your full name"}
+                      />
+                      {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="panNumber">
+                        PAN Number <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="panNumber"
+                        value={panNumber}
+                        onChange={(e) => { setPanNumber(e.target.value.toUpperCase()); setPanError(null); }}
+                        onBlur={() => setPanError(validatePAN(panNumber))}
+                        placeholder="e.g. ABCDE1234F"
+                        maxLength={10}
+                        className="uppercase tracking-wider"
+                      />
+                      {panError && <p className="text-xs text-destructive">{panError}</p>}
+                      <p className="text-xs text-muted-foreground">Required for identity verification and duplicate prevention.</p>
+                    </div>
 
                   {userType === "entity" && (
                     <div className="space-y-2">
