@@ -403,9 +403,9 @@ const Profile = () => {
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
-              <GamificationProfileCard userId={profile.id} />
-              {isOwnProfile && <WeeklyChallenges userId={profile.id} />}
-              {isOwnProfile && <ReferralCard userId={profile.id} />}
+              {ffIsEnabled("gamification_xp") && <GamificationProfileCard userId={profile.id} />}
+              {isOwnProfile && ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={profile.id} />}
+              {isOwnProfile && ffIsEnabled("referral_program") && <ReferralCard userId={profile.id} />}
               <MemoizedProfileSidebar
                 profile={profile}
                 roles={roles}
