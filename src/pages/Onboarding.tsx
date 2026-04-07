@@ -16,6 +16,7 @@ import { uploadFile } from "@/lib/storage";
 import { ContactImportDialog } from "@/components/network/ContactImportDialog";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
+import { formatName, validateName, validatePAN } from "@/lib/name-format";
 
 type UserType = "individual" | "entity";
 type Role = "investor" | "intermediary" | "issuer" | "enabler";
@@ -92,6 +93,9 @@ const Onboarding = () => {
   const [designation, setDesignation] = useState("");
   const [location, setLocation] = useState("");
   const [certifications, setCertifications] = useState<string[]>([]);
+  const [panNumber, setPanNumber] = useState("");
+  const [panError, setPanError] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
   
   const [loading, setLoading] = useState(false);
   const [verificationFiles, setVerificationFiles] = useState<Record<string, File | null>>({});
@@ -204,25 +208,45 @@ const Onboarding = () => {
 
   const handleComplete = async () => {
     if (!userId) return;
+
+    // Validate name
+    const nErr = validateName(displayName);
+    if (nErr) { setNameError(nErr); toast({ title: "Invalid name", description: nErr, variant: "destructive" }); return; }
+
+    // Validate PAN
+    const pErr = validatePAN(panNumber);
+    if (pErr) { setPanError(pErr); toast({ title: "Invalid PAN", description: pErr, variant: "destructive" }); return; }
+
+    const formattedName = formatName(displayName);
+    const formattedPAN = panNumber.trim().toUpperCase();
+
     setLoading(true);
     try {
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert({
           id: userId,
-          full_name: displayName,
-          display_name: displayName,
+          full_name: formattedName,
+          display_name: formattedName,
           bio,
           user_type: userType!,
-          organization: userType === "entity" ? organization : null,
+          organization: userType === "entity" ? formatName(organization) : null,
           designation: designation || null,
           location: location || null,
           certifications: certifications.length > 0 ? certifications : null,
-          
+          pan_number: formattedPAN,
           onboarding_completed: true,
           verification_status: Object.values(verificationFiles).some(f => f) ? "pending" : "unverified",
         } as any, { onConflict: "id" });
-      if (profileError) throw profileError;
+      if (profileError) {
+        if (profileError.message?.includes("idx_profiles_pan_unique") || profileError.code === "23505") {
+          setPanError("This PAN is already linked to another account");
+          toast({ title: "Duplicate PAN", description: "This PAN is already linked to another findoo account. If you believe this is an error, please contact support.", variant: "destructive" });
+          setLoading(false);
+          return;
+        }
+        throw profileError;
+      }
 
       // Upload verification documents and create verification_requests
       let uploadFailures: string[] = [];
@@ -292,8 +316,8 @@ const Onboarding = () => {
       case 1: return userType !== null;
       case 2: return selectedRoles.length > 0;
       case 3: return selectedRoles.every((role) => selectedSubTypes[role] !== "");
-      case 4: return displayName.trim().length > 0;
-      case 5: return true; // verification nudge is optional
+      case 4: return displayName.trim().length >= 3 && panNumber.trim().length === 10;
+      case 5: return true;
       default: return false;
     }
   };
@@ -474,17 +498,36 @@ const Onboarding = () => {
                   This is how others will see you on findoo.
                 </p>
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="displayName">
-                      {userType === "entity" ? "Entity Name" : "Display Name"}
-                    </Label>
-                    <Input
-                      id="displayName"
-                      value={displayName}
-                      onChange={(e) => setDisplayName(e.target.value)}
-                      placeholder={userType === "entity" ? "Your company name" : "Your name"}
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="displayName">
+                        {userType === "entity" ? "Entity Name" : "Full Name"}
+                      </Label>
+                      <Input
+                        id="displayName"
+                        value={displayName}
+                        onChange={(e) => { setDisplayName(e.target.value); setNameError(null); }}
+                        onBlur={() => setNameError(validateName(displayName))}
+                        placeholder={userType === "entity" ? "Your company name" : "Your full name"}
+                      />
+                      {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="panNumber">
+                        PAN Number <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        id="panNumber"
+                        value={panNumber}
+                        onChange={(e) => { setPanNumber(e.target.value.toUpperCase()); setPanError(null); }}
+                        onBlur={() => setPanError(validatePAN(panNumber))}
+                        placeholder="e.g. ABCDE1234F"
+                        maxLength={10}
+                        className="uppercase tracking-wider"
+                      />
+                      {panError && <p className="text-xs text-destructive">{panError}</p>}
+                      <p className="text-xs text-muted-foreground">Required for identity verification and duplicate prevention.</p>
+                    </div>
 
                   {userType === "entity" && (
                     <div className="space-y-2">

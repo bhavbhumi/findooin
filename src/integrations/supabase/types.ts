@@ -2619,6 +2619,7 @@ export type Database = {
           location: string | null
           onboarding_completed: boolean
           organization: string | null
+          pan_number: string | null
           regulatory_ids: Json | null
           social_links: Json | null
           specializations: string[] | null
@@ -2645,6 +2646,7 @@ export type Database = {
           location?: string | null
           onboarding_completed?: boolean
           organization?: string | null
+          pan_number?: string | null
           regulatory_ids?: Json | null
           social_links?: Json | null
           specializations?: string[] | null
@@ -2671,6 +2673,7 @@ export type Database = {
           location?: string | null
           onboarding_completed?: boolean
           organization?: string | null
+          pan_number?: string | null
           regulatory_ids?: Json | null
           social_links?: Json | null
           specializations?: string[] | null
