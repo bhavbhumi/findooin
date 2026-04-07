@@ -301,9 +301,9 @@ export const ProfileHeader = ({
                       </span>
                     )}
                     {profile.organization && (
-                      <Link to={`/org/${encodeURIComponent(profile.organization.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`} className="flex items-center gap-1 hover:text-primary transition-colors">
+                      <span className="flex items-center gap-1">
                         <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
-                      </Link>
+                      </span>
                     )}
                     {secondaryName && (
                       <span className="text-muted-foreground">({secondaryName})</span>
