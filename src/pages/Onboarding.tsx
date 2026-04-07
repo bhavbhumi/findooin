@@ -520,19 +520,61 @@ const Onboarding = () => {
                   This is how others will see you on findoo.
                 </p>
                 <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="displayName">
-                        {userType === "entity" ? "Entity Name" : "Full Name"}
-                      </Label>
-                      <Input
-                        id="displayName"
-                        value={displayName}
-                        onChange={(e) => { setDisplayName(e.target.value); setNameError(null); }}
-                        onBlur={() => setNameError(validateName(displayName))}
-                        placeholder={userType === "entity" ? "Your company name" : "Your full name"}
-                      />
-                      {nameError && <p className="text-xs text-destructive">{nameError}</p>}
-                    </div>
+                    {userType === "individual" ? (
+                      <>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-2">
+                            <Label htmlFor="firstName">
+                              First Name <span className="text-destructive">*</span>
+                            </Label>
+                            <Input
+                              id="firstName"
+                              value={firstName}
+                              onChange={(e) => { setFirstName(e.target.value); setNameError(null); }}
+                              onBlur={() => setNameError(validateName(firstName))}
+                              placeholder="Rajesh"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="middleName">
+                              Middle Name <span className="text-muted-foreground text-xs">(optional)</span>
+                            </Label>
+                            <Input
+                              id="middleName"
+                              value={middleName}
+                              onChange={(e) => setMiddleName(e.target.value)}
+                              placeholder="Kumar"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName">
+                            Last Name <span className="text-destructive">*</span>
+                          </Label>
+                          <Input
+                            id="lastName"
+                            value={lastName}
+                            onChange={(e) => { setLastName(e.target.value); setNameError(null); }}
+                            placeholder="Sharma"
+                          />
+                        </div>
+                        {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <Label htmlFor="displayName">
+                          Entity Name <span className="text-destructive">*</span>
+                        </Label>
+                        <Input
+                          id="displayName"
+                          value={displayName}
+                          onChange={(e) => { setDisplayName(e.target.value); setNameError(null); }}
+                          onBlur={() => setNameError(validateName(displayName))}
+                          placeholder="Your company name"
+                        />
+                        {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="panNumber">
