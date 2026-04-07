@@ -86,7 +86,10 @@ export function AdminFeatureFlags() {
         });
       }
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-feature-flags"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin-feature-flags"] });
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.featureFlags() });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
