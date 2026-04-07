@@ -18,7 +18,6 @@ import { Label } from "@/components/ui/label";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
-import { ROLE_CONFIG } from "@/lib/role-config";
 
 interface NetworkUser {
   id: string;

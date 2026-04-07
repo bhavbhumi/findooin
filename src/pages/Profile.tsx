@@ -5,7 +5,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, CreditCard, FolderLock, Store, ExternalLink, Share2, MapPin } from "lucide-react";
+import { ArrowLeft, Edit3, Bookmark, CreditCard, FolderLock, Store, ExternalLink, Share2, MapPin } from "lucide-react";
 import { EntityLocationsTab } from "@/components/profile/EntityLocationsTab";
 import { PostCard } from "@/components/feed/PostCard";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
