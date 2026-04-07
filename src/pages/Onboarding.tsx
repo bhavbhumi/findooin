@@ -16,7 +16,7 @@ import { uploadFile } from "@/lib/storage";
 import { ContactImportDialog } from "@/components/network/ContactImportDialog";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
-import { formatName, validateName, validatePAN } from "@/lib/name-format";
+import { formatName, validateName, validatePAN, composeFullName } from "@/lib/name-format";
 
 type UserType = "individual" | "entity";
 type Role = "investor" | "intermediary" | "issuer" | "enabler";
