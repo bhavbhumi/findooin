@@ -11,6 +11,9 @@ import { InviteDialog } from "@/components/network/InviteDialog";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NetworkUserSkeleton } from "@/components/skeletons/NetworkUserSkeleton";
+import { usePeopleYouMayKnow } from "@/hooks/usePeopleYouMayKnow";
+import { UpgradeNudge } from "@/components/subscription/UpgradeNudge";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 import {
   Users, UserPlus, UserCheck, UserMinus, Clock, Search, CheckCircle2,
   Send, MessageSquare,
