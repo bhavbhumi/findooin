@@ -257,7 +257,7 @@ const Profile = () => {
                 <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
                   <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
                   {(isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
-                    <TabsTrigger value="network" className={tabTriggerClass}>
+                   <TabsTrigger value="network" className={tabTriggerClass}>
                       Network
                       {isOwnProfile && tabPrivacy.network_visibility !== "everyone" && (
                         <Lock className="h-3 w-3 ml-1 text-muted-foreground" />
@@ -273,11 +273,6 @@ const Profile = () => {
                     </TabsTrigger>
                   )}
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
-                  {profile.user_type === "entity" && (
-                    <TabsTrigger value="team" className={tabTriggerClass}>
-                      <Users className="h-3.5 w-3.5 mr-1" /> Team
-                    </TabsTrigger>
-                  )}
                   {profile.user_type === "entity" && (
                     <TabsTrigger value="locations" className={tabTriggerClass}>
                       <MapPin className="h-3.5 w-3.5 mr-1" /> Locations
