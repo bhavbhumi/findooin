@@ -5,8 +5,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles, Store, ExternalLink, Download, Share2, Users, MapPin } from "lucide-react";
-import { EntityTeamTab } from "@/components/profile/EntityTeamTab";
+import { ArrowLeft, Edit3, Bookmark, CreditCard, FolderLock, Store, ExternalLink, Share2, MapPin } from "lucide-react";
 import { EntityLocationsTab } from "@/components/profile/EntityLocationsTab";
 import { PostCard } from "@/components/feed/PostCard";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
@@ -257,7 +256,7 @@ const Profile = () => {
                 <TabsList className="inline-flex w-max sm:w-full justify-start bg-card border border-border rounded-xl h-11 p-1">
                   <TabsTrigger value="about" className={tabTriggerClass}>About</TabsTrigger>
                   {(isOwnProfile || canViewTab(tabPrivacy.network_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
-                    <TabsTrigger value="network" className={tabTriggerClass}>
+                   <TabsTrigger value="network" className={tabTriggerClass}>
                       Network
                       {isOwnProfile && tabPrivacy.network_visibility !== "everyone" && (
                         <Lock className="h-3 w-3 ml-1 text-muted-foreground" />
@@ -273,11 +272,6 @@ const Profile = () => {
                     </TabsTrigger>
                   )}
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
-                  {profile.user_type === "entity" && (
-                    <TabsTrigger value="team" className={tabTriggerClass}>
-                      <Users className="h-3.5 w-3.5 mr-1" /> Team
-                    </TabsTrigger>
-                  )}
                   {profile.user_type === "entity" && (
                     <TabsTrigger value="locations" className={tabTriggerClass}>
                       <MapPin className="h-3.5 w-3.5 mr-1" /> Locations
@@ -342,7 +336,14 @@ const Profile = () => {
               </TabsContent>
 
               <TabsContent value="network" className="mt-0">
-                <ProfileNetwork profileId={profile.id} isOwnProfile={isOwnProfile} currentUserId={currentUserId} />
+                <ProfileNetwork
+                  profileId={profile.id}
+                  isOwnProfile={isOwnProfile}
+                  currentUserId={currentUserId}
+                  profileUserType={profile.user_type}
+                  profileRoles={roles}
+                  profileDisplayName={profile.display_name || profile.full_name}
+                />
               </TabsContent>
 
               <TabsContent value="activity" className="mt-0">
@@ -368,17 +369,6 @@ const Profile = () => {
                   userPosts.map((post) => <MemoizedPostCard key={post.id} post={post} />)
                 )}
               </TabsContent>
-
-              {profile.user_type === "entity" && (
-                <TabsContent value="team" className="mt-0">
-                  <EntityTeamTab
-                    entityProfileId={profile.id}
-                    isEntityAdmin={isOwnProfile && profile.user_type === "entity"}
-                    currentUserId={currentUserId}
-                    entityName={profile.display_name || profile.full_name}
-                  />
-                </TabsContent>
-              )}
 
               {profile.user_type === "entity" && (
                 <TabsContent value="locations" className="mt-0">
