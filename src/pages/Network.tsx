@@ -187,6 +187,15 @@ const Network = () => {
           </div>
         )}
 
+        {/* Usage nudge */}
+        <UpgradeNudge
+          feature="Connection requests"
+          used={usage.connectionRequests.used}
+          limit={usage.connectionRequests.limit}
+          proValue="100 requests/month"
+          variant="banner"
+        />
+
         {/* Search */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -296,7 +305,16 @@ const Network = () => {
                 followersCount={myFollowers.length}
                 followingCount={myFollowing.length}
                 pendingCount={pendingIncoming.length + pendingOutgoing.length}
-                suggestions={[]}
+                suggestions={(suggestions || []).map((s) => ({
+                  id: s.id,
+                  full_name: s.full_name,
+                  display_name: s.display_name,
+                  avatar_url: s.avatar_url,
+                  headline: s.headline || s.reason,
+                  verification_status: s.verification_status,
+                  user_type: s.user_type,
+                  organization: s.organization,
+                }))}
                 allUsers={[...myConnections, ...myFollowing, ...myFollowers]}
                 getInitials={getInitials}
                 onStatClick={(tab) => setActiveTab(tab)}
