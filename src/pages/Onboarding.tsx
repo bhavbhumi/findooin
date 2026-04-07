@@ -212,15 +212,26 @@ const Onboarding = () => {
   const handleComplete = async () => {
     if (!userId) return;
 
+    // Build full name based on user type
+    const isIndividual = userType === "individual";
+    const composedName = isIndividual
+      ? composeFullName(firstName, middleName, lastName)
+      : formatName(displayName);
+
     // Validate name
-    const nErr = validateName(displayName);
+    const nameToValidate = isIndividual ? firstName : displayName;
+    const nErr = validateName(nameToValidate);
     if (nErr) { setNameError(nErr); toast({ title: "Invalid name", description: nErr, variant: "destructive" }); return; }
+    if (isIndividual && lastName.trim().length < 1) {
+      setNameError("Last name is required");
+      toast({ title: "Invalid name", description: "Last name is required", variant: "destructive" });
+      return;
+    }
 
     // Validate PAN
     const pErr = validatePAN(panNumber);
     if (pErr) { setPanError(pErr); toast({ title: "Invalid PAN", description: pErr, variant: "destructive" }); return; }
 
-    const formattedName = formatName(displayName);
     const formattedPAN = panNumber.trim().toUpperCase();
 
     setLoading(true);
@@ -229,8 +240,11 @@ const Onboarding = () => {
         .from("profiles")
         .upsert({
           id: userId,
-          full_name: formattedName,
-          display_name: formattedName,
+          full_name: composedName,
+          display_name: composedName,
+          first_name: isIndividual ? formatName(firstName.trim()) : null,
+          middle_name: isIndividual && middleName.trim() ? formatName(middleName.trim()) : null,
+          last_name: isIndividual ? formatName(lastName.trim()) : null,
           bio,
           user_type: userType!,
           organization: userType === "entity" ? formatName(organization) : null,
