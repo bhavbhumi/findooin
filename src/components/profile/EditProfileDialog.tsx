@@ -37,6 +37,7 @@ import type { ProfileData } from "./ProfileHeader";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
 import { uploadFile, validateFile } from "@/lib/storage";
+import { formatName, validateName } from "@/lib/name-format";
 
 interface EditProfileDialogProps {
   open: boolean;
@@ -136,11 +137,14 @@ export const EditProfileDialog = ({ open, onOpenChange, profile, onSaved }: Edit
   };
 
   const handleSave = async () => {
+    const nErr = validateName(fullName);
+    if (nErr) { toast.error(nErr); return; }
+
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
       .update({
-        full_name: fullName.trim() || profile.full_name,
+        full_name: formatName(fullName.trim()),
         avatar_url: avatarUrl || null,
         banner_url: bannerUrl || null,
         display_name: displayName || null,
