@@ -16,7 +16,7 @@ import { uploadFile } from "@/lib/storage";
 import { ContactImportDialog } from "@/components/network/ContactImportDialog";
 import { LocationSelector } from "@/components/selectors/LocationSelector";
 import { CertificationSelector } from "@/components/selectors/CertificationSelector";
-import { formatName, validateName, validatePAN } from "@/lib/name-format";
+import { formatName, validateName, validatePAN, composeFullName } from "@/lib/name-format";
 
 type UserType = "individual" | "entity";
 type Role = "investor" | "intermediary" | "issuer" | "enabler";
@@ -88,6 +88,9 @@ const Onboarding = () => {
     enabler: "",
   });
   const [displayName, setDisplayName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
   const [organization, setOrganization] = useState("");
   const [designation, setDesignation] = useState("");
@@ -209,15 +212,26 @@ const Onboarding = () => {
   const handleComplete = async () => {
     if (!userId) return;
 
+    // Build full name based on user type
+    const isIndividual = userType === "individual";
+    const composedName = isIndividual
+      ? composeFullName(firstName, middleName, lastName)
+      : formatName(displayName);
+
     // Validate name
-    const nErr = validateName(displayName);
+    const nameToValidate = isIndividual ? firstName : displayName;
+    const nErr = validateName(nameToValidate);
     if (nErr) { setNameError(nErr); toast({ title: "Invalid name", description: nErr, variant: "destructive" }); return; }
+    if (isIndividual && lastName.trim().length < 1) {
+      setNameError("Last name is required");
+      toast({ title: "Invalid name", description: "Last name is required", variant: "destructive" });
+      return;
+    }
 
     // Validate PAN
     const pErr = validatePAN(panNumber);
     if (pErr) { setPanError(pErr); toast({ title: "Invalid PAN", description: pErr, variant: "destructive" }); return; }
 
-    const formattedName = formatName(displayName);
     const formattedPAN = panNumber.trim().toUpperCase();
 
     setLoading(true);
@@ -226,8 +240,11 @@ const Onboarding = () => {
         .from("profiles")
         .upsert({
           id: userId,
-          full_name: formattedName,
-          display_name: formattedName,
+          full_name: composedName,
+          display_name: composedName,
+          first_name: isIndividual ? formatName(firstName.trim()) : null,
+          middle_name: isIndividual && middleName.trim() ? formatName(middleName.trim()) : null,
+          last_name: isIndividual ? formatName(lastName.trim()) : null,
           bio,
           user_type: userType!,
           organization: userType === "entity" ? formatName(organization) : null,
@@ -316,7 +333,12 @@ const Onboarding = () => {
       case 1: return userType !== null;
       case 2: return selectedRoles.length > 0;
       case 3: return selectedRoles.every((role) => selectedSubTypes[role] !== "");
-      case 4: return displayName.trim().length >= 3 && panNumber.trim().length === 10;
+      case 4: {
+        const nameOk = userType === "individual"
+          ? firstName.trim().length >= 2 && lastName.trim().length >= 1
+          : displayName.trim().length >= 3;
+        return nameOk && panNumber.trim().length === 10;
+      }
       case 5: return true;
       default: return false;
     }
@@ -498,19 +520,61 @@ const Onboarding = () => {
                   This is how others will see you on findoo.
                 </p>
                 <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="displayName">
-                        {userType === "entity" ? "Entity Name" : "Full Name"}
-                      </Label>
-                      <Input
-                        id="displayName"
-                        value={displayName}
-                        onChange={(e) => { setDisplayName(e.target.value); setNameError(null); }}
-                        onBlur={() => setNameError(validateName(displayName))}
-                        placeholder={userType === "entity" ? "Your company name" : "Your full name"}
-                      />
-                      {nameError && <p className="text-xs text-destructive">{nameError}</p>}
-                    </div>
+                    {userType === "individual" ? (
+                      <>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-2">
+                            <Label htmlFor="firstName">
+                              First Name <span className="text-destructive">*</span>
+                            </Label>
+                            <Input
+                              id="firstName"
+                              value={firstName}
+                              onChange={(e) => { setFirstName(e.target.value); setNameError(null); }}
+                              onBlur={() => setNameError(validateName(firstName))}
+                              placeholder="Rajesh"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="middleName">
+                              Middle Name <span className="text-muted-foreground text-xs">(optional)</span>
+                            </Label>
+                            <Input
+                              id="middleName"
+                              value={middleName}
+                              onChange={(e) => setMiddleName(e.target.value)}
+                              placeholder="Kumar"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName">
+                            Last Name <span className="text-destructive">*</span>
+                          </Label>
+                          <Input
+                            id="lastName"
+                            value={lastName}
+                            onChange={(e) => { setLastName(e.target.value); setNameError(null); }}
+                            placeholder="Sharma"
+                          />
+                        </div>
+                        {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+                      </>
+                    ) : (
+                      <div className="space-y-2">
+                        <Label htmlFor="displayName">
+                          Entity Name <span className="text-destructive">*</span>
+                        </Label>
+                        <Input
+                          id="displayName"
+                          value={displayName}
+                          onChange={(e) => { setDisplayName(e.target.value); setNameError(null); }}
+                          onBlur={() => setNameError(validateName(displayName))}
+                          placeholder="Your company name"
+                        />
+                        {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label htmlFor="panNumber">
