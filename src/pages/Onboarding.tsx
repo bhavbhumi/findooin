@@ -333,7 +333,12 @@ const Onboarding = () => {
       case 1: return userType !== null;
       case 2: return selectedRoles.length > 0;
       case 3: return selectedRoles.every((role) => selectedSubTypes[role] !== "");
-      case 4: return displayName.trim().length >= 3 && panNumber.trim().length === 10;
+      case 4: {
+        const nameOk = userType === "individual"
+          ? firstName.trim().length >= 2 && lastName.trim().length >= 1
+          : displayName.trim().length >= 3;
+        return nameOk && panNumber.trim().length === 10;
+      }
       case 5: return true;
       default: return false;
     }
