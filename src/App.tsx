@@ -110,6 +110,7 @@ const AdminCodedMessagingPage = lazy(() => import("./pages/admin/AdminCodedMessa
 const AdminFeedbackPage = lazy(() => import("./pages/admin/AdminFeedbackPage"));
 const FinancialWrapped = lazy(() => import("./pages/FinancialWrapped"));
 const Feedback = lazy(() => import("./pages/Feedback"));
+const OrganizationPage = lazy(() => import("./pages/OrganizationPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -190,6 +191,7 @@ const App = () => {
                       <Route path="/profile/:id" element={<ProtectedRoute><RouteErrorBoundary routeName="Profile"><Profile /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/network" element={<ProtectedRoute><RouteErrorBoundary routeName="Network"><Network /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/discover" element={<ProtectedRoute><RouteErrorBoundary routeName="Discover"><Discover /></RouteErrorBoundary></ProtectedRoute>} />
+                      <Route path="/org/:slug" element={<ProtectedRoute><RouteErrorBoundary routeName="Organization"><OrganizationPage /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/analytics" element={<ProtectedRoute><RouteErrorBoundary routeName="Analytics"><PostAnalytics /></RouteErrorBoundary></ProtectedRoute>} />
                       <Route path="/notifications" element={<ProtectedRoute><RouteErrorBoundary routeName="Notifications"><Notifications /></RouteErrorBoundary></ProtectedRoute>} />
                       {/* Messages route moved to feature-flag-gated section below */}
