@@ -200,8 +200,8 @@ function MemberRow({
       <Link to={`/profile/${member.user_id}`}>
         <AvatarWithFallback
           src={member.member_avatar}
-          fallbackText={member.member_name || "?"}
-          className="h-10 w-10"
+          initials={(member.member_name || "?").slice(0, 2).toUpperCase()}
+          className="h-10 w-10 rounded-full"
         />
       </Link>
       <div className="flex-1 min-w-0">
