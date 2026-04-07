@@ -11,7 +11,7 @@ import {
   CheckCircle2, ShieldCheck, Briefcase, MapPin, XCircle,
   BarChart3, Landmark, Settings2,
 } from "lucide-react";
-import { useConnectionActions } from "@/hooks/useConnectionActions";
+
 import { useEntityTeam, useManageAffiliation, useRequestAffiliation, type TeamAffiliation } from "@/hooks/useTeamAffiliations";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
