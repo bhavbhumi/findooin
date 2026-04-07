@@ -887,6 +887,48 @@ export type Database = {
         }
         Relationships: []
       }
+      entity_locations: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          entity_profile_id: string
+          id: string
+          is_headquarters: boolean
+          label: string
+          location_type: string
+          pincode: string | null
+          state: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          entity_profile_id: string
+          id?: string
+          is_headquarters?: boolean
+          label?: string
+          location_type?: string
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          entity_profile_id?: string
+          id?: string
+          is_headquarters?: boolean
+          label?: string
+          location_type?: string
+          pincode?: string | null
+          state?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       event_registrations: {
         Row: {
           cancelled_at: string | null
@@ -3598,6 +3640,48 @@ export type Database = {
           },
         ]
       }
+      team_affiliations: {
+        Row: {
+          branch_location: string | null
+          departed_at: string | null
+          department: string | null
+          designation: string
+          entity_profile_id: string
+          id: string
+          requested_at: string
+          status: Database["public"]["Enums"]["affiliation_status"]
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          branch_location?: string | null
+          departed_at?: string | null
+          department?: string | null
+          designation?: string
+          entity_profile_id: string
+          id?: string
+          requested_at?: string
+          status?: Database["public"]["Enums"]["affiliation_status"]
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          branch_location?: string | null
+          departed_at?: string | null
+          department?: string | null
+          designation?: string
+          entity_profile_id?: string
+          id?: string
+          requested_at?: string
+          status?: Database["public"]["Enums"]["affiliation_status"]
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       ticket_replies: {
         Row: {
           content: string
@@ -4466,7 +4550,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_entity_admin: {
+        Args: { _entity_profile_id: string; _user_id: string }
+        Returns: boolean
+      }
       is_seed_user: { Args: { p_user_id: string }; Returns: boolean }
+      is_team_member: {
+        Args: { _entity_profile_id: string; _user_id: string }
+        Returns: boolean
+      }
       manage_own_role: {
         Args: {
           _action: string
@@ -4507,6 +4599,7 @@ export type Database = {
       update_login_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
+      affiliation_status: "pending" | "verified" | "rejected" | "departed"
       app_role: "issuer" | "intermediary" | "investor" | "admin" | "enabler"
       application_status:
         | "submitted"
@@ -4779,6 +4872,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      affiliation_status: ["pending", "verified", "rejected", "departed"],
       app_role: ["issuer", "intermediary", "investor", "admin", "enabler"],
       application_status: [
         "submitted",
