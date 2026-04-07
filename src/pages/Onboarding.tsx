@@ -208,25 +208,45 @@ const Onboarding = () => {
 
   const handleComplete = async () => {
     if (!userId) return;
+
+    // Validate name
+    const nErr = validateName(displayName);
+    if (nErr) { setNameError(nErr); toast({ title: "Invalid name", description: nErr, variant: "destructive" }); return; }
+
+    // Validate PAN
+    const pErr = validatePAN(panNumber);
+    if (pErr) { setPanError(pErr); toast({ title: "Invalid PAN", description: pErr, variant: "destructive" }); return; }
+
+    const formattedName = formatName(displayName);
+    const formattedPAN = panNumber.trim().toUpperCase();
+
     setLoading(true);
     try {
       const { error: profileError } = await supabase
         .from("profiles")
         .upsert({
           id: userId,
-          full_name: displayName,
-          display_name: displayName,
+          full_name: formattedName,
+          display_name: formattedName,
           bio,
           user_type: userType!,
-          organization: userType === "entity" ? organization : null,
+          organization: userType === "entity" ? formatName(organization) : null,
           designation: designation || null,
           location: location || null,
           certifications: certifications.length > 0 ? certifications : null,
-          
+          pan_number: formattedPAN,
           onboarding_completed: true,
           verification_status: Object.values(verificationFiles).some(f => f) ? "pending" : "unverified",
         } as any, { onConflict: "id" });
-      if (profileError) throw profileError;
+      if (profileError) {
+        if (profileError.message?.includes("idx_profiles_pan_unique") || profileError.code === "23505") {
+          setPanError("This PAN is already linked to another account");
+          toast({ title: "Duplicate PAN", description: "This PAN is already linked to another findoo account. If you believe this is an error, please contact support.", variant: "destructive" });
+          setLoading(false);
+          return;
+        }
+        throw profileError;
+      }
 
       // Upload verification documents and create verification_requests
       let uploadFailures: string[] = [];
