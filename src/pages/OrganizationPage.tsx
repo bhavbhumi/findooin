@@ -5,12 +5,12 @@ import { useOrganization, useOrgBranches, useOrgDepartments, useOrgMembers, useC
 import { FindooLoader } from "@/components/FindooLoader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,13 +26,13 @@ export default function OrganizationPage() {
   const { data: org, isLoading } = useOrganization(slug);
   const { data: branches = [] } = useOrgBranches(org?.id);
   const { data: departments = [] } = useOrgDepartments(org?.id);
-  const [memberTab, setMemberTab] = useState("verified");
+  const [memberTab] = useState("verified");
   const { data: members = [] } = useOrgMembers(org?.id, memberTab);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const claimMembership = useClaimMembership();
   const verifyMember = useVerifyMember();
   const manageBranch = useManageBranch();
-  const manageDepartment = useManageDepartment();
+  const _manageDepartment = useManageDepartment();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setCurrentUserId(data.user?.id ?? null));
