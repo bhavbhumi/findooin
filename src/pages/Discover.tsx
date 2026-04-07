@@ -488,6 +488,24 @@ const Discover = () => {
 function TrustCircleCard({ result, circleTier }: { result: TrustCircleResult; circleTier: CircleTier }) {
   const { profile: user, roles, referral_source, affinity_score } = result;
   const visual = CIRCLE_VISUALS[circleTier];
+  const [actionDone, setActionDone] = useState<string | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  const handleQuickAction = async (e: React.MouseEvent, actionType: "connect" | "follow") => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActionLoading(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { setActionLoading(false); return; }
+    await supabase.from("connections").insert({
+      from_user_id: session.user.id,
+      to_user_id: result.target_id,
+      connection_type: actionType,
+      status: actionType === "follow" ? "accepted" : "pending",
+    });
+    setActionDone(actionType === "connect" ? "Request sent" : "Following");
+    setActionLoading(false);
+  };
 
   return (
     <Link
@@ -574,6 +592,33 @@ function TrustCircleCard({ result, circleTier }: { result: TrustCircleResult; ci
               </>
             )}
           </div>
+        </div>
+        {/* Quick action buttons */}
+        <div className="flex flex-col gap-1.5 shrink-0">
+          {actionDone ? (
+            <span className="text-[10px] text-muted-foreground font-medium px-2 py-1">{actionDone}</span>
+          ) : (
+            <>
+              <Button
+                variant="default"
+                size="sm"
+                className="h-7 text-[10px] px-2.5 gap-1"
+                onClick={(e) => handleQuickAction(e, "connect")}
+                disabled={actionLoading}
+              >
+                <UserPlus className="h-3 w-3" /> Connect
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 text-[10px] px-2 text-muted-foreground"
+                onClick={(e) => handleQuickAction(e, "follow")}
+                disabled={actionLoading}
+              >
+                Follow
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </Link>
