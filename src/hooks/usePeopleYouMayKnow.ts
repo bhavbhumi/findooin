@@ -21,7 +21,7 @@ export interface SuggestedUser {
 
 export function usePeopleYouMayKnow(userId: string | null, limit = 8) {
   return useQuery({
-    queryKey: [...QUERY_KEYS.network(userId ?? ""), "suggestions"],
+    queryKey: ["people-you-may-know", userId],
     enabled: !!userId,
     queryFn: async (): Promise<SuggestedUser[]> => {
       if (!userId) return [];

@@ -7,8 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { NetworkAvatar } from "@/components/ui/network-avatar";
 import { CheckCircle2, Users } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { ROLE_CONFIG } from "@/lib/role-config";
 
 interface Props {
   profileId: string;
@@ -26,7 +24,7 @@ export function PeopleAlsoViewed({ profileId, profileRoles, profileLocation, isO
       const { data: roleUsers } = await supabase
         .from("user_roles")
         .select("user_id, role")
-        .in("role", profileRoles.length > 0 ? profileRoles : ["investor"])
+        .in("role", profileRoles.length > 0 ? profileRoles as any : ["investor"])
         .neq("user_id", profileId)
         .limit(30);
 
