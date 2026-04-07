@@ -5,7 +5,9 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles, Store, ExternalLink, Download, Share2 } from "lucide-react";
+import { ArrowLeft, Edit3, BarChart3, Bookmark, CreditCard, FolderLock, Sparkles, Store, ExternalLink, Download, Share2, Users, MapPin } from "lucide-react";
+import { EntityTeamTab } from "@/components/profile/EntityTeamTab";
+import { EntityLocationsTab } from "@/components/profile/EntityLocationsTab";
 import { PostCard } from "@/components/feed/PostCard";
 import { PostCardSkeleton } from "@/components/feed/PostCardSkeleton";
 import { useConnectionActions } from "@/hooks/useConnectionActions";
@@ -271,6 +273,16 @@ const Profile = () => {
                     </TabsTrigger>
                   )}
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
+                  {profile.user_type === "entity" && (
+                    <TabsTrigger value="team" className={tabTriggerClass}>
+                      <Users className="h-3.5 w-3.5 mr-1" /> Team
+                    </TabsTrigger>
+                  )}
+                  {profile.user_type === "entity" && (
+                    <TabsTrigger value="locations" className={tabTriggerClass}>
+                      <MapPin className="h-3.5 w-3.5 mr-1" /> Locations
+                    </TabsTrigger>
+                  )}
                   {ffIsEnabled("directory_listings") && (
                     <TabsTrigger value="showcase" className={tabTriggerClass}>
                       <Store className="h-3.5 w-3.5 mr-1" /> Showcase
@@ -356,6 +368,26 @@ const Profile = () => {
                   userPosts.map((post) => <MemoizedPostCard key={post.id} post={post} />)
                 )}
               </TabsContent>
+
+              {profile.user_type === "entity" && (
+                <TabsContent value="team" className="mt-0">
+                  <EntityTeamTab
+                    entityProfileId={profile.id}
+                    isEntityAdmin={isOwnProfile && profile.user_type === "entity"}
+                    currentUserId={currentUserId}
+                    entityName={profile.display_name || profile.full_name}
+                  />
+                </TabsContent>
+              )}
+
+              {profile.user_type === "entity" && (
+                <TabsContent value="locations" className="mt-0">
+                  <EntityLocationsTab
+                    entityProfileId={profile.id}
+                    isEntityAdmin={isOwnProfile && profile.user_type === "entity"}
+                  />
+                </TabsContent>
+              )}
 
               <TabsContent value="showcase" className="mt-0">
                 <ProfileListingsTab profileId={profile.id} isOwnProfile={isOwnProfile} roles={roles} />
