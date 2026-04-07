@@ -26,6 +26,7 @@ import { FeaturedContent } from "@/components/profile/FeaturedContent";
 import { ProfileCompletenessRing } from "@/components/profile/ProfileCompletenessRing";
 import { MutualConnections } from "@/components/profile/MutualConnections";
 import { TrustScoreBadge } from "@/components/profile/TrustScoreBadge";
+import { PeopleAlsoViewed } from "@/components/profile/PeopleAlsoViewed";
 import { useQuery } from "@tanstack/react-query";
 import { GamificationProfileCard } from "@/components/gamification/GamificationProfileCard";
 import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
