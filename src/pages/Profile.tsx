@@ -26,6 +26,7 @@ import { FeaturedContent } from "@/components/profile/FeaturedContent";
 import { ProfileCompletenessRing } from "@/components/profile/ProfileCompletenessRing";
 import { MutualConnections } from "@/components/profile/MutualConnections";
 import { TrustScoreBadge } from "@/components/profile/TrustScoreBadge";
+import { PeopleAlsoViewed } from "@/components/profile/PeopleAlsoViewed";
 import { useQuery } from "@tanstack/react-query";
 import { GamificationProfileCard } from "@/components/gamification/GamificationProfileCard";
 import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
@@ -403,6 +404,14 @@ const Profile = () => {
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
+              {!isOwnProfile && (
+                <PeopleAlsoViewed
+                  profileId={profile.id}
+                  profileRoles={roles.map((r) => r.role)}
+                  profileLocation={profile.location ?? null}
+                  isOwnProfile={isOwnProfile}
+                />
+              )}
               {ffIsEnabled("gamification_xp") && <GamificationProfileCard userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("referral_program") && <ReferralCard userId={profile.id} />}
@@ -436,6 +445,14 @@ const Profile = () => {
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
+              {!isOwnProfile && (
+                <PeopleAlsoViewed
+                  profileId={profile.id}
+                  profileRoles={roles.map((r) => r.role)}
+                  profileLocation={profile.location ?? null}
+                  isOwnProfile={isOwnProfile}
+                />
+              )}
               {ffIsEnabled("gamification_xp") && <GamificationProfileCard userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("referral_program") && <ReferralCard userId={profile.id} />}
