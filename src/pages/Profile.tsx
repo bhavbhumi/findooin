@@ -1,5 +1,6 @@
 import { useEffect, useState, memo } from "react";
 import { usePageMeta } from "@/hooks/usePageMeta";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -124,6 +125,7 @@ function useUserPosts(profileId: string | undefined) {
 
 const Profile = () => {
   usePageMeta({ title: "Profile" });
+  const { isEnabled: ffIsEnabled } = useFeatureFlags();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
@@ -268,10 +270,12 @@ const Profile = () => {
                     </TabsTrigger>
                   )}
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
-                  <TabsTrigger value="showcase" className={tabTriggerClass}>
-                    <Store className="h-3.5 w-3.5 mr-1" /> Showcase
-                  </TabsTrigger>
-                  {(isOwnProfile || canViewTab(tabPrivacy.vault_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
+                  {ffIsEnabled("directory_listings") && (
+                    <TabsTrigger value="showcase" className={tabTriggerClass}>
+                      <Store className="h-3.5 w-3.5 mr-1" /> Showcase
+                    </TabsTrigger>
+                  )}
+                  {ffIsEnabled("vault_storage") && (isOwnProfile || canViewTab(tabPrivacy.vault_visibility, isOwnProfile, isLoggedIn, isConnected)) && (
                     <TabsTrigger value="vault" className={tabTriggerClass}>
                       <FolderLock className="h-3.5 w-3.5 mr-1" /> Vault
                       {isOwnProfile && tabPrivacy.vault_visibility !== "only_me" && tabPrivacy.vault_visibility !== "everyone" && (
@@ -279,9 +283,11 @@ const Profile = () => {
                       )}
                     </TabsTrigger>
                   )}
-                  <TabsTrigger value="digital-card" className={tabTriggerClass}>
-                    <CreditCard className="h-3.5 w-3.5 mr-1" /> Digital Card
-                  </TabsTrigger>
+                  {ffIsEnabled("digital_card") && (
+                    <TabsTrigger value="digital-card" className={tabTriggerClass}>
+                      <CreditCard className="h-3.5 w-3.5 mr-1" /> Digital Card
+                    </TabsTrigger>
+                  )}
                 </TabsList>
               </div>
 
@@ -397,9 +403,9 @@ const Profile = () => {
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
-              <GamificationProfileCard userId={profile.id} />
-              {isOwnProfile && <WeeklyChallenges userId={profile.id} />}
-              {isOwnProfile && <ReferralCard userId={profile.id} />}
+              {ffIsEnabled("gamification_xp") && <GamificationProfileCard userId={profile.id} />}
+              {isOwnProfile && ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={profile.id} />}
+              {isOwnProfile && ffIsEnabled("referral_program") && <ReferralCard userId={profile.id} />}
               <MemoizedProfileSidebar
                 profile={profile}
                 roles={roles}
@@ -430,9 +436,9 @@ const Profile = () => {
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
-              <GamificationProfileCard userId={profile.id} />
-              {isOwnProfile && <WeeklyChallenges userId={profile.id} />}
-              {isOwnProfile && <ReferralCard userId={profile.id} />}
+              {ffIsEnabled("gamification_xp") && <GamificationProfileCard userId={profile.id} />}
+              {isOwnProfile && ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={profile.id} />}
+              {isOwnProfile && ffIsEnabled("referral_program") && <ReferralCard userId={profile.id} />}
               <MemoizedProfileSidebar
                 profile={profile}
                 roles={roles}

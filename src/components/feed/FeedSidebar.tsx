@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { WeeklyChallenges } from "@/components/gamification/WeeklyChallenges";
 import { ReferralCard } from "@/components/gamification/ReferralCard";
 import { OpinionsSidebarWidget } from "@/components/opinions/OpinionsSidebarWidget";
+import { useFeatureFlags } from "@/hooks/useFeatureFlags";
 
 // Lazy load non-default tabs
 const DraftsPanel = lazy(() =>
@@ -38,6 +39,7 @@ interface FeedSidebarProps {
 }
 
 export const FeedSidebar = memo(function FeedSidebar({ userId, onLoadDraft, initialTab }: FeedSidebarProps) {
+  const { isEnabled: ffIsEnabled } = useFeatureFlags();
   const [tab, setTab] = useState(initialTab || "trending");
   // Track which tabs have been visited to keep them mounted after first visit
   const [visited, setVisited] = useState<Set<string>>(new Set([initialTab || "trending"]));
@@ -89,9 +91,9 @@ export const FeedSidebar = memo(function FeedSidebar({ userId, onLoadDraft, init
       {/* Opinions + Gamification widgets below tabs */}
       {userId && (
         <div className="space-y-3 mt-4">
-          <OpinionsSidebarWidget />
-          <WeeklyChallenges userId={userId} />
-          <ReferralCard userId={userId} />
+          {ffIsEnabled("opinions_module") && <OpinionsSidebarWidget />}
+          {ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={userId} />}
+          {ffIsEnabled("referral_program") && <ReferralCard userId={userId} />}
         </div>
       )}
     </div>
