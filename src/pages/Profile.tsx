@@ -273,6 +273,16 @@ const Profile = () => {
                     </TabsTrigger>
                   )}
                   <TabsTrigger value="posts" className={tabTriggerClass}>Posts</TabsTrigger>
+                  {profile.user_type === "entity" && (
+                    <TabsTrigger value="team" className={tabTriggerClass}>
+                      <Users className="h-3.5 w-3.5 mr-1" /> Team
+                    </TabsTrigger>
+                  )}
+                  {profile.user_type === "entity" && (
+                    <TabsTrigger value="locations" className={tabTriggerClass}>
+                      <MapPin className="h-3.5 w-3.5 mr-1" /> Locations
+                    </TabsTrigger>
+                  )}
                   {ffIsEnabled("directory_listings") && (
                     <TabsTrigger value="showcase" className={tabTriggerClass}>
                       <Store className="h-3.5 w-3.5 mr-1" /> Showcase
