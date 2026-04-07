@@ -404,6 +404,14 @@ const Profile = () => {
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
+              {!isOwnProfile && (
+                <PeopleAlsoViewed
+                  profileId={profile.id}
+                  profileRoles={roles.map((r) => r.role)}
+                  profileLocation={profile.location ?? null}
+                  isOwnProfile={isOwnProfile}
+                />
+              )}
               {ffIsEnabled("gamification_xp") && <GamificationProfileCard userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("referral_program") && <ReferralCard userId={profile.id} />}
@@ -437,6 +445,14 @@ const Profile = () => {
                 currentUserId={currentUserId}
                 isOwnProfile={isOwnProfile}
               />
+              {!isOwnProfile && (
+                <PeopleAlsoViewed
+                  profileId={profile.id}
+                  profileRoles={roles.map((r) => r.role)}
+                  profileLocation={profile.location ?? null}
+                  isOwnProfile={isOwnProfile}
+                />
+              )}
               {ffIsEnabled("gamification_xp") && <GamificationProfileCard userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={profile.id} />}
               {isOwnProfile && ffIsEnabled("referral_program") && <ReferralCard userId={profile.id} />}
