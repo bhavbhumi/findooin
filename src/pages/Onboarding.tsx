@@ -88,6 +88,9 @@ const Onboarding = () => {
     enabler: "",
   });
   const [displayName, setDisplayName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [bio, setBio] = useState("");
   const [organization, setOrganization] = useState("");
   const [designation, setDesignation] = useState("");
