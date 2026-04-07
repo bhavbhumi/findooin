@@ -316,8 +316,8 @@ const Onboarding = () => {
       case 1: return userType !== null;
       case 2: return selectedRoles.length > 0;
       case 3: return selectedRoles.every((role) => selectedSubTypes[role] !== "");
-      case 4: return displayName.trim().length > 0;
-      case 5: return true; // verification nudge is optional
+      case 4: return displayName.trim().length >= 3 && panNumber.trim().length === 10;
+      case 5: return true;
       default: return false;
     }
   };
