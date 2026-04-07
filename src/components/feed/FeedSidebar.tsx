@@ -91,9 +91,9 @@ export const FeedSidebar = memo(function FeedSidebar({ userId, onLoadDraft, init
       {/* Opinions + Gamification widgets below tabs */}
       {userId && (
         <div className="space-y-3 mt-4">
-          <OpinionsSidebarWidget />
-          <WeeklyChallenges userId={userId} />
-          <ReferralCard userId={userId} />
+          {ffIsEnabled("opinions_module") && <OpinionsSidebarWidget />}
+          {ffIsEnabled("weekly_challenges") && <WeeklyChallenges userId={userId} />}
+          {ffIsEnabled("referral_program") && <ReferralCard userId={userId} />}
         </div>
       )}
     </div>
