@@ -271,7 +271,7 @@ const Discover = () => {
 
               {/* Filters row */}
               <div className="flex items-center gap-2 mb-4 flex-wrap">
-                {["investor", "intermediary", "issuer"].map((r) => {
+                {["investor", "intermediary", "issuer", "enabler"].map((r) => {
                   const conf = ROLE_CONFIG[r];
                   const Icon = conf?.icon;
                   return (
