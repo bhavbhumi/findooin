@@ -369,6 +369,26 @@ const Profile = () => {
                 )}
               </TabsContent>
 
+              {profile.user_type === "entity" && (
+                <TabsContent value="team" className="mt-0">
+                  <EntityTeamTab
+                    entityProfileId={profile.id}
+                    isEntityAdmin={isOwnProfile && profile.user_type === "entity"}
+                    currentUserId={currentUserId}
+                    entityName={profile.display_name || profile.full_name}
+                  />
+                </TabsContent>
+              )}
+
+              {profile.user_type === "entity" && (
+                <TabsContent value="locations" className="mt-0">
+                  <EntityLocationsTab
+                    entityProfileId={profile.id}
+                    isEntityAdmin={isOwnProfile && profile.user_type === "entity"}
+                  />
+                </TabsContent>
+              )}
+
               <TabsContent value="showcase" className="mt-0">
                 <ProfileListingsTab profileId={profile.id} isOwnProfile={isOwnProfile} roles={roles} />
               </TabsContent>
