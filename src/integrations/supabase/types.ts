@@ -2208,6 +2208,233 @@ export type Database = {
         }
         Relationships: []
       }
+      org_branches: {
+        Row: {
+          address_line: string | null
+          branch_name: string
+          branch_type: string
+          city: string | null
+          created_at: string
+          id: string
+          is_headquarters: boolean | null
+          org_id: string
+          pincode: string | null
+          state: string | null
+        }
+        Insert: {
+          address_line?: string | null
+          branch_name: string
+          branch_type?: string
+          city?: string | null
+          created_at?: string
+          id?: string
+          is_headquarters?: boolean | null
+          org_id: string
+          pincode?: string | null
+          state?: string | null
+        }
+        Update: {
+          address_line?: string | null
+          branch_name?: string
+          branch_type?: string
+          city?: string | null
+          created_at?: string
+          id?: string
+          is_headquarters?: boolean | null
+          org_id?: string
+          pincode?: string | null
+          state?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_branches_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_departments: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          org_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          org_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_departments_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      org_members: {
+        Row: {
+          branch_id: string | null
+          created_at: string
+          department_id: string | null
+          designation: string
+          employment_type: string | null
+          id: string
+          joined_at: string | null
+          left_at: string | null
+          org_id: string
+          rejection_reason: string | null
+          status: Database["public"]["Enums"]["org_member_status"]
+          updated_at: string
+          user_id: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          branch_id?: string | null
+          created_at?: string
+          department_id?: string | null
+          designation?: string
+          employment_type?: string | null
+          id?: string
+          joined_at?: string | null
+          left_at?: string | null
+          org_id: string
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["org_member_status"]
+          updated_at?: string
+          user_id: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          branch_id?: string | null
+          created_at?: string
+          department_id?: string | null
+          designation?: string
+          employment_type?: string | null
+          id?: string
+          joined_at?: string | null
+          left_at?: string | null
+          org_id?: string
+          rejection_reason?: string | null
+          status?: Database["public"]["Enums"]["org_member_status"]
+          updated_at?: string
+          user_id?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_members_branch_id_fkey"
+            columns: ["branch_id"]
+            isOneToOne: false
+            referencedRelation: "org_branches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "org_members_department_id_fkey"
+            columns: ["department_id"]
+            isOneToOne: false
+            referencedRelation: "org_departments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "org_members_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          claimed_at: string | null
+          claimed_by: string | null
+          created_at: string
+          description: string | null
+          employee_count_range: string | null
+          entity_type: string | null
+          founded_year: number | null
+          id: string
+          industry: string | null
+          is_verified: boolean | null
+          logo_url: string | null
+          name: string
+          registry_entity_id: string | null
+          slug: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          description?: string | null
+          employee_count_range?: string | null
+          entity_type?: string | null
+          founded_year?: number | null
+          id?: string
+          industry?: string | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name: string
+          registry_entity_id?: string | null
+          slug: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          claimed_at?: string | null
+          claimed_by?: string | null
+          created_at?: string
+          description?: string | null
+          employee_count_range?: string | null
+          entity_type?: string | null
+          founded_year?: number | null
+          id?: string
+          industry?: string | null
+          is_verified?: boolean | null
+          logo_url?: string | null
+          name?: string
+          registry_entity_id?: string | null
+          slug?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_registry_entity_id_fkey"
+            columns: ["registry_entity_id"]
+            isOneToOne: false
+            referencedRelation: "registry_entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organizations_registry_entity_id_fkey"
+            columns: ["registry_entity_id"]
+            isOneToOne: false
+            referencedRelation: "registry_entities_consolidated"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_history: {
         Row: {
           amount: number
@@ -4592,6 +4819,7 @@ export type Database = {
         | "global_impact"
       opinion_format: "binary" | "multiple_choice" | "scale" | "over_under"
       opinion_status: "draft" | "active" | "closed" | "archived"
+      org_member_status: "pending" | "verified" | "rejected" | "alumni"
       payment_status:
         | "created"
         | "authorized"
@@ -4872,6 +5100,7 @@ export const Constants = {
       ],
       opinion_format: ["binary", "multiple_choice", "scale", "over_under"],
       opinion_status: ["draft", "active", "closed", "archived"],
+      org_member_status: ["pending", "verified", "rejected", "alumni"],
       payment_status: [
         "created",
         "authorized",
