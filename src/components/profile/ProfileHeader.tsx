@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { SocialLinks, RegulatoryIds, LanguageEntry } from "@/lib/jsonb-types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -301,9 +301,9 @@ export const ProfileHeader = ({
                       </span>
                     )}
                     {profile.organization && (
-                      <span className="flex items-center gap-1">
+                      <Link to={`/org/${encodeURIComponent(profile.organization.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''))}`} className="flex items-center gap-1 hover:text-primary transition-colors">
                         <Building2 className="h-3 w-3 shrink-0" /> {profile.organization}
-                      </span>
+                      </Link>
                     )}
                     {secondaryName && (
                       <span className="text-muted-foreground">({secondaryName})</span>
