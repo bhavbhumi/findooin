@@ -367,8 +367,8 @@ const Profile = () => {
                   </div>
                 ) : (
                   userPosts.map((post) => <MemoizedPostCard key={post.id} post={post} />)
-                )
-              }
+                )}
+              </TabsContent>
 
               {profile.user_type === "entity" && (
                 <TabsContent value="locations" className="mt-0">
